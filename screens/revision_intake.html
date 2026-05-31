@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Intake Review | SereneCare</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-dim": "#67040d",
+                    "primary": "#296777",
+                    "surface-bright": "#f8fafb",
+                    "secondary-dim": "#1b5a69",
+                    "surface-tint": "#296777",
+                    "on-primary-fixed-variant": "#1d5e6d",
+                    "on-surface": "#2c3436",
+                    "secondary-fixed-dim": "#a4ddef",
+                    "on-error": "#fff7f6",
+                    "on-tertiary-fixed-variant": "#4c6d5a",
+                    "on-primary": "#f0fbff",
+                    "on-background": "#2c3436",
+                    "secondary": "#2b6775",
+                    "on-tertiary-fixed": "#2f503f",
+                    "surface-container-high": "#e3e9eb",
+                    "on-tertiary": "#e6ffee",
+                    "surface-container-low": "#f0f4f6",
+                    "inverse-surface": "#0b0f10",
+                    "tertiary-dim": "#395a48",
+                    "on-primary-container": "#0e5463",
+                    "on-error-container": "#6e0a12",
+                    "error-container": "#fa746f",
+                    "on-secondary-fixed-variant": "#266372",
+                    "tertiary-container": "#d7fde4",
+                    "surface-variant": "#dce4e6",
+                    "surface-dim": "#d4dbde",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed": "#d7fde4",
+                    "primary-container": "#a8e3f6",
+                    "surface-container-highest": "#dce4e6",
+                    "primary-fixed-dim": "#9ad5e7",
+                    "on-primary-fixed": "#00404d",
+                    "tertiary-fixed-dim": "#c9eed6",
+                    "primary-fixed": "#a8e3f6",
+                    "secondary-container": "#b2ecfd",
+                    "secondary-fixed": "#b2ecfd",
+                    "tertiary": "#456653",
+                    "outline": "#747c7e",
+                    "primary-dim": "#195a6a",
+                    "outline-variant": "#acb3b6",
+                    "surface-container": "#eaeff0",
+                    "inverse-primary": "#a8e3f6",
+                    "inverse-on-surface": "#9a9d9e",
+                    "on-surface-variant": "#596063",
+                    "on-secondary-fixed": "#004653",
+                    "surface": "#f8fafb",
+                    "on-tertiary-container": "#416350",
+                    "error": "#a83836",
+                    "on-secondary": "#effbff",
+                    "on-secondary-container": "#195968",
+                    "background": "#f8fafb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "display": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0b0f10; /* inverse-surface for true dark mode */
+            color: #f8fafb;
+        }
+        .glass-panel {
+            background: rgba(25, 90, 106, 0.1);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(172, 179, 182, 0.1);
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+<div class="flex min-h-screen">
+<!-- SideNavBar (Execution from JSON) -->
+<aside class="h-screen w-72 rounded-r-3xl sticky top-0 left-0 flex flex-col p-6 gap-8 bg-[#f0f4f6] dark:bg-slate-900 font-['Inter'] font-medium">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="spa">spa</span>
+</div>
+<div>
+<h1 class="font-['Manrope'] text-xl font-extrabold text-[#296777]">SereneCare</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-70">The Serene Curator</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Navigation Items -->
+<a class="flex items-center gap-4 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-all duration-200 rounded-2xl" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-white dark:bg-slate-800 text-[#296777] dark:text-[#4A90A4] rounded-2xl shadow-sm hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Patient Directory</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-all duration-200 rounded-2xl" href="#">
+<span class="material-symbols-outlined">assignment_ind</span>
+<span>Intake Queue</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-all duration-200 rounded-2xl" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span>Schedule</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-slate-800/50 hover:translate-x-1 transition-all duration-200 rounded-2xl" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Clinic Insights</span>
+</a>
+</nav>
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+<span>New Intake</span>
+</button>
+<div class="mt-auto space-y-2 border-t border-slate-200 dark:border-slate-800 pt-6">
+<a class="flex items-center gap-4 px-4 py-2 text-slate-500 dark:text-slate-400 hover:translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Help Center</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 text-slate-500 dark:text-slate-400 hover:translate-x-1 transition-transform" href="#" onclick="window._cerrarSesion&&window._cerrarSesion()">
+<span class="material-symbols-outlined">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-10 overflow-y-auto">
+<!-- Top Header Area -->
+<header class="flex justify-between items-start mb-12">
+<div class="space-y-2">
+<div class="flex items-center gap-4">
+<h2 class="text-4xl font-headline font-extrabold tracking-tight text-white">Review Intake Form</h2>
+<!-- Critical Safety Badge -->
+<div class="flex items-center gap-2 px-4 py-1.5 bg-error/20 border border-error/30 text-error-container rounded-full animate-pulse">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="text-xs font-bold uppercase tracking-widest">High Risk: Self-Harm Alert</span>
+</div>
+</div>
+<p class="text-on-surface-variant max-w-md">Submitted on Oct 24, 2023 • Case ID: #SC-9921-X</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 rounded-xl bg-slate-800 text-white font-semibold hover:bg-slate-700 transition-colors">Save Draft</button>
+<button class="px-6 py-3 rounded-xl bg-gradient-to-br from-primary to-primary-dim text-white font-bold shadow-xl shadow-primary/20 transition-transform active:scale-95">Approve &amp; Schedule</button>
+</div>
+</header>
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: The Intake Form -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<!-- Section: Personal Data -->
+<section class="bg-slate-900/50 rounded-3xl overflow-hidden">
+<div class="p-6 flex items-center justify-between border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-secondary-dim/30 flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined">person</span>
+</div>
+<h3 class="text-xl font-headline font-bold text-white">Personal Data</h3>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">expand_less</span>
+</div>
+<div class="p-8 grid grid-cols-2 gap-x-12 gap-y-8">
+<div class="space-y-1">
+<label class="text-xs font-bold text-primary tracking-widest uppercase">Full Name</label>
+<p class="text-lg font-medium text-white">Eleanor Vance</p>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold text-primary tracking-widest uppercase">Preferred Pronouns</label>
+<p class="text-lg font-medium text-white">She / Her</p>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold text-primary tracking-widest uppercase">Date of Birth</label>
+<p class="text-lg font-medium text-white">March 14, 1992 (31 yrs)</p>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold text-primary tracking-widest uppercase">Occupation</label>
+<p class="text-lg font-medium text-white">Architectural Designer</p>
+</div>
+<div class="col-span-2 space-y-1">
+<label class="text-xs font-bold text-primary tracking-widest uppercase">Home Address</label>
+<p class="text-lg font-medium text-white">742 Evergreen Terrace, Springfield, IL 62704</p>
+</div>
+</div>
+</section>
+<!-- Section: Clinical History (Critical Content) -->
+<section class="bg-slate-900/50 rounded-3xl overflow-hidden">
+<div class="p-6 flex items-center justify-between border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-dim/30 flex items-center justify-center text-tertiary-fixed">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<h3 class="text-xl font-headline font-bold text-white">Clinical History</h3>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">expand_less</span>
+</div>
+<div class="p-8 space-y-10">
+<div class="space-y-4">
+<label class="text-xs font-bold text-primary tracking-widest uppercase">Primary Concern</label>
+<p class="text-md leading-relaxed text-slate-300 bg-slate-950/40 p-5 rounded-2xl border-l-4 border-primary">
+                                    "Persistent feelings of dissociation and heightened anxiety specifically in social settings. Recently, these episodes have led to intrusive thoughts regarding self-harm as a way to 'feel real' again."
+                                </p>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="text-xs font-bold text-primary tracking-widest uppercase">Previous Therapy</label>
+<div class="flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+<span class="font-medium">Yes (CBT, 2019-2021)</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-primary tracking-widest uppercase">Current Medications</label>
+<div class="flex items-center gap-2 text-white">
+<span class="material-symbols-outlined text-on-surface-variant">medication</span>
+<span class="font-medium">Sertraline (50mg daily)</span>
+</div>
+</div>
+</div>
+<div class="p-6 rounded-2xl bg-error-dim/20 border border-error/20 flex gap-4">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">error</span>
+<div class="space-y-1">
+<h4 class="font-bold text-white">Self-Harm Screening Response</h4>
+<p class="text-sm text-slate-400">Patient indicated "Frequent" thoughts of self-harm in the last 14 days. No immediate plan or intent specified, but requires immediate clinical intervention.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Emergency Contact -->
+<section class="bg-slate-900/50 rounded-3xl overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
+<div class="p-6 flex items-center justify-between border-b border-white/5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined">contact_emergency</span>
+</div>
+<h3 class="text-xl font-headline font-bold text-white">Emergency Contact</h3>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">expand_more</span>
+</div>
+</section>
+</div>
+<!-- Right Column: Context & Metadata -->
+<aside class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Patient Profile Card -->
+<div class="glass-panel p-8 rounded-3xl space-y-6">
+<div class="flex flex-col items-center text-center space-y-4">
+<img alt="Patient Profile" class="w-32 h-32 rounded-[2.5rem] object-cover ring-4 ring-primary/20" data-alt="Close-up portrait of a thoughtful young woman with soft natural lighting and a minimalist aesthetic backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJzQsr8XVkiZOFQWdSB0r9gbJDNiG37qPmJaDTGXiAnYzK7f6J-3ISjnCgqp6B-62GTjIk3av-adgOD2MgiNJV28uILH1w-G-wZaSmdhRDDwdYKZjRudJccT5eAd4HlyR15aZId5YgOH2H6lv7nsbxutPsPcDzttsFWj38VZRuQ9rPeznz5I-APMT9_SQed3x0sQbylFio2xIP32cCin6EkDxJ-L8bEE3k074WwCWWUKakavGvrCEaVcdEYVAnm1v6eH38CouAvcFc"/>
+<div>
+<h3 class="text-2xl font-headline font-bold text-white">Eleanor Vance</h3>
+<p class="text-on-surface-variant">New Patient Application</p>
+</div>
+</div>
+<div class="pt-6 border-t border-white/5 space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-sm text-on-surface-variant">Risk Score</span>
+<span class="px-3 py-1 bg-error-dim/30 text-error-container text-xs font-bold rounded-full">High</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm text-on-surface-variant">Source</span>
+<span class="text-sm font-medium text-white">Referral (Dr. Aris)</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-sm text-on-surface-variant">Waitlist Position</span>
+<span class="text-sm font-medium text-white">Priority #2</span>
+</div>
+</div>
+</div>
+<!-- Clinical Notes / Quick Actions -->
+<div class="bg-slate-900/50 p-8 rounded-3xl space-y-6">
+<h4 class="font-headline font-bold text-white">Clinician Workspace</h4>
+<div class="space-y-4">
+<textarea class="w-full bg-slate-950/50 border border-white/5 rounded-2xl p-4 text-sm text-slate-300 focus:ring-1 focus:ring-primary focus:border-primary placeholder-slate-600 min-h-[120px]" placeholder="Add internal review notes..."></textarea>
+<div class="flex gap-2">
+<button class="flex-1 py-3 rounded-xl border border-white/10 text-white text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">Request Info</button>
+<button class="flex-1 py-3 rounded-xl border border-error/20 text-error text-xs font-bold uppercase tracking-widest hover:bg-error/5 transition-colors">Deny Intake</button>
+</div>
+</div>
+</div>
+<!-- Session Progress Visualization -->
+<div class="bg-slate-900/50 p-8 rounded-3xl space-y-4">
+<div class="flex justify-between items-center">
+<h4 class="font-headline font-bold text-white">Onboarding Flow</h4>
+<span class="text-xs text-primary font-bold">75% Complete</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-3/4"></div>
+</div>
+<p class="text-[11px] text-on-surface-variant">Next step: Assigning Primary Clinician &amp; Insurance Verification</p>
+</div>
+</aside>
+</div>
+</main>
+</div>
+<!-- Mobile NavBar (Responsive Execution) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg z-50 rounded-t-[2.5rem] shadow-[0_-10px_30px_rgba(0,0,0,0.03)] border-t border-slate-800">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[11px] font-semibold">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#b2ecfd] dark:bg-[#195968] text-[#195968] dark:text-[#b2ecfd] rounded-full px-5 py-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">edit_document</span>
+<span class="text-[11px] font-semibold">Intake</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="text-[11px] font-semibold">Inbox</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[11px] font-semibold">Profile</span>
+</a>
+</nav>
+
+  <div id='error-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <div id='success-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <script type="module">
+    import { guardaClinica, obtenerPaciente, crearCita } from '../js/clinica.js'
+    import { mostrarError, setBotonCargando, cerrarSesion } from '../js/auth.js'
+    window._cerrarSesion = cerrarSesion
+    import { supabase }                                   from '../js/supabase-client.js'
+
+    await guardaClinica()
+    const params     = new URLSearchParams(window.location.search)
+    const pacienteId = params.get('paciente')
+
+    if (pacienteId) {
+      try {
+        const p = await obtenerPaciente(pacienteId)
+        document.querySelectorAll('*').forEach(el => {
+          if (el.children.length === 0) {
+            if (el.textContent.includes('Eleanor')) el.textContent = `${p.nombre} ${p.apellido}`
+            if (el.textContent.includes('Ansiedad'))  el.textContent = p.motivo_consulta || '—'
+          }
+        })
+      } catch(e) { mostrarError(e.message) }
+    }
+
+    const btnAceptar = Array.from(document.querySelectorAll('button')).find(b =>
+      b.textContent.toLowerCase().includes('aceptar') || b.textContent.toLowerCase().includes('aprobar') || b.textContent.toLowerCase().includes('asignar'))
+    const btnRechazar = Array.from(document.querySelectorAll('button')).find(b =>
+      b.textContent.toLowerCase().includes('rechazar') || b.textContent.toLowerCase().includes('cancelar'))
+
+    btnAceptar?.addEventListener('click', () => location.href = `modal_nueva_cita.html?paciente=${pacienteId}`)
+    btnRechazar?.addEventListener('click', () => history.back())
+  </script>
+</body></html>

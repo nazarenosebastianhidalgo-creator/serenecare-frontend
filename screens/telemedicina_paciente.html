@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Tu Sesión</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; overflow: hidden; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.5); opacity: 0.1; }
+  }
+  .breathing-circle { animation: breathe 8s infinite ease-in-out; }
+  @keyframes breatheText {
+    0%, 100% { opacity: 1; content: 'Inhala suavemente'; }
+    40%, 60% { opacity: 1; content: 'Exhala lentamente'; }
+  }
+</style>
+</head>
+<body class="text-slate-200 antialiased h-screen selection:bg-teal-500/30">
+
+<!-- TOP BAR (minimal) -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-14" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.06);">
+  <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+      <span class="material-symbols-outlined text-sm" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">psychology</span>
+    </div>
+    <span class="text-sm font-bold text-white font-headline">SereneCare</span>
+    <div class="h-4 w-px bg-slate-800"></div>
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+      <span class="text-xs text-slate-400">Sesión en vivo</span>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.15);">
+      <span class="material-symbols-outlined text-sm" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">verified_user</span>
+      <span class="text-xs font-medium" style="color:#2dd4bf;">Espacio seguro y cifrado</span>
+    </div>
+    <span id="timer-display" class="text-xs font-mono text-slate-400">00:00</span>
+  </div>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<main class="ml-24 pt-14 pb-20 h-screen flex gap-4 pr-4">
+
+  <!-- SESSION ICON SIDEBAR (fixed left) -->
+  <aside class="fixed left-4 top-16 bottom-20 w-16 rounded-2xl flex flex-col items-center py-5 gap-5 z-40" style="background:rgba(10,15,28,0.9);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+    <div class="flex flex-col items-center gap-1 mb-2">
+      <div class="w-9 h-9 rounded-xl overflow-hidden" style="border:2px solid rgba(20,184,166,0.4);">
+        <img alt="Tu terapeuta" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfidB96vHjTPNibyYvcIMW11fKUFlAPb1052Sqs24aqcE5cJ296W8jJIu1ceu2PDW4daMzbFkKc3pbOJtiRIjRf0Cynxp_0PsYfTP2g2Rjo0TemK5CiFwGcBIx46TSHA4e6Zab0Dlqhb5VjDlCLR9Uyeod2HRMqT1SdCMEaqO9Nl8DVYu9VvAIeKlmnp21QWbo9fZjGciKjsPuvH5fCpUBImR4gbS8Js5T6az4LzoSmKfMKmWgFwAhtUxua0-HYW_OVFLH12vynrW_"/>
+      </div>
+      <span class="text-[9px] font-bold uppercase tracking-widest" style="color:#2dd4bf;">Live</span>
+    </div>
+    <nav class="flex flex-col gap-3">
+      <button class="rounded-xl p-2.5 flex flex-col items-center gap-1 transition-all" style="background:rgba(20,184,166,0.15);color:#2dd4bf;">
+        <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">videocam</span>
+        <span class="text-[9px] font-bold">Video</span>
+      </button>
+      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
+        <span class="material-symbols-outlined text-lg">description</span>
+        <span class="text-[9px]">Notas</span>
+      </button>
+      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
+        <span class="material-symbols-outlined text-lg">self_care</span>
+        <span class="text-[9px]">Calma</span>
+      </button>
+      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
+        <span class="material-symbols-outlined text-lg">forum</span>
+        <span class="text-[9px]">Chat</span>
+      </button>
+    </nav>
+    <button id="btn-fin-sidebar" class="mt-auto text-rose-400 hover:bg-rose-500/10 p-2.5 rounded-xl transition-all" title="Salir">
+      <span class="material-symbols-outlined">call_end</span>
+    </button>
+  </aside>
+
+  <!-- VIDEO AREA -->
+  <div class="flex-1 relative rounded-3xl overflow-hidden shadow-2xl" style="background:#0d1117;">
+    <img alt="Video del terapeuta" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDkWTs_M3BE2zA8I0Z7nhgjXLJ2hum33acULwBHw3w9fsCWuFgwaLu-gATQ_Jjk6bjbIIb0fXwGmAE0SIM0zVNJLL6eoPMuSN52eL9JC8YfM5kMYkJs8imz7vilfBaN8tQ1FpbQajweXEcG8K6p7niZHS87NqXXbuzflQaJhyvxhLN1K5igXwNHJL44cmZ-nD2Pi44LjljjP0Q5-YvMmmyYRRohxs92xo2xOAV6YHnXCd31nUrBO8DUqOyhOp3U35FF5qyY9kD-ooieD"/>
+    <!-- Safe space badge -->
+    <div class="absolute top-5 left-5 flex items-center gap-2 px-4 py-2 rounded-full" style="background:rgba(2,6,23,0.5);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);">
+      <span class="material-symbols-outlined text-sm" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">verified_user</span>
+      <span class="text-xs font-medium" style="color:rgba(255,255,255,0.8);">Este es un espacio seguro</span>
+    </div>
+    <!-- Doctor name -->
+    <div class="absolute bottom-5 left-5">
+      <div class="px-4 py-2 rounded-2xl" style="background:rgba(2,6,23,0.7);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">En sesión con</p>
+        <h2 class="text-base font-headline font-bold text-white" id="doctor-nombre">Dra. Ana Martínez</h2>
+      </div>
+    </div>
+    <!-- Patient PiP -->
+    <div class="absolute bottom-5 right-5 w-44 h-28 rounded-2xl overflow-hidden shadow-2xl" style="border:2px solid rgba(255,255,255,0.1);">
+      <img alt="Tu cámara" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPczsA3SkLMnc2Ch2hLS2Ma4kuMqwabRzMg_gEitYcXV7LHLhSNlZ8Hj4eoxv7WFj-jBj0DpDJ1avZkeR16NveAMTf6J334y673Tzo4nrP8hcZxUNNnr1Jgrlvpo1XeewJyCv_kn7xC9Gm0WMFTurvkFcJb6c7fXs4Kx-FWMDZv49rfM6jPgxLJEKnUy1HFYQMyjMtCYgfxNqkgsN_iwajCL9Yy8JvaP3RYSNo6J6VJ7137cm4uRunkK_w4hGbHy-qrSyLrsnGkpWL"/>
+      <div class="absolute bottom-1.5 left-2 flex items-center gap-1">
+        <div class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></div>
+        <span class="text-[9px] text-white/60">Tú</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: Asistente de Calma -->
+  <section class="w-72 flex flex-col gap-3 flex-shrink-0">
+    <!-- Breathing Assistant -->
+    <div class="flex-1 rounded-3xl p-5 flex flex-col" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-headline font-bold text-white flex items-center gap-2 text-sm">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;">psychology</span>
+          Asistente de Calma
+        </h3>
+        <button class="text-slate-500 hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-sm">close</span>
+        </button>
+      </div>
+      <!-- Breathing visualizer -->
+      <div class="flex-1 flex flex-col items-center justify-center relative">
+        <div class="absolute breathing-circle w-32 h-32 bg-teal-500 rounded-full blur-3xl"></div>
+        <div class="w-40 h-40 rounded-full flex items-center justify-center relative z-10" style="border:1px solid rgba(20,184,166,0.2);">
+          <div class="w-28 h-28 rounded-full flex items-center justify-center" style="border:3px solid rgba(20,184,166,0.35);">
+            <div class="w-20 h-20 rounded-full flex items-center justify-center shadow-lg" style="background:linear-gradient(135deg,rgba(20,184,166,0.6),rgba(6,182,212,0.4));">
+              <span class="material-symbols-outlined text-white text-3xl">air</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 text-center">
+          <p id="breath-text" class="font-headline font-bold text-lg" style="color:#2dd4bf;">Inhala suavemente</p>
+          <p class="text-slate-500 text-xs mt-1">Sigue el ritmo del círculo</p>
+        </div>
+      </div>
+      <!-- Calma tools -->
+      <div class="mt-4 space-y-2">
+        <div class="p-3.5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer group" style="background:rgba(255,255,255,0.03);">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="color:#2dd4bf;">spa</span>
+            <div>
+              <p class="text-xs font-bold text-slate-200">Relajación Progresiva</p>
+              <p class="text-[10px] text-slate-500">4 minutos</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-3.5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer group" style="background:rgba(255,255,255,0.03);">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="color:#2dd4bf;">water</span>
+            <div>
+              <p class="text-xs font-bold text-slate-200">Ruido Blanco / Lluvia</p>
+              <p class="text-[10px] text-slate-500">Ajustar volumen</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Session stats -->
+    <div class="rounded-3xl p-4 flex items-center justify-around flex-shrink-0" style="background:rgba(20,184,166,0.05);border:1px solid rgba(20,184,166,0.1);">
+      <div class="text-center">
+        <p class="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Tiempo</p>
+        <p id="stats-timer" class="text-xl font-headline font-bold" style="color:#2dd4bf;">00:00</p>
+      </div>
+      <div class="w-px h-8 bg-slate-800"></div>
+      <div class="text-center">
+        <p class="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Sesión</p>
+        <p class="text-xl font-headline font-bold" style="color:#2dd4bf;">#12</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- BOTTOM CONTROL BAR -->
+<footer class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
+  <div class="px-6 py-3.5 rounded-full flex items-center gap-4" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 40px rgba(0,0,0,0.6);">
+    <button id="btn-mic" class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Micrófono">
+      <span class="material-symbols-outlined text-slate-300">mic</span>
+    </button>
+    <button id="btn-cam" class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Cámara">
+      <span class="material-symbols-outlined text-slate-300">videocam</span>
+    </button>
+    <button class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Compartir pantalla">
+      <span class="material-symbols-outlined text-slate-300">screen_share</span>
+    </button>
+    <div class="w-px h-6 bg-slate-800 mx-1"></div>
+    <button class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Reacción">
+      <span class="material-symbols-outlined text-slate-300">mood</span>
+    </button>
+    <button class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Más opciones">
+      <span class="material-symbols-outlined text-slate-300">more_horiz</span>
+    </button>
+    <button id="btn-finalizar" class="h-11 px-6 rounded-full font-bold text-sm flex items-center gap-2 transition-all ml-2" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);" onmouseover="this.style.background='rgba(239,68,68,0.7)';this.style.color='white'" onmouseout="this.style.background='rgba(239,68,68,0.15)';this.style.color='#f87171'">
+      <span class="material-symbols-outlined">call_end</span>
+      Finalizar
+    </button>
+  </div>
+</footer>
+
+<script>
+// Timer
+var seconds = 0;
+var timerInterval = setInterval(function() {
+  seconds++;
+  var m = String(Math.floor(seconds / 60)).padStart(2, '0');
+  var s = String(seconds % 60).padStart(2, '0');
+  var t = m + ':' + s;
+  var d1 = document.getElementById('timer-display');
+  var d2 = document.getElementById('stats-timer');
+  if (d1) d1.textContent = t;
+  if (d2) d2.textContent = t;
+}, 1000);
+
+// Breathing text alternation
+var breathPhases = ['Inhala suavemente', 'Retén el aire...', 'Exhala lentamente', 'Descansa...'];
+var phaseIdx = 0;
+setInterval(function() {
+  phaseIdx = (phaseIdx + 1) % breathPhases.length;
+  var el = document.getElementById('breath-text');
+  if (el) el.textContent = breathPhases[phaseIdx];
+}, 4000);
+
+// Doctor name from URL params
+var params = new URLSearchParams(window.location.search);
+var doc = params.get('psicologo');
+if (doc) {
+  var el = document.getElementById('doctor-nombre');
+  if (el) el.textContent = 'Dr/a. ' + doc;
+}
+
+// Mic / Cam toggle
+document.getElementById('btn-mic').addEventListener('click', function() {
+  var icon = this.querySelector('.material-symbols-outlined');
+  var muted = icon.textContent === 'mic_off';
+  icon.textContent = muted ? 'mic' : 'mic_off';
+  this.style.background = muted ? 'rgba(255,255,255,0.06)' : 'rgba(239,68,68,0.2)';
+  icon.style.color = muted ? '' : '#f87171';
+});
+document.getElementById('btn-cam').addEventListener('click', function() {
+  var icon = this.querySelector('.material-symbols-outlined');
+  var off = icon.textContent === 'videocam_off';
+  icon.textContent = off ? 'videocam' : 'videocam_off';
+  this.style.background = off ? 'rgba(255,255,255,0.06)' : 'rgba(239,68,68,0.2)';
+  icon.style.color = off ? '' : '#f87171';
+});
+
+// Finalizar
+function finalizarSesion() {
+  if (confirm('¿Terminar la sesión de video?')) {
+    clearInterval(timerInterval);
+    window.location.href = 'feedback_sesion.html';
+  }
+}
+document.getElementById('btn-finalizar').addEventListener('click', finalizarSesion);
+document.getElementById('btn-fin-sidebar').addEventListener('click', finalizarSesion);
+</script>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { verificarSesion } from '../js/auth.js'
+const perfil = await verificarSesion(['paciente'])
+if (!perfil) return
+const params = new URLSearchParams(window.location.search)
+const citaId = params.get('cita')
+if (citaId) {
+  const { data: cita } = await supabase.from('citas')
+    .select('id, fecha, hora_inicio, sala_video_url, usuarios(nombre, apellido)')
+    .eq('id', citaId).single()
+  if (cita) {
+    const dn = document.getElementById('doctor-nombre')
+    if (dn && cita.usuarios) dn.textContent = 'Dr/a. ' + (cita.usuarios.nombre || '') + ' ' + (cita.usuarios.apellido || '')
+    if (cita.sala_video_url) {
+      const iframe = document.querySelector('iframe[id], iframe[src]')
+      if (iframe) iframe.src = cita.sala_video_url
+    }
+  }
+}
+</script>
+</body>
+</html>

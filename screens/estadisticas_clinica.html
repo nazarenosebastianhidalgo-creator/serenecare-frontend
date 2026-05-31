@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Estadísticas</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+
+  /* Bar chart */
+  .bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; gap: 6px; cursor: pointer; }
+  .bar-fill { width: 100%; border-radius: 5px 5px 0 0; transition: height 0.5s cubic-bezier(0.34,1.56,0.64,1); position: relative; }
+  .bar-fill:hover { filter: brightness(1.3); }
+  .bar-fill .tooltip {
+    display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+    background: #1e293b; border: 1px solid rgba(255,255,255,0.12); color: #f1f5f9;
+    padding: 5px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; z-index: 10;
+  }
+  .bar-fill:hover .tooltip { display: block; }
+
+  /* Line chart canvas */
+  #canvas-line { display: block; }
+
+  /* Progress bar animated */
+  .prog-fill { height: 100%; border-radius: 99px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); width: 0; }
+
+  /* KPI delta badge */
+  .delta-pos { background: rgba(20,184,166,0.1); color: #2dd4bf; }
+  .delta-neg { background: rgba(239,68,68,0.1); color: #f87171; }
+  .delta-neu { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+  /* Tab active */
+  .chart-tab { padding: 5px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #64748b; }
+  .chart-tab.active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
+  .chart-tab:not(.active):hover { color: #94a3b8; background: rgba(255,255,255,0.04); }
+
+  /* Terapeuta row */
+  .terapeuta-row { padding: 10px 12px; border-radius: 12px; cursor: pointer; transition: background 0.15s; }
+  .terapeuta-row:hover { background: rgba(255,255,255,0.04); }
+  .terapeuta-row.selected { background: rgba(255,255,255,0.06); }
+
+  /* Donut */
+  #donut-svg { display: block; }
+
+  /* Número animado */
+  @keyframes countUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .kpi-val { animation: countUp 0.4s ease forwards; }
+
+  /* Scroll suave */
+  .scroll-x { overflow-x: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<!-- Sidebar -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] text-teal-500 font-bold uppercase tracking-widest">Admin Portal</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_admin_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="pacientes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Pacientes</span>
+    </a>
+    <a href="agenda_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Agenda</span>
+    </a>
+
+    <a href="mensajes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="facturacion.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">receipt_long</span><span>Facturación</span>
+    </a>
+    
+  </nav>
+  <div id="demo-badge" class="hidden mb-3 px-3 py-2 rounded-xl text-center" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Modo Demo</p>
+  </div>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user-card" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">AC</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Admin</p>
+        <p class="text-[10px] text-slate-500">Admin Clínica</p>
+      </div>
+      <span id="chevron-user" class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="pl-64 min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 flex items-center justify-between px-8 py-4 border-b border-slate-800/50" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(12px);">
+    <div>
+      <h1 class="text-xl font-bold text-white font-headline">Estadísticas</h1>
+      <p class="text-xs text-slate-500 mt-0.5" id="header-sub">Métricas clínicas Â· Mayo 2026</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="setPeriodo('semana')" id="btn-semana" class="chart-tab">Semana</button>
+      <button onclick="setPeriodo('mes')"    id="btn-mes"    class="chart-tab active">Mes</button>
+      <button onclick="setPeriodo('trim')"   id="btn-trim"   class="chart-tab">Trimestre</button>
+      <button onclick="setPeriodo('anio')"   id="btn-anio"   class="chart-tab">Año</button>
+      <div style="width:1px;height:20px;background:rgba(255,255,255,0.1);margin:0 4px;"></div>
+      <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
+      <button id="btn-notif-est" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400">notifications</span>
+        <span id="notif-dot-est" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notificaciones dropdown -->
+  <div id="notif-panel-est" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
+      <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
+      <button id="btn-marcar-est" class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+    </div>
+    <div id="notif-list-est" class="max-h-72 overflow-y-auto"></div>
+    <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+      <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones â†’</a>
+    </div>
+  </div>
+
+  <div class="p-8">
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-4 gap-4 mb-7">
+      <div class="card rounded-2xl p-5 cursor-pointer hover:border-teal-500/30 transition-colors" onclick="resaltarChart('barras')">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(20,184,166,0.12);">
+            <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;">event_available</span>
+          </div>
+          <span id="delta-citas" class="text-xs font-bold px-2 py-0.5 rounded-full delta-pos">+8%</span>
+        </div>
+        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-citas">186</p>
+        <p class="text-xs text-slate-500 mt-1">Citas completadas</p>
+      </div>
+      <div class="card rounded-2xl p-5 cursor-pointer hover:border-indigo-500/30 transition-colors" onclick="resaltarChart('terapeutas')">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(99,102,241,0.12);">
+            <span class="material-symbols-outlined text-lg" style="color:#818cf8;">person_add</span>
+          </div>
+          <span id="delta-pac" class="text-xs font-bold px-2 py-0.5 rounded-full delta-pos">+15%</span>
+        </div>
+        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-pac">12</p>
+        <p class="text-xs text-slate-500 mt-1">Nuevos pacientes</p>
+      </div>
+      <div class="card rounded-2xl p-5 cursor-pointer hover:border-purple-500/30 transition-colors" onclick="resaltarChart('donut')">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,0.12);">
+            <span class="material-symbols-outlined text-lg" style="color:#a78bfa;">star</span>
+          </div>
+          <span id="delta-sat" class="text-xs font-bold px-2 py-0.5 rounded-full delta-pos">+0.2</span>
+        </div>
+        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-sat">4.7</p>
+        <p class="text-xs text-slate-500 mt-1">Satisfacción media</p>
+      </div>
+      <div class="card rounded-2xl p-5 cursor-pointer hover:border-amber-500/30 transition-colors" onclick="resaltarChart('horarios')">
+        <div class="flex items-center justify-between mb-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(245,158,11,0.12);">
+            <span class="material-symbols-outlined text-lg" style="color:#fbbf24;">event_busy</span>
+          </div>
+          <span id="delta-canc" class="text-xs font-bold px-2 py-0.5 rounded-full delta-neg">+2%</span>
+        </div>
+        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-canc">7%</p>
+        <p class="text-xs text-slate-500 mt-1">Tasa cancelación</p>
+      </div>
+    </div>
+
+    <!-- Fila 1: Barras + Terapeutas -->
+    <div class="grid grid-cols-5 gap-6 mb-6">
+
+      <!-- Gráfico barras principal -->
+      <div class="card rounded-2xl p-6 col-span-3" id="card-barras">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="text-sm font-bold text-white font-headline" id="chart-main-title">Citas completadas por semana</h3>
+            <p class="text-xs text-slate-500 mt-0.5" id="chart-main-sub">Mayo 2026</p>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="setChartView('barras')" id="view-barras" class="chart-tab active">Barras</button>
+            <button onclick="setChartView('linea')"  id="view-linea"  class="chart-tab">Línea</button>
+          </div>
+        </div>
+        <!-- Bar chart -->
+        <div id="wrap-barras" class="flex items-end gap-2 px-2" style="height:160px;"></div>
+        <!-- Line chart -->
+        <div id="wrap-linea" class="hidden" style="height:160px;">
+          <canvas id="canvas-line" style="width:100%;height:160px;"></canvas>
+        </div>
+        <!-- Eje X -->
+        <div id="chart-eje-x" class="flex justify-around mt-2 px-2"></div>
+      </div>
+
+      <!-- Terapeutas -->
+      <div class="card rounded-2xl p-6 col-span-2" id="card-terapeutas">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-bold text-white font-headline">Citas por terapeuta</h3>
+          <span class="text-xs text-slate-500" id="teraps-sub">Este mes</span>
+        </div>
+        <div id="chart-terapeutas" class="space-y-1"></div>
+        <!-- Detalle terapeuta -->
+        <div id="detalle-terapeuta" class="hidden mt-4 pt-4 border-t border-slate-800/40">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Detalle</p>
+          <div id="detalle-body" class="space-y-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 2: Donut + Pacientes + Horarios -->
+    <div class="grid grid-cols-3 gap-6">
+
+      <!-- Donut tipos sesión -->
+      <div class="card rounded-2xl p-6" id="card-donut">
+        <h3 class="text-sm font-bold text-white font-headline mb-4">Tipos de sesión</h3>
+        <div class="flex items-center gap-5">
+          <div class="flex-shrink-0" style="position:relative;width:120px;height:120px;">
+            <svg id="donut-svg" width="120" height="120" viewBox="0 0 120 120"></svg>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+              <p class="text-xl font-bold text-white font-headline" id="donut-center-val">186</p>
+              <p class="text-[9px] text-slate-500 uppercase tracking-widest">sesiones</p>
+            </div>
+          </div>
+          <div class="flex-1 space-y-2" id="donut-leyenda"></div>
+        </div>
+      </div>
+
+      <!-- Evolución pacientes activos -->
+      <div class="card rounded-2xl p-6" id="card-evolucion">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-bold text-white font-headline">Pacientes activos</h3>
+          <span class="text-xs font-bold" style="color:#818cf8;" id="evol-total">48 activos</span>
+        </div>
+        <div class="flex items-end gap-1.5 px-1" style="height:100px;" id="chart-evolucion"></div>
+        <div class="flex justify-between mt-2 px-1" id="evol-labels"></div>
+        <!-- Mini tabla detalle -->
+        <div class="mt-4 pt-3 border-t border-slate-800/40">
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div><p class="text-lg font-bold text-white font-headline" id="evol-altas">12</p><p class="text-[10px] text-slate-500">Altas</p></div>
+            <div><p class="text-lg font-bold text-white font-headline" id="evol-espera">6</p><p class="text-[10px] text-slate-500">En espera</p></div>
+            <div><p class="text-lg font-bold text-white font-headline" id="evol-alta">4</p><p class="text-[10px] text-slate-500">Alta clínica</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Horarios pico -->
+      <div class="card rounded-2xl p-6" id="card-horarios">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-bold text-white font-headline">Horarios más ocupados</h3>
+          <span class="text-xs text-slate-500">Clic para ver día</span>
+        </div>
+        <div id="horarios-pico" class="space-y-2.5"></div>
+        <!-- Días semana -->
+        <div class="mt-4 pt-3 border-t border-slate-800/40">
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Ocupación por día</p>
+          <div class="flex gap-1" id="dias-semana"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Fila 3: Tabla top pacientes con más sesiones -->
+    <div class="card rounded-2xl p-6 mt-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-sm font-bold text-white font-headline">Pacientes con mayor actividad</h3>
+        <span class="text-xs text-slate-500" id="tabla-periodo-label">Este mes</span>
+      </div>
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-slate-800/50">
+            <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">#</th>
+            <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Paciente</th>
+            <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Terapeuta</th>
+            <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Sesiones</th>
+            <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Asistencia</th>
+            <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Satisfacción</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-top"></tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<!-- Tooltip flotante global -->
+<div id="tooltip-global" class="hidden fixed pointer-events-none z-50 px-3 py-2 rounded-xl text-xs font-semibold text-white" style="background:#1e293b;border:1px solid rgba(255,255,255,0.12);"></div>
+
+<script>
+/* ============================================================
+   DATOS POR PERÍODO
+   ============================================================ */
+var PERIODOS = {
+  semana: {
+    label: 'Semana del 5â€“11 mayo 2026',
+    sub:   'Semana actual',
+    kpi: { citas:47, pac:3, sat:4.8, canc:'5%', dCitas:'+3%', dPac:'+0', dSat:'+0.1', dCanc:'-1%', dCancNeg:false },
+    barras: {
+      title: 'Citas por día',
+      items: [
+        {l:'Lun',v:8},{l:'Mar',v:10},{l:'Mié',v:9},{l:'Jue',v:12},{l:'Vie',v:8},{l:'Sáb',v:0},{l:'Dom',v:0}
+      ]
+    },
+    terapeutas: [
+      {nombre:'Ana Martínez',  citas:18, color:'#2dd4bf', detalle:{individual:14,pareja:3,grupo:1}},
+      {nombre:'Pedro Sánchez', citas:15, color:'#818cf8', detalle:{individual:12,pareja:2,grupo:1}},
+      {nombre:'Sofía Ruiz',    citas:10, color:'#a78bfa', detalle:{individual:8,pareja:2,grupo:0}},
+      {nombre:'Isabel López',  citas:4,  color:'#fbbf24', detalle:{individual:3,pareja:1,grupo:0}},
+    ],
+    tipos: [{t:'Individual',n:35,c:'#2dd4bf'},{t:'Pareja',n:8,c:'#818cf8'},{t:'Grupo',n:3,c:'#a78bfa'},{t:'Evaluación',n:1,c:'#fbbf24'}],
+    evolucion: [{m:'S-5',v:44},{m:'S-4',v:45},{m:'S-3',v:46},{m:'S-2',v:45},{m:'S-1',v:47},{m:'Actual',v:47}],
+    evolStats: {altas:3, espera:2, alta:1},
+    horarios: [
+      {hora:'09â€“11h', pct:75, citas:18},{hora:'11â€“13h', pct:62, citas:14},{hora:'16â€“18h', pct:92, citas:22},
+      {hora:'18â€“20h', pct:55, citas:13},{hora:'13â€“16h', pct:28, citas:6},
+    ],
+    dias: [{d:'L',pct:72},{d:'M',pct:85},{d:'X',pct:78},{d:'J',pct:95},{d:'V',pct:68},{d:'S',pct:0},{d:'D',pct:0}],
+    tabla: [
+      {pac:'Laura Gómez',terapeuta:'Ana Martínez',ses:4,asis:'100%',sat:5.0},
+      {pac:'Carlos Mendoza',terapeuta:'Pedro Sánchez',ses:3,asis:'100%',sat:4.8},
+      {pac:'Marta Pérez',terapeuta:'Sofía Ruiz',ses:3,asis:'67%',sat:4.5},
+      {pac:'Juan Torres',terapeuta:'Ana Martínez',ses:2,asis:'100%',sat:4.9},
+      {pac:'Elena Ruiz',terapeuta:'Isabel López',ses:2,asis:'100%',sat:4.7},
+    ]
+  },
+  mes: {
+    label: 'Mayo 2026',
+    sub:   'Este mes',
+    kpi: { citas:186, pac:12, sat:4.7, canc:'7%', dCitas:'+8%', dPac:'+15%', dSat:'+0.2', dCanc:'+2%', dCancNeg:true },
+    barras: {
+      title: 'Citas por semana',
+      items: [{l:'S1',v:38},{l:'S2',v:52},{l:'S3',v:45},{l:'S4',v:51}]
+    },
+    terapeutas: [
+      {nombre:'Ana Martínez',  citas:62, color:'#2dd4bf', detalle:{individual:48,pareja:10,grupo:4}},
+      {nombre:'Pedro Sánchez', citas:54, color:'#818cf8', detalle:{individual:42,pareja:8,grupo:4}},
+      {nombre:'Sofía Ruiz',    citas:48, color:'#a78bfa', detalle:{individual:38,pareja:7,grupo:3}},
+      {nombre:'Isabel López',  citas:22, color:'#fbbf24', detalle:{individual:16,pareja:4,grupo:2}},
+    ],
+    tipos: [{t:'Individual',n:134,c:'#2dd4bf'},{t:'Pareja',n:33,c:'#818cf8'},{t:'Grupo',n:13,c:'#a78bfa'},{t:'Evaluación',n:6,c:'#fbbf24'}],
+    evolucion: [{m:'Dic',v:34},{m:'Ene',v:36},{m:'Feb',v:39},{m:'Mar',v:41},{m:'Abr',v:45},{m:'May',v:48}],
+    evolStats: {altas:12, espera:6, alta:4},
+    horarios: [
+      {hora:'09â€“11h', pct:88, citas:72},{hora:'11â€“13h', pct:70, citas:58},{hora:'16â€“18h', pct:95, citas:78},
+      {hora:'18â€“20h', pct:60, citas:50},{hora:'13â€“16h', pct:30, citas:25},
+    ],
+    dias: [{d:'L',pct:80},{d:'M',pct:88},{d:'X',pct:76},{d:'J',pct:92},{d:'V',pct:72},{d:'S',pct:35},{d:'D',pct:0}],
+    tabla: [
+      {pac:'Laura Gómez',     terapeuta:'Ana Martínez',  ses:16, asis:'94%', sat:5.0},
+      {pac:'Carlos Mendoza',  terapeuta:'Pedro Sánchez', ses:14, asis:'100%',sat:4.8},
+      {pac:'Marta Pérez',     terapeuta:'Sofía Ruiz',    ses:13, asis:'85%', sat:4.6},
+      {pac:'Juan Torres',     terapeuta:'Ana Martínez',  ses:12, asis:'92%', sat:4.9},
+      {pac:'Elena Ruiz',      terapeuta:'Isabel López',  ses:10, asis:'100%',sat:4.7},
+      {pac:'Andrés Vega',     terapeuta:'Pedro Sánchez', ses:9,  asis:'89%', sat:4.5},
+      {pac:'Sofía Castro',    terapeuta:'Sofía Ruiz',    ses:8,  asis:'100%',sat:4.8},
+    ]
+  },
+  trim: {
+    label: 'Mar â€“ May 2026',
+    sub:   'Este trimestre',
+    kpi: { citas:521, pac:31, sat:4.6, canc:'8%', dCitas:'+11%', dPac:'+22%', dSat:'+0.1', dCanc:'+1%', dCancNeg:true },
+    barras: {
+      title: 'Citas por mes',
+      items: [{l:'Mar',v:165},{l:'Abr',v:170},{l:'May',v:186}]
+    },
+    terapeutas: [
+      {nombre:'Ana Martínez',  citas:178, color:'#2dd4bf', detalle:{individual:138,pareja:28,grupo:12}},
+      {nombre:'Pedro Sánchez', citas:152, color:'#818cf8', detalle:{individual:118,pareja:24,grupo:10}},
+      {nombre:'Sofía Ruiz',    citas:131, color:'#a78bfa', detalle:{individual:102,pareja:20,grupo:9}},
+      {nombre:'Isabel López',  citas:60,  color:'#fbbf24', detalle:{individual:46,pareja:10,grupo:4}},
+    ],
+    tipos: [{t:'Individual',n:375,c:'#2dd4bf'},{t:'Pareja',n:98,c:'#818cf8'},{t:'Grupo',n:36,c:'#a78bfa'},{t:'Evaluación',n:12,c:'#fbbf24'}],
+    evolucion: [{m:'Oct',v:29},{m:'Nov',v:31},{m:'Dic',v:34},{m:'Ene',v:36},{m:'Feb',v:39},{m:'Mar',v:41},{m:'Abr',v:45},{m:'May',v:48}],
+    evolStats: {altas:31, espera:10, alta:8},
+    horarios: [
+      {hora:'09â€“11h', pct:84, citas:210},{hora:'11â€“13h', pct:68, citas:170},{hora:'16â€“18h', pct:97, citas:240},
+      {hora:'18â€“20h', pct:58, citas:145},{hora:'13â€“16h', pct:32, citas:80},
+    ],
+    dias: [{d:'L',pct:82},{d:'M',pct:90},{d:'X',pct:78},{d:'J',pct:94},{d:'V',pct:74},{d:'S',pct:40},{d:'D',pct:5}],
+    tabla: [
+      {pac:'Laura Gómez',    terapeuta:'Ana Martínez',  ses:42, asis:'93%', sat:5.0},
+      {pac:'Carlos Mendoza', terapeuta:'Pedro Sánchez', ses:38, asis:'97%', sat:4.8},
+      {pac:'Marta Pérez',    terapeuta:'Sofía Ruiz',    ses:36, asis:'83%', sat:4.6},
+      {pac:'Juan Torres',    terapeuta:'Ana Martínez',  ses:34, asis:'94%', sat:4.9},
+      {pac:'Elena Ruiz',     terapeuta:'Isabel López',  ses:28, asis:'100%',sat:4.7},
+    ]
+  },
+  anio: {
+    label: 'Enero â€“ Mayo 2026',
+    sub:   'Este año',
+    kpi: { citas:892, pac:58, sat:4.5, canc:'9%', dCitas:'+18%', dPac:'+32%', dSat:'+0.3', dCanc:'+1%', dCancNeg:true },
+    barras: {
+      title: 'Citas por mes (2026)',
+      items: [{l:'Ene',v:162},{l:'Feb',v:168},{l:'Mar',v:165},{l:'Abr',v:170},{l:'May',v:186}]
+    },
+    terapeutas: [
+      {nombre:'Ana Martínez',  citas:295, color:'#2dd4bf', detalle:{individual:230,pareja:46,grupo:19}},
+      {nombre:'Pedro Sánchez', citas:258, color:'#818cf8', detalle:{individual:200,pareja:40,grupo:18}},
+      {nombre:'Sofía Ruiz',    citas:218, color:'#a78bfa', detalle:{individual:170,pareja:34,grupo:14}},
+      {nombre:'Isabel López',  citas:121, color:'#fbbf24', detalle:{individual:94,pareja:20,grupo:7}},
+    ],
+    tipos: [{t:'Individual',n:625,c:'#2dd4bf'},{t:'Pareja',n:168,c:'#818cf8'},{t:'Grupo',n:70,c:'#a78bfa'},{t:'Evaluación',n:29,c:'#fbbf24'}],
+    evolucion: [{m:'Ene',v:36},{m:'Feb',v:39},{m:'Mar',v:41},{m:'Abr',v:45},{m:'May',v:48}],
+    evolStats: {altas:58, espera:12, alta:15},
+    horarios: [
+      {hora:'09â€“11h', pct:82, citas:338},{hora:'11â€“13h', pct:66, citas:272},{hora:'16â€“18h', pct:96, citas:394},
+      {hora:'18â€“20h', pct:57, citas:234},{hora:'13â€“16h', pct:34, citas:140},
+    ],
+    dias: [{d:'L',pct:83},{d:'M',pct:91},{d:'X',pct:80},{d:'J',pct:95},{d:'V',pct:75},{d:'S',pct:42},{d:'D',pct:6}],
+    tabla: [
+      {pac:'Laura Gómez',    terapeuta:'Ana Martínez',  ses:68, asis:'91%', sat:5.0},
+      {pac:'Carlos Mendoza', terapeuta:'Pedro Sánchez', ses:62, asis:'95%', sat:4.8},
+      {pac:'Marta Pérez',    terapeuta:'Sofía Ruiz',    ses:58, asis:'82%', sat:4.6},
+      {pac:'Juan Torres',    terapeuta:'Ana Martínez',  ses:55, asis:'93%', sat:4.9},
+      {pac:'Elena Ruiz',     terapeuta:'Isabel López',  ses:48, asis:'98%', sat:4.7},
+      {pac:'Andrés Vega',    terapeuta:'Pedro Sánchez', ses:44, asis:'89%', sat:4.5},
+    ]
+  }
+};
+
+var periodoActual = 'mes';
+var chartView = 'barras';
+var selectedTerapeuta = null;
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function animarNumero(el, destino, esDecimal) {
+  var start = 0;
+  var dur = 500;
+  var t0 = performance.now();
+  function step(t) {
+    var prog = Math.min((t - t0) / dur, 1);
+    var ease = 1 - Math.pow(1 - prog, 3);
+    var val = start + (destino - start) * ease;
+    el.textContent = esDecimal ? val.toFixed(1) : Math.round(val).toString();
+    if (prog < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function deltaBadgeClass(neg) {
+  return neg ? 'delta-neg' : 'delta-pos';
+}
+
+/* ============================================================
+   RENDER KPIs
+   ============================================================ */
+function renderKPIs(d) {
+  var kpi = d.kpi;
+
+  // Citas
+  var elCitas = document.getElementById('kpi-citas');
+  animarNumero(elCitas, parseInt(kpi.citas), false);
+  var bCitas = document.getElementById('delta-citas');
+  bCitas.textContent = kpi.dCitas;
+  bCitas.className = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (kpi.dCitas.startsWith('-') ? 'delta-neg' : 'delta-pos');
+
+  // Pacientes
+  var elPac = document.getElementById('kpi-pac');
+  animarNumero(elPac, parseInt(kpi.pac), false);
+  var bPac = document.getElementById('delta-pac');
+  bPac.textContent = kpi.dPac;
+  bPac.className = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (kpi.dPac.startsWith('-') ? 'delta-neg' : 'delta-pos');
+
+  // Satisfacción
+  var elSat = document.getElementById('kpi-sat');
+  animarNumero(elSat, parseFloat(kpi.sat), true);
+  var bSat = document.getElementById('delta-sat');
+  bSat.textContent = kpi.dSat;
+  bSat.className = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (kpi.dSat.startsWith('-') ? 'delta-neg' : 'delta-pos');
+
+  // Cancelación
+  document.getElementById('kpi-canc').textContent = kpi.canc;
+  var bCanc = document.getElementById('delta-canc');
+  bCanc.textContent = kpi.dCanc;
+  bCanc.className = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (kpi.dCancNeg ? 'delta-neg' : 'delta-pos');
+}
+
+/* ============================================================
+   RENDER BARRAS
+   ============================================================ */
+function renderBarras(d) {
+  var items = d.barras.items;
+  document.getElementById('chart-main-title').textContent = d.barras.title;
+  document.getElementById('chart-main-sub').textContent = d.label;
+
+  var maxV = Math.max.apply(null, items.map(function(i){ return i.v; }));
+  var wrap = document.getElementById('wrap-barras');
+  wrap.innerHTML = '';
+
+  items.forEach(function(item) {
+    var pct = maxV > 0 ? (item.v / maxV * 100) : 0;
+    var col = document.createElement('div');
+    col.className = 'bar-col';
+    col.style.height = '160px';
+    col.style.justifyContent = 'flex-end';
+
+    var fill = document.createElement('div');
+    fill.className = 'bar-fill';
+    fill.style.height = '0px';
+    fill.style.background = 'rgba(20,184,166,0.3)';
+    fill.style.border = '1px solid rgba(20,184,166,0.4)';
+    fill.innerHTML = '<div class="tooltip">' + item.v + ' citas</div>';
+
+    // Animación de entrada
+    setTimeout(function(p, f) {
+      return function() {
+        f.style.height = (p * 1.52) + 'px'; // 160px * pct/100
+      };
+    }(pct, fill), 50);
+
+    col.appendChild(fill);
+    wrap.appendChild(col);
+  });
+
+  // Eje X
+  document.getElementById('chart-eje-x').innerHTML = items.map(function(i) {
+    return '<span class="text-[11px] text-slate-500 flex-1 text-center">' + i.l + '</span>';
+  }).join('');
+}
+
+/* ============================================================
+   RENDER LÍNEA (canvas)
+   ============================================================ */
+function renderLinea(d) {
+  var items = d.barras.items;
+  var canvas = document.getElementById('canvas-line');
+  var W = canvas.parentElement.offsetWidth;
+  var H = 160;
+  canvas.width = W;
+  canvas.height = H;
+  var ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+
+  var maxV = Math.max.apply(null, items.map(function(i){ return i.v; })) * 1.1;
+  var pad = 20;
+  var pts = items.map(function(item, idx) {
+    return {
+      x: pad + (idx / (items.length - 1 || 1)) * (W - pad * 2),
+      y: H - pad - (item.v / maxV) * (H - pad * 2)
+    };
+  });
+
+  // Área rellena
+  var grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, 'rgba(20,184,166,0.25)');
+  grad.addColorStop(1, 'rgba(20,184,166,0)');
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, H - pad);
+  pts.forEach(function(p) { ctx.lineTo(p.x, p.y); });
+  ctx.lineTo(pts[pts.length-1].x, H - pad);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Línea
+  ctx.beginPath();
+  pts.forEach(function(p, i) { i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); });
+  ctx.strokeStyle = '#2dd4bf';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Puntos
+  pts.forEach(function(p, i) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#2dd4bf';
+    ctx.fill();
+    ctx.strokeStyle = '#020617';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+
+  // Eje X
+  document.getElementById('chart-eje-x').innerHTML = items.map(function(i) {
+    return '<span class="text-[11px] text-slate-500 flex-1 text-center">' + i.l + '</span>';
+  }).join('');
+
+  // Hover en canvas
+  canvas.onmousemove = function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var closest = null, minDist = 999;
+    pts.forEach(function(p, i) {
+      var dist = Math.abs(mx - p.x);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    if (closest !== null && minDist < 40) {
+      showTooltip(e, items[closest].l + ': ' + items[closest].v + ' citas');
+    } else {
+      hideTooltip();
+    }
+  };
+  canvas.onmouseleave = hideTooltip;
+}
+
+/* ============================================================
+   RENDER TERAPEUTAS
+   ============================================================ */
+function renderTerapeutas(d) {
+  var items = d.terapeutas;
+  var maxC = Math.max.apply(null, items.map(function(t){ return t.citas; }));
+  document.getElementById('teraps-sub').textContent = d.sub;
+
+  document.getElementById('chart-terapeutas').innerHTML = items.map(function(t, idx) {
+    var pct = Math.round(t.citas / maxC * 100);
+    return '<div class="terapeuta-row' + (selectedTerapeuta === idx ? ' selected' : '') + '" onclick="clickTerapeuta(' + idx + ')" data-idx="' + idx + '">' +
+      '<div class="flex justify-between mb-1.5">' +
+        '<span class="text-sm text-slate-300 flex items-center gap-2">' +
+          '<span class="w-2 h-2 rounded-full flex-shrink-0" style="background:' + t.color + ';"></span>' + t.nombre +
+        '</span>' +
+        '<span class="text-sm font-bold text-white">' + t.citas + '</span>' +
+      '</div>' +
+      '<div class="w-full rounded-full h-1.5" style="background:rgba(255,255,255,0.06);">' +
+        '<div class="prog-fill" style="background:' + t.color + ';" data-pct="' + pct + '"></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Animar barras
+  setTimeout(function() {
+    document.querySelectorAll('#chart-terapeutas .prog-fill').forEach(function(el) {
+      el.style.width = el.getAttribute('data-pct') + '%';
+    });
+  }, 50);
+
+  // Actualizar detalle si hay selección
+  if (selectedTerapeuta !== null && items[selectedTerapeuta]) {
+    renderDetalleTerapeuta(items[selectedTerapeuta]);
+  } else {
+    document.getElementById('detalle-terapeuta').classList.add('hidden');
+  }
+}
+
+function clickTerapeuta(idx) {
+  var d = PERIODOS[periodoActual];
+  if (selectedTerapeuta === idx) {
+    selectedTerapeuta = null;
+    document.getElementById('detalle-terapeuta').classList.add('hidden');
+  } else {
+    selectedTerapeuta = idx;
+    renderDetalleTerapeuta(d.terapeutas[idx]);
+  }
+  // Redibujar filas para marcar selección
+  document.querySelectorAll('.terapeuta-row').forEach(function(row, i) {
+    row.classList.toggle('selected', i === selectedTerapeuta);
+  });
+}
+
+function renderDetalleTerapeuta(t) {
+  var det = t.detalle;
+  document.getElementById('detalle-terapeuta').classList.remove('hidden');
+  document.getElementById('detalle-body').innerHTML =
+    '<div class="flex justify-between text-xs py-1"><span class="text-slate-400">Individuales</span><span class="font-bold text-white">' + det.individual + '</span></div>' +
+    '<div class="flex justify-between text-xs py-1"><span class="text-slate-400">Pareja</span><span class="font-bold text-white">' + det.pareja + '</span></div>' +
+    '<div class="flex justify-between text-xs py-1"><span class="text-slate-400">Grupo</span><span class="font-bold text-white">' + det.grupo + '</span></div>';
+}
+
+/* ============================================================
+   RENDER DONUT
+   ============================================================ */
+function renderDonut(d) {
+  var tipos = d.tipos;
+  var total = tipos.reduce(function(s, t){ return s + t.n; }, 0);
+  document.getElementById('donut-center-val').textContent = total;
+
+  var svg = document.getElementById('donut-svg');
+  svg.innerHTML = '';
+  var cx = 60, cy = 60, R = 48, r = 30;
+  var startAngle = -Math.PI / 2;
+
+  tipos.forEach(function(t) {
+    var slice = (t.n / total) * Math.PI * 2;
+    var end = startAngle + slice;
+    var x1 = cx + R * Math.cos(startAngle);
+    var y1 = cy + R * Math.sin(startAngle);
+    var x2 = cx + R * Math.cos(end);
+    var y2 = cy + R * Math.sin(end);
+    var ix1 = cx + r * Math.cos(startAngle);
+    var iy1 = cy + r * Math.sin(startAngle);
+    var ix2 = cx + r * Math.cos(end);
+    var iy2 = cy + r * Math.sin(end);
+    var large = slice > Math.PI ? 1 : 0;
+
+    var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    var d2 = 'M ' + x1 + ' ' + y1 +
+             ' A ' + R + ' ' + R + ' 0 ' + large + ' 1 ' + x2 + ' ' + y2 +
+             ' L ' + ix2 + ' ' + iy2 +
+             ' A ' + r + ' ' + r + ' 0 ' + large + ' 0 ' + ix1 + ' ' + iy1 + ' Z';
+    path.setAttribute('d', d2);
+    path.setAttribute('fill', t.c);
+    path.setAttribute('opacity', '0.85');
+    path.style.cursor = 'pointer';
+    path.style.transition = 'opacity 0.2s';
+    path.addEventListener('mouseenter', function(e) {
+      this.setAttribute('opacity', '1');
+      showTooltip(e, t.t + ': ' + t.n + ' (' + Math.round(t.n/total*100) + '%)');
+    });
+    path.addEventListener('mouseleave', function() {
+      this.setAttribute('opacity', '0.85');
+      hideTooltip();
+    });
+    svg.appendChild(path);
+    startAngle = end;
+  });
+
+  // Leyenda
+  document.getElementById('donut-leyenda').innerHTML = tipos.map(function(t) {
+    return '<div class="flex items-center justify-between py-1.5 cursor-pointer rounded-lg px-1 hover:bg-white/5 transition-colors" ' +
+      'onmouseenter="resaltarDonut(\'' + t.t + '\')" onmouseleave="resaltarDonut(null)">' +
+      '<span class="text-xs text-slate-300 flex items-center gap-2">' +
+        '<span class="w-2 h-2 rounded-sm flex-shrink-0" style="background:' + t.c + ';"></span>' + t.t +
+      '</span>' +
+      '<span class="text-xs font-bold text-white">' + Math.round(t.n/total*100) + '%</span>' +
+    '</div>';
+  }).join('');
+}
+
+function resaltarDonut(tipo) {
+  var paths = document.querySelectorAll('#donut-svg path');
+  var tipos = PERIODOS[periodoActual].tipos;
+  paths.forEach(function(p, i) {
+    p.setAttribute('opacity', !tipo || tipos[i].t === tipo ? '1' : '0.3');
+  });
+}
+
+/* ============================================================
+   RENDER EVOLUCIÃ“N
+   ============================================================ */
+function renderEvolucion(d) {
+  var items = d.evolucion;
+  var maxV = Math.max.apply(null, items.map(function(x){ return x.v; }));
+  var wrap = document.getElementById('chart-evolucion');
+  wrap.innerHTML = '';
+
+  items.forEach(function(item, idx) {
+    var pct = (item.v / maxV * 100);
+    var isLast = idx === items.length - 1;
+    var bar = document.createElement('div');
+    bar.style.cssText = 'flex:1;display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer;';
+
+    var fill = document.createElement('div');
+    fill.style.cssText = 'border-radius:4px 4px 0 0;transition:height 0.5s cubic-bezier(0.34,1.56,0.64,1);height:0;' +
+      'background:' + (isLast ? 'rgba(99,102,241,0.7)' : 'rgba(99,102,241,0.25)') + ';' +
+      'border:1px solid ' + (isLast ? 'rgba(99,102,241,0.9)' : 'rgba(99,102,241,0.35)') + ';';
+
+    bar.addEventListener('mouseenter', function(e) {
+      showTooltip(e, item.m + ': ' + item.v + ' pacientes');
+    });
+    bar.addEventListener('mouseleave', hideTooltip);
+
+    setTimeout(function(p, f) {
+      return function() { f.style.height = (p * 1.0) + 'px'; };
+    }(pct, fill), 80);
+
+    bar.appendChild(fill);
+    wrap.appendChild(bar);
+  });
+
+  document.getElementById('evol-labels').innerHTML = items.map(function(i) {
+    return '<span class="text-[10px] text-slate-600 flex-1 text-center">' + i.m + '</span>';
+  }).join('');
+
+  document.getElementById('evol-total').textContent = items[items.length-1].v + ' activos';
+  animarNumero(document.getElementById('evol-altas'), d.evolStats.altas, false);
+  animarNumero(document.getElementById('evol-espera'), d.evolStats.espera, false);
+  animarNumero(document.getElementById('evol-alta'), d.evolStats.alta, false);
+}
+
+/* ============================================================
+   RENDER HORARIOS
+   ============================================================ */
+var horarioSeleccionado = null;
+function renderHorarios(d) {
+  var items = d.horarios;
+  var sorted = items.slice().sort(function(a,b){ return b.pct - a.pct; });
+
+  document.getElementById('horarios-pico').innerHTML = sorted.map(function(h, idx) {
+    var col = h.pct >= 80 ? '#2dd4bf' : h.pct >= 50 ? '#fbbf24' : '#475569';
+    var lbl = h.pct >= 80 ? 'Muy alto' : h.pct >= 60 ? 'Alto' : h.pct >= 40 ? 'Medio' : 'Bajo';
+    return '<div class="flex items-center gap-3 py-1 px-2 rounded-xl cursor-pointer transition-colors hover:bg-white/5" onclick="clickHorario(' + idx + ')" id="hora-row-' + idx + '">' +
+      '<span class="text-xs text-slate-400 w-20 flex-shrink-0">' + h.hora + '</span>' +
+      '<div class="flex-1 rounded-full h-2" style="background:rgba(255,255,255,0.06);">' +
+        '<div class="prog-fill" style="background:' + col + ';" data-pct="' + h.pct + '"></div>' +
+      '</div>' +
+      '<span class="text-[10px] font-bold w-14 text-right" style="color:' + col + ';">' + lbl + '</span>' +
+      '<span class="text-[10px] text-slate-600">' + h.citas + '</span>' +
+    '</div>';
+  }).join('');
+
+  setTimeout(function() {
+    document.querySelectorAll('#horarios-pico .prog-fill').forEach(function(el) {
+      el.style.width = el.getAttribute('data-pct') + '%';
+    });
+  }, 50);
+
+  // Días semana
+  var dias = d.dias;
+  document.getElementById('dias-semana').innerHTML = dias.map(function(dia) {
+    var intens = dia.pct >= 80 ? '#2dd4bf' : dia.pct >= 50 ? 'rgba(20,184,166,0.5)' : dia.pct > 0 ? 'rgba(20,184,166,0.2)' : 'rgba(255,255,255,0.05)';
+    return '<div class="flex-1 flex flex-col items-center gap-1 cursor-pointer group" ' +
+      'onmouseenter="showTooltip(event,\'' + dia.d + ': ' + dia.pct + '% ocupación\')" onmouseleave="hideTooltip()">' +
+      '<div class="w-full rounded-md transition-all group-hover:brightness-125" style="height:28px;background:' + intens + ';"></div>' +
+      '<span class="text-[10px] text-slate-600">' + dia.d + '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function clickHorario(idx) {
+  var rows = document.querySelectorAll('[id^="hora-row-"]');
+  rows.forEach(function(r, i) {
+    r.style.background = i === idx ? 'rgba(20,184,166,0.08)' : '';
+  });
+  horarioSeleccionado = horarioSeleccionado === idx ? null : idx;
+  if (horarioSeleccionado !== null) {
+    rows.forEach(function(r) { r.style.background = ''; });
+    rows[idx].style.background = 'rgba(20,184,166,0.08)';
+  }
+}
+
+/* ============================================================
+   RENDER TABLA
+   ============================================================ */
+function renderTabla(d) {
+  document.getElementById('tabla-periodo-label').textContent = d.sub;
+  var stars = function(n) {
+    var s = '';
+    for (var i=0;i<5;i++) s += '<span style="color:' + (i < Math.round(n) ? '#fbbf24' : '#334155') + ';font-size:10px;">â˜…</span>';
+    return s + ' <span class="text-xs text-slate-400">' + n.toFixed(1) + '</span>';
+  };
+  document.getElementById('tabla-top').innerHTML = d.tabla.map(function(row, i) {
+    var asisPct = parseInt(row.asis);
+    var asisCol = asisPct >= 90 ? '#2dd4bf' : asisPct >= 70 ? '#fbbf24' : '#f87171';
+    return '<tr class="border-b border-slate-800/40 hover:bg-white/[0.02] transition-colors">' +
+      '<td class="py-3 px-3 text-xs text-slate-600 font-bold">' + (i+1) + '</td>' +
+      '<td class="py-3 px-3 text-sm font-medium text-slate-200">' + row.pac + '</td>' +
+      '<td class="py-3 px-3 text-sm text-slate-400">' + row.terapeuta + '</td>' +
+      '<td class="py-3 px-3"><span class="text-sm font-bold text-white">' + row.ses + '</span><span class="text-xs text-slate-600 ml-1">ses.</span></td>' +
+      '<td class="py-3 px-3"><span class="text-sm font-bold" style="color:' + asisCol + ';">' + row.asis + '</span></td>' +
+      '<td class="py-3 px-3">' + stars(row.sat) + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+/* ============================================================
+   TOOLTIP GLOBAL
+   ============================================================ */
+function showTooltip(e, text) {
+  var t = document.getElementById('tooltip-global');
+  t.textContent = text;
+  t.classList.remove('hidden');
+  t.style.left = (e.clientX + 12) + 'px';
+  t.style.top  = (e.clientY - 30) + 'px';
+}
+function hideTooltip() {
+  document.getElementById('tooltip-global').classList.add('hidden');
+}
+document.addEventListener('mousemove', function(e) {
+  var t = document.getElementById('tooltip-global');
+  if (!t.classList.contains('hidden')) {
+    t.style.left = (e.clientX + 12) + 'px';
+    t.style.top  = (e.clientY - 30) + 'px';
+  }
+});
+
+/* ============================================================
+   HIGHLIGHT (click en KPI)
+   ============================================================ */
+function resaltarChart(id) {
+  var map = {
+    barras: 'card-barras', terapeutas: 'card-terapeutas',
+    donut: 'card-donut', horarios: 'card-horarios'
+  };
+  var card = document.getElementById(map[id]);
+  if (!card) return;
+  card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  card.style.borderColor = 'rgba(20,184,166,0.4)';
+  setTimeout(function(){ card.style.borderColor = ''; }, 1500);
+}
+
+/* ============================================================
+   CAMBIAR VISTA (barras / línea)
+   ============================================================ */
+function setChartView(v) {
+  chartView = v;
+  document.getElementById('view-barras').classList.toggle('active', v === 'barras');
+  document.getElementById('view-linea').classList.toggle('active', v === 'linea');
+  document.getElementById('wrap-barras').classList.toggle('hidden', v !== 'barras');
+  document.getElementById('wrap-linea').classList.toggle('hidden', v !== 'linea');
+  var d = PERIODOS[periodoActual];
+  if (v === 'linea') renderLinea(d);
+  else renderBarras(d);
+}
+
+/* ============================================================
+   CAMBIAR PERÍODO
+   ============================================================ */
+function setPeriodo(p) {
+  periodoActual = p;
+  selectedTerapeuta = null;
+  ['semana','mes','trim','anio'].forEach(function(k) {
+    document.getElementById('btn-' + k).classList.toggle('active', k === p);
+  });
+  var d = PERIODOS[p];
+  document.getElementById('header-sub').textContent = 'Métricas clínicas Â· ' + d.label;
+  renderAll(d);
+}
+
+function renderAll(d) {
+  renderKPIs(d);
+  if (chartView === 'barras') renderBarras(d); else renderLinea(d);
+  renderTerapeutas(d);
+  renderDonut(d);
+  renderEvolucion(d);
+  renderHorarios(d);
+  renderTabla(d);
+}
+
+/* ============================================================
+   SESIÃ“N
+   ============================================================ */
+(function() {
+  var nombre = localStorage.getItem('tp_nombre') || 'Admin';
+  var clinica = localStorage.getItem('tp_clinica') || 'SereneCare';
+  document.getElementById('user-nombre').textContent = nombre;
+  document.getElementById('nombre-clinica').textContent = clinica;
+  var ini = nombre.split(' ').map(function(w){ return w[0]; }).slice(0,2).join('');
+  document.getElementById('user-avatar').textContent = ini || 'A';
+  if (localStorage.getItem('tp_demo') === 'true') document.getElementById('demo-badge').classList.remove('hidden');
+  document.getElementById('btn-logout').addEventListener('click', function(e) {
+    e.preventDefault();
+    ['tp_rol','tp_nombre','tp_clinica_id','tp_clinica','tp_demo'].forEach(function(k){ localStorage.removeItem(k); });
+    window.location.href = 'demo_clinica.html';
+  });
+})();
+
+/* INIT */
+renderAll(PERIODOS['mes']);
+</script>
+
+<!-- MINI CHAT WIDGET -->
+<div id="cw-panel" style="position:fixed;bottom:160px;right:24px;z-index:9998;width:320px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
+
+  <!-- Vista: lista de conversaciones -->
+  <div id="cw-lista-wrap" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">
+    <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:18px;font-variation-settings:'FILL' 1;">chat</span>
+        <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#f1f5f9;">Mensajes</span>
+        <span id="cw-total-badge" style="background:#f87171;color:#020617;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px;">2</span>
+      </div>
+      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;padding:4px 10px;border-radius:8px;background:rgba(20,184,166,0.1);">Ver todo</a>
+    </div>
+    <div id="cw-conv-list" style="max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+  </div>
+
+  <!-- Vista: chat individual -->
+  <div id="cw-chat-wrap" style="display:none;flex-direction:column;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);height:420px;">
+    <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <button onclick="cwVolverLista()" style="background:none;border:none;cursor:pointer;color:#64748b;display:flex;align-items:center;padding:2px;">
+        <span class="material-symbols-outlined" style="font-size:17px;">arrow_back</span>
+      </button>
+      <span id="cw-chat-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>
+      <span id="cw-chat-title" style="flex:1;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;flex-shrink:0;">Expandir â†—</a>
+    </div>
+    <div id="cw-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+    <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;flex-shrink:0;">
+      <input id="cw-input" type="text" placeholder="Escribe un mensaje..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;border-radius:10px;padding:8px 12px;font-size:12px;outline:none;font-family:'Inter',sans-serif;" onkeydown="if(event.key==='Enter')cwEnviar()"/>
+      <button onclick="cwEnviar()" style="width:32px;height:32px;border-radius:50%;background:rgba(20,184,166,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(20,184,166,0.35);">
+        <span class="material-symbols-outlined" style="font-size:15px;color:#fff;font-variation-settings:'FILL' 1;">send</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<button id="fab-mensajes" onclick="toggleChatWidget()" style="position:fixed;bottom:96px;right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(20,184,166,0.95),rgba(13,140,124,0.95));box-shadow:0 8px 28px rgba(20,184,166,0.4),0 2px 8px rgba(0,0,0,0.4);transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;outline:none;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Mensajes">
+  <span id="cw-fab-icon" class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+  <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
+</button>
+
+<script>
+(function(){
+var CW_DATA = [
+  { id:'c1', nombre:'Ana Martínez', rol:'Terapeuta', dot:'online', unread:1, msgs:[
+    { from:'them', text:'Buenos días, ¿tienes disponibilidad para el paciente García mañana?', time:'10:14' },
+    { from:'me',   text:'Sí, a las 11:00 lo tengo libre.', time:'10:16' },
+    { from:'them', text:'Perfecto, le confirmo la cita.', time:'10:17' },
+  ]},
+  { id:'c2', nombre:'Pedro Sánchez', rol:'Terapeuta', dot:'busy', unread:1, msgs:[
+    { from:'them', text:'Necesito cambiar la cita de Marcos del jueves.', time:'09:30' },
+    { from:'me',   text:'¿A qué hora te viene bien?', time:'09:32' },
+  ]},
+  { id:'c3', nombre:'Lucía Méndez', rol:'Secretaria', dot:'online', unread:0, msgs:[
+    { from:'me',   text:'¿Enviaste los recordatorios de mañana?', time:'Ayer' },
+    { from:'them', text:'Sí, ya los envié todos.', time:'Ayer' },
+  ]},
+  { id:'c4', nombre:'Sofía Ruiz', rol:'Terapeuta', dot:'offline', unread:0, msgs:[
+    { from:'them', text:'Informe de Vidal listo para revisión.', time:'Lun' },
+  ]},
+];
+var CW_DOT_COLOR = { online:'#4ade80', busy:'#fbbf24', offline:'#475569' };
+var cwOpen = false, cwActive = null;
+
+window.toggleChatWidget = function() {
+  cwOpen = !cwOpen;
+  var panel = document.getElementById('cw-panel');
+  if (cwOpen) {
+    panel.style.pointerEvents = 'auto';
+    panel.style.opacity = '1';
+    panel.style.transform = 'translateY(0) scale(1)';
+    document.getElementById('fab-badge').style.display = 'none';
+    document.getElementById('cw-fab-icon').textContent = 'close';
+    cwMostrarLista();
+  } else {
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(14px) scale(0.97)';
+    panel.style.pointerEvents = 'none';
+    document.getElementById('cw-fab-icon').textContent = 'chat';
+  }
+};
+
+function cwMostrarLista() {
+  document.getElementById('cw-lista-wrap').style.display = 'block';
+  document.getElementById('cw-chat-wrap').style.display = 'none';
+  var html = CW_DATA.map(function(c) {
+    var last = c.msgs[c.msgs.length - 1];
+    return '<div onclick="cwAbrirConv(\'' + c.id + '\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'">'+
+      '<div style="position:relative;flex-shrink:0;">'+
+        '<div style="width:38px;height:38px;border-radius:50%;background:rgba(20,184,166,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2dd4bf;font-family:Manrope,sans-serif;">' + c.nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('') + '</div>'+
+        '<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:' + CW_DOT_COLOR[c.dot] + ';border:2px solid #0d1b2e;"></span>'+
+      '</div>'+
+      '<div style="flex:1;min-width:0;">'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">'+
+          '<span style="font-family:Manrope,sans-serif;font-weight:700;font-size:12px;color:#e2e8f0;">' + c.nombre + '</span>'+
+          '<span style="font-size:10px;color:#475569;">' + last.time + '</span>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;">'+
+          '<span style="font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;">' + (last.from === 'me' ? 'Tú: ' : '') + last.text + '</span>'+
+          (c.unread ? '<span style="min-width:16px;height:16px;background:#2dd4bf;border-radius:99px;font-size:9px;font-weight:800;color:#020617;display:flex;align-items:center;justify-content:center;padding:0 4px;margin-left:4px;flex-shrink:0;">' + c.unread + '</span>' : '') +
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('cw-conv-list').innerHTML = html;
+}
+
+window.cwAbrirConv = function(id) {
+  cwActive = CW_DATA.find(function(c){ return c.id === id; });
+  if (!cwActive) return;
+  cwActive.unread = 0;
+  document.getElementById('cw-lista-wrap').style.display = 'none';
+  var cw = document.getElementById('cw-chat-wrap');
+  cw.style.display = 'flex'; cw.style.flexDirection = 'column';
+  document.getElementById('cw-chat-title').textContent = cwActive.nombre;
+  document.getElementById('cw-chat-dot').style.background = CW_DOT_COLOR[cwActive.dot];
+  cwRenderMsgs();
+  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 40);
+};
+
+window.cwVolverLista = function() { cwMostrarLista(); };
+
+function cwRenderMsgs() {
+  var html = cwActive.msgs.map(function(m) {
+    var me = m.from === 'me';
+    return '<div style="display:flex;justify-content:' + (me ? 'flex-end' : 'flex-start') + ';animation:cwMsgIn 0.18s ease forwards;">'+
+      '<div style="max-width:80%;padding:8px 11px;border-radius:14px;' + (me ? 'background:rgba(20,184,166,0.18);border:1px solid rgba(20,184,166,0.28);border-bottom-right-radius:4px;' : 'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;') + '">'+
+        '<p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">' + m.text + '</p>'+
+        '<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:' + (me ? 'right' : 'left') + ';">' + m.time + '</p>'+
+      '</div></div>';
+  }).join('');
+  document.getElementById('cw-messages').innerHTML = html;
+}
+
+window.cwEnviar = function() {
+  if (!cwActive) return;
+  var input = document.getElementById('cw-input');
+  var text = (input.value || '').trim();
+  if (!text) return;
+  var t = new Date(); var time = t.getHours() + ':' + String(t.getMinutes()).padStart(2,'0');
+  cwActive.msgs.push({ from:'me', text:text, time:time });
+  input.value = '';
+  cwRenderMsgs();
+  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 30);
+};
+})();
+
+  // Apps overlay
+
+  // Sync apps footer user info
+  (function syncAppsUser() {
+    var nombre = localStorage.getItem('tp_nombre') || 'Admin';
+    var av = document.getElementById('apps-avatar');
+    var nm = document.getElementById('apps-nombre');
+    if (av) av.textContent = nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
+    if (nm) nm.textContent = nombre;
+  })();
+  window.toggleAppsPanel = function() {
+    var o = document.getElementById('apps-overlay');
+    var isHidden = o.style.display === 'none' || o.style.display === '';
+    if (isHidden) {
+      o.style.display = 'flex';
+    } else {
+      o.style.display = 'none';
+    }
+  };
+  window.cerrarApps = function(e) {
+    if (e && e.target !== document.getElementById('apps-overlay')) return;
+    document.getElementById('apps-overlay').style.display = 'none';
+  };
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var o = document.getElementById('apps-overlay');
+      if (o) o.style.display = 'none';
+    }
+  });
+
+  // User card popover
+  var userMenuOpen = false;
+  window.toggleUserMenu = function() {
+    userMenuOpen = !userMenuOpen;
+    document.getElementById('user-menu').classList.toggle('hidden', !userMenuOpen);
+    document.getElementById('chevron-user').textContent = userMenuOpen ? 'expand_more' : 'expand_less';
+  };
+  window.toggleTema = function() {
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    if (esClaro) {
+      localStorage.removeItem('tp_tema');
+      document.documentElement.style.filter = '';
+    } else {
+      localStorage.setItem('tp_tema', 'claro');
+      document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
+    }
+    actualizarLabelTema();
+    userMenuOpen = false;
+    document.getElementById('user-menu').classList.add('hidden');
+    document.getElementById('chevron-user').textContent = 'expand_less';
+  };
+  function actualizarLabelTema() {
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    var icon = document.getElementById('icon-tema');
+    var label = document.getElementById('label-tema');
+    if (icon) icon.textContent = esClaro ? 'light_mode' : 'dark_mode';
+    if (label) label.textContent = esClaro ? 'Modo oscuro' : 'Modo claro';
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu')) {
+      if (userMenuOpen) {
+        userMenuOpen = false;
+        var um = document.getElementById('user-menu');
+        if (um) um.classList.add('hidden');
+        var ch = document.getElementById('chevron-user');
+        if (ch) ch.textContent = 'expand_less';
+      }
+    }
+  });
+  actualizarLabelTema();
+
+  // Notificaciones
+  var NOTIFS_EST = [
+    { icon:'event_busy',  color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',   hora:'Hace 12 min', leida:false },
+    { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz', hora:'Hace 1 h',    leida:false },
+    { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',        hora:'Hace 2 h',    leida:false },
+    { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',   hora:'Hace 3 h',    leida:true  },
+    { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5â˜… de Laura Pérez',            hora:'Ayer',        leida:true  },
+  ];
+  var notifOpenEst = false;
+  function renderNotifsEst() {
+    var unread = NOTIFS_EST.filter(function(n){ return !n.leida }).length;
+    var dot = document.getElementById('notif-dot-est');
+    if (dot) dot.style.display = unread ? 'block' : 'none';
+    var list = document.getElementById('notif-list-est');
+    if (!list) return;
+    list.innerHTML = NOTIFS_EST.map(function(n,i){
+      return '<div onclick="leerNotifEst('+i+')" style="padding:12px 20px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;" onmouseover="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseout="this.style.background=\'none\'">'+
+        '<span class="material-symbols-outlined" style="font-size:16px;color:'+n.color+';flex-shrink:0;margin-top:2px;">'+n.icon+'</span>'+
+        '<div style="flex:1;min-width:0;">'+
+          '<p style="font-size:12px;color:#e2e8f0;margin:0;'+((!n.leida)?'font-weight:600;':'opacity:0.5;')+'">'+n.msg+'</p>'+
+          '<p style="font-size:10px;color:#64748b;margin:4px 0 0;">'+n.hora+'</p>'+
+        '</div>'+
+        ((!n.leida)?'<span style="width:6px;height:6px;border-radius:50%;background:#2dd4bf;flex-shrink:0;margin-top:6px;"></span>':'')+
+      '</div>';
+    }).join('');
+  }
+  window.leerNotifEst = function(i){ NOTIFS_EST[i].leida = true; renderNotifsEst(); };
+  document.getElementById('btn-notif-est').addEventListener('click', function(e){
+    e.stopPropagation();
+    notifOpenEst = !notifOpenEst;
+    document.getElementById('notif-panel-est').classList.toggle('hidden', !notifOpenEst);
+  });
+  document.getElementById('btn-marcar-est').addEventListener('click', function(){
+    NOTIFS_EST.forEach(function(n){ n.leida = true; }); renderNotifsEst();
+  });
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('#btn-notif-est') && !e.target.closest('#notif-panel-est')) {
+      notifOpenEst = false;
+      var p = document.getElementById('notif-panel-est');
+      if (p) p.classList.add('hidden');
+    }
+  });
+  renderNotifsEst();
+
+</script>
+<style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
+
+<!-- =============== APPS OVERLAY =============== -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:680px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal de administración de clínica</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;transition:all 0.15s;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+
+      <a href="gestion_personal_admin.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(245,158,11,0.1)';this.style.borderColor='rgba(245,158,11,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">badge</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Personal</span>
+      </a>
+
+      <a href="facturacion.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(16,185,129,0.1)';this.style.borderColor='rgba(16,185,129,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.25);">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:22px;font-variation-settings:'FILL' 1;">payments</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Facturación</span>
+      </a>
+
+      <a href="estadisticas_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Estadísticas</span>
+      </a>
+
+      <a href="config_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(248,113,113,0.1)';this.style.borderColor='rgba(248,113,113,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.25);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">settings</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Configuración</span>
+      </a>
+
+      <a href="integraciones_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">cable</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Integraciones</span>
+      </a>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- WhatsApp Widget flotante -->
+<div id="wa-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;">
+  <div id="wa-panel" class="hidden" style="position:absolute;bottom:calc(100% + 12px);right:0;width:300px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <div class="flex items-center justify-between px-4 py-3" style="background:rgba(37,211,102,0.1);border-bottom:1px solid rgba(37,211,102,0.15);">
+      <div class="flex items-center gap-2">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="text-sm font-bold text-white">WhatsApp</span>
+        <span class="text-xs px-1.5 py-0.5 rounded-full font-bold" style="background:rgba(37,211,102,0.2);color:#25d366;">3</span>
+      </div>
+      <button onclick="document.getElementById('wa-panel').classList.add('hidden')" class="p-1 rounded-lg hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-500" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">MP</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">María Pérez</p><p class="text-xs text-slate-500 truncate">¿A qué hora es mi cita?</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">10:45</span><span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">2</span></div>
+      </a>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">JL</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Juan López</p><p class="text-xs text-slate-500 truncate">Confirmo asistencia ðŸ‘</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">09:15</span><span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">1</span></div>
+      </a>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">CR</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Carmen Ruiz</p><p class="text-xs text-slate-500 truncate">Necesito cancelar la sesión</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">Ayer</span></div>
+      </a>
+    </div>
+    <div class="px-4 py-3" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition-all" style="background:rgba(37,211,102,0.12);color:#25d366;text-decoration:none;border:1px solid rgba(37,211,102,0.2);">
+        <span class="material-symbols-outlined text-base">chat</span>Ver todas las conversaciones
+      </a>
+    </div>
+  </div>
+  <div style="position:relative;">
+    <button onclick="document.getElementById('wa-panel').classList.toggle('hidden')" class="w-14 h-14 rounded-full flex items-center justify-center transition-transform hover:scale-110 active:scale-95" style="background:#25d366;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(37,211,102,0.35);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </button>
+    <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
+  </div>
+</div>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { cerrarSesion } from '../js/auth.js'
+window._cerrarSesion = cerrarSesion
+
+const oldLogout = document.getElementById('btn-logout')
+if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.replaceChild(n, oldLogout) }
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = '../login.html' }
+
+const clinicaId = localStorage.getItem('tp_clinica_id')
+
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()
+if (usu) {
+  const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = usu.nombre+' '+usu.apellido
+  const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = (usu.nombre[0]||'')+(usu.apellido[0]||'')
+}
+
+const hoy = new Date()
+const inicioMes = hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-01'
+
+const [{ count: totalCitas }, { count: totalPac }] = await Promise.all([
+  supabase.from('citas').select('id', { count:'exact', head:true }).eq('clinica_id', clinicaId).gte('fecha', inicioMes),
+  supabase.from('pacientes').select('id', { count:'exact', head:true }).eq('clinica_id', clinicaId),
+])
+
+if (totalCitas !== null) { const el = document.getElementById('kpi-citas'); if (el) el.textContent = totalCitas }
+if (totalPac !== null)   { const el = document.getElementById('kpi-pac');   if (el) el.textContent = totalPac }
+</script>
+</body>
+</html>

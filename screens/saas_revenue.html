@@ -1,0 +1,420 @@
+﻿<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Facturación | Serene Curator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface": "#2c3436",
+                        "inverse-on-surface": "#9a9d9e",
+                        "error-dim": "#67040d",
+                        "surface-container-low": "#f0f4f6",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "surface-tint": "#296777",
+                        "outline": "#747c7e",
+                        "on-background": "#2c3436",
+                        "on-primary": "#f0fbff",
+                        "primary": "#296777",
+                        "secondary-fixed": "#b2ecfd",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "on-tertiary-container": "#416350",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "background": "#f8fafb",
+                        "error-container": "#fa746f",
+                        "surface-variant": "#dce4e6",
+                        "inverse-primary": "#a8e3f6",
+                        "surface-dim": "#d4dbde",
+                        "surface-bright": "#f8fafb",
+                        "error": "#a83836",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8fafb",
+                        "outline-variant": "#acb3b6",
+                        "primary-fixed": "#a8e3f6",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "on-primary-container": "#0e5463",
+                        "secondary": "#2b6775",
+                        "tertiary": "#456653",
+                        "surface-container": "#eaeff0",
+                        "tertiary-container": "#d7fde4",
+                        "inverse-surface": "#0b0f10",
+                        "primary-container": "#a8e3f6",
+                        "on-error-container": "#6e0a12",
+                        "primary-dim": "#195a6a",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "on-tertiary": "#e6ffee",
+                        "on-secondary-fixed-variant": "#266372",
+                        "surface-container-highest": "#dce4e6",
+                        "tertiary-fixed": "#d7fde4",
+                        "surface-container-high": "#e3e9eb",
+                        "on-primary-fixed": "#00404d",
+                        "on-secondary": "#effbff",
+                        "secondary-dim": "#1b5a69",
+                        "on-secondary-container": "#195968",
+                        "on-secondary-fixed": "#004653",
+                        "on-error": "#fff7f6",
+                        "on-tertiary-fixed": "#2f503f",
+                        "tertiary-dim": "#395a48",
+                        "secondary-container": "#b2ecfd",
+                        "on-surface-variant": "#596063"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- SideNavBar Anchor -->
+<nav class="bg-slate-50 dark:bg-slate-900 h-screen w-64 fixed left-0 top-0 flex flex-col h-full py-6 pl-4 font-manrope antialiased tracking-tight z-50">
+<div class="mb-10 pr-4">
+<div class="text-xl font-bold text-cyan-900 dark:text-cyan-100 mb-1">Serene Curator</div>
+<div class="text-xs text-on-surface-variant opacity-70">Administración Clínica</div>
+</div>
+<div class="flex-1 space-y-2 pr-4">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-cyan-600 hover:bg-slate-100 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-cyan-600 hover:bg-slate-100 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-medium">Calendario</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-cyan-600 hover:bg-slate-100 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium">Pacientes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white text-cyan-700 rounded-l-xl border-r-4 border-cyan-600" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium">Facturación</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-cyan-600 hover:bg-slate-100 transition-colors duration-200 rounded-xl" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Configuración</span>
+</a>
+</div>
+<div class="mt-auto pr-4 space-y-2 pt-6 border-t border-slate-200/50">
+<button class="w-full bg-gradient-to-br from-primary to-primary-dim text-on-primary py-3 px-4 rounded-xl font-semibold text-sm shadow-sm hover:opacity-90 transition-all flex items-center justify-center gap-2 mb-4">
+<span class="material-symbols-outlined text-sm">add</span>
+                Nueva Cita
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-cyan-600 transition-colors text-sm" href="#">
+<span class="material-symbols-outlined">help</span>
+                Soporte
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-error transition-colors text-sm" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Cerrar Sesión
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar Anchor -->
+<header class="w-full h-16 sticky top-0 z-40 bg-transparent flex justify-between items-center px-8 font-manrope font-medium text-sm">
+<div class="flex items-center gap-8">
+<div class="text-on-surface-variant font-headline font-bold text-lg">Portal Clínico</div>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-400 hover:text-cyan-600 transition-all" href="#">Hoy</a>
+<a class="text-slate-400 hover:text-cyan-600 transition-all" href="#">Semana</a>
+<a class="text-slate-400 hover:text-cyan-600 transition-all" href="#">Mes</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 text-cyan-800 hover:text-cyan-700 transition-all px-4 py-2 bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined text-lg">download</span>
+                    Descargar Reporte
+                </button>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-all overflow-hidden bg-primary-container">
+<span class="material-symbols-outlined text-on-primary-container">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="px-10 py-8 max-w-7xl mx-auto">
+<header class="mb-12">
+<h1 class="text-4xl font-extrabold tracking-tight text-on-surface mb-2">SaaS Revenue</h1>
+<p class="text-on-surface-variant font-body">Gestiona tu suscripción, métodos de pago e historial de facturación clínica.</p>
+</header>
+<!-- Grid Layout (Editorial / Bento Style) -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Plan Current Status (Glass Card) -->
+<div class="col-span-12 lg:col-span-7 rounded-3xl bg-surface-container-lowest p-8 relative overflow-hidden flex flex-col justify-between min-h-[320px]">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<span class="px-4 py-1.5 bg-tertiary-container text-on-tertiary-container rounded-full text-xs font-bold uppercase tracking-widest">Plan Actual</span>
+<span class="text-on-surface-variant text-sm font-medium">Renovación: 15 de Mayo, 2024</span>
+</div>
+<h2 class="text-5xl font-extrabold text-primary mb-2">Premium</h2>
+<p class="text-on-surface-variant max-w-md text-lg leading-relaxed">Acceso ilimitado a telemedicina, reportes avanzados y almacenamiento cifrado para todos tus pacientes.</p>
+</div>
+<div class="relative z-10 flex items-center gap-4 mt-8">
+<button class="bg-gradient-to-br from-primary to-primary-dim text-on-primary px-8 py-3.5 rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
+                            Cambiar Plan
+                        </button>
+<button class="px-6 py-3.5 text-primary font-bold hover:bg-surface-container rounded-xl transition-all">
+                            Ver Beneficios
+                        </button>
+</div>
+<!-- Decorative Abstract Shapes (Editorial Vibe) -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary-container/20 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-12 -left-12 w-48 h-48 bg-tertiary-container/30 rounded-full blur-2xl"></div>
+</div>
+<!-- Billing Summary Card -->
+<div class="col-span-12 lg:col-span-5 rounded-3xl bg-surface-container-low p-8 flex flex-col">
+<h3 class="text-xl font-bold mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                        Resumen de cobro
+                    </h3>
+<div class="space-y-6 flex-1">
+<div class="flex justify-between items-center pb-4 border-b border-outline-variant/10">
+<span class="text-on-surface-variant">Próximo cobro</span>
+<span class="font-bold">15 May 2024</span>
+</div>
+<div class="flex justify-between items-center pb-4 border-b border-outline-variant/10">
+<span class="text-on-surface-variant">Monto estimado</span>
+<span class="text-3xl font-black text-on-surface">$129.00 <span class="text-sm font-medium opacity-50">/mes</span></span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-on-surface-variant">Estado de cuenta</span>
+<span class="flex items-center gap-1.5 text-tertiary font-bold">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                                Al día
+                            </span>
+</div>
+</div>
+<div class="mt-8 p-4 bg-surface-container-lowest rounded-2xl flex items-center gap-4 border border-outline-variant/5">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container">info</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-tight">Tu suscripción se renovará automáticamente usando el método de pago predeterminado.</p>
+</div>
+</div>
+<!-- Payment Method Section -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<h3 class="text-xl font-bold px-2">Método de Pago</h3>
+<div class="glass-card rounded-3xl p-6 border border-outline-variant/10 shadow-sm relative overflow-hidden group">
+<!-- Chip simulation -->
+<div class="w-12 h-9 bg-surface-container-high rounded-md mb-8 opacity-40"></div>
+<div class="space-y-4 mb-8">
+<div class="text-xl font-medium tracking-[0.2em] text-on-surface">•••• •••• •••• 8824</div>
+<div class="flex justify-between items-end">
+<div>
+<div class="text-[10px] uppercase tracking-tighter text-on-surface-variant opacity-60">Titular</div>
+<div class="text-sm font-bold uppercase">Dr. Adrian Serene</div>
+</div>
+<div class="text-right">
+<div class="text-[10px] uppercase tracking-tighter text-on-surface-variant opacity-60">Expira</div>
+<div class="text-sm font-bold">12/26</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 bg-surface-container-highest/50 hover:bg-surface-container-highest text-on-surface font-bold rounded-xl transition-all flex items-center justify-center gap-2 group-hover:bg-primary group-hover:text-on-primary">
+<span class="material-symbols-outlined text-sm">edit</span>
+                            Cambiar tarjeta
+                        </button>
+</div>
+</div>
+<!-- Billing History (Table Pattern) -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<div class="flex justify-between items-center px-2">
+<h3 class="text-xl font-bold">Historial de Facturas</h3>
+<button class="text-primary text-sm font-bold hover:underline">Ver todas</button>
+</div>
+<div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm border border-outline-variant/5">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Fecha</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Número</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Monto</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-5 text-sm font-medium">15 Abr 2024</td>
+<td class="px-6 py-5 text-sm font-body text-on-surface-variant">INV-2024-004</td>
+<td class="px-6 py-5 text-sm font-bold">$129.00</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:bg-primary-container p-2 rounded-lg transition-all">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-5 text-sm font-medium">15 Mar 2024</td>
+<td class="px-6 py-5 text-sm font-body text-on-surface-variant">INV-2024-003</td>
+<td class="px-6 py-5 text-sm font-bold">$129.00</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:bg-primary-container p-2 rounded-lg transition-all">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-5 text-sm font-medium">15 Feb 2024</td>
+<td class="px-6 py-5 text-sm font-body text-on-surface-variant">INV-2024-002</td>
+<td class="px-6 py-5 text-sm font-bold">$129.00</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:bg-primary-container p-2 rounded-lg transition-all">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-6 py-5 text-sm font-medium">15 Ene 2024</td>
+<td class="px-6 py-5 text-sm font-body text-on-surface-variant">INV-2024-001</td>
+<td class="px-6 py-5 text-sm font-bold">$129.00</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary hover:bg-primary-container p-2 rounded-lg transition-all">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Promotions / Upsell Bento Box -->
+<div class="col-span-12 mt-4">
+<div class="rounded-3xl bg-inverse-surface p-8 flex flex-col md:flex-row items-center justify-between gap-8 text-inverse-on-surface">
+<div class="flex items-center gap-6">
+<div class="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover grayscale opacity-80" data-alt="Modern clinical workspace with a laptop and stethoscope in a serene high-end setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZJ5UnCiVjxEqqRQ6Q2LhfUvyo3g0MCaSExizoDBMoiTxph_I5WJgo5arYy5FvtkJ7I1XK9F2xnFQxMrfZcSgOHNpMLzU5YhjchQYH_0ZOiARdMCdUo_lXZkYg0id1xNvLn5CmuEcRhRWxzY0HQ8Og2Ni-i1WmrU7i_H03y0RnDxeCM9fNYpvfUDnX1LGNjAgXtcy1Qt8B-rRv4c2hzsLsx_6BdGt1M5LC8AcQXzGemdkchC3DCDCJfZbDOyeHDKOZmNg0S8KZXMoa"/>
+</div>
+<div>
+<h4 class="text-xl font-bold text-white mb-2">Ahorra un 20% con el Plan Anual</h4>
+<p class="opacity-70 text-sm max-w-lg">Optimiza tus costos operativos cambiando a la facturación anual. Recibe todos los beneficios Premium y dos meses gratis.</p>
+</div>
+</div>
+<button class="bg-white text-inverse-surface px-8 py-3 rounded-xl font-bold hover:bg-primary-fixed transition-all whitespace-nowrap">
+                            Cambiar a Anual
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Space Filler for Editorial Feel -->
+<footer class="px-10 py-12 text-center">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-40 font-bold">Serene Curator © 2024 • Sistema de Gestión Clínica de Alta Gama</p>
+</footer>
+</main>
+
+  <div id="error-msg"   class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <script type="module">
+    import { guardaClinica }                                            from '../js/clinica.js'
+    import { obtenerSuscripcionActual, iniciarCheckout, abrirPortalStripe, PLANES, obtenerUsoActual } from '../js/pagos.js'
+    import { mostrarError, setBotonCargando }                           from '../js/auth.js'
+
+    await guardaClinica()
+
+    // Verificar resultado del checkout
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('success')) {
+      const ok = document.getElementById('success-msg')
+      ok.textContent = '✓ Suscripción activada correctamente. ¡Bienvenido!'
+      ok.classList.remove('hidden')
+      setTimeout(() => ok.classList.add('hidden'), 4000)
+    }
+    if (params.get('cancelled')) {
+      mostrarError('El proceso de pago fue cancelado.')
+    }
+
+    // Cargar suscripción y uso actual
+    try {
+      const [subs, uso] = await Promise.all([obtenerSuscripcionActual(), obtenerUsoActual()])
+      const plan = subs.plan
+
+      // Actualizar datos del plan actual en el HTML
+      document.querySelectorAll('*').forEach(el => {
+        if (el.children.length > 0) return
+        const t = el.textContent.trim()
+        if (t === '$129.00' || t === '€129.00') el.textContent = plan ? `$${plan.precio_mensual}/mes` : 'Sin plan'
+        if (t === 'Basic' || t === 'Básico')    el.textContent = plan?.nombre || 'Trial'
+      })
+
+      // Badge de estado
+      const statusBadge = Array.from(document.querySelectorAll('span')).find(s =>
+        ['Activa','Trial','Suspendida','Active'].includes(s.textContent.trim()))
+      if (statusBadge) {
+        const colores = { activa: 'bg-tertiary-container text-on-tertiary-container', trial: 'bg-secondary-container text-on-secondary-container', suspendida: 'bg-error-container text-on-error-container' }
+        statusBadge.className = `px-3 py-1 rounded-full text-xs font-bold ${colores[subs.status] || ''}`
+        statusBadge.textContent = subs.status === 'activa' ? 'Activa' : subs.status === 'trial' ? 'Trial' : 'Suspendida'
+      }
+
+      // Barra de uso
+      const maxPsic = plan?.max_psicologos || 1
+      const maxPac  = plan?.max_pacientes  || 10
+      document.querySelectorAll('[class*="progress"], [class*="w-["], [role="progressbar"]').forEach((bar, i) => {
+        if (i === 0) bar.style.width = `${Math.min(100, (uso.psicologos / maxPsic) * 100)}%`
+        if (i === 1) bar.style.width = `${Math.min(100, (uso.pacientes  / maxPac)  * 100)}%`
+      })
+
+      // Botones de planes
+      PLANES.filter(p => p.id !== 'trial').forEach(p => {
+        document.querySelectorAll('button').forEach(btn => {
+          const txt = btn.textContent.toLowerCase()
+          if (txt.includes(p.nombre.toLowerCase()) || txt.includes('upgrade') || txt.includes('actualizar')) {
+            btn.addEventListener('click', async () => {
+              setBotonCargando(btn, true)
+              try {
+                const url = await iniciarCheckout(p.id)
+                window.location.href = url
+              } catch(e) { mostrarError(e.message) }
+              finally { setBotonCargando(btn, false) }
+            })
+          }
+        })
+      })
+
+      // Botón gestionar suscripción (Stripe Portal)
+      document.querySelectorAll('button, a').forEach(el => {
+        const txt = el.textContent.toLowerCase()
+        if (txt.includes('gestionar') || txt.includes('factura') || txt.includes('billing') || txt.includes('ver planes')) {
+          el.addEventListener('click', async e => {
+            e.preventDefault()
+            if (!subs.stripeActivo) { mostrarError('No tenés una suscripción activa en Stripe.'); return }
+            try {
+              const url = await abrirPortalStripe()
+              window.location.href = url
+            } catch(e) { mostrarError(e.message) }
+          })
+        }
+      })
+
+    } catch(e) { mostrarError(e.message) }
+  </script>
+</body></html>

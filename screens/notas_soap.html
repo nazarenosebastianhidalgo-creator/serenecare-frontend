@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Notas SOAP</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; text-decoration: none; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .app-card { display:flex; flex-direction:column; align-items:center; gap:0.6rem; padding:1.25rem 0.75rem; border-radius:1.25rem; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); text-decoration:none; transition:all 0.2s; cursor:pointer; }
+  .tab-btn { padding:6px 16px; border-radius:10px; font-size:12px; font-weight:700; font-family:Manrope,sans-serif; cursor:pointer; transition:all 0.15s; border:none; }
+  .tab-active { background:rgba(139,92,246,0.15); color:#a78bfa; border:1px solid rgba(139,92,246,0.3) !important; }
+  .tab-inactive { background:transparent; color:#64748b; border:1px solid transparent; }
+  .tab-inactive:hover { background:rgba(255,255,255,0.04); color:#94a3b8; }
+  .nota-row { display:grid; grid-template-columns:2fr 140px 120px 60px 100px; align-items:center; padding:14px 20px; border-radius:14px; transition:background 0.15s; cursor:pointer; border:1px solid transparent; }
+  .nota-row:hover { background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.06); }
+  .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Portal Clínico</p>
+    </div>
+  </div>
+
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="agenda_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Mi Agenda</span>
+    </a>
+    <a href="pacientes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Mis Pacientes</span>
+    </a>
+    <a href="mensajes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+  
+    <a href="sala_espera_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline" style="color:#4ade80;">
+      <span class="material-symbols-outlined text-lg" style="color:#4ade80;font-variation-settings:'FILL' 1;">videocam</span><span>Videollamadas</span>
+    </a>
+    <a href="consentimientos_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">history_edu</span><span>Consentimientos</span>
+    </a>
+  </nav>
+
+  <div id="demo-badge" class="hidden mb-3 px-3 py-2 rounded-xl text-center" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Modo Demo</p>
+  </div>
+
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(139,92,246,0.2);color:#a78bfa;">PS</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Psicólogo</p>
+        <p class="text-[10px] text-slate-500">Terapeuta</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="pl-64 min-h-screen">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/20" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(16px);">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Notas SOAP</h2>
+      <p id="fecha-hoy" class="text-slate-500 text-xs capitalize"></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <!-- Banner demo -->
+      <div id="banner-demo" class="hidden items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:#fbbf24;">
+        <span class="material-symbols-outlined" style="font-size:14px;">info</span>
+        Datos de demostración
+      </div>
+      <button onclick="abrirModalNuevaNota()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);">
+        <span class="material-symbols-outlined text-base">add</span>
+        Nueva nota
+      </button>
+      <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
+      <div class="relative">
+        <button id="btn-notif" onclick="toggleNotif()" class="p-2 rounded-xl hover:bg-white/5 transition-colors relative" style="border:none;background:none;cursor:pointer;">
+          <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">notifications</span>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style="background:#a78bfa;"></span>
+        </button>
+        <div id="notif-panel" class="hidden" style="position:absolute;top:calc(100% + 8px);right:0;width:340px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,0.5);z-index:100;overflow:hidden;">
+          <div style="padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <p style="font-family:Manrope,sans-serif;font-size:13px;font-weight:800;color:#f1f5f9;">Notificaciones</p>
+          </div>
+          <div style="max-height:288px;overflow-y:auto;padding:8px;">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 10px;border-radius:12px;background:rgba(139,92,246,0.06);">
+              <span class="material-symbols-outlined" style="font-size:16px;color:#fbbf24;margin-top:1px;font-variation-settings:'FILL' 1;">pending_actions</span>
+              <div><p style="font-size:12px;font-weight:700;color:#e2e8f0;">3 notas SOAP pendientes</p><p style="font-size:11px;color:#475569;margin-top:2px;">Mateo Sánchez, Carlos Ruiz, Sofía Martínez</p></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 10px;border-radius:12px;margin-top:4px;">
+              <span class="material-symbols-outlined" style="font-size:16px;color:#34d399;margin-top:1px;font-variation-settings:'FILL' 1;">psychology</span>
+              <div><p style="font-size:12px;font-weight:600;color:#64748b;">Informe IA listo — Elena Rodríguez</p><p style="font-size:11px;color:#334155;margin-top:2px;">Hace 15 min</p></div>
+            </div>
+          </div>
+          <div style="padding:10px 18px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+            <a href="notificaciones_psicologo.html" style="font-size:12px;font-weight:700;color:#a78bfa;text-decoration:none;">Ver todas las notificaciones →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="px-8 py-6">
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-4 gap-4 mb-6">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:1.1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-outlined" style="font-size:18px;color:#fbbf24;font-variation-settings:'FILL' 1;">pending_actions</span>
+          </div>
+          <span style="font-size:11px;color:#64748b;font-weight:600;">Pendientes</span>
+        </div>
+        <p id="kpi-pendientes" class="font-headline text-2xl font-extrabold text-white">—</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:1.1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.2);display:flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-outlined" style="font-size:18px;color:#34d399;font-variation-settings:'FILL' 1;">task_alt</span>
+          </div>
+          <span style="font-size:11px;color:#64748b;font-weight:600;">Completadas (semana)</span>
+        </div>
+        <p id="kpi-semana" class="font-headline text-2xl font-extrabold text-white">—</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:1.1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-outlined" style="font-size:18px;color:#a78bfa;font-variation-settings:'FILL' 1;">auto_awesome</span>
+          </div>
+          <span style="font-size:11px;color:#64748b;font-weight:600;">Asistidas por IA</span>
+        </div>
+        <p id="kpi-ia" class="font-headline text-2xl font-extrabold text-white">—</p>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:1.1rem 1.25rem;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.2);display:flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-outlined" style="font-size:18px;color:#60a5fa;font-variation-settings:'FILL' 1;">clinical_notes</span>
+          </div>
+          <span style="font-size:11px;color:#64748b;font-weight:600;">Total del mes</span>
+        </div>
+        <p id="kpi-mes" class="font-headline text-2xl font-extrabold text-white">—</p>
+      </div>
+    </div>
+
+    <!-- Filter + search -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex gap-1" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:5px;">
+        <button class="tab-btn tab-active" onclick="setTab(this,'todas')">Todas</button>
+        <button class="tab-btn tab-inactive" onclick="setTab(this,'borrador')">Pendientes</button>
+        <button class="tab-btn tab-inactive" onclick="setTab(this,'completa')">Completadas</button>
+        <button class="tab-btn tab-inactive" onclick="setTab(this,'ia')">Con IA</button>
+      </div>
+      <div style="position:relative;">
+        <span class="material-symbols-outlined" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;color:#475569;">search</span>
+        <input id="buscador" type="text" placeholder="Buscar paciente..." oninput="filtrarNotas()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:8px 12px 8px 36px;font-size:12px;color:#e2e8f0;outline:none;width:220px;" onfocus="this.style.borderColor='rgba(139,92,246,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"/>
+      </div>
+    </div>
+
+    <!-- Table header -->
+    <div style="display:grid;grid-template-columns:2fr 140px 120px 60px 100px;padding:8px 20px;margin-bottom:4px;">
+      <span style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;font-family:Manrope,sans-serif;">Paciente</span>
+      <span style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;font-family:Manrope,sans-serif;">Fecha sesión</span>
+      <span style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;font-family:Manrope,sans-serif;">Estado</span>
+      <span style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;font-family:Manrope,sans-serif;">IA</span>
+      <span style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;font-family:Manrope,sans-serif;text-align:right;">Acción</span>
+    </div>
+
+    <!-- Loading skeleton -->
+    <div id="loading-state" class="flex flex-col gap-2">
+      <div class="skeleton" style="height:56px;"></div>
+      <div class="skeleton" style="height:56px;opacity:0.7;"></div>
+      <div class="skeleton" style="height:56px;opacity:0.4;"></div>
+    </div>
+
+    <!-- Notes list -->
+    <div id="notas-list" class="hidden flex flex-col gap-2"></div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="hidden" style="text-align:center;padding:64px 0;">
+      <span class="material-symbols-outlined" style="font-size:48px;color:#1e293b;display:block;margin-bottom:14px;">clinical_notes</span>
+      <p style="color:#475569;font-size:14px;font-weight:600;margin-bottom:6px;">No hay notas en esta categoría</p>
+      <p style="color:#334155;font-size:12px;">Crea una nueva nota clínica para comenzar</p>
+    </div>
+
+  </div>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="hidden" style="position:fixed;bottom:24px;right:24px;z-index:300;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px 18px;font-size:13px;font-weight:600;color:#e2e8f0;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:320px;"></div>
+
+<!-- Modal nueva nota -->
+<div id="modal-nueva" onclick="cerrarModal(event)" style="display:none;position:fixed;inset:0;z-index:250;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div onclick="event.stopPropagation()" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:24px;width:100%;max-width:480px;padding:2rem;box-shadow:0 40px 100px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#f1f5f9;">Nueva nota SOAP</p>
+        <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">Selecciona el paciente</p>
+      </div>
+      <button onclick="cerrarModal()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:16px;">close</span>
+      </button>
+    </div>
+    <!-- Search patients -->
+    <div style="position:relative;margin-bottom:12px;">
+      <span class="material-symbols-outlined" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:16px;color:#475569;">search</span>
+      <input id="modal-buscar" type="text" placeholder="Buscar paciente..." oninput="filtrarModalPacientes()" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 12px 10px 36px;font-size:13px;color:#e2e8f0;outline:none;" onfocus="this.style.borderColor='rgba(139,92,246,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"/>
+    </div>
+    <div id="modal-lista-pacientes" style="max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;"></div>
+  </div>
+</div>
+
+<!-- Apps overlay -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:480px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal clínico del terapeuta</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+      <a href="notas_soap.html" class="app-card" style="outline:2px solid rgba(139,92,246,0.3);">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">clinical_notes</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#a78bfa;text-align:center;font-family:Manrope,sans-serif;">Notas SOAP</span>
+      </a>
+      <a href="perfil_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(96,165,250,0.1)';this.style.borderColor='rgba(96,165,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.25);">
+          <span class="material-symbols-outlined" style="color:#60a5fa;font-size:22px;font-variation-settings:'FILL' 1;">manage_accounts</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mi Perfil</span>
+      </a>
+      <a href="recursos_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(52,211,153,0.1)';this.style.borderColor='rgba(52,211,153,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:22px;font-variation-settings:'FILL' 1;">library_books</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Recursos</span>
+      </a>
+      <a href="mis_estadisticas.html" class="app-card" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mis Estadísticas</span>
+      </a>
+      <a href="gestion_documentos_ia.html" class="app-card" onmouseover="this.style.background='rgba(248,113,113,0.1)';this.style.borderColor='rgba(248,113,113,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.25);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">folder_special</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Docs IA</span>
+      </a>
+      <a href="analytics_ia_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">rate_review</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Revisor IA</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- MOCK DATA (demo cuando Supabase no está activo) -->
+<script>
+var COLORES_PACIENTE = [
+  { bg:'rgba(139,92,246,0.15)', color:'#a78bfa' },
+  { bg:'rgba(20,184,166,0.15)', color:'#2dd4bf' },
+  { bg:'rgba(245,158,11,0.15)', color:'#fbbf24' },
+  { bg:'rgba(96,165,250,0.15)', color:'#60a5fa' },
+  { bg:'rgba(248,113,113,0.15)', color:'#f87171' },
+  { bg:'rgba(52,211,153,0.15)', color:'#34d399' },
+];
+
+var MOCK_NOTAS = [
+  { id:'n1', paciente_id:'p1', paciente_nombre:'Elena Rodríguez', iniciales:'ER', ci:0, subjetivo:'Reporta mejora en la regulación emocional...', objetivo:'Contacto visual sostenido. Lenguaje corporal abierto.', evaluacion:'Progreso positivo en TCC para ansiedad social.', plan:'Continuar exposición gradual. Tarea: registro de situaciones sociales evitadas.', asistida_por_ia:true, created_at:'2026-05-07T14:30:00Z', estado:'completa' },
+  { id:'n2', paciente_id:'p2', paciente_nombre:'Mateo Sánchez', iniciales:'MS', ci:1, subjetivo:'', objetivo:'', evaluacion:'', plan:'', asistida_por_ia:false, created_at:'2026-05-06T10:00:00Z', estado:'borrador' },
+  { id:'n3', paciente_id:'p3', paciente_nombre:'Carlos Ruiz', iniciales:'CR', ci:3, subjetivo:'Refiere episodios de desconexión durante evaluación...', objetivo:'Test de atención completado. Puntuación 68/100.', evaluacion:'Consistente con diagnóstico TDAH. Se requieren más sesiones de evaluación.', plan:'Programar batería neuropsicológica completa para la próxima semana.', asistida_por_ia:true, created_at:'2026-05-05T11:00:00Z', estado:'completa' },
+  { id:'n4', paciente_id:'p4', paciente_nombre:'Sofía Martínez', iniciales:'SM', ci:2, subjetivo:'', objetivo:'', evaluacion:'', plan:'', asistida_por_ia:false, created_at:'2026-05-08T11:00:00Z', estado:'borrador' },
+  { id:'n5', paciente_id:'p5', paciente_nombre:'Marcos Vidal', iniciales:'MV', ci:4, subjetivo:'Reporta reducción de rumiaciones nocturnas...', objetivo:'Escala de depresión PHQ-9: bajó de 14 a 9 esta semana.', evaluacion:'Mejoría moderada. TCC evidenciando efecto.', plan:'Mantener registro de pensamientos. Introducir activación conductual.', asistida_por_ia:true, created_at:'2026-05-04T16:00:00Z', estado:'completa' },
+  { id:'n6', paciente_id:'p6', paciente_nombre:'Lucía Ferreyra', iniciales:'LF', ci:5, subjetivo:'Menciona tensión en la comunicación con su pareja...', objetivo:'Lenguaje no verbal defensivo al inicio, se fue abriendo. Participación activa en role-play.', evaluacion:'La dinámica de evitación de conflictos persiste pero con menor intensidad.', plan:'Ejercicio: lista de necesidades no expresadas. Próxima sesión conjunta con pareja.', asistida_por_ia:false, created_at:'2026-05-03T17:30:00Z', estado:'completa' },
+  { id:'n7', paciente_id:'p4', paciente_nombre:'Sofía Martínez', iniciales:'SM', ci:2, subjetivo:'Reportó crisis de llanto al llegar. Se calmó con técnica 5-4-3-2-1.', objetivo:'Estado emocional inestable al inicio. Mejoró notablemente con grounding.', evaluacion:'Crisis puntual relacionada con situación laboral. Estabilidad general se mantiene.', plan:'Reforzar uso de técnica de grounding ante desbordamiento emocional.', asistida_por_ia:true, created_at:'2026-04-29T11:00:00Z', estado:'completa' },
+];
+
+var MOCK_PACIENTES = [
+  { id:'p1', nombre:'Elena', apellido:'Rodríguez', ci:0 },
+  { id:'p2', nombre:'Mateo', apellido:'Sánchez', ci:1 },
+  { id:'p3', nombre:'Carlos', apellido:'Ruiz', ci:3 },
+  { id:'p4', nombre:'Sofía', apellido:'Martínez', ci:2 },
+  { id:'p5', nombre:'Marcos', apellido:'Vidal', ci:4 },
+  { id:'p6', nombre:'Lucía', apellido:'Ferreyra', ci:5 },
+];
+
+var TODAS_LAS_NOTAS = [];
+var PACIENTES_LISTA = [...MOCK_PACIENTES];
+var tabActual = 'todas';
+
+function getColor(ci) {
+  return COLORES_PACIENTE[ci % COLORES_PACIENTE.length];
+}
+
+function formatFecha(iso) {
+  if (!iso) return '—';
+  var d = new Date(iso);
+  var meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return d.getDate() + ' ' + meses[d.getMonth()] + ' · ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+function esCompletaNota(n) {
+  return n.subjetivo && n.objetivo && n.evaluacion && n.plan;
+}
+
+function calcularKPIs(notas) {
+  var hoy = new Date();
+  var inicioSemana = new Date(hoy);
+  inicioSemana.setDate(hoy.getDate() - hoy.getDay());
+  var inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+
+  var pendientes = notas.filter(function(n) { return !esCompletaNota(n); }).length;
+  var semana = notas.filter(function(n) {
+    var d = new Date(n.created_at);
+    return esCompletaNota(n) && d >= inicioSemana;
+  }).length;
+  var conIA = notas.filter(function(n) { return n.asistida_por_ia; }).length;
+  var mes = notas.filter(function(n) {
+    return new Date(n.created_at) >= inicioMes;
+  }).length;
+
+  document.getElementById('kpi-pendientes').textContent = pendientes;
+  document.getElementById('kpi-semana').textContent = semana;
+  document.getElementById('kpi-ia').textContent = conIA;
+  document.getElementById('kpi-mes').textContent = mes;
+}
+
+function renderNotas(notas) {
+  var busqueda = document.getElementById('buscador').value.toLowerCase();
+  var filtradas = notas.filter(function(n) {
+    var nombre = (n.paciente_nombre || ((n.pacientes?.nombre || '') + ' ' + (n.pacientes?.apellido || ''))).toLowerCase();
+    var matchBusq = !busqueda || nombre.includes(busqueda);
+    var matchTab = tabActual === 'todas'
+      || (tabActual === 'borrador' && !esCompletaNota(n))
+      || (tabActual === 'completa' && esCompletaNota(n))
+      || (tabActual === 'ia' && n.asistida_por_ia);
+    return matchBusq && matchTab;
+  });
+
+  document.getElementById('loading-state').classList.add('hidden');
+  var list = document.getElementById('notas-list');
+  list.classList.remove('hidden');
+
+  if (!filtradas.length) {
+    list.classList.add('hidden');
+    document.getElementById('empty-state').classList.remove('hidden');
+    return;
+  }
+  document.getElementById('empty-state').classList.add('hidden');
+
+  list.innerHTML = filtradas.map(function(n) {
+    var nombre = n.paciente_nombre || ((n.pacientes?.nombre || '') + ' ' + (n.pacientes?.apellido || ''));
+    var iniciales = nombre.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2);
+    var c = getColor(n.ci !== undefined ? n.ci : (nombre.charCodeAt(0) % 6));
+    var completa = esCompletaNota(n);
+    var estadoBadge = completa
+      ? '<span style="font-size:11px;font-weight:700;background:rgba(52,211,153,0.1);color:#34d399;border-radius:8px;padding:3px 8px;border:1px solid rgba(52,211,153,0.2);">Completa</span>'
+      : '<span style="font-size:11px;font-weight:700;background:rgba(245,158,11,0.1);color:#fbbf24;border-radius:8px;padding:3px 8px;border:1px solid rgba(245,158,11,0.2);">Pendiente</span>';
+    var iaBadge = n.asistida_por_ia
+      ? '<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;background:rgba(139,92,246,0.12);color:#a78bfa;border-radius:6px;padding:2px 7px;border:1px solid rgba(139,92,246,0.2);"><span class="material-symbols-outlined" style="font-size:11px;font-variation-settings:\'FILL\' 1;">auto_awesome</span> IA</span>'
+      : '<span style="color:#334155;font-size:11px;">—</span>';
+    var pacId = n.paciente_id || n.pacientes?.id || '';
+    return '<div class="nota-row" onclick="irAEditor(\'' + pacId + '\',\'' + n.id + '\')">'
+      + '<div style="display:flex;align-items:center;gap:12px;">'
+      +   '<div style="width:36px;height:36px;border-radius:10px;background:'+c.bg+';display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:'+c.color+';font-family:Manrope,sans-serif;flex-shrink:0;">'+iniciales+'</div>'
+      +   '<div>'
+      +     '<p style="font-size:13px;font-weight:700;color:#e2e8f0;font-family:Manrope,sans-serif;">'+nombre+'</p>'
+      +     '<p style="font-size:11px;color:#475569;margin-top:1px;">'+( completa && n.plan ? n.plan.slice(0,50)+'…' : 'Nota sin completar' )+'</p>'
+      +   '</div>'
+      + '</div>'
+      + '<span style="font-size:11px;color:#64748b;">'+formatFecha(n.created_at)+'</span>'
+      + '<div>'+estadoBadge+'</div>'
+      + '<div>'+iaBadge+'</div>'
+      + '<div style="text-align:right;">'
+      +   '<button onclick="event.stopPropagation();irAEditor(\'' + pacId + '\',\'' + n.id + '\')" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:9px;padding:5px 12px;font-size:11px;font-weight:700;color:#a78bfa;cursor:pointer;font-family:Manrope,sans-serif;">Editar</button>'
+      + '</div>'
+      + '</div>';
+  }).join('');
+}
+
+function irAEditor(pacienteId, notaId) {
+  var url = 'editor_soap.html?paciente=' + encodeURIComponent(pacienteId);
+  if (notaId) url += '&nota=' + encodeURIComponent(notaId);
+  window.location.href = url;
+}
+
+function setTab(btn, tab) {
+  tabActual = tab;
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    b.classList.remove('tab-active'); b.classList.add('tab-inactive');
+  });
+  btn.classList.remove('tab-inactive'); btn.classList.add('tab-active');
+  renderNotas(TODAS_LAS_NOTAS);
+}
+
+function filtrarNotas() { renderNotas(TODAS_LAS_NOTAS); }
+
+// ─── Modal nueva nota ───
+function abrirModalNuevaNota() {
+  document.getElementById('modal-nueva').style.display = 'flex';
+  document.getElementById('modal-buscar').value = '';
+  renderModalPacientes(PACIENTES_LISTA);
+  setTimeout(function(){ document.getElementById('modal-buscar').focus(); }, 100);
+}
+function cerrarModal(e) {
+  if (!e || e.target === document.getElementById('modal-nueva'))
+    document.getElementById('modal-nueva').style.display = 'none';
+}
+function filtrarModalPacientes() {
+  var q = document.getElementById('modal-buscar').value.toLowerCase();
+  var filt = PACIENTES_LISTA.filter(function(p) {
+    return (p.nombre + ' ' + p.apellido).toLowerCase().includes(q);
+  });
+  renderModalPacientes(filt);
+}
+function renderModalPacientes(lista) {
+  var c = document.getElementById('modal-lista-pacientes');
+  if (!lista.length) {
+    c.innerHTML = '<p style="text-align:center;padding:20px 0;font-size:12px;color:#475569;">Sin resultados</p>';
+    return;
+  }
+  c.innerHTML = lista.map(function(p) {
+    var nombre = p.nombre + ' ' + p.apellido;
+    var iniciales = (p.nombre[0]||'') + (p.apellido[0]||'');
+    var col = getColor(p.ci || 0);
+    return '<button onclick="irAEditor(\'' + p.id + '\',\'\')" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;width:100%;text-align:left;transition:background 0.15s;" onmouseover="this.style.background=\'rgba(139,92,246,0.08)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.03)\'">'
+      + '<div style="width:32px;height:32px;border-radius:9px;background:'+col.bg+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:'+col.color+';font-family:Manrope,sans-serif;flex-shrink:0;">'+iniciales.toUpperCase()+'</div>'
+      + '<span style="font-size:13px;font-weight:600;color:#e2e8f0;">'+nombre+'</span>'
+      + '<span class="material-symbols-outlined" style="margin-left:auto;font-size:16px;color:#334155;">chevron_right</span>'
+      + '</button>';
+  }).join('');
+}
+
+// ─── UI utils ───
+function toggleAppsPanel() {
+  var o = document.getElementById('apps-overlay');
+  o.style.display = o.style.display === 'flex' ? 'none' : 'flex';
+}
+function cerrarApps(e) {
+  if (!e || e.target === document.getElementById('apps-overlay')) document.getElementById('apps-overlay').style.display = 'none';
+}
+function toggleNotif() { document.getElementById('notif-panel').classList.toggle('hidden'); }
+function toggleUserMenu() { document.getElementById('user-menu').classList.toggle('hidden'); }
+function toggleTema() {
+  var nuevo = (localStorage.getItem('tp_tema') || 'oscuro') === 'claro' ? 'oscuro' : 'claro';
+  localStorage.setItem('tp_tema', nuevo);
+  location.reload();
+}
+var _tt = null;
+function mostrarToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  if (_tt) clearTimeout(_tt);
+  _tt = setTimeout(function(){ t.classList.add('hidden'); }, 3000);
+}
+
+// ─── Init (sidebar user info + fecha) ───
+(function() {
+  var n = localStorage.getItem('tp_nombre') || 'Dra. López';
+  var c = localStorage.getItem('tp_clinica') || 'Clínica Sol';
+  var initials = n.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+  document.getElementById('user-nombre').textContent = n;
+  document.getElementById('nombre-clinica').textContent = c;
+  document.getElementById('user-avatar').textContent = initials;
+  if (localStorage.getItem('tp_demo') === '1') document.getElementById('demo-badge').classList.remove('hidden');
+  var dias = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  var meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var hoy = new Date();
+  document.getElementById('fecha-hoy').textContent = dias[hoy.getDay()] + ', ' + hoy.getDate() + ' de ' + meses[hoy.getMonth()];
+  // Close panels when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#btn-notif') && !e.target.closest('#notif-panel'))
+      document.getElementById('notif-panel').classList.add('hidden');
+    if (!e.target.closest('#btn-user') && !e.target.closest('#user-menu'))
+      document.getElementById('user-menu').classList.add('hidden');
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SUPABASE INTEGRATION (ES module) -->
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { cerrarSesion } from '../js/auth.js'
+window._cerrarSesion = cerrarSesion
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = '../login.html' }
+
+const clinicaId = localStorage.getItem('tp_clinica_id')
+
+// Actualizar info de usuario en sidebar
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()
+if (usu) {
+  const nombreCompleto = usu.nombre + ' ' + usu.apellido
+  const iniciales = (usu.nombre[0] || '') + (usu.apellido[0] || '')
+  const el = document.getElementById('user-nombre')
+  if (el) el.textContent = nombreCompleto
+  const av = document.getElementById('user-avatar')
+  if (av) av.textContent = iniciales.toUpperCase()
+}
+
+async function cargarDesdeSupabase() {
+  const user = session.user
+  if (!user || !clinicaId) return null
+
+  const { data: notas, error: eNotas } = await supabase
+    .from('notas_soap')
+    .select('id, subjetivo, objetivo, evaluacion, plan, asistida_por_ia, compartida_con_paciente, created_at, updated_at, paciente_id, pacientes(id, nombre, apellido)')
+    .eq('clinica_id', clinicaId)
+    .eq('psicologo_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(100)
+
+  if (eNotas) return null
+
+  const { data: pacs } = await supabase
+    .from('pacientes')
+    .select('id, nombre, apellido')
+    .eq('clinica_id', clinicaId)
+    .order('apellido')
+
+  return { notas: notas || [], pacientes: pacs || [] }
+}
+
+try {
+  const result = await cargarDesdeSupabase()
+
+  if (result) {
+    // ── Datos reales de Supabase ──
+    window.TODAS_LAS_NOTAS = result.notas.map(function(n, i) {
+      return Object.assign({}, n, {
+        paciente_nombre: n.pacientes ? n.pacientes.nombre + ' ' + n.pacientes.apellido : 'Paciente',
+        ci: i % 6,
+        estado: (n.subjetivo && n.objetivo && n.evaluacion && n.plan) ? 'completa' : 'borrador',
+      })
+    })
+    if (result.pacientes.length) {
+      window.PACIENTES_LISTA = result.pacientes.map(function(p, i) {
+        return Object.assign({}, p, { ci: i % 6 })
+      })
+    }
+  } else {
+    // ── Fallback: datos de demostración ──
+    window.TODAS_LAS_NOTAS = window.MOCK_NOTAS
+    document.getElementById('banner-demo').style.display = 'flex'
+  }
+} catch(e) {
+  window.TODAS_LAS_NOTAS = window.MOCK_NOTAS
+  document.getElementById('banner-demo').style.display = 'flex'
+}
+
+// Render después de resolver la fuente de datos
+window.calcularKPIs(window.TODAS_LAS_NOTAS)
+window.renderNotas(window.TODAS_LAS_NOTAS)
+</script>
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SereneCare — Ingresar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2 { font-family: 'Manrope', sans-serif; }
+    .bg-main { background: linear-gradient(135deg, #020617 0%, #0a1628 60%, #020617 100%); }
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); }
+    .input-base {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .input-base:focus {
+      outline: none;
+      border-color: rgba(45,212,191,0.5);
+      box-shadow: 0 0 0 2px rgba(45,212,191,0.12);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0d9488, #0f766e);
+      box-shadow: 0 4px 20px rgba(13,148,136,0.3);
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+    .btn-primary:active { transform: scale(0.98); }
+    .orbe-1 { background: radial-gradient(circle, rgba(45,212,191,0.25) 0%, transparent 70%); }
+    .orbe-2 { background: radial-gradient(circle, rgba(20,184,166,0.2) 0%, transparent 70%); }
+    .tab-active { color: #2dd4bf; border-bottom: 2px solid #2dd4bf; }
+    .tab-inactive { color: #64748b; border-bottom: 2px solid transparent; }
+    .tab-inactive:hover { color: #94a3b8; }
+  </style>
+</head>
+<body class="min-h-screen bg-main flex items-center justify-center p-6">
+
+  <!-- Orbes decorativos -->
+  <div class="fixed top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none orbe-1"></div>
+  <div class="fixed bottom-0 left-0 w-80 h-80 rounded-full opacity-15 pointer-events-none orbe-2"></div>
+
+  <div class="w-full max-w-md relative z-10">
+
+    <!-- Logo -->
+    <div class="text-center mb-10">
+      <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+           style="background:rgba(45,212,191,0.15);border:1px solid rgba(45,212,191,0.3);box-shadow:0 0 40px rgba(45,212,191,0.12);">
+        <span class="material-symbols-outlined text-4xl" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">self_improvement</span>
+      </div>
+      <h1 class="text-3xl font-extrabold text-white">SereneCare</h1>
+      <p class="text-slate-400 mt-1 text-sm">Plataforma de salud mental</p>
+    </div>
+
+    <!-- Card -->
+    <div class="card rounded-3xl p-8 backdrop-blur-sm">
+
+      <!-- Tabs: Contraseña / Código -->
+      <div class="flex gap-0 mb-6 border-b border-white/10">
+        <button id="tab-pwd" onclick="switchTab('pwd')"
+          class="tab-active pb-3 px-4 text-sm font-semibold transition-all flex-1 text-center">
+          Con contraseña
+        </button>
+        <button id="tab-otp" onclick="switchTab('otp')"
+          class="tab-inactive pb-3 px-4 text-sm font-semibold transition-all flex-1 text-center">
+          Código por email
+        </button>
+      </div>
+
+      <!-- Error -->
+      <div id="error-msg" class="hidden mb-4 px-4 py-3 rounded-xl text-sm font-medium text-red-300"
+           style="background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.2);"></div>
+
+      <!-- Formulario: Contraseña -->
+      <form id="form-pwd" class="space-y-5" novalidate>
+
+        <div>
+          <label class="text-sm font-semibold text-slate-300 block mb-1.5">Correo electrónico</label>
+          <input id="email-pwd" type="email" placeholder="tu@email.com" required
+            class="input-base w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm"/>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="text-sm font-semibold text-slate-300">Contraseña</label>
+            <a href="screens/recuperar_password.html" class="text-xs font-medium transition-colors"
+               style="color:#2dd4bf;" onmouseover="this.style.color='#5eead4'" onmouseout="this.style.color='#2dd4bf'">
+              ¿Olvidaste la contraseña?
+            </a>
+          </div>
+          <div class="relative">
+            <input id="password" type="password" placeholder="••••••••" required
+              class="input-base w-full px-4 py-3 pr-12 rounded-xl text-white placeholder-slate-500 text-sm"/>
+            <button type="button" id="toggle-pwd"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors">
+              <span class="material-symbols-outlined text-xl">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-pwd"
+          class="btn-primary w-full py-3.5 font-bold rounded-xl text-sm text-white mt-2">
+          Ingresar
+        </button>
+      </form>
+
+      <!-- Formulario: OTP -->
+      <form id="form-otp" class="hidden space-y-5" novalidate>
+
+        <p class="text-sm text-slate-400">Ingresá tu email y te enviamos un código de acceso de 6 dígitos. No necesitás contraseña.</p>
+
+        <div>
+          <label class="text-sm font-semibold text-slate-300 block mb-1.5">Correo electrónico</label>
+          <input id="email-otp" type="email" placeholder="tu@email.com" required
+            class="input-base w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm"/>
+        </div>
+
+        <button type="submit" id="btn-otp"
+          class="btn-primary w-full py-3.5 font-bold rounded-xl text-sm text-white">
+          Enviar código
+        </button>
+      </form>
+
+      <!-- Verificación OTP -->
+      <div id="panel-otp-verify" class="hidden space-y-5">
+        <p class="text-sm text-slate-400">Revisá tu bandeja de entrada. Ingresá el código de 6 dígitos.</p>
+        <div>
+          <label class="text-sm font-semibold text-slate-300 block mb-1.5">Código</label>
+          <input id="otp-code" type="text" maxlength="6" placeholder="123456"
+            class="input-base w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm text-center text-xl tracking-widest font-mono"/>
+        </div>
+        <button id="btn-verify"
+          class="btn-primary w-full py-3.5 font-bold rounded-xl text-sm text-white">
+          Verificar código
+        </button>
+        <button onclick="resetOTP()" class="w-full text-sm text-slate-400 hover:text-white transition-colors py-1">
+          Volver a enviar
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-xs text-slate-600 mt-6">
+      ¿Sos una clínica? <a href="screens/landing_registro.html" style="color:#2dd4bf;" class="font-medium hover:underline">Registrá tu institución</a>
+    </p>
+
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const supabase = createClient(
+      'https://wnuwuxenzwfqmhxagryk.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o'
+    );
+
+    const RUTAS = {
+      admin_clinica: 'screens/dashboard_admin_clinica.html',
+      psicologo:     'screens/dashboard_psicologo.html',
+      secretario:    'screens/dashboard_psicologo.html',
+      paciente:      'screens/portal_paciente_inicio.html',
+    };
+
+    // ── Si ya hay sesión activa, redirigir ──────────────────────
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) redirigirPorSesion(session.user.id);
+    });
+
+    async function redirigirPorSesion(userId) {
+      try {
+        const { data: perfil } = await supabase
+          .from('usuarios')
+          .select('rol, clinica_id, nombre, apellido')
+          .eq('id', userId)
+          .single();
+        if (!perfil) return;
+        localStorage.setItem('tp_rol', perfil.rol);
+        localStorage.setItem('tp_clinica_id', perfil.clinica_id ?? '');
+        localStorage.setItem('tp_nombre', `${perfil.nombre} ${perfil.apellido}`);
+        const ruta = RUTAS[perfil.rol];
+        if (ruta) window.location.href = ruta;
+      } catch {}
+    }
+
+    // ── Toggle contraseña ───────────────────────────────────────
+    document.getElementById('toggle-pwd').addEventListener('click', () => {
+      const input = document.getElementById('password');
+      const icon  = document.querySelector('#toggle-pwd .material-symbols-outlined');
+      if (input.type === 'password') { input.type = 'text';     icon.textContent = 'visibility_off'; }
+      else                           { input.type = 'password'; icon.textContent = 'visibility'; }
+    });
+
+    // ── Login con contraseña ────────────────────────────────────
+    document.getElementById('form-pwd').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email    = document.getElementById('email-pwd').value.trim();
+      const password = document.getElementById('password').value;
+      const btn      = document.getElementById('btn-pwd');
+
+      if (!email || !password) return mostrarError('Completá email y contraseña.');
+      setBtnLoading(btn, true);
+      ocultarError();
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) { setBtnLoading(btn, false); return mostrarError('Email o contraseña incorrectos.'); }
+
+      await redirigirPorSesion(data.user.id);
+      setBtnLoading(btn, false);
+    });
+
+    // ── Enviar OTP ──────────────────────────────────────────────
+    document.getElementById('form-otp').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email-otp').value.trim();
+      const btn   = document.getElementById('btn-otp');
+
+      if (!email) return mostrarError('Ingresá tu email.');
+      setBtnLoading(btn, true);
+      ocultarError();
+
+      const { error } = await supabase.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+      setBtnLoading(btn, false);
+
+      if (error) return mostrarError('No encontramos esa cuenta. Verificá el email.');
+      sessionStorage.setItem('tp_otp_email', email);
+      document.getElementById('form-otp').classList.add('hidden');
+      document.getElementById('panel-otp-verify').classList.remove('hidden');
+    });
+
+    // ── Verificar OTP ───────────────────────────────────────────
+    document.getElementById('btn-verify').addEventListener('click', async () => {
+      const token = document.getElementById('otp-code').value.trim();
+      const email = sessionStorage.getItem('tp_otp_email');
+      const btn   = document.getElementById('btn-verify');
+
+      if (!token || token.length < 6) return mostrarError('Ingresá el código completo.');
+      setBtnLoading(btn, true);
+      ocultarError();
+
+      const { data, error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
+      setBtnLoading(btn, false);
+
+      if (error) return mostrarError('Código incorrecto o expirado.');
+      sessionStorage.removeItem('tp_otp_email');
+      await redirigirPorSesion(data.user.id);
+    });
+
+    // ── OTP: input auto-avance ──────────────────────────────────
+    document.getElementById('otp-code').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '');
+      if (e.target.value.length === 6) document.getElementById('btn-verify').click();
+    });
+
+    // ── Helpers ─────────────────────────────────────────────────
+    function mostrarError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+    function ocultarError() {
+      document.getElementById('error-msg').classList.add('hidden');
+    }
+    function setBtnLoading(btn, loading) {
+      if (loading) {
+        btn.disabled = true;
+        btn.dataset.orig = btn.textContent;
+        btn.innerHTML = '<span class="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>';
+      } else {
+        btn.disabled = false;
+        btn.textContent = btn.dataset.orig;
+      }
+    }
+
+    // ── Tabs ────────────────────────────────────────────────────
+    window.switchTab = function(tab) {
+      const isPwd = tab === 'pwd';
+      document.getElementById('form-pwd').classList.toggle('hidden', !isPwd);
+      document.getElementById('form-otp').classList.toggle('hidden', isPwd);
+      document.getElementById('panel-otp-verify').classList.add('hidden');
+      document.getElementById('tab-pwd').className = isPwd ? 'tab-active pb-3 px-4 text-sm font-semibold transition-all flex-1 text-center' : 'tab-inactive pb-3 px-4 text-sm font-semibold transition-all flex-1 text-center';
+      document.getElementById('tab-otp').className = isPwd ? 'tab-inactive pb-3 px-4 text-sm font-semibold transition-all flex-1 text-center' : 'tab-active pb-3 px-4 text-sm font-semibold transition-all flex-1 text-center';
+      ocultarError();
+    };
+
+    window.resetOTP = function() {
+      document.getElementById('panel-otp-verify').classList.add('hidden');
+      document.getElementById('form-otp').classList.remove('hidden');
+    };
+  </script>
+
+</body>
+</html>

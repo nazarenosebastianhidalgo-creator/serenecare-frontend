@@ -1,0 +1,580 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-dim": "#1b5a69",
+                        "surface-container": "#eaeff0",
+                        "secondary-fixed": "#b2ecfd",
+                        "outline": "#747c7e",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "tertiary": "#456653",
+                        "surface-container-highest": "#dce4e6",
+                        "tertiary-dim": "#395a48",
+                        "on-surface-variant": "#596063",
+                        "on-tertiary-container": "#416350",
+                        "error": "#a83836",
+                        "surface": "#f8fafb",
+                        "primary-container": "#a8e3f6",
+                        "surface-container-high": "#e3e9eb",
+                        "tertiary-container": "#d7fde4",
+                        "secondary-container": "#b2ecfd",
+                        "on-tertiary-fixed": "#2f503f",
+                        "on-secondary-container": "#195968",
+                        "on-primary-fixed": "#00404d",
+                        "surface-tint": "#296777",
+                        "surface-bright": "#f8fafb",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#9a9d9e",
+                        "on-secondary": "#effbff",
+                        "on-secondary-fixed": "#004653",
+                        "surface-dim": "#d4dbde",
+                        "primary-dim": "#195a6a",
+                        "inverse-surface": "#0b0f10",
+                        "error-dim": "#67040d",
+                        "on-background": "#2c3436",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "secondary": "#2b6775",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "surface-variant": "#dce4e6",
+                        "inverse-primary": "#a8e3f6",
+                        "on-surface": "#2c3436",
+                        "tertiary-fixed": "#d7fde4",
+                        "outline-variant": "#acb3b6",
+                        "on-error": "#fff7f6",
+                        "primary": "#296777",
+                        "on-secondary-fixed-variant": "#266372",
+                        "error-container": "#fa746f",
+                        "surface-container-low": "#f0f4f6",
+                        "on-tertiary": "#e6ffee",
+                        "on-primary-container": "#0e5463",
+                        "background": "#f8fafb",
+                        "on-primary": "#f0fbff",
+                        "primary-fixed": "#a8e3f6",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "on-error-container": "#6e0a12",
+                        "slate-950": "#020617"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-on-surface font-body antialiased">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-900/50 border-r border-slate-800/30 flex flex-col p-4 gap-2 z-50">
+<div class="flex items-center gap-3 px-2 mb-8">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-dim flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="psychology">psychology</span>
+</div>
+<div>
+<h1 class="text-lg font-black tracking-tighter text-cyan-200">Serene Admin</h1>
+<p class="text-xs text-slate-400 font-medium">Psicología Avanzada</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:translate-x-1 transition-all duration-200 rounded-xl hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-medium font-manrope">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:translate-x-1 transition-all duration-200 rounded-xl hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-medium font-manrope">Citas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white/5 text-cyan-300 rounded-xl shadow-sm border border-cyan-500/20" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-medium font-manrope">Recordatorios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:translate-x-1 transition-all duration-200 rounded-xl hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium font-manrope">Pacientes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:translate-x-1 transition-all duration-200 rounded-xl hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-medium font-manrope">Analíticas</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 flex flex-col gap-1">
+<button class="w-full mb-4 bg-gradient-to-r from-primary to-primary-dim text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+                Nueva Cita
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span>Ayuda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-red-400 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Cerrar Sesión</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 min-h-screen">
+<!-- TopAppBar Context -->
+<header class="flex justify-between items-center mb-10">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-white font-headline">Historial de envíos</h2>
+<p class="text-on-surface-variant mt-1 text-sm">Monitoreo de comunicaciones SereneCare</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="bg-slate-900/80 border border-slate-800 rounded-2xl px-4 py-2 flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="calendar_month">calendar_month</span>
+<span class="text-sm font-medium text-slate-200">12 Oct — 19 Oct, 2023</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer" data-icon="expand_more">expand_more</span>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-slate-800">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary/30 overflow-hidden">
+<img alt="Clinician Profile" class="w-full h-full object-cover" data-alt="professional portrait of a female doctor in a clinical setting with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPNXHEEB9Cm5LxOnpahpbkS8QXAoFPyRo82f4H5Ij80zbHOJamV6NI5KEOBsqXA8l9fphDKh33Iki-QZrhp6ByqZ5lUBpxSapHnYInD3FVMNFONoKW9I1zjqaIFW-HRjPTcJ3okV-Mhv6Xf2uQ72DjAx3B3_KeLzxAuWetAvnn5myYivdlJ_9XS8VB83yZ0jXuCOIcKUMU9i-5jh90qJtevhpPJ-aDOicOdKG_sMIsOnBUehGuuU9CrKHvOjTfUDhyfmL99TzNHWLx"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Summary Cards (The "Editorial" Bento) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all"></div>
+<div class="flex flex-col gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</div>
+<div>
+<p class="text-sm font-medium text-slate-400 uppercase tracking-widest">Total Enviados</p>
+<h3 class="text-4xl font-bold text-white mt-1">2,842</h3>
+<p class="text-xs text-tertiary mt-2 flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+                            +12% vs mes anterior
+                        </p>
+</div>
+</div>
+</div>
+<div class="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary-fixed/10 rounded-full blur-3xl group-hover:bg-secondary-fixed/20 transition-all"></div>
+<div class="flex flex-col gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center text-secondary-fixed">
+<span class="material-symbols-outlined" data-icon="task_alt">task_alt</span>
+</div>
+<div>
+<p class="text-sm font-medium text-slate-400 uppercase tracking-widest">Tasa Entrega</p>
+<h3 class="text-4xl font-bold text-white mt-1">98.4%</h3>
+<div class="w-full bg-slate-800 h-1.5 mt-4 rounded-full overflow-hidden">
+<div class="bg-secondary-fixed h-full w-[98.4%]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-card border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-tertiary/10 rounded-full blur-3xl group-hover:bg-tertiary/20 transition-all"></div>
+<div class="flex flex-col gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+</div>
+<div>
+<p class="text-sm font-medium text-slate-400 uppercase tracking-widest">No-Shows Evitados</p>
+<h3 class="text-4xl font-bold text-white mt-1">156</h3>
+<p class="text-xs text-slate-500 mt-2">Impacto estimado: <span class="text-white font-medium">€7,800</span></p>
+</div>
+</div>
+</div>
+</div>
+<!-- Filters Section -->
+<div class="flex flex-wrap items-center gap-4 mb-8">
+<div class="relative flex-grow max-w-sm">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" data-icon="search">search</span>
+<input class="w-full bg-slate-900 border-none rounded-2xl py-3 pl-12 pr-4 text-sm text-slate-200 focus:ring-2 focus:ring-primary/40 transition-all placeholder:text-slate-600" placeholder="Buscar por paciente..." type="text"/>
+</div>
+<div class="flex items-center gap-2 bg-slate-900/50 p-1.5 rounded-2xl">
+<button class="px-4 py-2 bg-slate-800 text-white text-xs font-semibold rounded-xl shadow-sm">Todos</button>
+<button class="px-4 py-2 text-slate-500 hover:text-slate-300 text-xs font-semibold transition-colors">WhatsApp</button>
+<button class="px-4 py-2 text-slate-500 hover:text-slate-300 text-xs font-semibold transition-colors">Email</button>
+<button class="px-4 py-2 text-slate-500 hover:text-slate-300 text-xs font-semibold transition-colors">SMS</button>
+</div>
+<select class="bg-slate-900 border-none rounded-2xl py-3 px-6 text-sm text-slate-300 focus:ring-2 focus:ring-primary/40 appearance-none min-w-[160px]">
+<option>Estado: Todos</option>
+<option>Entregado</option>
+<option>Abierto</option>
+<option>Fallido</option>
+</select>
+<select class="bg-slate-900 border-none rounded-2xl py-3 px-6 text-sm text-slate-300 focus:ring-2 focus:ring-primary/40 appearance-none min-w-[180px]">
+<option>Psicólogo: Todos</option>
+<option>Dr. Javier Aranda</option>
+<option>Dra. Elena Ruiz</option>
+</select>
+</div>
+<!-- Table / List Content -->
+<div class="glass-card rounded-3xl border border-white/5 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-900/40">
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Paciente</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Cita</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Psicólogo</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Regla / Canal</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest">Estado</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 1 -->
+<tr class="hover:bg-white/5 transition-colors group cursor-pointer">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img alt="Patient Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="portrait of a young woman with a friendly smile against a neutral soft-toned background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOjHK3TCAO8IfJ6tYVxxEClkzZs2VwbLjigaxdNel_ZTf7wwfnwUMZuVp3vQXqMNObfqZxhvs2-ozVqu84q1ZDKoVpLUKya4pspc9YIsVDV8hF2nUmOh8lGVzQxA5mKdh-C8zAbupqhTkEbY8zPrObJGonexCCEw_6pla--9GzK9YEwq8RKxeuhNPTGm0VOUvvdRUhv4g6Xqvb51UlQAVTZze4id4CFO6mlV0Py3eLPSEPlyZ3eHlQ-cwtISjNbBR_UTCI03cSpoZe"/>
+<div>
+<p class="font-semibold text-slate-100">Ana María García</p>
+<p class="text-xs text-slate-500 font-medium">am.garcia@email.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="text-sm">
+<p class="text-slate-200 font-medium">Mañana, 10:30</p>
+<p class="text-xs text-slate-500">20 Oct, 2023</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-sm text-slate-300">Dr. Javier Aranda</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 bg-slate-800 rounded-lg text-[10px] font-bold text-slate-400">48H ANTES</span>
+<span class="material-symbols-outlined text-cyan-400" data-icon="chat_bubble">chat_bubble</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary/10 text-tertiary text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                                Entregado
+                            </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-slate-500 hover:text-white hover:bg-slate-800 rounded-lg transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="replay">replay</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/5 transition-colors group cursor-pointer">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img alt="Patient Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="professional male portrait with soft ambient lighting and blurred office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtlyrN4wVRly8_ShGFTTY7Vkq7CSMq-uBKw-CgJ023taGC2rR6I_8pTeHvPJ005v8-fP4-N8HVdQtw2mMo6APLxGhaBAEIKcTOt2QD6-EE6xFvyK0s9Xkryyz_1mt12dTSwNN3kz2sWWOxXM8qUd-tioYAD57sPL_AYrv1FV8qLOWY36ThoiqAphpSnzH288HUlxzfioJH-tmTlBnOdrApndSRttSlTMEj3wc51Y24i1OHzbz246R_69vsA76JE_GW3sfqb4XyCfmW"/>
+<div>
+<p class="font-semibold text-slate-100">Roberto Jiménez</p>
+<p class="text-xs text-slate-500 font-medium">+34 612 334 ***</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="text-sm">
+<p class="text-slate-200 font-medium">Lunes, 16:00</p>
+<p class="text-xs text-slate-500">23 Oct, 2023</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-sm text-slate-300">Dra. Elena Ruiz</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 bg-slate-800 rounded-lg text-[10px] font-bold text-slate-400">24H ANTES</span>
+<span class="material-symbols-outlined text-blue-400" data-icon="mail">mail</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/10 text-secondary-fixed text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
+                                Abierto
+                            </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-slate-500 hover:text-white hover:bg-slate-800 rounded-lg transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="replay">replay</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 (Expandible simulation) -->
+<tr class="bg-primary/5 transition-colors group cursor-pointer border-l-4 border-primary">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<img alt="Patient Avatar" class="w-10 h-10 rounded-full object-cover" data-alt="close-up portrait of a woman looking thoughtful with warm artistic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEq8zoQn0h80iUhMSoJ2oAFml1QtJzSRG9-Q0YdQIW9tRcKr177gHJ-gX0mQNVRGvzvxvLRJp4NMFhFmGCkgJ4XiQzoaomKMPzgKyxxL0e-ChPs0lGfLF1cNVReVU-lWaTwCLfDj9djYhO4bTWItQTAz6jZZsfMAhUUc-A_GZS6W8SjomgBhw7mp01KcXfNABnO6pOm0gcIBalgF0J_rUw3E_uONpuVnn1tgiFZCZgY6-dqBp7pRODmgEMAPJbTtcO3QPpkdZwAueq"/>
+<div>
+<p class="font-semibold text-slate-100">Lucía Torres</p>
+<p class="text-xs text-slate-500 font-medium">l.torres@email.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="text-sm">
+<p class="text-slate-200 font-medium">Hoy, 18:45</p>
+<p class="text-xs text-slate-500">19 Oct, 2023</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-sm text-slate-300">Dr. Javier Aranda</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 bg-slate-800 rounded-lg text-[10px] font-bold text-slate-400">1H ANTES</span>
+<span class="material-symbols-outlined text-red-400" data-icon="sms">sms</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error/10 text-error-container text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                Fallido
+                            </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="inline-flex items-center gap-2 px-3 py-1.5 bg-error text-white text-xs font-bold rounded-xl active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xs" data-icon="replay">replay</span>
+                                Reenviar
+                            </button>
+</td>
+</tr>
+<!-- Expanded content simulated -->
+<tr class="bg-slate-900/20 border-l-4 border-primary/50">
+<td class="px-8 py-6" colspan="6">
+<div class="grid grid-cols-4 gap-8">
+<div class="col-span-2">
+<p class="text-xs font-bold text-slate-500 uppercase mb-2">Detalle del Error</p>
+<p class="text-sm text-slate-300 leading-relaxed">El número de teléfono +34 600 000 *** devolvió un error de red (Provider Timeout). Se recomienda verificar el contacto o intentar por email.</p>
+</div>
+<div>
+<p class="text-xs font-bold text-slate-500 uppercase mb-2">Intentos</p>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<p class="text-sm text-slate-400">19 Oct — 17:45 (Fallido)</p>
+</div>
+</div>
+<div>
+<p class="text-xs font-bold text-slate-500 uppercase mb-2">Metadata</p>
+<p class="text-sm text-slate-400">ID: MSG-99283-TRX</p>
+<p class="text-sm text-slate-400">Template: Reminder_Short_ES</p>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/5 transition-colors group cursor-pointer">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold">PC</div>
+<div>
+<p class="font-semibold text-slate-100">Pedro Casales</p>
+<p class="text-xs text-slate-500 font-medium">p.casales@email.com</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="text-sm">
+<p class="text-slate-200 font-medium">Mañana, 09:00</p>
+<p class="text-xs text-slate-500">20 Oct, 2023</p>
+</div>
+</td>
+<td class="px-6 py-5">
+<p class="text-sm text-slate-300">Dra. Elena Ruiz</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 bg-slate-800 rounded-lg text-[10px] font-bold text-slate-400">24H ANTES</span>
+<span class="material-symbols-outlined text-slate-400" data-icon="mail">mail</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-xs font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span>
+                                Enviado
+                            </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-slate-500 hover:text-white hover:bg-slate-800 rounded-lg transition-all opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined" data-icon="replay">replay</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination Footer -->
+<div class="px-6 py-6 bg-slate-900/40 border-t border-white/5 flex justify-between items-center">
+<p class="text-xs text-slate-500 font-medium">Mostrando 4 de 1,248 resultados</p>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-slate-800 text-slate-400 rounded-xl text-xs font-bold flex items-center gap-1 hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+                        Anterior
+                    </button>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded-lg text-slate-500 hover:text-white text-xs font-bold">2</button>
+<button class="w-8 h-8 rounded-lg text-slate-500 hover:text-white text-xs font-bold">3</button>
+<span class="text-slate-600 px-1">...</span>
+<button class="w-8 h-8 rounded-lg text-slate-500 hover:text-white text-xs font-bold">42</button>
+</div>
+<button class="px-4 py-2 bg-slate-800 text-slate-200 rounded-xl text-xs font-bold flex items-center gap-1 hover:bg-slate-700 transition-colors">
+                        Siguiente
+                        <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Anchor for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-slate-900/90 backdrop-blur-xl border-t border-white/5 px-6 flex justify-between items-center z-50">
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="text-[10px]">Dashboard</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="text-[10px]">Citas</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-cyan-400">
+<span class="material-symbols-outlined" data-icon="notifications_active" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="text-[10px]">Log</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-[10px]">Pacientes</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-500">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<span class="text-[10px]">Más</span>
+</button>
+</nav>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { verificarSesion, cerrarSesion } from '../js/auth.js'
+import { obtenerHistorialRecordatorios, enviarRecordatorioManual } from '../js/pagos.js'
+
+await verificarSesion(['psicologo', 'admin_clinica'])
+const { data: { user } } = await supabase.auth.getUser()
+const { data: perfil } = await supabase.from('usuarios').select('clinica_id').eq('id', user.id).single()
+const cid = perfil?.clinica_id
+
+// Stats globales
+const { count: totalEnviados } = await supabase.from('recordatorios').select('id', { count: 'exact', head: true })
+  .eq('clinica_id', cid).eq('enviado', true)
+const statCards = document.querySelectorAll('.glass-card h3.text-4xl')
+if (statCards[0]) statCards[0].textContent = totalEnviados || 0
+
+// Cargar tabla
+async function cargarTabla(filtro = {}) {
+  let q = supabase.from('recordatorios')
+    .select('id, canal, mensaje, enviado, fecha_envio, pacientes(nombre, apellido, email), citas(fecha, hora_inicio, psicologo_id, usuarios(nombre, apellido))')
+    .eq('clinica_id', cid)
+    .order('fecha_envio', { ascending: false })
+    .limit(50)
+
+  if (filtro.canal && filtro.canal !== 'todos') q = q.eq('canal', filtro.canal)
+  if (filtro.estado === 'fallido') q = q.eq('enviado', false)
+  if (filtro.estado === 'enviado') q = q.eq('enviado', true)
+
+  const { data } = await q
+  const tbody = document.querySelector('tbody')
+  if (!tbody || !data) return
+
+  tbody.querySelectorAll('tr').forEach(r => r.remove())
+
+  data.forEach(r => {
+    const estadoBadge = r.enviado
+      ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary/10 text-tertiary text-xs font-bold"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>Entregado</span>`
+      : `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-error/10 text-error-container text-xs font-bold"><span class="w-1.5 h-1.5 rounded-full bg-error"></span>Fallido</span>`
+    const iconCanal = r.canal === 'email' ? 'mail' : r.canal === 'whatsapp' ? 'chat_bubble' : 'sms'
+    const colorCanal = r.canal === 'email' ? 'text-blue-400' : 'text-cyan-400'
+    const fechaCita = r.citas?.fecha ? new Date(r.citas.fecha + 'T00:00:00').toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short' }) : '—'
+    const hora = r.citas?.hora_inicio?.substring(0, 5) || ''
+    const psicoNombre = r.citas?.usuarios ? `${r.citas.usuarios.nombre} ${r.citas.usuarios.apellido}` : '—'
+    const pacienteNombre = r.pacientes ? `${r.pacientes.nombre} ${r.pacientes.apellido}` : '—'
+    const emailP = r.pacientes?.email || ''
+    const tr = document.createElement('tr')
+    tr.className = 'hover:bg-white/5 transition-colors group cursor-pointer'
+    tr.innerHTML = `
+      <td class="px-6 py-5"><div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold">${pacienteNombre.split(' ').map(x=>x[0]||'').join('').substring(0,2).toUpperCase()}</div>
+        <div><p class="font-semibold text-slate-100">${pacienteNombre}</p><p class="text-xs text-slate-500">${emailP}</p></div>
+      </div></td>
+      <td class="px-6 py-5"><div class="text-sm"><p class="text-slate-200 font-medium">${fechaCita}${hora ? ', ' + hora : ''}</p></div></td>
+      <td class="px-6 py-5"><p class="text-sm text-slate-300">${psicoNombre}</p></td>
+      <td class="px-6 py-5"><div class="flex items-center gap-3">
+        <span class="px-2 py-1 bg-slate-800 rounded-lg text-[10px] font-bold text-slate-400">24H ANTES</span>
+        <span class="material-symbols-outlined ${colorCanal}">${iconCanal}</span>
+      </div></td>
+      <td class="px-6 py-5">${estadoBadge}</td>
+      <td class="px-6 py-5 text-right">
+        ${!r.enviado ? `<button class="inline-flex items-center gap-2 px-3 py-1.5 bg-error text-white text-xs font-bold rounded-xl active:scale-95 transition-all btn-reenviar" data-id="${r.id}"><span class="material-symbols-outlined text-xs">replay</span>Reenviar</button>` : `<button class="p-2 text-slate-500 hover:text-white hover:bg-slate-800 rounded-lg transition-all opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined">replay</span></button>`}
+      </td>`
+    tbody.appendChild(tr)
+  })
+
+  // Actualizar contador
+  const countEl = document.querySelector('.flex.justify-between.items-center.mb-10 + div p, .glass-card p.text-xs.text-slate-500')
+  const paginEl = document.querySelector('.px-6.py-6 p.text-xs.text-slate-500')
+  if (paginEl) paginEl.textContent = `Mostrando ${data.length} resultados`
+}
+
+cargarTabla()
+
+// Filtros
+document.querySelectorAll('.flex.items-center.gap-2.bg-slate-900\\/50 button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.flex.items-center.gap-2.bg-slate-900\\/50 button').forEach(b => {
+      b.classList.remove('bg-slate-800', 'text-white')
+      b.classList.add('text-slate-500')
+    })
+    btn.classList.add('bg-slate-800', 'text-white')
+    btn.classList.remove('text-slate-500')
+    const canal = btn.textContent.trim().toLowerCase()
+    cargarTabla({ canal: canal === 'todos' ? null : canal })
+  })
+})
+
+// Nueva cita
+document.querySelector('button.bg-gradient-to-r')?.addEventListener('click', () => {
+  window.location.href = '/screens/gestion_citas.html'
+})
+
+// Cerrar sesión
+document.querySelectorAll('a').forEach(a => {
+  if (a.textContent.trim() === 'Cerrar Sesión') a.addEventListener('click', e => { e.preventDefault(); cerrarSesion() })
+})
+
+// Disparar recordatorio manual
+const btnManual = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Nueva Cita'))
+// No hay botón manual explícito, se deja para acción futura
+</script>
+</body></html>

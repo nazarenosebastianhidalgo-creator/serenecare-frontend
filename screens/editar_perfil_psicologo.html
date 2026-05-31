@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Editor de Perfil Profesional - SereneCare</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#596063",
+                      "tertiary": "#456653",
+                      "tertiary-fixed-dim": "#c9eed6",
+                      "surface-bright": "#f8fafb",
+                      "on-surface": "#2c3436",
+                      "on-tertiary": "#e6ffee",
+                      "on-secondary-fixed": "#004653",
+                      "on-tertiary-container": "#416350",
+                      "secondary": "#2b6775",
+                      "on-primary-fixed": "#00404d",
+                      "error": "#a83836",
+                      "on-secondary-container": "#195968",
+                      "inverse-surface": "#0b0f10",
+                      "inverse-on-surface": "#9a9d9e",
+                      "surface-tint": "#296777",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-highest": "#dce4e6",
+                      "tertiary-dim": "#395a48",
+                      "tertiary-container": "#d7fde4",
+                      "surface-dim": "#d4dbde",
+                      "secondary-fixed": "#b2ecfd",
+                      "primary-fixed": "#a8e3f6",
+                      "secondary-dim": "#1b5a69",
+                      "surface-container-low": "#f0f4f6",
+                      "error-dim": "#67040d",
+                      "on-tertiary-fixed": "#2f503f",
+                      "surface-container-high": "#e3e9eb",
+                      "outline-variant": "#acb3b6",
+                      "on-secondary": "#effbff",
+                      "surface": "#f8fafb",
+                      "on-background": "#2c3436",
+                      "primary-dim": "#195a6a",
+                      "on-primary-fixed-variant": "#1d5e6d",
+                      "surface-variant": "#dce4e6",
+                      "error-container": "#fa746f",
+                      "outline": "#747c7e",
+                      "secondary-container": "#b2ecfd",
+                      "on-tertiary-fixed-variant": "#4c6d5a",
+                      "surface-container": "#eaeff0",
+                      "tertiary-fixed": "#d7fde4",
+                      "on-error-container": "#6e0a12",
+                      "on-error": "#fff7f6",
+                      "inverse-primary": "#a8e3f6",
+                      "primary-fixed-dim": "#9ad5e7",
+                      "on-primary-container": "#0e5463",
+                      "background": "#f8fafb",
+                      "secondary-fixed-dim": "#a4ddef",
+                      "on-secondary-fixed-variant": "#266372",
+                      "primary-container": "#a8e3f6",
+                      "primary": "#296777",
+                      "on-primary": "#f0fbff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "2xl": "1rem",
+                      "3xl": "1.5rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Manrope"],
+                      "display": ["Manrope"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-[#020617] text-white font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Sidebar Container -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto sidebar-dark flex flex-col p-5 border-r border-slate-800/30 z-50" style="background:#0a1628;">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
+    </div>
+    <div class="overflow-hidden">
+      <p class="text-sm font-bold text-white truncate" style="font-family:Manrope,sans-serif;">Clínica Sol</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Portal Clínico</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_psicologo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm" style="color:#94a3b8;transition:all 0.2s;font-family:Manrope,sans-serif;">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="agenda_psicologo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm" style="color:#94a3b8;transition:all 0.2s;font-family:Manrope,sans-serif;">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Mi Agenda</span>
+    </a>
+    <a href="pacientes_psicologo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm" style="color:#94a3b8;transition:all 0.2s;font-family:Manrope,sans-serif;">
+      <span class="material-symbols-outlined text-lg">group</span><span>Mis Pacientes</span>
+    </a>
+    <a href="mensajes_psicologo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm" style="color:#94a3b8;transition:all 0.2s;font-family:Manrope,sans-serif;">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="sala_espera_psicologo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm" style="color:#4ade80;font-family:Manrope,sans-serif;">
+      <span class="material-symbols-outlined text-lg" style="color:#4ade80;font-variation-settings:'FILL' 1;">videocam</span><span>Videollamadas</span>
+    </a>
+    <a href="consentimientos_psicologo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm" style="color:#94a3b8;transition:all 0.2s;font-family:Manrope,sans-serif;">
+      <span class="material-symbols-outlined text-lg">history_edu</span><span>Consentimientos</span>
+    </a>
+  </nav>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button onclick="document.getElementById('user-menu').classList.toggle('hidden')" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(139,92,246,0.2);color:#a78bfa;">PS</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p class="text-sm font-bold text-white truncate">Psicólogo</p>
+        <p class="text-[10px] text-slate-500">Terapeuta</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen p-8 lg:p-12">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<h2 class="text-3xl font-headline font-extrabold tracking-tight">Mi Perfil Profesional</h2>
+<span class="px-3 py-1 bg-tertiary-container/10 text-tertiary-fixed-dim text-[10px] font-bold uppercase tracking-wider rounded-full border border-tertiary/20">Visible públicamente</span>
+</div>
+<p class="text-slate-400 text-sm max-w-md">Esta información aparecerá en el directorio público de tu clínica.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-5 py-2.5 border border-slate-700 text-slate-300 rounded-xl text-sm font-semibold hover:bg-slate-800 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">visibility</span>
+                    Vista previa pública
+                </button>
+<button class="px-6 py-2.5 bg-gradient-to-br from-primary to-primary-dim text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
+                    Guardar cambios
+                </button>
+</div>
+</header>
+<!-- Profile Editor Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column (33%) -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Card 1: Identity -->
+<section class="glass-card p-8 rounded-3xl border border-white/5 relative overflow-hidden group">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-6">
+<div class="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-800/50 shadow-2xl">
+<img class="w-full h-full object-cover" data-alt="Professional portrait of a middle-aged female psychologist with a friendly expression in a bright modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4PlwYQqnyh47GBrWiT2e8A2mJfscJvAv_Kqbr71fEnuloOsBsfhHhJLiYBYLPm1S3j9e3Vs-sPmhdauoAFgw1bUFcA-QiGe2Vwd82P-8dUy4lqqCrUswBmH2Y36ZDnDqYof-Cdcz8SIaTnQw5flUwf38gC0vANJNb0E6hklWGl9n0hHAPiCHE71dX8aniG_VEMwVI3gor3xOJv_k-IACE3Jl9HEUJxmg9Cx7v2FrdbyJ71JY0itIZppQNSQtQa_GR-zW1AJFaSSQ6"/>
+</div>
+<button class="absolute bottom-0 right-0 p-2 bg-primary text-white rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-sm">edit</span>
+</button>
+</div>
+<h3 class="text-xl font-headline font-bold mb-1">Dra. Julianne Moore</h3>
+<div class="flex items-center gap-1.5 text-slate-400 text-sm mb-6">
+<span class="material-symbols-outlined text-primary text-base" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span>Colegiado: 282805432</span>
+</div>
+<div class="w-full pt-6 border-t border-white/5 space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-sm text-slate-400 font-medium">Estado</span>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-tertiary-fixed-dim">Disponible</span>
+<div class="w-10 h-5 bg-tertiary/30 rounded-full relative cursor-pointer">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-tertiary-fixed-dim rounded-full shadow-sm"></div>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-start gap-2">
+<span class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Idiomas</span>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-slate-800/50 rounded-lg text-xs font-medium">Español</span>
+<span class="px-3 py-1 bg-slate-800/50 rounded-lg text-xs font-medium">Inglés</span>
+<span class="px-3 py-1 bg-slate-800/50 rounded-lg text-xs font-medium">Catalán</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Card 2: Logistics -->
+<section class="glass-card p-8 rounded-3xl border border-white/5 space-y-8">
+<div>
+<h4 class="text-sm font-headline font-bold mb-4 flex items-center gap-2 text-primary-fixed">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+                            Disponibilidad semanal
+                        </h4>
+<div class="grid grid-cols-7 gap-2 mb-4">
+<!-- Days items -->
+<div class="flex flex-col items-center gap-2">
+<span class="text-[10px] font-bold text-slate-500">L</span>
+<div class="w-8 h-8 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-xs text-primary-fixed" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-[10px] font-bold text-slate-500">M</span>
+<div class="w-8 h-8 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-xs text-primary-fixed" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-[10px] font-bold text-slate-500">X</span>
+<div class="w-8 h-8 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-xs text-primary-fixed" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-[10px] font-bold text-slate-500">J</span>
+<div class="w-8 h-8 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-xs text-primary-fixed" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="text-[10px] font-bold text-slate-500">V</span>
+<div class="w-8 h-8 rounded-lg bg-primary/20 border border-primary/30 flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-xs text-primary-fixed" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<span class="text-[10px] font-bold text-slate-500">S</span>
+<div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center cursor-pointer">
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<span class="text-[10px] font-bold text-slate-500">D</span>
+<div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center cursor-pointer">
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 text-xs text-slate-400">
+<div class="flex-1 p-2 bg-slate-900/50 rounded-lg border border-white/5 text-center">09:00</div>
+<span class="text-slate-600">—</span>
+<div class="flex-1 p-2 bg-slate-900/50 rounded-lg border border-white/5 text-center">18:00</div>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-2 block">Duración sesión</label>
+<div class="grid grid-cols-4 gap-2">
+<button class="p-2 text-[11px] rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">45min</button>
+<button class="p-2 text-[11px] rounded-lg bg-primary text-white font-bold">50min</button>
+<button class="p-2 text-[11px] rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">60min</button>
+<button class="p-2 text-[11px] rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors">90min</button>
+</div>
+</div>
+<div class="flex items-center justify-between gap-4">
+<div class="flex-1">
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-2 block">Precio/sesión</label>
+<div class="relative">
+<input class="w-full bg-slate-900 border-none rounded-xl text-sm py-2 px-3 text-white focus:ring-1 focus:ring-primary/50" type="text" value="65"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs">€</span>
+</div>
+</div>
+<div class="pt-6">
+<label class="flex items-center gap-2 cursor-pointer">
+<div class="w-10 h-5 bg-slate-800 rounded-full relative">
+<div class="absolute left-0.5 top-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+</div>
+<span class="text-xs text-slate-400">1ª consulta gratis</span>
+</label>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (66%) -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Card 1: Professional Info -->
+<section class="glass-card p-8 rounded-3xl border border-white/5">
+<h4 class="text-xl font-headline font-bold mb-8 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed">psychology</span>
+                        Información profesional
+                    </h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+<div class="space-y-2">
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Título profesional</label>
+<input class="w-full bg-slate-900/50 border border-white/5 rounded-xl text-sm py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Ej: Psicóloga Clínica Senior" type="text" value="Psicóloga Clínica y Psicoterapeuta"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Universidad</label>
+<input class="w-full bg-slate-900/50 border border-white/5 rounded-xl text-sm py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Universidad de..." type="text" value="Universidad Autónoma de Madrid"/>
+</div>
+</div>
+<div class="space-y-6">
+<div class="space-y-3">
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Especialidades (Máx 5)</label>
+<div class="flex flex-wrap gap-2">
+<div class="px-4 py-2 bg-secondary-container/10 text-secondary-fixed border border-secondary/20 rounded-full text-xs font-medium flex items-center gap-2">
+                                    Ansiedad y Estrés <span class="material-symbols-outlined text-xs cursor-pointer">close</span>
+</div>
+<div class="px-4 py-2 bg-secondary-container/10 text-secondary-fixed border border-secondary/20 rounded-full text-xs font-medium flex items-center gap-2">
+                                    Depresión <span class="material-symbols-outlined text-xs cursor-pointer">close</span>
+</div>
+<div class="px-4 py-2 bg-secondary-container/10 text-secondary-fixed border border-secondary/20 rounded-full text-xs font-medium flex items-center gap-2">
+                                    Terapia de Pareja <span class="material-symbols-outlined text-xs cursor-pointer">close</span>
+</div>
+<div class="px-4 py-2 bg-secondary-container/10 text-secondary-fixed border border-secondary/20 rounded-full text-xs font-medium flex items-center gap-2">
+                                    Autoestima <span class="material-symbols-outlined text-xs cursor-pointer">close</span>
+</div>
+<button class="px-4 py-2 border border-dashed border-slate-700 text-slate-500 rounded-full text-xs font-medium hover:border-primary/50 hover:text-primary transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">add</span> Añadir
+                                </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<div class="flex justify-between">
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Enfoque terapéutico</label>
+<span class="text-[10px] text-slate-600">320 / 500</span>
+</div>
+<textarea class="w-full bg-slate-900/50 border border-white/5 rounded-2xl text-sm py-3 px-4 focus:ring-2 focus:ring-primary/20 resize-none outline-none" rows="4">Mi enfoque se basa en la Terapia Cognitivo-Conductual (TCC) integrada con técnicas de Mindfulness y Terapia de Aceptación y Compromiso (ACT). Trabajo desde la empatía y el respeto para crear un espacio seguro donde el paciente pueda explorar sus emociones y desarrollar herramientas prácticas.</textarea>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between">
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Bio corta</label>
+<span class="text-[10px] text-slate-600">145 / 200</span>
+</div>
+<textarea class="w-full bg-slate-900/50 border border-white/5 rounded-2xl text-sm py-3 px-4 focus:ring-2 focus:ring-primary/20 resize-none outline-none" rows="4">Psicóloga con más de 12 años de experiencia ayudando a adultos a superar crisis de ansiedad y mejorar su bienestar emocional a través de terapias basadas en evidencia.</textarea>
+</div>
+</div>
+<div class="space-y-4">
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Años de experiencia</label>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 bg-slate-900/50 p-1.5 rounded-2xl border border-white/5">
+<button class="w-10 h-10 flex items-center justify-center bg-slate-800 rounded-xl hover:bg-slate-700 text-slate-300">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<span class="text-xl font-bold px-4">12</span>
+<button class="w-10 h-10 flex items-center justify-center bg-primary rounded-xl text-white shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<p class="text-xs text-slate-500 italic">Este dato se utiliza para filtrar en el directorio principal.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Card 2: Training -->
+<section class="glass-card p-8 rounded-3xl border border-white/5">
+<div class="flex justify-between items-center mb-8">
+<h4 class="text-xl font-headline font-bold flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed">school</span>
+                            Formación y certificaciones
+                        </h4>
+<button class="flex items-center gap-2 text-xs font-bold text-primary-fixed hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                            Añadir
+                        </button>
+</div>
+<div class="space-y-4">
+<!-- Education items -->
+<div class="group flex items-center justify-between p-4 bg-slate-900/30 rounded-2xl border border-white/5 hover:bg-slate-900/60 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-200">Máster en Psicología General Sanitaria</p>
+<p class="text-xs text-slate-500">UAM • 2012</p>
+</div>
+</div>
+<button class="p-2 text-slate-600 hover:text-error opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<div class="group flex items-center justify-between p-4 bg-slate-900/30 rounded-2xl border border-white/5 hover:bg-slate-900/60 transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-200">Especialización en Terapia de Pareja</p>
+<p class="text-xs text-slate-500">Instituto Superior de Psicología • 2014</p>
+</div>
+</div>
+<button class="p-2 text-slate-600 hover:text-error opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Card 3: Modalities -->
+<section class="glass-card p-8 rounded-3xl border border-white/5">
+<h4 class="text-xl font-headline font-bold mb-8 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-fixed">room_service</span>
+                        Modalidades
+                    </h4>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="relative p-6 rounded-3xl bg-slate-900/40 border border-white/5 hover:border-primary/50 transition-all cursor-pointer group text-center flex flex-col items-center gap-4 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">home_pin</span>
+</div>
+<span class="text-sm font-bold">Presencial</span>
+<div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-slate-700 flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-primary rounded-full hidden"></div>
+</div>
+</div>
+<div class="relative p-6 rounded-3xl bg-primary/10 border-2 border-primary/50 transition-all cursor-pointer group text-center flex flex-col items-center gap-4 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
+<div class="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined text-2xl">videocam</span>
+</div>
+<span class="text-sm font-bold text-primary-fixed">Online</span>
+<div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-primary-fixed flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-primary-fixed rounded-full"></div>
+</div>
+</div>
+<div class="relative p-6 rounded-3xl bg-slate-900/40 border border-white/5 hover:border-primary/50 transition-all cursor-pointer group text-center flex flex-col items-center gap-4 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">commute</span>
+</div>
+<span class="text-sm font-bold">Domicilio</span>
+<div class="absolute top-4 right-4 w-5 h-5 rounded-full border-2 border-slate-700 flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-primary rounded-full hidden"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+
+  <div id='error-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <div id='success-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <script type="module">
+    import { guardaClinica } from '../js/clinica.js'
+    import { supabase }      from '../js/supabase-client.js'
+    import { cerrarSesion, mostrarError, setBotonCargando } from '../js/auth.js'
+    window._cerrarSesion = cerrarSesion
+
+    await guardaClinica()
+    const uid = (await supabase.auth.getUser()).data.user?.id
+    const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', uid).single()
+
+    // Poblar campos
+    document.querySelectorAll('input[type="text"], input[type="email"], textarea').forEach(inp => {
+      const n = (inp.name || inp.id || inp.placeholder || '').toLowerCase()
+      if (n.includes('nombre') || n.includes('name'))   inp.value = perfil?.nombre    || ''
+      if (n.includes('apellido') || n.includes('last'))  inp.value = perfil?.apellido  || ''
+      if (n.includes('email'))                           inp.value = perfil?.email     || ''
+      if (n.includes('tel') || n.includes('phone'))      inp.value = perfil?.telefono  || ''
+    })
+
+    const btnGuardar = Array.from(document.querySelectorAll('button')).find(b =>
+      b.textContent.toLowerCase().includes('guardar') || b.textContent.toLowerCase().includes('save'))
+
+    btnGuardar?.addEventListener('click', async () => {
+      setBotonCargando(btnGuardar, true)
+      const inputs = document.querySelectorAll('input[type="text"], input[type="email"]')
+      const datos  = {}
+      inputs.forEach(inp => {
+        const n = (inp.name || inp.id || '').toLowerCase()
+        if (n.includes('nombre')) datos.nombre   = inp.value
+        if (n.includes('apellido')) datos.apellido = inp.value
+        if (n.includes('tel'))    datos.telefono = inp.value
+      })
+      try {
+        await supabase.from('usuarios').update({ ...datos, updated_at: new Date().toISOString() }).eq('id', uid)
+        const ok = document.getElementById('success-msg')
+        ok.textContent = 'Perfil actualizado.'
+        ok.classList.remove('hidden')
+        setTimeout(() => ok.classList.add('hidden'), 2000)
+      } catch(e) { mostrarError(e.message) }
+      finally { setBotonCargando(btnGuardar, false) }
+    })
+  </script>
+<!-- MINI CHAT WIDGET -->
+<div id="cw-panel" style="position:fixed;bottom:160px;right:24px;z-index:9998;width:320px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
+  <div id="cw-lista-wrap" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">
+    <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="material-symbols-outlined" style="color:#a78bfa;font-size:18px;font-variation-settings:'FILL' 1;">chat</span>
+        <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#f1f5f9;">Mensajes</span>
+        <span id="cw-total-badge" style="background:#f87171;color:#020617;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px;">2</span>
+      </div>
+      <a href="mensajes_psicologo.html" style="font-size:11px;font-weight:700;color:#a78bfa;text-decoration:none;padding:4px 10px;border-radius:8px;background:rgba(139,92,246,0.1);">Ver todo</a>
+    </div>
+    <div id="cw-conv-list" style="max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+  </div>
+  <div id="cw-chat-wrap" style="display:none;flex-direction:column;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);height:420px;">
+    <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <button onclick="cwVolverLista()" style="background:none;border:none;cursor:pointer;color:#64748b;display:flex;align-items:center;padding:2px;">
+        <span class="material-symbols-outlined" style="font-size:17px;">arrow_back</span>
+      </button>
+      <span id="cw-chat-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>
+      <span id="cw-chat-title" style="flex:1;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+      <a href="mensajes_psicologo.html" style="font-size:11px;font-weight:700;color:#a78bfa;text-decoration:none;flex-shrink:0;">Expandir &#x2197;</a>
+    </div>
+    <div id="cw-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+    <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;flex-shrink:0;">
+      <input id="cw-input" type="text" placeholder="Escribe un mensaje..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;border-radius:10px;padding:8px 12px;font-size:12px;outline:none;font-family:'Inter',sans-serif;" onkeydown="if(event.key==='Enter')cwEnviar()"/>
+      <button onclick="cwEnviar()" style="width:32px;height:32px;border-radius:50%;background:rgba(139,92,246,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(139,92,246,0.35);">
+        <span class="material-symbols-outlined" style="font-size:15px;color:#fff;font-variation-settings:'FILL' 1;">send</span>
+      </button>
+    </div>
+  </div>
+</div>
+<button id="fab-mensajes" onclick="toggleChatWidget()" style="position:fixed;bottom:96px;right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(139,92,246,0.95),rgba(109,40,217,0.95));box-shadow:0 8px 28px rgba(139,92,246,0.4),0 2px 8px rgba(0,0,0,0.4);transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;outline:none;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Mensajes">
+  <span id="cw-fab-icon" class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+  <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
+</button>
+<style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
+<script>
+(function(){
+var CW_DATA=[
+  {id:'c1',nombre:'Elena Vidal',rol:'Paciente',dot:'online',unread:1,msgs:[
+    {from:'them',text:'Buenos días, ¿podemos hablar del informe?',time:'10:14'},
+    {from:'me',text:'Claro, ¿a las 11 te viene bien?',time:'10:16'}
+  ]},
+  {id:'c2',nombre:'Marcos Gil',rol:'Paciente',dot:'busy',unread:1,msgs:[
+    {from:'them',text:'Necesito cancelar la sesión de mañana.',time:'09:30'},
+    {from:'me',text:'Sin problema, ¿cuándo prefieres?',time:'09:32'}
+  ]},
+  {id:'c3',nombre:'Lucía Méndez',rol:'Secretaria',dot:'online',unread:0,msgs:[
+    {from:'me',text:'¿Tienes el horario de la semana?',time:'Ayer'},
+    {from:'them',text:'Sí, te lo mando ahora.',time:'Ayer'}
+  ]},
+  {id:'c4',nombre:'Ana Martínez',rol:'Admin',dot:'offline',unread:0,msgs:[
+    {from:'them',text:'Reunión de equipo el viernes.',time:'Lun'}
+  ]}
+];
+var CW_DOT_COLOR={online:'#4ade80',busy:'#fbbf24',offline:'#475569'};
+var cwOpen=false,cwActive=null;
+window.toggleChatWidget=function(){
+  cwOpen=!cwOpen;
+  var panel=document.getElementById('cw-panel');
+  if(cwOpen){
+    panel.style.pointerEvents='auto';panel.style.opacity='1';panel.style.transform='translateY(0) scale(1)';
+    document.getElementById('fab-badge').style.display='none';
+    document.getElementById('cw-fab-icon').textContent='close';
+    cwMostrarLista();
+  }else{
+    panel.style.opacity='0';panel.style.transform='translateY(14px) scale(0.97)';panel.style.pointerEvents='none';
+    document.getElementById('cw-fab-icon').textContent='chat';
+  }
+};
+function cwMostrarLista(){
+  document.getElementById('cw-lista-wrap').style.display='block';
+  document.getElementById('cw-chat-wrap').style.display='none';
+  var html=CW_DATA.map(function(c){
+    var last=c.msgs[c.msgs.length-1];
+    return '<div onclick="cwAbrirConv(\''+c.id+'\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'">'+
+      '<div style="position:relative;flex-shrink:0;">'+
+        '<div style="width:38px;height:38px;border-radius:50%;background:rgba(139,92,246,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#a78bfa;font-family:Manrope,sans-serif;">'+c.nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('')+'</div>'+
+        '<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:'+CW_DOT_COLOR[c.dot]+';border:2px solid #0d1b2e;"></span>'+
+      '</div>'+
+      '<div style="flex:1;min-width:0;">'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">'+
+          '<span style="font-family:Manrope,sans-serif;font-weight:700;font-size:12px;color:#e2e8f0;">'+c.nombre+'</span>'+
+          '<span style="font-size:10px;color:#475569;">'+last.time+'</span>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;">'+
+          '<span style="font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;">'+(last.from==='me'?'Tú: ':'')+last.text+'</span>'+
+          (c.unread?'<span style="min-width:16px;height:16px;background:#a78bfa;border-radius:99px;font-size:9px;font-weight:800;color:#020617;display:flex;align-items:center;justify-content:center;padding:0 4px;margin-left:4px;flex-shrink:0;">'+c.unread+'</span>':'')+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('cw-conv-list').innerHTML=html;
+}
+window.cwAbrirConv=function(id){
+  cwActive=CW_DATA.find(function(c){return c.id===id;});
+  if(!cwActive)return;
+  cwActive.unread=0;
+  document.getElementById('cw-lista-wrap').style.display='none';
+  var cw=document.getElementById('cw-chat-wrap');
+  cw.style.display='flex';cw.style.flexDirection='column';
+  document.getElementById('cw-chat-title').textContent=cwActive.nombre;
+  document.getElementById('cw-chat-dot').style.background=CW_DOT_COLOR[cwActive.dot];
+  cwRenderMsgs();
+  setTimeout(function(){var m=document.getElementById('cw-messages');m.scrollTop=m.scrollHeight;},40);
+};
+window.cwVolverLista=function(){cwMostrarLista();};
+function cwRenderMsgs(){
+  var html=cwActive.msgs.map(function(m){
+    var me=m.from==='me';
+    return '<div style="display:flex;justify-content:'+(me?'flex-end':'flex-start')+';animation:cwMsgIn 0.18s ease forwards;">'+
+      '<div style="max-width:80%;padding:8px 11px;border-radius:14px;'+(me?'background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.28);border-bottom-right-radius:4px;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;')+'">'+
+        '<p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">'+m.text+'</p>'+
+        '<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:'+(me?'right':'left')+';">'+m.time+'</p>'+
+      '</div></div>';
+  }).join('');
+  document.getElementById('cw-messages').innerHTML=html;
+}
+window.cwEnviar=function(){
+  if(!cwActive)return;
+  var input=document.getElementById('cw-input');
+  var text=(input.value||'').trim();
+  if(!text)return;
+  var t=new Date();var time=t.getHours()+':'+String(t.getMinutes()).padStart(2,'0');
+  cwActive.msgs.push({from:'me',text:text,time:time});
+  input.value='';cwRenderMsgs();
+  setTimeout(function(){var m=document.getElementById('cw-messages');m.scrollTop=m.scrollHeight;},30);
+};
+})();
+</script>
+<!-- WhatsApp Widget flotante -->
+<div id="wa-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;">
+  <div id="wa-panel" class="hidden" style="position:absolute;bottom:calc(100% + 12px);right:0;width:300px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(37,211,102,0.1);border-bottom:1px solid rgba(37,211,102,0.15);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span style="font-size:14px;font-weight:700;color:#fff;font-family:Manrope,sans-serif;">WhatsApp</span>
+        <span style="font-size:11px;padding:2px 6px;border-radius:99px;font-weight:800;background:rgba(37,211,102,0.2);color:#25d366;">3</span>
+      </div>
+      <button onclick="document.getElementById('wa-panel').classList.add('hidden')" style="border:none;background:none;cursor:pointer;color:#64748b;display:flex;align-items:center;padding:4px;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div>
+      <a href="mensajes_psicologo.html?wa=1" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(37,211,102,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#25d366;flex-shrink:0;">EP</div>
+        <div style="flex:1;overflow:hidden;">
+          <p style="font-size:13px;font-weight:600;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Elena Pérez</p>
+          <p style="font-size:11px;color:#64748b;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">¿A qué hora es mi sesión?</p>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
+          <span style="font-size:10px;color:#475569;">10:45</span>
+          <span style="width:16px;height:16px;border-radius:50%;background:#25d366;color:#000;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;">2</span>
+        </div>
+      </a>
+      <a href="mensajes_psicologo.html?wa=1" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(37,211,102,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#25d366;flex-shrink:0;">MG</div>
+        <div style="flex:1;overflow:hidden;">
+          <p style="font-size:13px;font-weight:600;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Marcos Gil</p>
+          <p style="font-size:11px;color:#64748b;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Necesito cancelar mañana</p>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
+          <span style="font-size:10px;color:#475569;">09:15</span>
+          <span style="width:16px;height:16px;border-radius:50%;background:#25d366;color:#000;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;">1</span>
+        </div>
+      </a>
+      <a href="mensajes_psicologo.html?wa=1" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(37,211,102,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#25d366;flex-shrink:0;">SR</div>
+        <div style="flex:1;overflow:hidden;">
+          <p style="font-size:13px;font-weight:600;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Sofía Ruiz</p>
+          <p style="font-size:11px;color:#64748b;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Muchas gracias por todo</p>
+        </div>
+        <div style="flex-shrink:0;"><span style="font-size:10px;color:#475569;">Ayer</span></div>
+      </a>
+    </div>
+    <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,0.06);">
+      <a href="mensajes_psicologo.html?wa=1" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:12px;font-size:13px;font-weight:700;background:rgba(37,211,102,0.12);color:#25d366;text-decoration:none;border:1px solid rgba(37,211,102,0.2);">
+        <span class="material-symbols-outlined" style="font-size:16px;">chat</span>
+        Ver todas las conversaciones
+      </a>
+    </div>
+  </div>
+  <div style="position:relative;">
+    <button onclick="document.getElementById('wa-panel').classList.toggle('hidden')" style="width:56px;height:56px;border-radius:50%;background:#25d366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,0.35);transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </button>
+    <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
+  </div>
+</div></body></html>

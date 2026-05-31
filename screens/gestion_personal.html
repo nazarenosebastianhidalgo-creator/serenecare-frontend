@@ -1,0 +1,465 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestión de Personal | Serene Curator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#d7fde4",
+              "on-error": "#fff7f6",
+              "on-error-container": "#6e0a12",
+              "surface-container-lowest": "#ffffff",
+              "primary-container": "#a8e3f6",
+              "on-tertiary-fixed-variant": "#4c6d5a",
+              "tertiary-container": "#d7fde4",
+              "on-surface": "#2c3436",
+              "error-container": "#fa746f",
+              "surface": "#f8fafb",
+              "surface-container-highest": "#dce4e6",
+              "error-dim": "#67040d",
+              "background": "#f8fafb",
+              "secondary-dim": "#1b5a69",
+              "on-tertiary-container": "#416350",
+              "surface-tint": "#296777",
+              "on-primary-fixed": "#00404d",
+              "surface-variant": "#dce4e6",
+              "secondary-fixed-dim": "#a4ddef",
+              "error": "#a83836",
+              "on-surface-variant": "#596063",
+              "secondary-container": "#b2ecfd",
+              "inverse-primary": "#a8e3f6",
+              "surface-container": "#eaeff0",
+              "inverse-surface": "#0b0f10",
+              "secondary-fixed": "#b2ecfd",
+              "outline": "#747c7e",
+              "on-secondary-fixed-variant": "#266372",
+              "on-primary": "#f0fbff",
+              "on-tertiary": "#e6ffee",
+              "tertiary-dim": "#395a48",
+              "surface-dim": "#d4dbde",
+              "on-primary-container": "#0e5463",
+              "tertiary": "#456653",
+              "on-tertiary-fixed": "#2f503f",
+              "on-secondary-fixed": "#004653",
+              "on-primary-fixed-variant": "#1d5e6d",
+              "on-secondary-container": "#195968",
+              "primary-dim": "#195a6a",
+              "tertiary-fixed-dim": "#c9eed6",
+              "surface-container-low": "#f0f4f6",
+              "secondary": "#2b6775",
+              "surface-bright": "#f8fafb",
+              "primary": "#296777",
+              "primary-fixed-dim": "#9ad5e7",
+              "inverse-on-surface": "#9a9d9e",
+              "outline-variant": "#acb3b6",
+              "on-secondary": "#effbff",
+              "on-background": "#2c3436",
+              "surface-container-high": "#e3e9eb",
+              "primary-fixed": "#a8e3f6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #020617; /* Forced deep slate for Dark Mode Staff Directory */
+            color: #f1f5f9;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-cyan-500/30">
+<!-- TopNavBar Implementation -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-slate-950/70 backdrop-blur-xl shadow-[0_20px_40px_rgba(0,0,0,0.3)] tonal-transition bg-slate-900/50">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-slate-100 font-headline">Serene Curator</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-slate-400 hover:text-slate-200 transition-colors font-manrope tracking-tight font-semibold" href="#">Dashboard</a>
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1 font-manrope tracking-tight font-semibold" href="#">Patients</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors font-manrope tracking-tight font-semibold" href="#">Calendar</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors font-manrope tracking-tight font-semibold" href="#">Billing</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out text-slate-400">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out text-slate-400">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-slate-700">
+<img class="w-full h-full object-cover" data-alt="Professional clinical headshot of a woman doctor with a calm expression in a modern office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvZ7MfmytXA9CXwdCzGKfBcL8-RUBLrF9uEIZfW3vixgKhTMGuyBn_uFlFN-L9qIVEjU_SSRGeyB5m-pDM8y9yom0I6IU3BCogGVZgcFvQ5SHlla47wRWiT9AV7BGUH_romag_mQ04kZd2J2qB350LdXBqjJeRVYPFZ_h2t9E8SBRDM0c9PyXfHtThd6SkusUghYFTiUMXWuSjcis5qDtsHDg9uEyDF8JuI1AOV0PICfTYGIc37luZ7nX6Bsag7caXv6kF4HPn-DuT"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar Implementation (Floating Style) -->
+<aside class="fixed left-0 h-screen w-64 bg-slate-900 flex flex-col p-4 gap-2 tonal-shift bg-slate-950 z-40 hidden lg:flex pt-20">
+<div class="mb-8 px-2">
+<h2 class="text-lg font-black text-slate-100 font-headline uppercase tracking-widest">Therapeutic</h2>
+<p class="text-[10px] text-cyan-500 font-bold tracking-[0.2em] uppercase">Premium Care</p>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all font-manrope text-sm font-medium scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Overview
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all font-manrope text-sm font-medium scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+                Schedule
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-cyan-900/30 text-cyan-400 rounded-xl font-manrope text-sm font-medium scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+                Patients
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all font-manrope text-sm font-medium scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined">payments</span>
+                Financials
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all font-manrope text-sm font-medium scale-98 active:scale-95" href="#">
+<span class="material-symbols-outlined">library_books</span>
+                Resources
+            </a>
+</nav>
+<div class="mt-auto pt-8 border-t border-slate-800/50 space-y-1">
+<button class="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all font-manrope text-sm font-medium scale-98 active:scale-95">
+<span class="material-symbols-outlined">help</span>
+                Help Center
+            </button>
+<button onclick="window._cerrarSesion&&window._cerrarSesion()" class="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-all font-manrope text-sm font-medium scale-98 active:scale-95">
+<span class="material-symbols-outlined text-error">logout</span>
+                Logout
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="lg:ml-64 pt-24 px-8 pb-12 min-h-screen">
+<header class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div class="max-w-2xl">
+<h1 class="text-4xl font-extrabold tracking-tight text-slate-50 font-headline mb-2">Gestión de Personal</h1>
+<p class="text-slate-400 text-lg">Directorio editorial del equipo clínico y administrativo de Therapeutic Perspective.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold rounded-xl transition-all font-manrope text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                    Filtrar
+                </button>
+<button class="px-6 py-3 bg-gradient-to-br from-cyan-600 to-cyan-800 hover:from-cyan-500 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all font-manrope text-sm shadow-lg shadow-cyan-900/20 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">person_add</span>
+                    Nuevo Miembro
+                </button>
+</div>
+</header>
+<!-- Search & Metrics Bento -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+<div class="md:col-span-2 glass-card p-6 rounded-2xl flex items-center gap-4 border border-slate-800/50">
+<span class="material-symbols-outlined text-slate-500">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-slate-200 placeholder-slate-500 w-full text-lg font-light" placeholder="Buscar por nombre, especialidad o estado..." type="text"/>
+</div>
+<div class="glass-card p-6 rounded-2xl border border-slate-800/50 flex flex-col justify-between">
+<span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Activos Ahora</span>
+<div class="flex items-end justify-between mt-2">
+<span class="text-3xl font-bold text-slate-100 font-headline">24</span>
+<span class="text-tertiary text-xs font-medium bg-tertiary-container/10 px-2 py-1 rounded-full">+3 hoy</span>
+</div>
+</div>
+<div class="glass-card p-6 rounded-2xl border border-slate-800/50 flex flex-col justify-between">
+<span class="text-slate-500 text-xs font-bold uppercase tracking-wider">Tasa de Ocupación</span>
+<div class="flex items-end justify-between mt-2">
+<span class="text-3xl font-bold text-slate-100 font-headline">88%</span>
+<div class="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div class="bg-cyan-500 h-full w-[88%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Staff List (The Editorial Table) -->
+<div class="glass-card rounded-3xl border border-slate-800/30 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-slate-800/50">
+<th class="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] font-headline">Miembro del Equipo</th>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] font-headline">Especialidad / Rol</th>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] font-headline">Estado</th>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] font-headline">Pacientes</th>
+<th class="px-8 py-5 text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] font-headline text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800/30">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl overflow-hidden ring-2 ring-cyan-500/20">
+<img class="w-full h-full object-cover" data-alt="Female clinician with glasses smiling warmly in a minimalist white office setting, soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBWbJ8RzLx3VHT25JjoQsOsrgT0TyFwdN2lMnUDjcSTd8jGd6j5hcVkEt3Hm1kfQdsnoLJNI5EU48DiTOXly9yy7D74HqyOKEDB_v1zsI41PUglswlhqYwbdIj9EQRKiUvq-MnbNumW32LGYf7voQMDRAs1B1a7Kg_XKK-AxhHa5MrN-ZEwmIHA95mMfFm_EQrcspvYIn51ILW114aJukJ2dlLYT2LlZBxCtl8J_Vl-CbePjhsjV5Xuct0pGiol6Nhbd752H37kHQT"/>
+</div>
+<div>
+<p class="font-headline font-bold text-slate-100">Dra. Elena Vargas</p>
+<p class="text-xs text-slate-500 font-medium">elena.vargas@perspective.com</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-slate-800 text-slate-300 text-[11px] font-bold uppercase rounded-lg tracking-wider">Psicología Clínica</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+<span class="text-sm font-medium text-slate-200">En Sesión</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden"></div>
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden"></div>
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden"></div>
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-cyan-900 flex items-center justify-center text-[10px] text-cyan-200">+12</div>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 text-slate-500 hover:text-slate-200 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl overflow-hidden ring-2 ring-slate-700/20">
+<img class="w-full h-full object-cover" data-alt="Male doctor with beard wearing a navy scrub, confident expression, blurred clinical background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_ZbudyVU-98sJe8R_Daw9YQX44i8H4cnqhu532T9rufQDCkWuSvpuf1IEZ6hQONE5YZoAWYaxyETmNx9V7PCo9CaF0VEJRDneVaTxaJNxtAYBuRRhqstyDAXbuEsJVMR47fdcRiOwIIkH2DgKesCc5Ncxwe80oPLthx4_6VSqjYMm97aDXMwnaMRIOlUVBbsBNyB6UT7RKlbofKTWEhwzNoDqQqhkaw8AJhwGr9xO6IBHHqjmtWsROUDP38-pxdpyg0BCGH_UuDDK"/>
+</div>
+<div>
+<p class="font-headline font-bold text-slate-100">Dr. Marc Soler</p>
+<p class="text-xs text-slate-500 font-medium">m.soler@perspective.com</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-slate-800 text-slate-300 text-[11px] font-bold uppercase rounded-lg tracking-wider">Psiquiatría</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-slate-600"></span>
+<span class="text-sm font-medium text-slate-400">Disponible</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden"></div>
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden"></div>
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-cyan-900 flex items-center justify-center text-[10px] text-cyan-200">+8</div>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 text-slate-500 hover:text-slate-200 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl overflow-hidden ring-2 ring-slate-700/20">
+<img class="w-full h-full object-cover" data-alt="Woman therapist in a stylish beige sweater sitting on a modern chair, soft focus interior office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7wwpAW8KcMhoFGPZ2BAICxuh3HrtrUKIUwM142Oqkr_AsLZlLqoQ5hS8AfF7EGkXTHsD7A3qySoOSxsUqqewmy5ZX8eDen1wZmMYhmEKOodSWEo4jB6OndN245lTf9IWKvqfbkTnz7X_IbRtwpcURxWMU17XJdxteWxcELVNb-c3fINCMx1eOeXQjUuzx8301avCVf7hYSrlT_Usp0TwlqpKg2vn7dQiGMRtSU7J04UMPVHQK-MUkj_CpaUc-haohPqKscw6zITi-"/>
+</div>
+<div>
+<p class="font-headline font-bold text-slate-100">Lucía Méndez</p>
+<p class="text-xs text-slate-500 font-medium">l.mendez@perspective.com</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-slate-800 text-slate-300 text-[11px] font-bold uppercase rounded-lg tracking-wider">Terapia de Pareja</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="text-sm font-medium text-slate-200">En Llamada</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden"></div>
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-slate-800 overflow-hidden"></div>
+<div class="w-7 h-7 rounded-full border-2 border-slate-900 bg-cyan-900 flex items-center justify-center text-[10px] text-cyan-200">+5</div>
+</div>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 text-slate-500 hover:text-slate-200 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-800/20 transition-colors group">
+<td class="px-8 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl overflow-hidden ring-2 ring-slate-700/20">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young male administrator in a clean office setting, sharp features, calm demeanor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1vuRrDPgfuR5Rp0Ssk_0TWu6E8WlTFu0AzQVmVFsZtJtbUwL2JkqZF_EIkXeK-CgbrTODbiySFsiANZrQIreH63cWkzQIkhhY4DXtBrFMBBKI2ZTHsqtORN6NTjIcV7KmyxY8bOSRSnw2XpRRV4EsJnce_VA3cMWfeYi9OeO6O4UwZemmg4z8nNoQ1fNIWflkvqxJoe3J9TVNxwj0iUW-hChQoxm3wBSlrOBM7oJ8wO3jGWb-IErX1zdrim7jC-o8ztVNIr2xqbI2"/>
+</div>
+<div>
+<p class="font-headline font-bold text-slate-100">Adrián Torres</p>
+<p class="text-xs text-slate-500 font-medium">a.torres@perspective.com</p>
+</div>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-slate-800 text-slate-300 text-[11px] font-bold uppercase rounded-lg tracking-wider">Gestión Adm.</span>
+</td>
+<td class="px-8 py-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-slate-600"></span>
+<span class="text-sm font-medium text-slate-400">Ausente</span>
+</div>
+</td>
+<td class="px-8 py-6">
+<span class="text-[10px] text-slate-600 font-bold tracking-widest uppercase">N/A</span>
+</td>
+<td class="px-8 py-6 text-right">
+<button class="p-2 text-slate-500 hover:text-slate-200 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Editorial -->
+<div class="px-8 py-4 border-t border-slate-800/50 flex items-center justify-between">
+<span class="text-xs text-slate-500 font-medium">Mostrando 4 de 24 miembros del equipo</span>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg border border-slate-800 text-slate-400 hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="px-4 py-2 rounded-lg bg-slate-800 text-slate-100 text-xs font-bold font-headline">1</button>
+<button class="px-4 py-2 rounded-lg text-slate-500 hover:bg-slate-800 text-xs font-bold font-headline">2</button>
+<button class="px-4 py-2 rounded-lg text-slate-500 hover:bg-slate-800 text-xs font-bold font-headline">3</button>
+<button class="p-2 rounded-lg border border-slate-800 text-slate-400 hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Role Analytics Secondary Grid -->
+<section class="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2">
+<h3 class="text-xl font-bold text-slate-100 font-headline mb-6">Distribución por Especialidad</h3>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+<div class="p-6 glass-card rounded-2xl border border-slate-800/30">
+<p class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Psicología</p>
+<p class="text-2xl font-bold text-slate-100">12</p>
+<div class="mt-3 w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+<div class="bg-cyan-500 h-full w-1/2"></div>
+</div>
+</div>
+<div class="p-6 glass-card rounded-2xl border border-slate-800/30">
+<p class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Psiquiatría</p>
+<p class="text-2xl font-bold text-slate-100">4</p>
+<div class="mt-3 w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+<div class="bg-purple-500 h-full w-1/4"></div>
+</div>
+</div>
+<div class="p-6 glass-card rounded-2xl border border-slate-800/30">
+<p class="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-1">Adm.</p>
+<p class="text-2xl font-bold text-slate-100">8</p>
+<div class="mt-3 w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+<div class="bg-slate-400 h-full w-1/3"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-card p-8 rounded-3xl border border-slate-800/30 relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="text-lg font-bold text-slate-100 font-headline mb-2">Resumen Semanal</h3>
+<p class="text-slate-400 text-sm mb-6">El equipo ha completado 142 sesiones terapéuticas esta semana.</p>
+<a class="inline-flex items-center gap-2 text-cyan-400 font-bold text-sm hover:gap-3 transition-all" href="#">
+                        Ver Reporte Detallado
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<!-- Abstract BG Shape -->
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-cyan-900/10 rounded-full blur-3xl group-hover:bg-cyan-900/20 transition-all"></div>
+</div>
+</section>
+</main>
+<!-- Contextual FAB (Supressed for Staff Details, but relevant here for Add Member) -->
+<div class="fixed bottom-8 right-8">
+<button class="w-14 h-14 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white shadow-2xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <script type="module">
+    import { guardaClinica, obtenerStaff, toggleStaffActivo } from '../js/clinica.js'
+    import { mostrarError, cerrarSesion } from '../js/auth.js'
+    window._cerrarSesion = cerrarSesion
+
+    await guardaClinica()
+
+    async function cargar() {
+      try {
+        const staff = await obtenerStaff()
+        const tbody = document.querySelector('tbody, [data-staff]')
+        if (!tbody) return
+        const rolLabel = { admin_clinica: 'Admin', psicologo: 'Psicólogo', secretario: 'Secretario' }
+        tbody.innerHTML = staff.map(s => `
+          <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center font-bold text-tertiary text-sm">${s.nombre?.charAt(0) || '?'}</div>
+                <div>
+                  <p class="font-semibold text-sm">${s.nombre} ${s.apellido}</p>
+                  <p class="text-xs text-on-surface-variant">${s.email}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3"><span class="px-3 py-1 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">${rolLabel[s.rol] || s.rol}</span></td>
+            <td class="px-4 py-3">
+              <span class="px-3 py-1 rounded-full text-xs font-bold ${s.activo ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-error-container text-on-error-container'}">
+                ${s.activo ? 'Activo' : 'Inactivo'}
+              </span>
+            </td>
+            <td class="px-4 py-3">
+              <button onclick="toggleActivo('${s.id}', ${s.activo})"
+                class="px-3 py-1 text-xs ${s.activo ? 'bg-error-container text-on-error-container' : 'bg-tertiary-container text-on-tertiary-container'} rounded-full font-semibold">
+                ${s.activo ? 'Desactivar' : 'Activar'}
+              </button>
+            </td>
+          </tr>`).join('')
+      } catch(e) { mostrarError(e.message) }
+    }
+
+    window.toggleActivo = async (id, estadoActual) => {
+      try { await toggleStaffActivo(id, !estadoActual); cargar() }
+      catch(e) { mostrarError(e.message) }
+    }
+
+    await cargar()
+  </script>
+</body></html>

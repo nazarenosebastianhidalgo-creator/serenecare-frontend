@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Personal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .field { width: 100%; padding: 10px 14px; border-radius: 10px; font-size: 13px; transition: border-color 0.2s; }
+  input.field, select.field, textarea.field { background: rgba(255,255,255,0.06) !important; border: 1px solid rgba(255,255,255,0.12) !important; color: #e2e8f0 !important; }
+  input.field:focus, select.field:focus, textarea.field:focus { outline: none !important; border-color: rgba(20,184,166,0.5) !important; box-shadow: none !important; }
+  input.field::placeholder, textarea.field::placeholder { color: #64748b !important; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px; }
+  .modal-box { background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:24px;width:100%;max-width:420px; }
+  @keyframes mIn { from{opacity:0;transform:scale(0.96) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .modal-box { animation: mIn 0.22s cubic-bezier(0.16,1,0.3,1) forwards; }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<!-- Sidebar -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] text-teal-500 font-bold uppercase tracking-widest">Admin Portal</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_admin_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="pacientes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Pacientes</span>
+    </a>
+    <a href="agenda_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Agenda</span>
+    </a>
+
+    <a href="mensajes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="facturacion.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">receipt_long</span><span>Facturación</span>
+    </a>
+    
+  </nav>
+  <div id="demo-badge" class="hidden mb-3 px-3 py-2 rounded-xl text-center" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Modo Demo</p>
+  </div>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user-card" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">AC</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Admin</p>
+        <p class="text-[10px] text-slate-500">Admin Clínica</p>
+      </div>
+      <span id="chevron-user" class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="pl-64 min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/20" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(16px);">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Personal</h2>
+      <p class="text-slate-500 text-xs">Equipo terapéutico y administrativo</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="btn-invitar" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);">
+        <span class="material-symbols-outlined text-base">person_add</span>
+        Invitar miembro
+      </button>
+      <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
+      <button id="btn-notif-per" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400">notifications</span>
+        <span id="notif-dot-per" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notificaciones dropdown -->
+  <div id="notif-panel-per" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
+      <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
+      <button id="btn-marcar-per" class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+    </div>
+    <div id="notif-list-per" class="max-h-72 overflow-y-auto"></div>
+    <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+      <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones â†’</a>
+    </div>
+  </div>
+
+  <div class="p-8 max-w-6xl mx-auto space-y-6">
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="card rounded-2xl p-5">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style="background:rgba(139,92,246,0.12);">
+          <span class="material-symbols-outlined text-lg" style="color:#a78bfa;">psychology</span>
+        </div>
+        <p class="text-2xl font-headline font-bold text-white" id="stat-psicologos">—</p>
+        <p class="text-xs text-slate-500 mt-0.5">Terapeutas</p>
+      </div>
+      <div class="card rounded-2xl p-5">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style="background:rgba(20,184,166,0.1);">
+          <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;">support_agent</span>
+        </div>
+        <p class="text-2xl font-headline font-bold text-white" id="stat-secretarios">—</p>
+        <p class="text-xs text-slate-500 mt-0.5">Secretarios/as</p>
+      </div>
+      <div class="card rounded-2xl p-5">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style="background:rgba(34,197,94,0.1);">
+          <span class="material-symbols-outlined text-lg" style="color:#4ade80;">check_circle</span>
+        </div>
+        <p class="text-2xl font-headline font-bold text-white" id="stat-activos">—</p>
+        <p class="text-xs text-slate-500 mt-0.5">Activos hoy</p>
+      </div>
+      <div class="card rounded-2xl p-5">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center mb-3" style="background:rgba(245,158,11,0.1);">
+          <span class="material-symbols-outlined text-lg" style="color:#fbbf24;">mail</span>
+        </div>
+        <p class="text-2xl font-headline font-bold text-white" id="stat-invitaciones">2</p>
+        <p class="text-xs text-slate-500 mt-0.5">Invitaciones pendientes</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- Tabla principal -->
+      <div class="lg:col-span-2 card rounded-2xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-800/30 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <h3 class="font-headline font-bold text-white text-sm">Miembros del equipo</h3>
+            <div class="flex gap-1">
+              <button data-filter="todos" class="filter-btn px-3 py-1 rounded-full text-xs font-bold transition-all" style="background:rgba(20,184,166,0.15);color:#2dd4bf;">Todos</button>
+              <button data-filter="psicologo" class="filter-btn px-3 py-1 rounded-full text-xs font-bold text-slate-500 hover:text-slate-300 transition-all">Terapeutas</button>
+              <button data-filter="secretario" class="filter-btn px-3 py-1 rounded-full text-xs font-bold text-slate-500 hover:text-slate-300 transition-all">Secretarios</button>
+            </div>
+          </div>
+          <span id="staff-count" class="text-xs text-slate-500"></span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="border-b border-slate-800/40">
+                <th class="px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-500">Miembro</th>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-500">Rol</th>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-500">Estado</th>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-widest text-slate-500 text-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-staff" class="divide-y divide-slate-800/30"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Panel derecho -->
+      <div class="flex flex-col gap-4">
+
+        <!-- Invitaciones pendientes -->
+        <div class="card rounded-2xl overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-800/30">
+            <h3 class="font-headline font-bold text-white text-sm">Invitaciones pendientes</h3>
+          </div>
+          <div id="lista-invitaciones" class="divide-y divide-slate-800/30">
+            <div class="px-5 py-4 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style="background:rgba(20,184,166,0.2);">SM</div>
+                <div>
+                  <p class="text-xs font-semibold text-slate-200">Sara Morales</p>
+                  <p class="text-[10px] text-slate-500">Secretaria</p>
+                </div>
+              </div>
+              <div class="flex gap-1">
+                <button class="text-[10px] font-bold px-2 py-1 rounded-lg transition-colors" style="color:#2dd4bf;" onclick="alert('Invitación reenviada')">Reenviar</button>
+                <button class="text-[10px] font-bold px-2 py-1 rounded-lg text-red-400 hover:text-red-300 transition-colors" onclick="this.closest('.px-5').remove()">Cancelar</button>
+              </div>
+            </div>
+            <div class="px-5 py-4 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style="background:rgba(139,92,246,0.2);">JC</div>
+                <div>
+                  <p class="text-xs font-semibold text-slate-200">Juan Castro</p>
+                  <p class="text-[10px] text-slate-500">Psicólogo</p>
+                </div>
+              </div>
+              <div class="flex gap-1">
+                <button class="text-[10px] font-bold px-2 py-1 rounded-lg transition-colors" style="color:#2dd4bf;" onclick="alert('Invitación reenviada')">Reenviar</button>
+                <button class="text-[10px] font-bold px-2 py-1 rounded-lg text-red-400 hover:text-red-300 transition-colors" onclick="this.closest('.px-5').remove()">Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actividad reciente -->
+        <div class="card rounded-2xl overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-800/30">
+            <h3 class="font-headline font-bold text-white text-sm">Actividad reciente</h3>
+          </div>
+          <div class="px-5 py-4 space-y-4">
+            <div class="flex gap-3">
+              <div class="w-1.5 flex-shrink-0 mt-1.5"><div class="w-1.5 h-1.5 rounded-full bg-teal-400"></div></div>
+              <div><p class="text-xs text-slate-400 leading-relaxed">Dr. Ruiz editó historial clínico de R.G.</p><p class="text-[10px] text-slate-600 mt-0.5">Hoy, 10:45</p></div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-1.5 flex-shrink-0 mt-1.5"><div class="w-1.5 h-1.5 rounded-full bg-indigo-400"></div></div>
+              <div><p class="text-xs text-slate-400 leading-relaxed">Lucía Méndez agendó 3 nuevas citas.</p><p class="text-[10px] text-slate-600 mt-0.5">Hoy, 09:12</p></div>
+            </div>
+            <div class="flex gap-3">
+              <div class="w-1.5 flex-shrink-0 mt-1.5"><div class="w-1.5 h-1.5 rounded-full bg-purple-400"></div></div>
+              <div><p class="text-xs text-slate-400 leading-relaxed">Administrador invitó a Sara Morales.</p><p class="text-[10px] text-slate-600 mt-0.5">Ayer, 18:30</p></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+var STAFF_DEMO = [
+  { id:'1', nombre:'Ana',      apellido:'Martínez', email:'ana.martinez@clinicasol.com',   rol:'psicologo',     activo:true,  actividad:'hace 10 min' },
+  { id:'2', nombre:'Pedro',    apellido:'Sánchez',  email:'pedro.sanchez@clinicasol.com',  rol:'psicologo',     activo:true,  actividad:'hace 30 min' },
+  { id:'3', nombre:'Sofía',    apellido:'Ruiz',     email:'sofia.ruiz@clinicasol.com',     rol:'psicologo',     activo:true,  actividad:'hace 1h'     },
+  { id:'4', nombre:'Isabel',   apellido:'López',    email:'isabel.lopez@clinicasol.com',   rol:'psicologo',     activo:false, actividad:'Ayer'         },
+  { id:'5', nombre:'Lucía',    apellido:'Méndez',   email:'lucia.mendez@clinicasol.com',   rol:'secretario',    activo:true,  actividad:'hace 2h'     },
+  { id:'6', nombre:'Roberto',  apellido:'Castillo', email:'roberto.c@clinicasol.com',      rol:'secretario',    activo:false, actividad:'hace 3 días'  },
+]
+
+var ROL_LABELS = { psicologo:'Terapeuta', admin_clinica:'Admin', secretario:'Secretario/a' }
+var ROL_COLORS = {
+  psicologo:     { bg:'rgba(139,92,246,0.15)', color:'#a78bfa' },
+  admin_clinica: { bg:'rgba(20,184,166,0.15)', color:'#2dd4bf' },
+  secretario:    { bg:'rgba(100,116,139,0.15)',color:'#94a3b8' },
+}
+
+var currentFilter = 'todos'
+var staffData = STAFF_DEMO.slice()
+
+function renderStaff() {
+  var filtered = currentFilter === 'todos' ? staffData : staffData.filter(function(u){ return u.rol === currentFilter })
+  var tbody = document.getElementById('tbody-staff')
+  document.getElementById('staff-count').textContent = filtered.length + ' miembros'
+  document.getElementById('stat-psicologos').textContent = staffData.filter(function(u){ return u.rol==='psicologo' }).length
+  document.getElementById('stat-secretarios').textContent = staffData.filter(function(u){ return u.rol==='secretario' }).length
+  document.getElementById('stat-activos').textContent = staffData.filter(function(u){ return u.activo }).length
+
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="py-10 text-center text-slate-500 text-sm">Sin miembros en esta categoría</td></tr>'
+    return
+  }
+
+  tbody.innerHTML = filtered.map(function(u) {
+    var rc = ROL_COLORS[u.rol] || ROL_COLORS.secretario
+    var initials = (u.nombre[0]||'') + (u.apellido[0]||'')
+    return '<tr>' +
+      '<td class="px-6 py-3.5"><div class="flex items-center gap-3">' +
+        '<div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style="background:' + rc.bg + ';color:' + rc.color + ';">' + initials + '</div>' +
+        '<div><p class="text-sm font-semibold text-slate-200">' + u.nombre + ' ' + u.apellido + '</p>' +
+        '<p class="text-xs text-slate-500">' + u.email + '</p></div>' +
+      '</div></td>' +
+      '<td class="px-4 py-3.5"><span class="text-xs font-bold px-2 py-1 rounded-full" style="background:' + rc.bg + ';color:' + rc.color + '">' + (ROL_LABELS[u.rol]||u.rol) + '</span></td>' +
+      '<td class="px-4 py-3.5"><div class="flex items-center gap-2">' +
+        '<span class="w-2 h-2 rounded-full flex-shrink-0" style="background:' + (u.activo ? '#4ade80' : '#475569') + ';"></span>' +
+        '<span class="text-xs text-slate-400">' + (u.activo ? 'Activo' : 'Inactivo') + '</span>' +
+        '<span class="text-[10px] text-slate-600">Â· ' + u.actividad + '</span>' +
+      '</div></td>' +
+      '<td class="px-4 py-3.5 text-right"><div class="flex items-center justify-end gap-1">' +
+        '<button class="p-1.5 rounded-lg hover:bg-white/5 transition-colors" title="Editar"><span class="material-symbols-outlined text-slate-500 hover:text-slate-300" style="font-size:16px;">edit</span></button>' +
+        '<button class="p-1.5 rounded-lg hover:bg-red-500/10 transition-colors btn-eliminar" data-id="' + u.id + '" title="Eliminar"><span class="material-symbols-outlined text-red-400/60 hover:text-red-400" style="font-size:16px;">delete</span></button>' +
+      '</div></td>' +
+    '</tr>'
+  }).join('')
+
+  tbody.querySelectorAll('.btn-eliminar').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      if (!confirm('¿Eliminar a este miembro del equipo?')) return
+      var id = this.getAttribute('data-id')
+      staffData = staffData.filter(function(u){ return u.id !== id })
+      renderStaff()
+    })
+  })
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var nombre  = localStorage.getItem('tp_nombre') || 'Admin'
+  var clinica = localStorage.getItem('tp_clinica') || 'Mi Clínica'
+  var demo    = localStorage.getItem('tp_demo') === 'true'
+  var el = document.getElementById('user-nombre'); if(el) el.textContent = nombre
+  var ec = document.getElementById('nombre-clinica'); if(ec) ec.textContent = clinica
+  var av = document.getElementById('user-avatar')
+  if(av) { var p = nombre.split(' '); av.textContent = (p[0]?.[0]||'')+(p[1]?.[0]||'') }
+  if(demo) { var b = document.getElementById('demo-badge'); if(b) b.classList.remove('hidden') }
+
+  // Filtros
+  document.querySelectorAll('.filter-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      currentFilter = this.getAttribute('data-filter')
+      document.querySelectorAll('.filter-btn').forEach(function(b) {
+        b.style.background = ''; b.style.color = '#64748b'
+      })
+      this.style.background = 'rgba(20,184,166,0.15)'
+      this.style.color = '#2dd4bf'
+      renderStaff()
+    })
+  })
+
+  // Invitar
+  document.getElementById('btn-invitar').addEventListener('click', function() {
+    document.getElementById('modal-invitar').classList.remove('hidden')
+  })
+  document.getElementById('modal-invitar').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.add('hidden')
+  })
+  document.getElementById('btn-confirmar-invitar').addEventListener('click', function() {
+    var nombre = (document.getElementById('inv-nombre').value || '').trim()
+    var email  = (document.getElementById('inv-email').value || '').trim()
+    var rol    = document.getElementById('inv-rol').value
+    if (!nombre || !email) { alert('Nombre y email obligatorios'); return }
+    var parts = nombre.split(' ')
+    staffData.push({ id: Date.now().toString(), nombre: parts[0], apellido: parts.slice(1).join(' ') || '—', email: email, rol: rol, activo: false, actividad: 'Invitado ahora' })
+    renderStaff()
+    document.getElementById('modal-invitar').classList.add('hidden')
+    document.getElementById('inv-nombre').value = ''
+    document.getElementById('inv-email').value = ''
+  })
+
+  document.getElementById('btn-logout').addEventListener('click', function(e) {
+    e.preventDefault()
+    localStorage.removeItem('tp_rol'); localStorage.removeItem('tp_nombre')
+    localStorage.removeItem('tp_clinica_id'); localStorage.removeItem('tp_clinica')
+    localStorage.removeItem('tp_demo')
+    window.location.href = 'demo_clinica.html'
+  })
+
+  renderStaff()
+})
+</script>
+
+<!-- Modal invitar miembro -->
+<div id="modal-invitar" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="px-6 py-5 border-b border-slate-800/50 flex items-center justify-between">
+      <h3 class="font-headline font-bold text-white">Invitar miembro</h3>
+      <button onclick="document.getElementById('modal-invitar').classList.add('hidden')" class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors">
+        <span class="material-symbols-outlined text-slate-400 text-lg">close</span>
+      </button>
+    </div>
+    <div class="p-6 space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Nombre completo</label>
+        <input id="inv-nombre" type="text" placeholder="Nombre y apellido" class="field"/>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Email</label>
+        <input id="inv-email" type="email" placeholder="email@clinica.com" class="field"/>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Rol</label>
+        <select id="inv-rol" class="field" style="background:#0d1b2e;cursor:pointer;">
+          <option value="psicologo">Terapeuta / Psicólogo</option>
+          <option value="secretario">Secretario/a</option>
+        </select>
+      </div>
+      <p class="text-xs text-slate-500">Se enviará un email de invitación con instrucciones para crear su contraseña.</p>
+    </div>
+    <div class="px-6 pb-6 flex gap-3">
+      <button onclick="document.getElementById('modal-invitar').classList.add('hidden')" class="flex-1 py-3 rounded-xl text-sm font-bold text-slate-400 transition-all hover:bg-white/5" style="border:1px solid rgba(255,255,255,0.08);">Cancelar</button>
+      <button id="btn-confirmar-invitar" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);">Enviar invitación</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- MINI CHAT WIDGET -->
+<div id="cw-panel" style="position:fixed;bottom:160px;right:24px;z-index:9998;width:320px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
+
+  <!-- Vista: lista de conversaciones -->
+  <div id="cw-lista-wrap" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">
+    <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:18px;font-variation-settings:'FILL' 1;">chat</span>
+        <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#f1f5f9;">Mensajes</span>
+        <span id="cw-total-badge" style="background:#f87171;color:#020617;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px;">2</span>
+      </div>
+      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;padding:4px 10px;border-radius:8px;background:rgba(20,184,166,0.1);">Ver todo</a>
+    </div>
+    <div id="cw-conv-list" style="max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+  </div>
+
+  <!-- Vista: chat individual -->
+  <div id="cw-chat-wrap" style="display:none;flex-direction:column;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);height:420px;">
+    <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <button onclick="cwVolverLista()" style="background:none;border:none;cursor:pointer;color:#64748b;display:flex;align-items:center;padding:2px;">
+        <span class="material-symbols-outlined" style="font-size:17px;">arrow_back</span>
+      </button>
+      <span id="cw-chat-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>
+      <span id="cw-chat-title" style="flex:1;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;flex-shrink:0;">Expandir â†—</a>
+    </div>
+    <div id="cw-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+    <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;flex-shrink:0;">
+      <input id="cw-input" type="text" placeholder="Escribe un mensaje..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;border-radius:10px;padding:8px 12px;font-size:12px;outline:none;font-family:'Inter',sans-serif;" onkeydown="if(event.key==='Enter')cwEnviar()"/>
+      <button onclick="cwEnviar()" style="width:32px;height:32px;border-radius:50%;background:rgba(20,184,166,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(20,184,166,0.35);">
+        <span class="material-symbols-outlined" style="font-size:15px;color:#fff;font-variation-settings:'FILL' 1;">send</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<button id="fab-mensajes" onclick="toggleChatWidget()" style="position:fixed;bottom:96px;right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(20,184,166,0.95),rgba(13,140,124,0.95));box-shadow:0 8px 28px rgba(20,184,166,0.4),0 2px 8px rgba(0,0,0,0.4);transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;outline:none;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Mensajes">
+  <span id="cw-fab-icon" class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+  <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
+</button>
+
+<script>
+(function(){
+var CW_DATA = [
+  { id:'c1', nombre:'Ana Martínez', rol:'Terapeuta', dot:'online', unread:1, msgs:[
+    { from:'them', text:'Buenos días, ¿tienes disponibilidad para el paciente García mañana?', time:'10:14' },
+    { from:'me',   text:'Sí, a las 11:00 lo tengo libre.', time:'10:16' },
+    { from:'them', text:'Perfecto, le confirmo la cita.', time:'10:17' },
+  ]},
+  { id:'c2', nombre:'Pedro Sánchez', rol:'Terapeuta', dot:'busy', unread:1, msgs:[
+    { from:'them', text:'Necesito cambiar la cita de Marcos del jueves.', time:'09:30' },
+    { from:'me',   text:'¿A qué hora te viene bien?', time:'09:32' },
+  ]},
+  { id:'c3', nombre:'Lucía Méndez', rol:'Secretaria', dot:'online', unread:0, msgs:[
+    { from:'me',   text:'¿Enviaste los recordatorios de mañana?', time:'Ayer' },
+    { from:'them', text:'Sí, ya los envié todos.', time:'Ayer' },
+  ]},
+  { id:'c4', nombre:'Sofía Ruiz', rol:'Terapeuta', dot:'offline', unread:0, msgs:[
+    { from:'them', text:'Informe de Vidal listo para revisión.', time:'Lun' },
+  ]},
+];
+var CW_DOT_COLOR = { online:'#4ade80', busy:'#fbbf24', offline:'#475569' };
+var cwOpen = false, cwActive = null;
+
+window.toggleChatWidget = function() {
+  cwOpen = !cwOpen;
+  var panel = document.getElementById('cw-panel');
+  if (cwOpen) {
+    panel.style.pointerEvents = 'auto';
+    panel.style.opacity = '1';
+    panel.style.transform = 'translateY(0) scale(1)';
+    document.getElementById('fab-badge').style.display = 'none';
+    document.getElementById('cw-fab-icon').textContent = 'close';
+    cwMostrarLista();
+  } else {
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(14px) scale(0.97)';
+    panel.style.pointerEvents = 'none';
+    document.getElementById('cw-fab-icon').textContent = 'chat';
+  }
+};
+
+function cwMostrarLista() {
+  document.getElementById('cw-lista-wrap').style.display = 'block';
+  document.getElementById('cw-chat-wrap').style.display = 'none';
+  var html = CW_DATA.map(function(c) {
+    var last = c.msgs[c.msgs.length - 1];
+    return '<div onclick="cwAbrirConv(\'' + c.id + '\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'">'+
+      '<div style="position:relative;flex-shrink:0;">'+
+        '<div style="width:38px;height:38px;border-radius:50%;background:rgba(20,184,166,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2dd4bf;font-family:Manrope,sans-serif;">' + c.nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('') + '</div>'+
+        '<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:' + CW_DOT_COLOR[c.dot] + ';border:2px solid #0d1b2e;"></span>'+
+      '</div>'+
+      '<div style="flex:1;min-width:0;">'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">'+
+          '<span style="font-family:Manrope,sans-serif;font-weight:700;font-size:12px;color:#e2e8f0;">' + c.nombre + '</span>'+
+          '<span style="font-size:10px;color:#475569;">' + last.time + '</span>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;">'+
+          '<span style="font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;">' + (last.from === 'me' ? 'Tú: ' : '') + last.text + '</span>'+
+          (c.unread ? '<span style="min-width:16px;height:16px;background:#2dd4bf;border-radius:99px;font-size:9px;font-weight:800;color:#020617;display:flex;align-items:center;justify-content:center;padding:0 4px;margin-left:4px;flex-shrink:0;">' + c.unread + '</span>' : '') +
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('cw-conv-list').innerHTML = html;
+}
+
+window.cwAbrirConv = function(id) {
+  cwActive = CW_DATA.find(function(c){ return c.id === id; });
+  if (!cwActive) return;
+  cwActive.unread = 0;
+  document.getElementById('cw-lista-wrap').style.display = 'none';
+  var cw = document.getElementById('cw-chat-wrap');
+  cw.style.display = 'flex'; cw.style.flexDirection = 'column';
+  document.getElementById('cw-chat-title').textContent = cwActive.nombre;
+  document.getElementById('cw-chat-dot').style.background = CW_DOT_COLOR[cwActive.dot];
+  cwRenderMsgs();
+  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 40);
+};
+
+window.cwVolverLista = function() { cwMostrarLista(); };
+
+function cwRenderMsgs() {
+  var html = cwActive.msgs.map(function(m) {
+    var me = m.from === 'me';
+    return '<div style="display:flex;justify-content:' + (me ? 'flex-end' : 'flex-start') + ';animation:cwMsgIn 0.18s ease forwards;">'+
+      '<div style="max-width:80%;padding:8px 11px;border-radius:14px;' + (me ? 'background:rgba(20,184,166,0.18);border:1px solid rgba(20,184,166,0.28);border-bottom-right-radius:4px;' : 'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;') + '">'+
+        '<p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">' + m.text + '</p>'+
+        '<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:' + (me ? 'right' : 'left') + ';">' + m.time + '</p>'+
+      '</div></div>';
+  }).join('');
+  document.getElementById('cw-messages').innerHTML = html;
+}
+
+window.cwEnviar = function() {
+  if (!cwActive) return;
+  var input = document.getElementById('cw-input');
+  var text = (input.value || '').trim();
+  if (!text) return;
+  var t = new Date(); var time = t.getHours() + ':' + String(t.getMinutes()).padStart(2,'0');
+  cwActive.msgs.push({ from:'me', text:text, time:time });
+  input.value = '';
+  cwRenderMsgs();
+  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 30);
+};
+})();
+
+  // Apps overlay
+
+  // Sync apps footer user info
+  (function syncAppsUser() {
+    var nombre = localStorage.getItem('tp_nombre') || 'Admin';
+    var av = document.getElementById('apps-avatar');
+    var nm = document.getElementById('apps-nombre');
+    if (av) av.textContent = nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
+    if (nm) nm.textContent = nombre;
+  })();
+  window.toggleAppsPanel = function() {
+    var o = document.getElementById('apps-overlay');
+    var isHidden = o.style.display === 'none' || o.style.display === '';
+    if (isHidden) {
+      o.style.display = 'flex';
+    } else {
+      o.style.display = 'none';
+    }
+  };
+  window.cerrarApps = function(e) {
+    if (e && e.target !== document.getElementById('apps-overlay')) return;
+    document.getElementById('apps-overlay').style.display = 'none';
+  };
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var o = document.getElementById('apps-overlay');
+      if (o) o.style.display = 'none';
+    }
+  });
+
+  // User card popover
+  var userMenuOpen = false;
+  window.toggleUserMenu = function() {
+    userMenuOpen = !userMenuOpen;
+    document.getElementById('user-menu').classList.toggle('hidden', !userMenuOpen);
+    document.getElementById('chevron-user').textContent = userMenuOpen ? 'expand_more' : 'expand_less';
+  };
+  window.toggleTema = function() {
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    if (esClaro) {
+      localStorage.removeItem('tp_tema');
+      document.documentElement.style.filter = '';
+    } else {
+      localStorage.setItem('tp_tema', 'claro');
+      document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
+    }
+    actualizarLabelTema();
+    userMenuOpen = false;
+    document.getElementById('user-menu').classList.add('hidden');
+    document.getElementById('chevron-user').textContent = 'expand_less';
+  };
+  function actualizarLabelTema() {
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    var icon = document.getElementById('icon-tema');
+    var label = document.getElementById('label-tema');
+    if (icon) icon.textContent = esClaro ? 'light_mode' : 'dark_mode';
+    if (label) label.textContent = esClaro ? 'Modo oscuro' : 'Modo claro';
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu')) {
+      if (userMenuOpen) {
+        userMenuOpen = false;
+        var um = document.getElementById('user-menu');
+        if (um) um.classList.add('hidden');
+        var ch = document.getElementById('chevron-user');
+        if (ch) ch.textContent = 'expand_less';
+      }
+    }
+  });
+  actualizarLabelTema();
+
+  // Notificaciones
+  var NOTIFS_PER = [
+    { icon:'event_busy',  color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',   hora:'Hace 12 min', leida:false },
+    { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz', hora:'Hace 1 h',    leida:false },
+    { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',        hora:'Hace 2 h',    leida:false },
+    { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',   hora:'Hace 3 h',    leida:true  },
+    { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5â˜… de Laura Pérez',            hora:'Ayer',        leida:true  },
+  ];
+  var notifOpenPer = false;
+  function renderNotifsPer() {
+    var unread = NOTIFS_PER.filter(function(n){ return !n.leida; }).length;
+    var dot = document.getElementById('notif-dot-per');
+    if (dot) dot.style.display = unread ? 'block' : 'none';
+    var list = document.getElementById('notif-list-per');
+    if (!list) return;
+    list.innerHTML = NOTIFS_PER.map(function(n,i){
+      return '<div onclick="leerNotifPer('+i+')" style="padding:12px 20px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;" onmouseover="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseout="this.style.background=\'none\'">'+
+        '<span class="material-symbols-outlined" style="font-size:16px;color:'+n.color+';flex-shrink:0;margin-top:2px;">'+n.icon+'</span>'+
+        '<div style="flex:1;min-width:0;">'+
+          '<p style="font-size:12px;color:#e2e8f0;margin:0;'+((!n.leida)?'font-weight:600;':'opacity:0.5;')+'">'+n.msg+'</p>'+
+          '<p style="font-size:10px;color:#64748b;margin:4px 0 0;">'+n.hora+'</p>'+
+        '</div>'+
+        ((!n.leida)?'<span style="width:6px;height:6px;border-radius:50%;background:#2dd4bf;flex-shrink:0;margin-top:6px;"></span>':'')+
+      '</div>';
+    }).join('');
+  }
+  window.leerNotifPer = function(i){ NOTIFS_PER[i].leida = true; renderNotifsPer(); };
+  document.getElementById('btn-notif-per').addEventListener('click', function(e){
+    e.stopPropagation();
+    notifOpenPer = !notifOpenPer;
+    document.getElementById('notif-panel-per').classList.toggle('hidden', !notifOpenPer);
+  });
+  document.getElementById('btn-marcar-per').addEventListener('click', function(){
+    NOTIFS_PER.forEach(function(n){ n.leida = true; }); renderNotifsPer();
+  });
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('#btn-notif-per') && !e.target.closest('#notif-panel-per')) {
+      notifOpenPer = false;
+      var p = document.getElementById('notif-panel-per');
+      if (p) p.classList.add('hidden');
+    }
+  });
+  renderNotifsPer();
+
+</script>
+<style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
+
+<!-- =============== APPS OVERLAY =============== -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:680px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal de administración de clínica</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;transition:all 0.15s;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+
+      <a href="gestion_personal_admin.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(245,158,11,0.1)';this.style.borderColor='rgba(245,158,11,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">badge</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Personal</span>
+      </a>
+
+      <a href="facturacion.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(16,185,129,0.1)';this.style.borderColor='rgba(16,185,129,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.25);">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:22px;font-variation-settings:'FILL' 1;">payments</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Facturación</span>
+      </a>
+
+      <a href="estadisticas_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Estadísticas</span>
+      </a>
+
+      <a href="config_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(248,113,113,0.1)';this.style.borderColor='rgba(248,113,113,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.25);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">settings</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Configuración</span>
+      </a>
+
+      <a href="integraciones_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">cable</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Integraciones</span>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<!-- WhatsApp Widget flotante -->
+<div id="wa-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;">
+  <div id="wa-panel" class="hidden" style="position:absolute;bottom:calc(100% + 12px);right:0;width:300px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <div class="flex items-center justify-between px-4 py-3" style="background:rgba(37,211,102,0.1);border-bottom:1px solid rgba(37,211,102,0.15);">
+      <div class="flex items-center gap-2">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="text-sm font-bold text-white">WhatsApp</span>
+        <span class="text-xs px-1.5 py-0.5 rounded-full font-bold" style="background:rgba(37,211,102,0.2);color:#25d366;">3</span>
+      </div>
+      <button onclick="document.getElementById('wa-panel').classList.add('hidden')" class="p-1 rounded-lg hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-500" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">MP</div>
+        <div class="flex-1 overflow-hidden">
+          <p class="text-sm font-semibold text-white truncate">María Pérez</p>
+          <p class="text-xs text-slate-500 truncate">¿A qué hora es mi cita?</p>
+        </div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0">
+          <span class="text-[10px] text-slate-600">10:45</span>
+          <span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">2</span>
+        </div>
+      </a>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">JL</div>
+        <div class="flex-1 overflow-hidden">
+          <p class="text-sm font-semibold text-white truncate">Juan López</p>
+          <p class="text-xs text-slate-500 truncate">Confirmo asistencia ðŸ‘</p>
+        </div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0">
+          <span class="text-[10px] text-slate-600">09:15</span>
+          <span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">1</span>
+        </div>
+      </a>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">CR</div>
+        <div class="flex-1 overflow-hidden">
+          <p class="text-sm font-semibold text-white truncate">Carmen Ruiz</p>
+          <p class="text-xs text-slate-500 truncate">Necesito cancelar la sesión</p>
+        </div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0">
+          <span class="text-[10px] text-slate-600">Ayer</span>
+        </div>
+      </a>
+    </div>
+    <div class="px-4 py-3" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition-all" style="background:rgba(37,211,102,0.12);color:#25d366;text-decoration:none;border:1px solid rgba(37,211,102,0.2);">
+        <span class="material-symbols-outlined text-base">chat</span>
+        Ver todas las conversaciones
+      </a>
+    </div>
+  </div>
+  <div style="position:relative;">
+    <button onclick="document.getElementById('wa-panel').classList.toggle('hidden')" class="w-14 h-14 rounded-full flex items-center justify-center transition-transform hover:scale-110 active:scale-95" style="background:#25d366;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(37,211,102,0.35);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </button>
+    <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
+  </div>
+</div>
+
+<script type="module">
+import { verificarSesion, cerrarSesion } from '../js/auth.js';
+import { supabase } from '../js/supabase-client.js';
+window._cerrarSesion = cerrarSesion;
+(async () => {
+  const perfil = await verificarSesion(['admin_clinica']);
+  if (!perfil) return;
+  const n = perfil.nombre||'', a = perfil.apellido||'';
+  const ini = ((n[0]||'')+(a[0]||'')).toUpperCase()||'AC';
+  const el = document.getElementById('user-nombre'); if (el) el.textContent = (n+' '+a).trim();
+  const av = document.getElementById('user-avatar'); if (av) av.textContent = ini;
+  if (perfil.clinica_id) {
+    const { data } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single();
+    const nc = document.getElementById('nombre-clinica'); if (nc && data) nc.textContent = data.nombre;
+  }
+})();
+</script>
+</body></html>

@@ -1,0 +1,395 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<title>Sugerencias de Mejora — SereneCare</title>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #020617; color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  .sg-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 16px 20px; transition: all 0.15s; }
+  .sg-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.12); }
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; }
+  .prio-nice { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+  .prio-importante { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
+  .prio-critico { background: rgba(248,113,113,0.1); color: #f87171; border: 1px solid rgba(248,113,113,0.25); }
+  .cat-badge { background: rgba(99,102,241,0.1); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.2); }
+  .estado-pendiente { background: rgba(251,191,36,0.08); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+  .estado-revisada { background: rgba(99,102,241,0.08); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.2); }
+  .estado-implementada { background: rgba(52,211,153,0.08); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
+  .estado-descartada { background: rgba(100,116,139,0.1); color: #64748b; border: 1px solid rgba(100,116,139,0.2); }
+  .btn-estado { padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); color: #94a3b8; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: 'Inter', sans-serif; }
+  .btn-estado:hover { background: rgba(255,255,255,0.08); color: #e2e8f0; }
+  @keyframes sgIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body class="min-h-screen flex overflow-hidden">
+
+<!-- Sidebar -->
+<aside class="w-72 bg-slate-900 border-r border-slate-800/20 flex flex-col px-6 py-8 fixed h-full z-30">
+  <div class="mb-10 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
+      <span class="material-symbols-outlined text-white filled">health_and_safety</span>
+    </div>
+    <div>
+      <h1 class="text-xl font-extrabold text-white font-headline tracking-tight">SereneCare</h1>
+      <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">SaaS Enterprise</p>
+    </div>
+  </div>
+  <nav class="flex-1 space-y-2">
+    <a href="dashboard_maestro_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">dashboard</span><span class="font-medium">Dashboard</span>
+    </a>
+    <a href="gestion_clinicas_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">medical_services</span><span class="font-medium">Clinics</span>
+    </a>
+    <a href="revenue_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">payments</span><span class="font-medium">Revenue</span>
+    </a>
+    <a href="configuracion_ia_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">settings_input_component</span><span class="font-medium">AI Config</span>
+    </a>
+    <a href="soporte_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">contact_support</span><span class="font-medium">Support</span>
+    </a>
+    <a href="estado_sistema_super_admin.html#logs" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">terminal</span><span class="font-medium">Logs Sistema</span>
+    </a>
+    <a href="#" class="flex items-center gap-3 px-4 py-3 bg-amber-500/10 text-amber-400 rounded-xl font-semibold">
+      <span class="material-symbols-outlined filled">lightbulb</span><span class="font-medium">Sugerencias</span>
+    </a>
+  </nav>
+  <div class="mt-auto pt-6 border-t border-slate-800/40">
+    <div class="p-4 bg-slate-800/50 rounded-2xl mb-4">
+      <div class="flex items-center gap-2 text-xs font-bold text-teal-400 uppercase tracking-widest mb-1">
+        <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>System Healthy
+      </div>
+      <p class="text-[10px] text-slate-500">99.98% uptime</p>
+    </div>
+    <a href="acceso_super_admin.html" class="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-rose-400 rounded-xl transition-all" style="text-decoration:none;">
+      <span class="material-symbols-outlined">logout</span><span class="font-medium">Logout</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Header -->
+<header class="fixed top-0 left-72 right-0 h-20 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/10 flex items-center justify-between px-8 z-20">
+  <div>
+    <h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Sugerencias de Mejora</h2>
+    <p id="subtitulo-header" class="text-slate-500 text-xs">Feedback recibido de psicólogos y administradores de clínica</p>
+  </div>
+  <div class="flex items-center gap-3">
+    <select id="filtro-prio" onchange="renderSugerencias()" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-xl px-3 py-2">
+      <option value="all">Todas las prioridades</option>
+      <option value="critico">Crítico</option>
+      <option value="importante">Importante</option>
+      <option value="nice">Nice-to-have</option>
+    </select>
+    <select id="filtro-estado" onchange="renderSugerencias()" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-xl px-3 py-2">
+      <option value="all">Todos los estados</option>
+      <option value="pendiente">Pendiente</option>
+      <option value="revisada">Revisada</option>
+      <option value="implementada">Implementada</option>
+      <option value="descartada">Descartada</option>
+    </select>
+    <select id="filtro-cat" onchange="renderSugerencias()" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-xl px-3 py-2">
+      <option value="all">Todas las categorías</option>
+      <option value="agenda">Agenda</option>
+      <option value="pacientes">Pacientes</option>
+      <option value="ia">IA / Informes</option>
+      <option value="facturacion">Facturación</option>
+      <option value="otra">Otra</option>
+    </select>
+    <button onclick="limpiarTodo()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-rose-400 border border-rose-400/20 hover:bg-rose-400/5 transition-all">
+      <span class="material-symbols-outlined" style="font-size:14px;">delete_sweep</span>Limpiar todo
+    </button>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="ml-72 pt-20 min-h-screen px-8 py-8">
+
+  <!-- Métricas rápidas -->
+  <div class="grid grid-cols-4 gap-4 mb-8">
+    <div class="sg-card text-center">
+      <p id="stat-total" class="text-3xl font-extrabold font-headline text-white mb-1">0</p>
+      <p class="text-xs text-slate-500 font-medium">Total sugerencias</p>
+    </div>
+    <div class="sg-card text-center">
+      <p id="stat-critico" class="text-3xl font-extrabold font-headline text-rose-400 mb-1">0</p>
+      <p class="text-xs text-slate-500 font-medium">Críticas</p>
+    </div>
+    <div class="sg-card text-center">
+      <p id="stat-pendiente" class="text-3xl font-extrabold font-headline text-amber-400 mb-1">0</p>
+      <p class="text-xs text-slate-500 font-medium">Pendientes de revisar</p>
+    </div>
+    <div class="sg-card text-center">
+      <p id="stat-implementada" class="text-3xl font-extrabold font-headline text-emerald-400 mb-1">0</p>
+      <p class="text-xs text-slate-500 font-medium">Implementadas</p>
+    </div>
+  </div>
+
+  <!-- Ranking automático -->
+  <div id="ranking-panel" class="mb-8" style="background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.15);border-radius:20px;padding:24px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <span class="material-symbols-outlined" style="color:#a5b4fc;font-size:20px;font-variation-settings:'FILL' 1;">auto_awesome</span>
+      <p class="font-headline font-bold text-white" style="margin:0;font-size:15px;">Qué construir primero — score automático</p>
+      <span style="font-size:11px;color:#64748b;margin-left:4px;">crítico ×3 · importante ×2 · nice ×1 · tamaño solo×1 pequeña×1.5 mediana×2.5 grande×4 · clínicas distintas ×1.5</span>
+    </div>
+    <div id="ranking-lista" class="space-y-2"></div>
+    <div id="ranking-empty" class="hidden" style="font-size:13px;color:#475569;">Sin datos suficientes todavía — las sugerencias de las clínicas irán apareciendo aquí.</div>
+    <!-- Capa 2 y 3 pendientes -->
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:16px;">
+      <div style="display:flex;align-items:center;gap:6px;opacity:0.4;">
+        <span class="material-symbols-outlined" style="font-size:14px;color:#94a3b8;">timeline</span>
+        <span style="font-size:11px;color:#94a3b8;">Capa 2: comportamiento (activa con Vercel Analytics)</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;opacity:0.4;">
+        <span class="material-symbols-outlined" style="font-size:14px;color:#94a3b8;">trending_up</span>
+        <span style="font-size:11px;color:#94a3b8;">Capa 3: retención por clínica (activa con Supabase)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de sugerencias -->
+  <div id="lista-sugerencias" class="space-y-3"></div>
+
+  <!-- Empty state -->
+  <div id="empty-state" class="hidden text-center py-24">
+    <span class="material-symbols-outlined text-slate-700" style="font-size:64px;">lightbulb</span>
+    <p class="text-slate-500 font-medium mt-4">No hay sugerencias todavía</p>
+    <p class="text-slate-600 text-sm mt-1">Las sugerencias de psicólogos y admins aparecerán aquí.</p>
+  </div>
+
+</main>
+
+<!-- Modal detalle / nota interna -->
+<div id="modal-overlay" onclick="cerrarModal()" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);align-items:center;justify-content:center;">
+  <div onclick="event.stopPropagation()" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:24px;width:100%;max-width:520px;margin:16px;box-shadow:0 40px 100px rgba(0,0,0,0.6);">
+    <div style="padding:24px 24px 0;display:flex;align-items:flex-start;justify-content:space-between;">
+      <p class="font-headline font-bold text-white text-base" style="margin:0;">Nota interna</p>
+      <button onclick="cerrarModal()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:16px;">close</span>
+      </button>
+    </div>
+    <div style="padding:20px 24px;">
+      <textarea id="modal-nota" rows="4" placeholder="Añade una nota sobre esta sugerencia (solo visible para ti)..." style="width:100%;box-sizing:border-box;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#f1f5f9;font-size:13px;padding:12px;resize:none;outline:none;font-family:'Inter',sans-serif;line-height:1.5;"></textarea>
+      <button onclick="guardarNota()" style="margin-top:12px;width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;font-family:'Manrope',sans-serif;font-weight:800;font-size:14px;background:rgba(251,191,36,0.9);color:#020617;">Guardar nota</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var CAT_LABEL = { agenda:'Agenda', pacientes:'Pacientes', ia:'IA / Informes', facturacion:'Facturación', otra:'Otra' };
+var PRIO_LABEL = { nice:'Nice-to-have', importante:'Importante', critico:'Crítico' };
+var ESTADO_LABEL = { pendiente:'Pendiente', revisada:'Revisada', implementada:'Implementada', descartada:'Descartada' };
+var ESTADO_OPCIONES = ['pendiente','revisada','implementada','descartada'];
+var _modalId = null;
+
+function cargarSugerencias() {
+  return JSON.parse(localStorage.getItem('tp_sugerencias') || '[]');
+}
+function guardarSugerencias(arr) {
+  localStorage.setItem('tp_sugerencias', JSON.stringify(arr));
+}
+
+function actualizarStats(todas) {
+  document.getElementById('stat-total').textContent = todas.length;
+  document.getElementById('stat-critico').textContent = todas.filter(function(s){ return s.prioridad === 'critico'; }).length;
+  document.getElementById('stat-pendiente').textContent = todas.filter(function(s){ return s.estado === 'pendiente'; }).length;
+  document.getElementById('stat-implementada').textContent = todas.filter(function(s){ return s.estado === 'implementada'; }).length;
+}
+
+var CAT_ICON  = { agenda:'calendar_month', pacientes:'person', ia:'psychology', facturacion:'receipt_long', otra:'lightbulb' };
+var PRIO_PTS  = { critico: 3, importante: 2, nice: 1 };
+var TAM_MULT  = { solo: 1, 'pequeña': 1.5, mediana: 2.5, grande: 4 };
+var TAM_LABEL = { solo: 'Solo', 'pequeña': '2–10', mediana: '11–30', grande: '+30' };
+
+function renderRanking() {
+  var todas = cargarSugerencias().filter(function(s){ return s.estado !== 'descartada' && s.estado !== 'implementada'; });
+  var el = document.getElementById('ranking-lista');
+  var empty = document.getElementById('ranking-empty');
+  if (!todas.length) { el.innerHTML = ''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+
+  // Score por categoría — capa 1: prioridad × tamaño clínica, bonus por clínicas distintas
+  var scores = {};
+  var clinicasPorCat = {};
+  todas.forEach(function(s) {
+    var cat  = s.categoria || 'otra';
+    var pts  = PRIO_PTS[s.prioridad] || 1;
+    var mult = TAM_MULT[s.tamano]    || 1;
+    scores[cat] = (scores[cat] || 0) + (pts * mult);
+    if (!clinicasPorCat[cat]) clinicasPorCat[cat] = new Set();
+    if (s.clinica) clinicasPorCat[cat].add(s.clinica);
+  });
+
+  // Bonus ×1.5 por cada clínica distinta adicional que lo pidió
+  Object.keys(scores).forEach(function(cat) {
+    var clinicas = clinicasPorCat[cat] ? clinicasPorCat[cat].size : 1;
+    if (clinicas > 1) scores[cat] = Math.round(scores[cat] * (1 + (clinicas - 1) * 0.5));
+    else scores[cat] = Math.round(scores[cat]);
+  });
+
+  var ranking = Object.keys(scores).sort(function(a,b){ return scores[b] - scores[a]; });
+  var maxScore = scores[ranking[0]] || 1;
+
+  el.innerHTML = ranking.map(function(cat, idx) {
+    var score = scores[cat];
+    var pct   = Math.round((score / maxScore) * 100);
+    var nClin = clinicasPorCat[cat] ? clinicasPorCat[cat].size : 1;
+    var nSug  = todas.filter(function(s){ return s.categoria === cat; }).length;
+    var icon  = CAT_ICON[cat] || 'lightbulb';
+    var label = CAT_LABEL[cat] || cat;
+    var medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : '';
+    var barColor = idx === 0 ? '#a5b4fc' : idx === 1 ? '#fbbf24' : '#64748b';
+    return '<div style="display:flex;align-items:center;gap:12px;">' +
+      '<span style="font-size:13px;width:20px;text-align:center;">' + (medal || ('#' + (idx+1))) + '</span>' +
+      '<span class="material-symbols-outlined" style="font-size:16px;color:' + barColor + ';">' + icon + '</span>' +
+      '<div style="flex:1;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">' +
+          '<span style="font-size:13px;font-weight:700;color:#e2e8f0;">' + label + '</span>' +
+          '<span style="font-size:11px;color:#64748b;">' + nSug + ' sugerencia' + (nSug!==1?'s':'') + ' · ' + nClin + ' clínica' + (nClin!==1?'s':'') + ' · score ' + score + '</span>' +
+        '</div>' +
+        '<div style="height:5px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden;">' +
+          '<div style="height:100%;width:' + pct + '%;background:' + barColor + ';border-radius:99px;transition:width 0.4s ease;"></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderSugerencias() {
+  var todas = cargarSugerencias();
+  actualizarStats(todas);
+  renderRanking();
+
+  var filPrio   = document.getElementById('filtro-prio').value;
+  var filEstado = document.getElementById('filtro-estado').value;
+  var filCat    = document.getElementById('filtro-cat').value;
+
+  var filtradas = todas.filter(function(s) {
+    if (filPrio   !== 'all' && s.prioridad !== filPrio)   return false;
+    if (filEstado !== 'all' && s.estado    !== filEstado) return false;
+    if (filCat    !== 'all' && s.categoria !== filCat)    return false;
+    return true;
+  });
+
+  var lista = document.getElementById('lista-sugerencias');
+  var empty = document.getElementById('empty-state');
+
+  if (filtradas.length === 0) {
+    lista.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+
+  lista.innerHTML = filtradas.map(function(s, idx) {
+    var fecha = new Date(s.fecha);
+    var fechaStr = fecha.toLocaleDateString('es-ES', { day:'numeric', month:'short', year:'numeric' }) + ' ' + fecha.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+    var prioClass = 'prio-' + (s.prioridad || 'nice');
+    var estadoClass = 'estado-' + (s.estado || 'pendiente');
+    var nota = s.nota ? '<p style="margin:8px 0 0;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);font-size:12px;color:#94a3b8;font-style:italic;">📝 ' + escHtml(s.nota) + '</p>' : '';
+    var opciones = ESTADO_OPCIONES.map(function(op) {
+      return '<option value="' + op + '"' + (s.estado === op ? ' selected' : '') + '>' + ESTADO_LABEL[op] + '</option>';
+    }).join('');
+    return '<div class="sg-card" style="animation:sgIn 0.2s ease ' + (idx * 0.04) + 's both;">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;">' +
+            '<span class="badge cat-badge">' + (CAT_LABEL[s.categoria] || s.categoria) + '</span>' +
+            '<span class="badge ' + prioClass + '">' + (PRIO_LABEL[s.prioridad] || s.prioridad) + '</span>' +
+            (s.tamano ? '<span class="badge" style="background:rgba(148,163,184,0.08);color:#64748b;border:1px solid rgba(148,163,184,0.15);">' + (TAM_LABEL[s.tamano] || s.tamano) + ' prof.</span>' : '') +
+            '<span class="badge ' + estadoClass + '">' + (ESTADO_LABEL[s.estado] || s.estado) + '</span>' +
+          '</div>' +
+          '<p style="margin:0 0 8px;font-size:14px;color:#e2e8f0;line-height:1.6;">' + escHtml(s.texto) + '</p>' +
+          '<p style="margin:0;font-size:11px;color:#475569;">' +
+            '<span style="color:#64748b;font-weight:600;">' + escHtml(s.rol || '') + '</span>' +
+            (s.usuario ? ' · ' + escHtml(s.usuario) : '') +
+            (s.clinica ? ' · ' + escHtml(s.clinica) : '') +
+            ' · ' + fechaStr +
+          '</p>' +
+          nota +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0;">' +
+          '<select onchange="cambiarEstado(\'' + s.id + '\', this.value)" class="bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-lg px-2 py-1.5">' + opciones + '</select>' +
+          '<button onclick="abrirNota(\'' + s.id + '\')" class="btn-estado"><span class="material-symbols-outlined" style="font-size:12px;vertical-align:middle;">edit_note</span> Nota</button>' +
+          '<button onclick="eliminarSugerencia(\'' + s.id + '\')" class="btn-estado" style="color:#f87171;border-color:rgba(248,113,113,0.2);">Eliminar</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.cambiarEstado = function(id, nuevoEstado) {
+  var todas = cargarSugerencias();
+  var sg = todas.find(function(s){ return String(s.id) === String(id); });
+  if (sg) { sg.estado = nuevoEstado; guardarSugerencias(todas); renderSugerencias(); }
+};
+
+window.eliminarSugerencia = function(id) {
+  if (!confirm('¿Eliminar esta sugerencia?')) return;
+  var todas = cargarSugerencias().filter(function(s){ return String(s.id) !== String(id); });
+  guardarSugerencias(todas);
+  renderSugerencias();
+};
+
+window.abrirNota = function(id) {
+  _modalId = id;
+  var todas = cargarSugerencias();
+  var sg = todas.find(function(s){ return String(s.id) === String(id); });
+  document.getElementById('modal-nota').value = sg && sg.nota ? sg.nota : '';
+  document.getElementById('modal-overlay').style.display = 'flex';
+};
+
+window.cerrarModal = function() {
+  document.getElementById('modal-overlay').style.display = 'none';
+  _modalId = null;
+};
+
+window.guardarNota = function() {
+  if (!_modalId) return;
+  var nota = document.getElementById('modal-nota').value.trim();
+  var todas = cargarSugerencias();
+  var sg = todas.find(function(s){ return String(s.id) === String(_modalId); });
+  if (sg) { sg.nota = nota; guardarSugerencias(todas); }
+  cerrarModal();
+  renderSugerencias();
+};
+
+window.limpiarTodo = function() {
+  if (!confirm('¿Eliminar TODAS las sugerencias? Esta acción no se puede deshacer.')) return;
+  localStorage.removeItem('tp_sugerencias');
+  renderSugerencias();
+};
+
+// Init
+renderSugerencias();
+
+// Datos de demo si no hay nada
+(function seedDemo() {
+  if (cargarSugerencias().length > 0) return;
+  var demo = [
+    { id: 1716000000001, fecha: new Date(Date.now() - 2*24*60*60*1000).toISOString(), rol: 'psicologo', usuario: 'Dr. López', clinica: 'Clínica Salud Mental Norte', categoria: 'agenda', texto: 'Sería ideal poder ver la disponibilidad de todos los terapeutas en una sola vista de calendario, en lugar de cambiar uno por uno.', prioridad: 'importante', estado: 'pendiente' },
+    { id: 1716000000002, fecha: new Date(Date.now() - 5*24*60*60*1000).toISOString(), rol: 'admin_clinica', usuario: 'María Gómez', clinica: 'Centro PsicoCare', categoria: 'facturacion', texto: 'Necesitamos poder generar facturas agrupadas por seguro médico al final del mes. Ahora hay que hacerlo una por una.', prioridad: 'critico', estado: 'pendiente' },
+    { id: 1716000000003, fecha: new Date(Date.now() - 10*24*60*60*1000).toISOString(), rol: 'psicologo', usuario: 'Dra. Martínez', clinica: 'Clínica Salud Mental Norte', categoria: 'ia', texto: 'El informe de IA a veces incluye términos muy técnicos que el paciente no entiende. ¿Se podría ajustar el nivel del lenguaje?', prioridad: 'nice', estado: 'revisada' },
+    { id: 1716000000004, fecha: new Date(Date.now() - 15*24*60*60*1000).toISOString(), rol: 'admin_clinica', usuario: 'Carlos Ruiz', clinica: 'PsicoSalud Sur', categoria: 'pacientes', texto: 'Falta un campo de "notas internas del admin" en la ficha del paciente, separado de las notas clínicas del terapeuta.', prioridad: 'importante', estado: 'implementada' },
+  ];
+  guardarSugerencias(demo);
+  renderSugerencias();
+})();
+</script>
+</body>
+</html>

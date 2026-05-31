@@ -1,0 +1,477 @@
+﻿<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary": "#f0fbff",
+              "primary-fixed": "#a8e3f6",
+              "surface-container-highest": "#dce4e6",
+              "on-tertiary": "#e6ffee",
+              "surface-bright": "#f8fafb",
+              "on-error": "#fff7f6",
+              "tertiary-fixed": "#d7fde4",
+              "surface-container": "#eaeff0",
+              "on-tertiary-fixed": "#2f503f",
+              "background": "#f8fafb",
+              "surface": "#f8fafb",
+              "secondary-fixed": "#b2ecfd",
+              "on-surface": "#2c3436",
+              "primary-dim": "#195a6a",
+              "inverse-primary": "#a8e3f6",
+              "on-secondary": "#effbff",
+              "error-dim": "#67040d",
+              "secondary-dim": "#1b5a69",
+              "on-secondary-container": "#195968",
+              "on-surface-variant": "#596063",
+              "surface-container-high": "#e3e9eb",
+              "on-primary-container": "#0e5463",
+              "outline": "#747c7e",
+              "tertiary-container": "#d7fde4",
+              "primary-fixed-dim": "#9ad5e7",
+              "on-secondary-fixed-variant": "#266372",
+              "inverse-on-surface": "#9a9d9e",
+              "secondary-container": "#b2ecfd",
+              "inverse-surface": "#0b0f10",
+              "on-background": "#2c3436",
+              "on-tertiary-container": "#416350",
+              "surface-dim": "#d4dbde",
+              "primary": "#296777",
+              "on-primary-fixed": "#00404d",
+              "surface-variant": "#dce4e6",
+              "surface-container-lowest": "#ffffff",
+              "on-error-container": "#6e0a12",
+              "error": "#a83836",
+              "tertiary-dim": "#395a48",
+              "outline-variant": "#acb3b6",
+              "tertiary": "#456653",
+              "surface-container-low": "#f0f4f6",
+              "on-primary-fixed-variant": "#1d5e6d",
+              "error-container": "#fa746f",
+              "primary-container": "#a8e3f6",
+              "on-tertiary-fixed-variant": "#4c6d5a",
+              "secondary": "#2b6775",
+              "secondary-fixed-dim": "#a4ddef",
+              "surface-tint": "#296777",
+              "on-secondary-fixed": "#004653",
+              "tertiary-fixed-dim": "#c9eed6"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+      }
+      ::-webkit-scrollbar {
+        width: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #dce4e6;
+        border-radius: 10px;
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 hidden lg:flex flex-col bg-slate-100 dark:bg-slate-950 font-manrope text-sm font-medium p-4 gap-y-4">
+<div class="flex items-center gap-3 px-2 py-4">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined" data-icon="spa">spa</span>
+</div>
+<div>
+<h1 class="text-lg font-bold text-cyan-900 dark:text-white leading-none">Clínica Central</h1>
+<p class="text-[10px] text-on-surface-variant font-medium opacity-70">Gestión Terapéutica</p>
+</div>
+</div>
+<nav class="flex-1 space-y-2 no-border">
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 text-cyan-800 dark:text-cyan-200 rounded-xl shadow-sm transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+<span>Mensajes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl transition-colors duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Personal</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl transition-colors duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span>Sesiones</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl transition-colors duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span>Historial</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl transition-colors duration-200 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span>Ajustes</span>
+</a>
+</nav>
+<div class="mt-auto space-y-2 pt-4">
+<button class="w-full bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-xl py-3 px-4 flex items-center justify-center gap-2 font-semibold shadow-lg shadow-primary/10 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span>Nueva Sesión</span>
+</button>
+<div class="h-px bg-surface-container-highest/50 my-4"></div>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Ayuda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-error hover:text-error-dim transition-colors" href="#" onclick="window._cerrarSesion&&window._cerrarSesion()">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Cerrar Sesión</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 lg:ml-64 h-screen flex flex-col bg-surface overflow-hidden">
+<!-- TopAppBar (Shared Component) -->
+<header class="w-full sticky top-0 z-50 bg-slate-50/70 dark:bg-slate-900/70 backdrop-blur-xl flex items-center justify-between px-8 h-16 shadow-sm dark:shadow-none font-manrope antialiased tracking-tight">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold text-cyan-900 dark:text-cyan-100">Mensajería</span>
+<nav class="hidden md:flex items-center gap-6 ml-8">
+<a class="text-slate-500 dark:text-slate-400 hover:text-cyan-600 transition-colors" href="#">Dashboard</a>
+<a class="text-cyan-700 dark:text-cyan-300 font-semibold border-b-2 border-cyan-700 dark:border-cyan-300 pb-1" href="#">Pacientes</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-cyan-600 transition-colors" href="#">Calendario</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-cyan-600 transition-colors" href="#">Reportes</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out hover:scale-[1.02]">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200/50 dark:bg-slate-800/50"></div>
+<div class="flex items-center gap-3">
+<img alt="Avatar del especialista" class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm" data-alt="portrait of a professional female therapist with a warm smile in a clean clinical setting, professional photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrLc_aTCgx0AD-4B7MWF_l2uGxNdQNeBlGQJjiDehRVlPqdZmwH5S5BmxY4_0sck8fOC9w3uH8UERUB8eSz4dtyqU4UzLj9UrQcYw1pxL-fvP9f-fV08_Cng_INGnBiGt_Sy_jdl39xREJQPVEi98fh1qk6AKDTJKhHIk_tzFGYELektC2IX1P3A7hH0XyLFEvTxECKYpwW3i_Ww4YuIxqOOHLO4G_USvYbQ24_p0Cb3fyewsLXScrc6MtEmuWsXQkKCS_YgMH-8_G"/>
+<span class="hidden sm:block font-semibold text-cyan-800 dark:text-cyan-300 text-sm">Dra. Elena Rossi</span>
+</div>
+</div>
+</header>
+<!-- Messaging Layout -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Chat List Panel -->
+<section class="w-80 bg-surface-container-low flex flex-col border-r border-transparent">
+<div class="p-6">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-xl pl-10 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/50" placeholder="Buscar pacientes o chats..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-4 pb-4 space-y-1">
+<!-- Active Chat Item -->
+<div class="p-3 bg-surface-container-lowest rounded-2xl flex items-center gap-3 transition-all cursor-pointer">
+<div class="relative">
+<img alt="Paciente" class="w-12 h-12 rounded-xl object-cover" data-alt="portrait of a young man with a calm expression, soft natural lighting, high quality editorial style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4RdLH_evbUiKX2Wf-Gp2GJjWaBmmCJdGjDJe_8hIO0k0qJeVUwrnFgYiqHNoQhb4oDFBw4bBvnERrM0n-u3Ls1YulkZbCgfsl8t9uvsm_B0CJRaL0APVUzZDx-dHNsXSELDz7Jfk8C4Fb0iFrqbYf5L4ppmHhdQ-h3ATs7K1w11OKrxbS2PP5sbuZenQtpbZWn99FPPAlvn_09C4eCh-jlUbVRUAtiDUSfhP1ze9yqlOH-v8U3l3YEiVrfKGv6wEgB3pbTZzmca-r"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-tertiary border-2 border-white rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h4 class="font-bold text-sm truncate">Carlos Méndez</h4>
+<span class="text-[10px] text-on-surface-variant">10:42 AM</span>
+</div>
+<p class="text-xs text-on-surface-variant truncate font-medium">Gracias doctora, me siento mejor...</p>
+</div>
+</div>
+<!-- Inactive Chat Items -->
+<div class="p-3 hover:bg-surface-container-high rounded-2xl flex items-center gap-3 transition-all cursor-pointer group">
+<div class="relative">
+<img alt="Paciente" class="w-12 h-12 rounded-xl object-cover opacity-80" data-alt="portrait of a professional woman with glasses, soft indoor lighting, serene atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx7o1Ii_h0QjhU1B6Jvpn0lU40sDrkrBXL3WS9LBBEont9wWcSTJJF_3Jusrnwe8xPD8WIXGLhL6spDGfLyo0Xmx_o5oNsf424oB2L6JOYoZE-FybR1SjGy6lM6iMLX7J61xf4_cGdyilZcNClOQHKZeD71hZIwXSvGdDzfjGkewth9ADUgePxAJBwHbhGFp84RSwIv7brclCWoUlqMDmzJopPVa-3fGm9mJa6jEes222g1CxZugWONbC4SPLqLJ8B3ODEu236sWAI"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h4 class="font-semibold text-sm truncate text-on-surface/80">Lucía Torres</h4>
+<span class="text-[10px] text-on-surface-variant">Ayer</span>
+</div>
+<p class="text-xs text-on-surface-variant truncate">¿Podemos adelantar la cita?</p>
+</div>
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+<div class="p-3 hover:bg-surface-container-high rounded-2xl flex items-center gap-3 transition-all cursor-pointer group">
+<img alt="Paciente" class="w-12 h-12 rounded-xl object-cover opacity-80" data-alt="man in his 40s smiling gently, warm earth tones, professional photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAya7va7OpmyzmDwP1ZOqtSNoC3vwLLJAaF6LAtmtHgp988vF-0DjJyyCNunsLMKKuisLXz77ER-uB-Ja_ulbsdoI1_RJZnE0LpY_I456jw5z6MJKERctr9R1LQIX0PgScR-UrrEEdXDpSTCDRh4l9xtlsvJOr-anlCsWtJoZpe5SHOnVmvGDsMAEmG2soEs9pt9dJgTI5O1rtstH0AF5t_gdhFhgNnSHq3k6kZw6JM1a3JXdeMR9RNlxiivPpzIPjZTR9woxDPSiMD"/>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h4 class="font-semibold text-sm truncate text-on-surface/80">Roberto Gil</h4>
+<span class="text-[10px] text-on-surface-variant">Martes</span>
+</div>
+<p class="text-xs text-on-surface-variant truncate">Confirmado para el jueves.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Chat Window -->
+<section class="flex-1 bg-surface-container-lowest flex flex-col relative">
+<!-- Chat Header -->
+<div class="px-8 py-4 flex items-center justify-between border-b border-surface-container">
+<div class="flex items-center gap-4">
+<div class="relative">
+<img alt="Paciente Activo" class="w-10 h-10 rounded-full object-cover" data-alt="portrait of a young man with a calm expression, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoZCB6bPBXdqf0uDzhajl62kNn_KPaa2NjqRvJ0CD6IWeMYUYFjcTWHGbPKeIXav1THfPbTvHgzitwfkTa1TxXnfUf1a7AbQDke_acVIXBZ2MeWQG0OtvSZcIPAwNpiqZCmmISYfVsZuC1UN7gavSXqkyI735RKwttMla7X_0QltXZ4OflZQ1cp6-OTW2caJVdmP-FniRltvQYDui78G1As2y7FF_24CXtQqMF1SHHLcPSPRtVQM_otxZScu1ZvfrJO5quniDlpMOT"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-tertiary border-2 border-white rounded-full"></span>
+</div>
+<div>
+<h3 class="font-bold text-base leading-tight">Carlos Méndez</h3>
+<p class="text-[10px] text-tertiary font-semibold uppercase tracking-wider">En línea ahora</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2.5 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="videocam">videocam</span>
+</button>
+<button class="p-2.5 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="call">call</span>
+</button>
+<button class="p-2.5 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Messages Display -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<div class="flex justify-center">
+<span class="px-3 py-1 bg-surface-container text-[10px] font-bold text-on-surface-variant rounded-full uppercase tracking-widest">Hoy</span>
+</div>
+<!-- Patient Message -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<img alt="Carlos" class="w-8 h-8 rounded-lg object-cover" data-alt="small avatar of young man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjGlXsVs0LLVLVnYr6Xxexr857ssmYztsTdW1g62Tnd-V8I5OdBLeLpEqJ3lGQ4Quhx4J9U8PZ97vfjF4gcxMWkcdg-768DP8Zm8AtmgEfIutb7_Yyv_0Tj7u0E8saSphG5w8vCYHyrj0VhMSZdaQG2acB-4_XEaUyxRWwnBHhOYUchd6Ygok57r8JFrkNmp9lRLFr_k_LeEBgPedQeVrSjel9VaBX-dKO1rATi6IojT9fMdd6663RkSKbk8w5nV_nV_seQNMvcHHc"/>
+<div class="p-4 rounded-2xl rounded-bl-none glass-card bg-surface-container-low text-sm text-on-surface shadow-sm">
+<p>Hola Dra. Rossi, he estado practicando los ejercicios de respiración que comentamos en la última sesión. Realmente me han ayudado a manejar la ansiedad matutina.</p>
+<span class="block mt-2 text-[10px] opacity-60">09:15 AM</span>
+</div>
+</div>
+<!-- Doctor Message -->
+<div class="flex items-end gap-3 max-w-[80%] ml-auto flex-row-reverse">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="medical_services">medical_services</span>
+</div>
+<div class="p-4 rounded-2xl rounded-br-none bg-secondary-container text-on-secondary-container text-sm shadow-sm">
+<p>¡Eso es excelente, Carlos! Me alegra mucho escucharlo. ¿Notaste algún gatillo específico hoy o la técnica fue suficiente para calmar el pico inicial?</p>
+<span class="block mt-2 text-[10px] opacity-60">10:20 AM</span>
+</div>
+</div>
+<!-- Patient Message -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<img alt="Carlos" class="w-8 h-8 rounded-lg object-cover" data-alt="small avatar of young man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFJtb5SYPboxAJvGNftXjU-2pXMEntzDcrRR8c8RQGxD1AEuwgkHs13n2H96CjxStTIzJ1f9xT4B70uwX3nDnMGCDuM7xkV6Gr46TWrNEQ044BRDGqR9qLIh_KsMi_QtfczBIVv3gT8IbPoO7g5UjYlGNWJLt0wR0ZPaqTIuyJg3fu_TmXOHM54LxlKy7OCwWm_frsgtIuqG6nyczhpwbJ84k4_SKs__PtiFKhru8MxVYwt5lrjl9_I_6qLB653YpHLqAY-NIQCr0c"/>
+<div class="p-4 rounded-2xl rounded-bl-none glass-card bg-surface-container-low text-sm text-on-surface shadow-sm">
+<p>Fue suficiente. Solo quería confirmarle. Gracias doctora, me siento mejor sabiendo que tengo esas herramientas.</p>
+<span class="block mt-2 text-[10px] opacity-60">10:42 AM</span>
+</div>
+</div>
+</div>
+<!-- Message Input -->
+<div class="p-6 bg-surface-container-lowest border-t border-surface-container/50">
+<div class="flex items-end gap-3 max-w-5xl mx-auto">
+<button class="p-2.5 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<div class="flex-1 relative">
+<textarea class="w-full bg-surface-container-low border-none rounded-2xl px-5 py-3 text-sm focus:ring-2 focus:ring-primary/20 resize-none placeholder:text-on-surface-variant/40" placeholder="Escribe un mensaje para Carlos..." rows="1"></textarea>
+<button class="absolute right-3 bottom-2.5 text-primary">
+<span class="material-symbols-outlined" data-icon="sentiment_satisfied">sentiment_satisfied</span>
+</button>
+</div>
+<button class="h-11 w-11 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="send" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Quick Profile Sidebar (Right) -->
+<aside class="w-72 bg-surface-container-low hidden xl:flex flex-col overflow-y-auto">
+<div class="p-8 flex flex-col items-center text-center">
+<div class="relative mb-4">
+<img alt="Carlos Perfil" class="w-32 h-32 rounded-[2rem] object-cover shadow-xl" data-alt="profile portrait of a calm young man, high quality photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPq4yqsf1TWjHrh3ryaUa_aaurPr_mG6pmlCZmqHgjOYkPQxYHEyUiGr9eWxo8lU73Ca0PZwnnCTo5NLhOhQLQSTk8T-8-iO5nZeAXbKbRgk78TS3IrX7c6OU8N6ZiVpk_MaaZMiwxGNMEC4K0hthZquyrAiSMBD4t4Wf4ffAATIcDtAfLrXj6kfzB5GMJ0nRItULA9GPrDuQ-Ldrb0KJUTmVGCJdrnhfSShw02wskSxlw9pC6fNOou8Fm4XhqJh65HBBMBA6VpUUf"/>
+<div class="absolute -bottom-2 -right-2 bg-tertiary-container text-on-tertiary-container p-2 rounded-xl shadow-md">
+<span class="material-symbols-outlined text-sm" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+</div>
+<h2 class="font-headline font-extrabold text-xl text-cyan-900 tracking-tight">Carlos Méndez</h2>
+<p class="text-on-surface-variant text-xs mt-1 font-medium">Paciente desde Octubre 2023</p>
+<div class="flex gap-2 mt-6">
+<span class="px-3 py-1 bg-white/50 text-[10px] font-bold text-on-surface-variant rounded-full border border-surface-container">Ansiedad Gral.</span>
+<span class="px-3 py-1 bg-white/50 text-[10px] font-bold text-on-surface-variant rounded-full border border-surface-container">Insomnio</span>
+</div>
+</div>
+<div class="px-6 space-y-6">
+<!-- Progress Section -->
+<div class="bg-surface-container-lowest p-5 rounded-3xl">
+<div class="flex justify-between items-center mb-3">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Progreso Terapéutico</span>
+<span class="text-[10px] font-bold text-tertiary">65%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[65%]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-3 text-center leading-relaxed italic">"Carlos muestra una mejora significativa en la gestión de crisis."</p>
+</div>
+<!-- Quick Actions -->
+<div class="space-y-2">
+<h4 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest px-2">Acciones Rápidas</h4>
+<button class="w-full flex items-center gap-3 p-3 bg-white/40 hover:bg-white text-sm rounded-2xl transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="description">description</span>
+<span class="font-medium text-xs">Ver Historial Clínico</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 bg-white/40 hover:bg-white text-sm rounded-2xl transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="calendar_month">calendar_month</span>
+<span class="font-medium text-xs">Agendar Próxima Sesión</span>
+</button>
+<button class="w-full flex items-center gap-3 p-3 bg-white/40 hover:bg-white text-sm rounded-2xl transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="attachment">attachment</span>
+<span class="font-medium text-xs">Documentos Compartidos</span>
+</button>
+</div>
+<!-- Upcoming Sessions -->
+<div class="pt-2">
+<h4 class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest px-2 mb-3">Próxima Sesión</h4>
+<div class="p-4 bg-tertiary-container/30 border border-tertiary-container rounded-3xl flex items-center gap-4">
+<div class="w-10 h-10 bg-white rounded-2xl flex flex-col items-center justify-center leading-tight">
+<span class="text-[10px] font-bold text-tertiary">OCT</span>
+<span class="text-sm font-extrabold">24</span>
+</div>
+<div>
+<p class="text-xs font-bold text-cyan-900">Jueves, 16:00</p>
+<p class="text-[10px] text-on-tertiary-fixed-variant">Modalidad Online</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-auto p-6">
+<div class="bg-primary/5 p-4 rounded-3xl border border-primary/10">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="lightbulb">lightbulb</span>
+<span class="text-[10px] font-bold text-primary uppercase">Nota del Curador</span>
+</div>
+<p class="text-[10px] text-primary-dim leading-relaxed">Priorizar técnicas cognitivo-conductuales en la próxima sesión.</p>
+</div>
+</div>
+</aside>
+</div>
+<!-- BottomNavBar (Shared Component - Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-6 pt-3 lg:hidden bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-t border-slate-100 dark:border-slate-800 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center bg-cyan-100 dark:bg-cyan-900/40 text-cyan-800 dark:text-cyan-100 rounded-2xl px-5 py-2 tap-highlight-transparent transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="forum" style="font-variation-settings: 'FILL' 1;">forum</span>
+<span class="font-manrope text-[10px] font-medium">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 tap-highlight-transparent transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+<span class="font-manrope text-[10px] font-medium">Staff</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 tap-highlight-transparent transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-manrope text-[10px] font-medium">Citas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 tap-highlight-transparent transition-transform active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-manrope text-[10px] font-medium">Perfil</span>
+</a>
+</nav>
+</main>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <script type="module">
+    import { guardaClinica, obtenerConversaciones, obtenerMensajes, enviarMensaje, suscribirMensajes } from '../js/clinica.js'
+    import { mostrarError, cerrarSesion } from '../js/auth.js'
+    window._cerrarSesion = cerrarSesion
+    import { supabase } from '../js/supabase-client.js'
+
+    await guardaClinica()
+    const uid = (await supabase.auth.getUser()).data.user?.id
+    let contactoActivo = null
+    let canal = null
+
+    // Cargar lista de conversaciones
+    try {
+      const convs = await obtenerConversaciones()
+      const contactosVistos = new Map()
+      convs.forEach(m => {
+        const otro = m.de_id === uid ? { id: m.para_id, ...m.para } : { id: m.de_id, ...m.de }
+        if (!contactosVistos.has(otro.id)) contactosVistos.set(otro.id, { ...otro, ultimo: m.texto })
+      })
+
+      const listaSidebar = document.querySelector('[data-contactos], aside ul, .sidebar ul') || document.querySelector('aside')
+      if (listaSidebar) {
+        listaSidebar.innerHTML = Array.from(contactosVistos.values()).map(c => `
+          <li onclick="abrirChat('${c.id}', '${c.nombre} ${c.apellido}')"
+              class="flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-surface-container transition-colors" id="contact-${c.id}">
+            <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center font-bold text-primary text-sm flex-shrink-0">
+              ${c.nombre?.charAt(0) || '?'}
+            </div>
+            <div class="overflow-hidden">
+              <p class="font-semibold text-sm truncate">${c.nombre} ${c.apellido}</p>
+              <p class="text-xs text-on-surface-variant truncate">${c.ultimo || ''}</p>
+            </div>
+          </li>`).join('')
+      }
+    } catch(e) { mostrarError(e.message) }
+
+    // Abrir chat con un contacto
+    window.abrirChat = async (otroId, nombre) => {
+      contactoActivo = otroId
+      document.querySelectorAll('[id^="contact-"]').forEach(el => el.classList.remove('bg-surface-container-low'))
+      document.getElementById(`contact-${otroId}`)?.classList.add('bg-surface-container-low')
+
+      const headerNombre = document.querySelector('[data-chat-nombre], header h2, .chat-header h2')
+      if (headerNombre) headerNombre.textContent = nombre
+
+      await cargarMensajes()
+
+      if (canal) canal.unsubscribe()
+      canal = suscribirMensajes(otroId, async () => await cargarMensajes())
+    }
+
+    async function cargarMensajes() {
+      if (!contactoActivo) return
+      try {
+        const msgs = await obtenerMensajes(contactoActivo)
+        const chat = document.querySelector('[data-mensajes], .chat-messages, main > div > div:last-child')
+        if (!chat) return
+        chat.innerHTML = msgs.map(m => {
+          const esMio = m.de_id === uid
+          return `<div class="flex ${esMio ? 'justify-end' : 'justify-start'} mb-3">
+            <div class="max-w-xs px-4 py-2 rounded-2xl text-sm ${esMio ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface'}">
+              ${m.texto}
+              <p class="text-[10px] opacity-60 mt-1 text-right">${new Date(m.created_at).toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})}</p>
+            </div>
+          </div>`
+        }).join('')
+        chat.scrollTop = chat.scrollHeight
+      } catch(e) { console.error(e) }
+    }
+
+    // Enviar mensaje
+    const inputMsg = document.querySelector('input[type="text"][placeholder*="mensaje" i], input[placeholder*="escrib" i], input[placeholder*="message" i], footer input, .chat-input input')
+    const btnEnviar = document.querySelector('button[type="submit"], [data-enviar], footer button')
+
+    async function enviar() {
+      if (!contactoActivo || !inputMsg?.value.trim()) return
+      const texto = inputMsg.value.trim()
+      inputMsg.value = ''
+      try { await enviarMensaje(contactoActivo, texto); await cargarMensajes() }
+      catch(e) { mostrarError(e.message) }
+    }
+
+    btnEnviar?.addEventListener('click', enviar)
+    inputMsg?.addEventListener('keydown', e => { if (e.key === 'Enter') enviar() })
+  </script>
+</body></html>

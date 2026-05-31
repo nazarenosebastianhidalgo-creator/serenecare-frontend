@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-dim": "#67040d",
+                    "primary": "#296777",
+                    "surface-bright": "#f8fafb",
+                    "secondary-dim": "#1b5a69",
+                    "surface-tint": "#296777",
+                    "on-primary-fixed-variant": "#1d5e6d",
+                    "on-surface": "#2c3436",
+                    "secondary-fixed-dim": "#a4ddef",
+                    "on-error": "#fff7f6",
+                    "on-tertiary-fixed-variant": "#4c6d5a",
+                    "on-primary": "#f0fbff",
+                    "on-background": "#2c3436",
+                    "secondary": "#2b6775",
+                    "on-tertiary-fixed": "#2f503f",
+                    "surface-container-high": "#e3e9eb",
+                    "on-tertiary": "#e6ffee",
+                    "surface-container-low": "#f0f4f6",
+                    "inverse-surface": "#0b0f10",
+                    "tertiary-dim": "#395a48",
+                    "on-primary-container": "#0e5463",
+                    "on-error-container": "#6e0a12",
+                    "error-container": "#fa746f",
+                    "on-secondary-fixed-variant": "#266372",
+                    "tertiary-container": "#d7fde4",
+                    "surface-variant": "#dce4e6",
+                    "surface-dim": "#d4dbde",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed": "#d7fde4",
+                    "primary-container": "#a8e3f6",
+                    "surface-container-highest": "#dce4e6",
+                    "primary-fixed-dim": "#9ad5e7",
+                    "on-primary-fixed": "#00404d",
+                    "tertiary-fixed-dim": "#c9eed6",
+                    "primary-fixed": "#a8e3f6",
+                    "secondary-container": "#b2ecfd",
+                    "secondary-fixed": "#b2ecfd",
+                    "tertiary": "#456653",
+                    "outline": "#747c7e",
+                    "primary-dim": "#195a6a",
+                    "outline-variant": "#acb3b6",
+                    "surface-container": "#eaeff0",
+                    "inverse-primary": "#a8e3f6",
+                    "inverse-on-surface": "#9a9d9e",
+                    "on-surface-variant": "#596063",
+                    "on-secondary-fixed": "#004653",
+                    "surface": "#f8fafb",
+                    "on-tertiary-container": "#416350",
+                    "error": "#a83836",
+                    "on-secondary": "#effbff",
+                    "on-secondary-container": "#195968",
+                    "background": "#f8fafb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "display": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .editorial-shadow {
+            box-shadow: 0 20px 40px rgba(44, 52, 54, 0.06);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        body {
+            background-color: #f8fafb;
+            color: #2c3436;
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- Suppression of Navigation Shell as per "The Destination Rule" for Transactional Success Screens -->
+<main class="min-h-screen flex items-center justify-center p-6 md:p-12 relative overflow-hidden">
+<!-- Abstract Background Decorative Elements -->
+<div class="absolute top-[-10%] right-[-5%] w-[40rem] h-[40rem] rounded-full bg-secondary-container/20 blur-3xl -z-10"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[35rem] h-[35rem] rounded-full bg-tertiary-container/30 blur-3xl -z-10"></div>
+<div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+<!-- Left Editorial Section: Asymmetrical Visual -->
+<div class="md:col-span-5 order-2 md:order-1">
+<div class="relative group">
+<div class="absolute -inset-4 bg-gradient-to-tr from-primary/10 to-transparent rounded-3xl -z-10 transform rotate-2"></div>
+<img alt="Interior of a modern, peaceful psychological clinic with soft natural lighting and minimalist furniture" class="w-full h-[500px] object-cover rounded-3xl editorial-shadow grayscale-[20%] group-hover:grayscale-0 transition-all duration-700" data-alt="Calm therapist office interior with large windows, soft morning light, green plants, and comfortable neutral-toned chairs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArtrYU_woSCMr0vgNbh6DEFxJ5FG7NCspCzVO7uuFzUX00quAuRJ88gONxItMJyoTGPNOFXw50s2977wEJyr6DuISC2L0u2Bm-1Jm6wC-FvTCRTLJX7Plu18xpBpLmOOTxutzforpSbXLY3sLNz0eIdZOVsVx88KOcwNYEM7L7GV--DXpEQ8IHnYbRmTVe07DxWjWm5sifSDt9AcgBX5mNsNRI_HCY90gTLlmC_63pxBub-uKfLqwn2-tawEBRNtz8QIptNLwRi65E"/>
+<!-- Floating Summary Badge -->
+<div class="absolute bottom-8 -right-4 glass-panel p-6 rounded-2xl editorial-shadow max-w-[240px]">
+<p class="font-headline font-bold text-primary text-lg leading-tight mb-2">SereneCare Journey</p>
+<p class="text-on-surface-variant text-sm font-medium">Your path to mental wellness begins with this intentional first step.</p>
+</div>
+</div>
+</div>
+<!-- Right Content Section: Transactional Details -->
+<div class="md:col-span-7 order-1 md:order-2 flex flex-col gap-10">
+<!-- Success Header -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded-full bg-tertiary-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="h-px flex-1 bg-surface-container-high hidden md:block"></div>
+</div>
+<h1 class="font-headline text-5xl font-extrabold tracking-tight text-on-surface">
+                        Booking Confirmed.
+                    </h1>
+<p class="font-body text-xl text-on-surface-variant leading-relaxed max-w-lg">
+                        We've reserved your session. A serene space is being prepared for your conversation.
+                    </p>
+</div>
+<!-- Session Summary Card -->
+<div class="bg-surface-container-lowest rounded-3xl p-8 editorial-shadow flex flex-col gap-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+<!-- Clinician Info -->
+<div class="flex flex-col gap-2">
+<span class="font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Psychologist</span>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container overflow-hidden">
+<img alt="Portrait of Dr. Elena Vance" class="w-full h-full object-cover" data-alt="Professional headshot of a friendly female psychologist in her 40s with a warm smile wearing a soft knit sweater" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSi6LlN_mOmNJUbam84z2-D3gB-vZ351Icez-GcXrwGajMyiacLO7Ff17HXx0mUNyV8F0uIN7ryOBG5plZYhOZ9s8k55R3CTbkxZT9ShvVU4NKTgJiir954eZgvx-HBa_-E35WM6O6-MeQZexgosItQDj13nFkRI7Y7VTkOvZV2jw-qyOaCxldmYF7tL2_mQhO-tV0ZkyIG1aVYWrnKLjOy0fciZVILG8IKSUbG4kKtiixfBI6y48yrWNLNON1dZXG_UyXXbBlzbK0"/>
+</div>
+<p class="font-headline font-bold text-on-surface">Dr. Elena Vance</p>
+</div>
+</div>
+<!-- Date & Time -->
+<div class="flex flex-col gap-2">
+<span class="font-label text-xs font-bold uppercase tracking-widest text-on-surface-variant/60">Date &amp; Time</span>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+<p class="font-headline font-bold text-on-surface">Oct 24, 2024 · 10:30 AM</p>
+</div>
+</div>
+</div>
+<!-- Divider shift (No-line rule) -->
+<div class="h-px w-full bg-surface-container-low"></div>
+<!-- Action Area -->
+<div class="flex flex-col sm:flex-row items-center gap-4">
+<a class="w-full sm:w-auto bg-gradient-to-br from-primary to-primary-dim text-on-primary px-8 py-4 rounded-3xl font-headline font-bold text-center editorial-shadow hover:translate-y-[-2px] active:scale-95 transition-all" href="#">
+                            Access Patient Portal
+                        </a>
+<button class="w-full sm:w-auto px-8 py-4 rounded-3xl font-headline font-bold text-on-surface-variant hover:bg-surface-container-low transition-colors">
+                            Add to Calendar
+                        </button>
+</div>
+</div>
+<!-- Secondary Support Links -->
+<div class="flex items-center gap-8 px-2">
+<div class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">mail</span>
+<span class="font-label font-semibold text-sm">Resend Receipt</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">help</span>
+<span class="font-label font-semibold text-sm">Help Center</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Brand Footer Anchor -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 pointer-events-none">
+<span class="font-headline font-extrabold text-xl text-primary tracking-tight">SereneCare</span>
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+<span class="font-body text-sm font-medium">The Serene Curator</span>
+</div>
+</main>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+
+const params = new URLSearchParams(location.search)
+const citaId = params.get('cita_id')
+const stored = sessionStorage.getItem('tp_ultima_cita')
+
+async function cargarConfirmacion() {
+  let cita = null
+
+  if (citaId) {
+    const { data } = await supabase.from('citas')
+      .select('id, fecha, hora_inicio, tipo, pacientes(nombre, apellido), usuarios(nombre, apellido), clinicas(nombre)')
+      .eq('id', citaId).single()
+    cita = data
+  } else if (stored) {
+    cita = JSON.parse(stored)
+  }
+
+  if (!cita) return
+
+  const fecha = cita.fecha ? new Date(cita.fecha + 'T00:00:00').toLocaleDateString('es-AR', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  }) : '—'
+  const hora = cita.hora_inicio?.substring(0, 5) || ''
+  const psicoNombre = cita.usuarios ? `Dr/a. ${cita.usuarios.nombre} ${cita.usuarios.apellido}` : 'Por asignar'
+  const pacienteNombre = cita.pacientes ? `${cita.pacientes.nombre} ${cita.pacientes.apellido}` : ''
+
+  // Actualizar nombre psicólogo
+  const drEl = document.querySelector('.font-headline.font-bold.text-on-surface')
+  if (drEl && drEl.textContent.includes('Elena Vance')) drEl.textContent = psicoNombre
+
+  // Actualizar fecha/hora
+  const fechaEl = document.querySelector('.font-headline.font-bold.text-on-surface:last-of-type, p.font-headline.font-bold')
+  document.querySelectorAll('.font-headline.font-bold.text-on-surface').forEach(el => {
+    if (el.textContent.match(/Oct|Nov|Dec|\d{4}/)) el.textContent = `${fecha} · ${hora}`
+  })
+
+  // Botón portal
+  const btnPortal = document.querySelector('a.bg-gradient-to-br')
+  if (btnPortal) btnPortal.href = '/screens/portal_paciente_inicio.html'
+
+  // Botón agregar al calendario (descarga .ics)
+  const btnCal = document.querySelector('button.w-full.sm\\:w-auto.px-8')
+  if (btnCal && cita.fecha) {
+    btnCal.addEventListener('click', () => {
+      const start = `${cita.fecha.replace(/-/g, '')}T${(cita.hora_inicio || '10:00:00').replace(/:/g, '').substring(0, 6)}00`
+      const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:${start}\nSUMMARY:Sesión con ${psicoNombre}\nDESCRIPTION:Therapeutic Perspective - ${cita.tipo || 'consulta'}\nEND:VEVENT\nEND:VCALENDAR`
+      const blob = new Blob([ics], { type: 'text/calendar' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a'); a.href = url; a.download = 'cita.ics'; a.click()
+    })
+  }
+}
+
+cargarConfirmacion()
+</script>
+</body></html>

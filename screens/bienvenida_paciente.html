@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Bienvenida</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 40px rgba(52,211,153,0.2); }
+    50% { box-shadow: 0 0 70px rgba(52,211,153,0.35); }
+  }
+  .logo-glow { animation: pulse-glow 3s ease-in-out infinite; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp 0.6s ease forwards; }
+  .fade-up-2 { animation: fadeUp 0.6s ease 0.15s forwards; opacity:0; }
+  .fade-up-3 { animation: fadeUp 0.6s ease 0.3s forwards; opacity:0; }
+  .fade-up-4 { animation: fadeUp 0.6s ease 0.45s forwards; opacity:0; }
+  .progress-ring { transition: stroke-dashoffset 1s ease; }
+</style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center px-6 py-10 relative overflow-hidden">
+
+  <!-- Background glows -->
+  <div class="fixed top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(52,211,153,0.08) 0%,transparent 70%);"></div>
+  <div class="fixed bottom-0 left-0 w-[400px] h-[400px] rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(16,185,129,0.06) 0%,transparent 70%);"></div>
+
+  <div class="w-full max-w-sm relative z-10 flex flex-col items-center text-center">
+
+    <!-- Logo -->
+    <div class="fade-up mb-8">
+      <div class="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto logo-glow" style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);">
+        <span class="material-symbols-outlined text-5xl" style="color:#34d399;font-variation-settings:'FILL' 1;">spa</span>
+      </div>
+      <p class="text-xs font-bold uppercase tracking-widest mt-3" style="color:#34d399;">SereneCare</p>
+    </div>
+
+    <!-- Welcome text -->
+    <div class="fade-up-2 mb-8">
+      <h1 class="text-4xl font-extrabold text-white font-headline leading-tight mb-4">
+        Bienvenida, <span id="pac-name">Eleanor</span>
+      </h1>
+      <p class="text-slate-400 text-base leading-relaxed">
+        Estamos aquí para acompañarte en tu camino hacia el bienestar emocional. Tu espacio de cuidado personal te espera.
+      </p>
+    </div>
+
+    <!-- Therapist card -->
+    <div class="fade-up-3 w-full mb-8 p-5 rounded-2xl flex items-center gap-4 text-left" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);">
+        <span class="material-symbols-outlined" style="color:#34d399;font-size:28px;font-variation-settings:'FILL' 1;">person</span>
+      </div>
+      <div class="flex-1 overflow-hidden">
+        <h3 class="font-bold text-white text-base font-headline truncate">Dra. Marta Rivadavia</h3>
+        <p class="text-sm font-semibold mb-1" style="color:#34d399;">Especialista en Ansiedad</p>
+        <p class="text-xs text-slate-500 italic leading-snug">"Mi objetivo es crear un entorno seguro donde te sientas escuchado y comprendido."</p>
+      </div>
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="fade-up-3 w-full mb-6">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Paso 1 de 3</span>
+        <span class="text-xs font-semibold" style="color:#34d399;">33% completado</span>
+      </div>
+      <div class="w-full h-1 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.07);">
+        <div class="h-full rounded-full transition-all duration-500" style="background:#34d399;width:33%;"></div>
+      </div>
+    </div>
+
+    <!-- CTA button -->
+    <div class="fade-up-4 w-full space-y-3">
+      <button id="btn-continuar"
+        class="w-full py-4 rounded-2xl font-bold text-lg text-white transition-all active:scale-95 font-headline"
+        style="background:linear-gradient(135deg,#059669,#047857);box-shadow:0 8px 28px rgba(5,150,105,0.35);"
+        onmouseover="this.style.background='linear-gradient(135deg,#10b981,#059669)'"
+        onmouseout="this.style.background='linear-gradient(135deg,#059669,#047857)'">
+        Empezar (3)
+      </button>
+      <p class="text-xs text-slate-600">Solo te llevará 2 minutos</p>
+    </div>
+
+  </div>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full font-semibold text-sm z-50" style="background:rgba(239,68,68,0.9);color:white;"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full font-semibold text-sm z-50" style="background:rgba(52,211,153,0.9);color:#020617;"></div>
+
+<script>
+(function(){
+  var nombre = localStorage.getItem('pac_nombre') || 'Eleanor';
+  var el = document.getElementById('pac-name');
+  if (el) el.textContent = nombre.split(' ')[0] || nombre;
+})();
+</script>
+
+  <script type="module">
+    import { guardaPaciente } from '../js/paciente.js'
+    import { supabase } from '../js/supabase-client.js'
+
+    const { data: { session } } = await supabase.auth.getSession()
+    const modoDemo = !session
+    if (!modoDemo) {
+      await guardaPaciente()
+      const uid = (await supabase.auth.getUser()).data.user?.id
+      const { data } = await supabase.from('pacientes').select('nombre').eq('usuario_id', uid).single()
+      if (data) {
+        document.querySelectorAll('*').forEach(el => {
+          if (el.children.length === 0 && (el.textContent.trim() === 'Eleanor' || el.textContent.includes('Bienvenida,')))
+            el.textContent = el.textContent.replace('Eleanor', data.nombre)
+        })
+      }
+    }
+
+    // Auto-redirigir al portal en 3 segundos o al hacer click
+    let contador = 3
+    const btnContinuar = document.querySelector('button, a[href]')
+    const intervalo    = setInterval(() => {
+      contador--
+      if (btnContinuar && contador > 0) btnContinuar.textContent = `Empezar (${contador})`
+      if (contador <= 0) { clearInterval(intervalo); location.href = 'portal_paciente_inicio.html' }
+    }, 1000)
+
+    btnContinuar?.addEventListener('click', e => {
+      e.preventDefault()
+      clearInterval(intervalo)
+      location.href = 'portal_paciente_inicio.html'
+    })
+  </script>
+</body>
+</html>

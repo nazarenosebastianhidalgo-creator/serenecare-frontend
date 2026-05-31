@@ -1,0 +1,463 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Soporte | Super Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #020617; color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .apps-ov-glass { background: rgba(15,23,42,0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .apps-ov-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease; }
+  .apps-ov-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+  .apps-ov-card:active { transform: scale(0.96); }
+  @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+</style>
+</head>
+<body class="min-h-screen flex">
+
+<!-- Sidebar -->
+<aside class="w-72 bg-slate-950 border-r border-slate-800/50 flex flex-col px-6 py-8 fixed h-full z-30">
+  <div class="mb-10">
+    <h1 class="text-xl font-extrabold text-white font-headline tracking-tight">Therapeutic</h1>
+    <p class="text-xs text-slate-500 font-medium tracking-widest mt-1 uppercase">SaaS Enterprise</p>
+  </div>
+  <nav class="flex-1 space-y-2">
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all rounded-xl" href="dashboard_maestro_super_admin.html">
+      <span class="material-symbols-outlined">dashboard</span><span class="font-medium">Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all rounded-xl" href="gestion_clinicas_super_admin.html">
+      <span class="material-symbols-outlined">medical_services</span><span class="font-medium">Clínicas</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all rounded-xl" href="revenue_super_admin.html">
+      <span class="material-symbols-outlined">payments</span><span class="font-medium">Revenue</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all rounded-xl" href="configuracion_ia_super_admin.html">
+      <span class="material-symbols-outlined">settings_input_component</span><span class="font-medium">IA Config</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 bg-indigo-500/10 text-indigo-400 rounded-xl font-semibold" href="soporte_super_admin.html">
+      <span class="material-symbols-outlined">contact_support</span><span class="font-medium">Soporte</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all rounded-xl" href="gestion_planes_super_admin.html">
+      <span class="material-symbols-outlined">inventory_2</span><span class="font-medium">Planes SaaS</span>
+    </a>
+    <a href="sugerencias_mejora.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">lightbulb</span><span class="font-medium">Sugerencias</span>
+    </a>
+  </nav>
+  <div class="mt-auto pt-6 border-t border-slate-800/40">
+    <div class="flex items-center gap-3 px-4 py-3 mb-4 rounded-xl bg-emerald-500/5 text-emerald-400 text-sm font-medium">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>System Status: Healthy
+    </div>
+    <a id="btn-logout" href="#" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer rounded-xl">
+      <span class="material-symbols-outlined">logout</span><span class="font-medium">Logout</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="pl-72 min-h-screen w-full">
+  <header class="sticky top-0 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/10 h-20 flex items-center justify-between px-8 z-20">
+    <div>
+      <h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Soporte</h2>
+      <p class="text-slate-500 text-xs">Contactos de clínicas y estado del sistema</p>
+    </div>
+    <div class="flex items-center gap-2 relative">
+      <div class="relative">
+        <button id="btn-notifications" class="relative p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">notifications</span>
+          <span id="notif-dot" class="hidden absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full border-2 border-slate-950"></span>
+        </button>
+        <div id="panel-notifications" class="hidden absolute right-0 top-12 w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+            <span class="font-bold text-slate-100 text-sm">Notificaciones</span>
+            <button id="btn-mark-read" class="text-xs text-indigo-400 hover:text-indigo-300">Marcar todas leídas</button>
+          </div>
+          <div id="lista-notificaciones" class="divide-y divide-slate-800 max-h-72 overflow-y-auto">
+            <p class="text-slate-500 text-sm text-center py-8">Sin notificaciones nuevas</p>
+          </div>
+          <div class="px-5 py-3 border-t border-slate-800">
+            <a href="alertas_globales_super_admin.html" class="block text-center text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Ver todas las alertas →</a>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="btn-settings" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">settings</span>
+        </button>
+        <div id="panel-settings" class="hidden absolute right-0 top-12 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 p-4">
+          <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Apariencia</p>
+          <div id="toggle-tema-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span id="icon-tema" class="material-symbols-outlined text-indigo-400">dark_mode</span>
+              <div>
+                <p class="text-sm font-semibold text-slate-200">Tema oscuro</p>
+                <p id="label-tema" class="text-xs text-slate-500">Activo</p>
+              </div>
+            </div>
+            <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+              <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+            </div>
+          </div>
+          <div class="border-t border-slate-800 my-3"></div>
+          <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Notificaciones</p>
+          <div id="toggle-email-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-blue-400">mail</span>
+              <div>
+                <p class="text-sm font-semibold text-slate-200">Alertas por email</p>
+                <p class="text-xs text-slate-500">Incidencias críticas</p>
+              </div>
+            </div>
+            <div id="toggle-email" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+              <div id="toggle-email-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+            </div>
+          </div>
+          <div class="border-t border-slate-800 my-3"></div>
+          <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Seguridad</p>
+          <button id="btn-cerrar-sesiones" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/10 transition-colors text-left">
+            <span class="material-symbols-outlined text-rose-400">no_accounts</span>
+            <div>
+              <p class="text-sm font-semibold text-slate-200">Cerrar todas las sesiones</p>
+              <p class="text-xs text-slate-500">Expira todos los tokens activos</p>
+            </div>
+          </button>
+          <div id="toggle-mantenimiento-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-amber-400">construction</span>
+              <div>
+                <p class="text-sm font-semibold text-slate-200">Modo mantenimiento</p>
+                <p class="text-xs text-slate-500">Bloquea acceso a clínicas</p>
+              </div>
+            </div>
+            <div id="toggle-mantenimiento" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+              <div id="toggle-mantenimiento-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="btn-apps" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">apps</span>
+        </button>
+        <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
+          <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+            <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
+              <span class="material-symbols-outlined text-3xl">close</span>
+            </button>
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
+              </div>
+              <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+              <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
+                  <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
+              </a>
+              <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
+              </a>
+              <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
+              </a>
+              <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
+              </a>
+              <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
+              </a>
+              <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
+              </a>
+            </div>
+            <div class="mt-8 flex items-center justify-between py-4 border-t" style="border-color: rgba(255,255,255,0.07);">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-indigo-400/50 text-sm">security</span>
+                <span class="text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold">Super Administrador • Acceso Restringido</span>
+              </div>
+              <span class="text-[10px] text-slate-700 font-mono">ESC para cerrar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="p-8 space-y-8">
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">Total Clínicas</p>
+        <p id="total-clinicas" class="text-3xl font-extrabold text-white font-headline">—</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">Total Usuarios</p>
+        <p id="total-usuarios" class="text-3xl font-extrabold text-white font-headline">—</p>
+      </div>
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">Total Pacientes</p>
+        <p id="total-pacientes" class="text-3xl font-extrabold text-white font-headline">—</p>
+      </div>
+    </div>
+
+    <!-- Directorio de contactos -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+        <h3 class="font-headline font-bold text-slate-100">Directorio de clínicas</h3>
+        <input id="buscador" type="text" placeholder="Buscar clínica..." class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 w-64"/>
+      </div>
+      <table class="w-full">
+        <thead class="bg-slate-950/50">
+          <tr>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Clínica</th>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Email contacto</th>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Teléfono</th>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Estado</th>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Acción</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-contactos" class="divide-y divide-slate-800">
+          <tr><td colspan="5" class="text-center py-10 text-slate-500">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<script type="module">
+  import { guardaSuperAdmin } from '../js/admin.js'
+  import { supabase } from '../js/supabase-client.js'
+
+  await guardaSuperAdmin()
+
+  const estadoBadge = (s) => {
+    const map = { activa: 'bg-emerald-500/10 text-emerald-400', trial: 'bg-amber-500/10 text-amber-400', suspendida: 'bg-rose-500/10 text-rose-400' }
+    return `<span class="px-2 py-0.5 rounded-full text-xs font-semibold ${map[s] || ''}">${s}</span>`
+  }
+
+  let clinicasData = []
+
+  const renderTabla = (lista) => {
+    const tbody = document.getElementById('tabla-contactos')
+    if (!lista.length) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">Sin resultados.</td></tr>`
+      return
+    }
+    tbody.innerHTML = lista.map(c => `
+      <tr class="hover:bg-slate-800/30 transition-colors">
+        <td class="px-6 py-4 text-sm font-semibold text-slate-200">${c.nombre}</td>
+        <td class="px-6 py-4 text-sm text-slate-400">${c.email_contacto || '—'}</td>
+        <td class="px-6 py-4 text-sm text-slate-400">${c.telefono || '—'}</td>
+        <td class="px-6 py-4">${estadoBadge(c.status)}</td>
+        <td class="px-6 py-4">
+          <a href="detalle_clinica_super_admin.html?id=${c.id}" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold">Ver detalle →</a>
+        </td>
+      </tr>`).join('')
+  }
+
+  // Cargar datos en paralelo
+  const [{ data: clinicas }, { count: totalUsuarios }, { count: totalPacientes }] = await Promise.all([
+    supabase.from('clinicas').select('id, nombre, email_contacto, telefono, status').order('nombre'),
+    supabase.from('usuarios').select('*', { count: 'exact', head: true }),
+    supabase.from('pacientes').select('*', { count: 'exact', head: true }),
+  ])
+
+  if (clinicas) {
+    clinicasData = clinicas
+    document.getElementById('total-clinicas').textContent = clinicas.length
+    renderTabla(clinicas)
+  }
+  document.getElementById('total-usuarios').textContent  = totalUsuarios ?? 0
+  document.getElementById('total-pacientes').textContent = totalPacientes ?? 0
+
+  document.getElementById('buscador').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase()
+    renderTabla(clinicasData.filter(c => c.nombre.toLowerCase().includes(q) || (c.email_contacto || '').toLowerCase().includes(q)))
+  })
+
+  document.getElementById('btn-logout')?.addEventListener('click', async (e) => {
+    e.preventDefault()
+    await supabase.auth.signOut()
+    localStorage.removeItem('tp_rol')
+    localStorage.removeItem('tp_user_id')
+    localStorage.removeItem('tp_email')
+    window.location.href = 'acceso_super_admin.html'
+  })
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var btnNotif    = document.getElementById('btn-notifications')
+    var panelNotif  = document.getElementById('panel-notifications')
+    var btnSettings = document.getElementById('btn-settings')
+    var btnApps     = document.getElementById('btn-apps')
+    var panelApps   = document.getElementById('panel-apps')
+    document.body.appendChild(panelApps)
+    var panelSettings = document.getElementById('panel-settings')
+
+    function closeAll() {
+      panelNotif    && panelNotif.classList.add('hidden')
+      panelSettings && panelSettings.classList.add('hidden')
+      panelApps     && panelApps.classList.add('hidden')
+    }
+
+    btnNotif && btnNotif.addEventListener('click', function(e) {
+      e.stopPropagation()
+      var wasHidden = panelNotif.classList.contains('hidden')
+      closeAll()
+      if (wasHidden) panelNotif.classList.remove('hidden')
+    })
+    btnSettings && btnSettings.addEventListener('click', function(e) {
+      e.stopPropagation()
+      var wasHidden = panelSettings.classList.contains('hidden')
+      closeAll()
+      if (wasHidden) panelSettings.classList.remove('hidden')
+    })
+    btnApps && btnApps.addEventListener('click', function(e) {
+      e.stopPropagation()
+      var wasHidden = panelApps.classList.contains('hidden')
+      closeAll()
+      if (wasHidden) {
+        panelApps.classList.remove('hidden')
+        var inner = document.getElementById('apps-inner')
+        if (inner) { inner.classList.remove('apps-ov-enter'); void inner.offsetWidth; inner.classList.add('apps-ov-enter') }
+      }
+    })
+    document.addEventListener('click', closeAll)
+    var appsInner = document.getElementById('apps-inner')
+    appsInner && appsInner.addEventListener('click', function(e) { e.stopPropagation() })
+    var btnCloseApps = document.getElementById('btn-close-apps')
+    btnCloseApps && btnCloseApps.addEventListener('click', function(e) {
+      e.stopPropagation()
+      panelApps && panelApps.classList.add('hidden')
+    })
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && panelApps && !panelApps.classList.contains('hidden')) {
+        panelApps.classList.add('hidden')
+      }
+    })
+
+    var btnRead = document.getElementById('btn-mark-read')
+    btnRead && btnRead.addEventListener('click', function(e) {
+      e.stopPropagation()
+      document.getElementById('notif-dot')?.classList.add('hidden')
+      var lista = document.getElementById('lista-notificaciones')
+      if (lista) lista.innerHTML = '<p style="color:#64748b;font-size:13px;text-align:center;padding:32px">Sin notificaciones nuevas</p>'
+    })
+
+    _initSeguridad(panelSettings)
+  })
+
+  function _toastSeg(msg, warn) {
+    var t = document.createElement('div')
+    t.textContent = msg
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' + (warn ? '#92400e' : '#1e293b') + ';color:#fff;padding:12px 24px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;border:1px solid ' + (warn ? '#d97706' : '#334155') + ';box-shadow:0 4px 20px rgba(0,0,0,.4)'
+    document.body.appendChild(t)
+    setTimeout(function() { t.remove() }, 3500)
+  }
+
+  function _initSeguridad(panelSett) {
+    var btnCerrar = document.getElementById('btn-cerrar-sesiones')
+    btnCerrar && btnCerrar.addEventListener('click', function(e) {
+      e.stopPropagation()
+      if (confirm('¿Cerrar TODAS las sesiones activas? Los usuarios tendrán que volver a iniciar sesión.')) {
+        panelSett && panelSett.classList.add('hidden')
+        _toastSeg('Todas las sesiones han sido cerradas.', false)
+      }
+    })
+
+    var modoMant  = localStorage.getItem('tp_modo_mantenimiento') === 'true'
+    var tRow = document.getElementById('toggle-mantenimiento-row')
+    var tBar = document.getElementById('toggle-mantenimiento')
+    var tDot = document.getElementById('toggle-mantenimiento-dot')
+
+    function syncToggle() {
+      if (!tBar || !tDot) return
+      tBar.style.background    = modoMant ? '#f59e0b' : '#334155'
+      tDot.style.left          = modoMant ? '22px'   : '2px'
+      tDot.style.background    = modoMant ? '#fff'   : '#94a3b8'
+    }
+    syncToggle()
+
+    tRow && tRow.addEventListener('click', function(e) {
+      e.stopPropagation()
+      modoMant = !modoMant
+      localStorage.setItem('tp_modo_mantenimiento', modoMant)
+      syncToggle()
+      _toastSeg(modoMant ? 'Modo mantenimiento ACTIVADO — Clínicas bloqueadas' : 'Modo mantenimiento desactivado', modoMant)
+    })
+    var temaOscuro = localStorage.getItem('tp_tema') !== 'claro'
+    var tRowTema = document.getElementById('toggle-tema-row')
+    var tBarTema = document.getElementById('toggle-tema')
+    var tDotTema = document.getElementById('toggle-tema-dot')
+    var iconTema = document.getElementById('icon-tema')
+    var labelTema = document.getElementById('label-tema')
+    function syncTema() {
+      if (tBarTema) tBarTema.style.background = temaOscuro ? '#6366f1' : '#334155'
+      if (tDotTema) { tDotTema.style.left = temaOscuro ? '22px' : '2px'; tDotTema.style.background = temaOscuro ? '#fff' : '#94a3b8' }
+      if (iconTema) iconTema.textContent = temaOscuro ? 'dark_mode' : 'light_mode'
+      if (labelTema) labelTema.textContent = temaOscuro ? 'Activo' : 'Desactivado'
+      document.documentElement.style.filter = temaOscuro ? '' : 'invert(1) hue-rotate(180deg)'
+    }
+    syncTema()
+    tRowTema && tRowTema.addEventListener('click', function(e) {
+      e.stopPropagation()
+      temaOscuro = !temaOscuro
+      localStorage.setItem('tp_tema', temaOscuro ? 'oscuro' : 'claro')
+      syncTema()
+    })
+    var emailNotif = localStorage.getItem('tp_email_notif') !== 'false'
+    var tRowEmail = document.getElementById('toggle-email-row')
+    var tBarEmail = document.getElementById('toggle-email')
+    var tDotEmail = document.getElementById('toggle-email-dot')
+    function syncEmail() {
+      if (tBarEmail) tBarEmail.style.background = emailNotif ? '#3b82f6' : '#334155'
+      if (tDotEmail) { tDotEmail.style.left = emailNotif ? '22px' : '2px'; tDotEmail.style.background = emailNotif ? '#fff' : '#94a3b8' }
+    }
+    syncEmail()
+    tRowEmail && tRowEmail.addEventListener('click', function(e) {
+      e.stopPropagation()
+      emailNotif = !emailNotif
+      localStorage.setItem('tp_email_notif', emailNotif)
+      syncEmail()
+      _toastSeg(emailNotif ? 'Alertas por email activadas' : 'Alertas por email desactivadas', false)
+    })
+  }
+</script>
+</body>
+</html>

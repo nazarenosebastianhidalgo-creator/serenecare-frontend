@@ -1,0 +1,483 @@
+﻿<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Historial de Pagos - Eleanor Vance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#6e0a12",
+                    "tertiary-fixed-dim": "#c9eed6",
+                    "on-error": "#fff7f6",
+                    "surface-container-low": "#f0f4f6",
+                    "on-surface-variant": "#596063",
+                    "outline-variant": "#acb3b6",
+                    "background": "#f8fafb",
+                    "on-background": "#2c3436",
+                    "on-primary-container": "#0e5463",
+                    "on-primary-fixed": "#00404d",
+                    "on-secondary-fixed-variant": "#266372",
+                    "error-dim": "#67040d",
+                    "inverse-surface": "#0b0f10",
+                    "surface-dim": "#d4dbde",
+                    "on-tertiary": "#e6ffee",
+                    "primary": "#296777",
+                    "on-secondary-fixed": "#004653",
+                    "on-primary": "#f0fbff",
+                    "outline": "#747c7e",
+                    "secondary": "#2b6775",
+                    "surface-container-high": "#e3e9eb",
+                    "on-tertiary-fixed-variant": "#4c6d5a",
+                    "error": "#a83836",
+                    "on-tertiary-container": "#416350",
+                    "primary-dim": "#195a6a",
+                    "on-primary-fixed-variant": "#1d5e6d",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f8fafb",
+                    "surface-container-highest": "#dce4e6",
+                    "on-tertiary-fixed": "#2f503f",
+                    "surface-container": "#eaeff0",
+                    "secondary-fixed": "#b2ecfd",
+                    "tertiary-fixed": "#d7fde4",
+                    "secondary-container": "#b2ecfd",
+                    "on-secondary-container": "#195968",
+                    "tertiary-dim": "#395a48",
+                    "inverse-primary": "#a8e3f6",
+                    "tertiary": "#456653",
+                    "primary-container": "#a8e3f6",
+                    "secondary-fixed-dim": "#a4ddef",
+                    "secondary-dim": "#1b5a69",
+                    "primary-fixed-dim": "#9ad5e7",
+                    "surface-tint": "#296777",
+                    "on-surface": "#2c3436",
+                    "surface-variant": "#dce4e6",
+                    "surface-bright": "#f8fafb",
+                    "primary-fixed": "#a8e3f6",
+                    "on-secondary": "#effbff",
+                    "error-container": "#fa746f",
+                    "tertiary-container": "#d7fde4",
+                    "inverse-on-surface": "#9a9d9e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "display": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .glass-dark {
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #020617;
+            color: #f8fafb;
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-teal-500/30">
+<!-- TopNavBar -->
+<header class="bg-slate-950/70 backdrop-blur-xl font-manrope antialiased sticky top-0 z-50 shadow-[0_20px_40px_rgba(0,0,0,0.3)] flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-8">
+<h1 class="text-xl font-bold tracking-tight text-teal-400">SereneCare Payments</h1>
+<div class="hidden md:flex items-center gap-6">
+<nav class="flex gap-6 text-sm">
+<a class="text-slate-400 hover:text-teal-200 transition-colors" href="#">Dashboard</a>
+<a class="text-slate-400 hover:text-teal-200 transition-colors" href="#">Patients</a>
+<a class="text-teal-400 border-b-2 border-teal-400 pb-1" href="#">Payments</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-400 hover:text-teal-200 cursor-pointer transition-all duration-200 scale-95">notifications</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-teal-200 cursor-pointer transition-all duration-200 scale-95">settings</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-slate-800">
+<img alt="Clinician profile" class="w-full h-full object-cover" data-alt="Professional portrait of a middle-aged female clinician in a modern medical setting, soft studio lighting, professional and empathetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-ehKjyjne8zKAt2L4pPfD3gXQxiP_3XV2JYvildZU6jd9ncvLT0jhkFCwc_4_VLwkIvrnLtPbemqrm76SUJFNacIsBpTUIntVBrw2uHdXZXCFbevyQbcxZbZKBslOuQae2Iii6BF_4Cd8Jaba-O93915PGs59ChJrsBOxS-8gESxT4ZG_52BpAwXs72gXd6EOAkTddwHE2g-krSsmKSfQ5x0BFF7lnhr_cypWGiMVkajE9va1Ey0B2fcPKzGVnTH-_NXe-0bJz36b"/>
+</div>
+</div>
+</header>
+<div class="flex min-h-[calc(100vh-72px)]">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-full w-64 bg-slate-900/40 backdrop-blur-md border-r border-slate-800/50 p-4 gap-2 font-manrope font-medium text-sm transition-all duration-300 ease-in-out">
+<div class="mb-8 px-2">
+<h2 class="text-lg font-extrabold text-teal-500">The Serene Curator</h2>
+<p class="text-xs text-slate-500">Billing Management</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all" href="#">
+<span class="material-symbols-outlined">group</span> Patients
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-teal-500/10 text-teal-400 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">payments</span> Payments
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all" href="#">
+<span class="material-symbols-outlined">description</span> Invoices
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span> Analytics
+                </a>
+</nav>
+<button class="mt-8 mx-2 bg-gradient-to-br from-primary to-primary-dim text-on-primary py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm">add</span> New Invoice
+            </button>
+<div class="mt-auto flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 transition-all" href="#">
+<span class="material-symbols-outlined">help</span> Support
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 transition-all" href="#">
+<span class="material-symbols-outlined">person</span> Account
+                </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full">
+<!-- Patient Header Context -->
+<div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<nav class="flex gap-2 text-xs font-medium text-slate-500 mb-4 tracking-wider uppercase">
+<span>Pacientes</span>
+<span>/</span>
+<span class="text-teal-400">Eleanor Vance</span>
+</nav>
+<div class="flex items-center gap-5">
+<div class="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl">
+<img alt="Eleanor Vance" class="w-full h-full object-cover" data-alt="Portrait of a young woman with a thoughtful and calm expression, soft natural lighting, editorial photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACssiWFaCJA281r3ex-1nxtyqEgMIPdxduJlCLk91VrwIfjewdKC39kjN7pUcvkmmYbYdyYfDhywlyA9RBqltp5YJFlIK9mu56TFjCdfoCBgHgUlUWBJZ1s9QAkerGbAEkqlA1QpxsBL9RAOTbSlYtvwGQNuTLunCgIIeKb90jWjy6j_q0wOC72QomDwjptbV-OQnjToQP89YyTKeUZVa89U0ZyYfytKqjyLd7BwSO13DZouYUMOtqDBx5f-J-Ba4m62thg3YAK-W-"/>
+</div>
+<div>
+<h1 class="text-4xl font-headline font-extrabold tracking-tight text-white mb-1">Eleanor Vance</h1>
+<div class="flex gap-4 items-center">
+<span class="bg-teal-500/10 text-teal-400 px-3 py-0.5 rounded-full text-xs font-semibold">Paciente Activo</span>
+<span class="text-slate-500 text-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-base">calendar_today</span> Próxima sesión: 24 Oct
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="bg-slate-800/50 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all border border-slate-700/50 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">picture_as_pdf</span> Exportar historial PDF
+                    </button>
+<button class="bg-gradient-to-br from-primary to-primary-dim text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 shadow-xl shadow-teal-900/20">
+<span class="material-symbols-outlined text-lg">add_card</span> Nueva factura manual
+                    </button>
+</div>
+</div>
+<!-- Profile Tabs -->
+<div class="flex gap-8 mb-8 border-b border-slate-800/50">
+<button class="pb-4 text-slate-500 font-semibold hover:text-slate-300 transition-colors">Historial Clínico</button>
+<button class="pb-4 text-teal-400 border-b-2 border-teal-400 font-semibold">Facturación</button>
+<button class="pb-4 text-slate-500 font-semibold hover:text-slate-300 transition-colors">Documentos</button>
+<button class="pb-4 text-slate-500 font-semibold hover:text-slate-300 transition-colors">Citas</button>
+</div>
+<!-- Metrics Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="glass-dark p-6 rounded-2xl border border-slate-800/50">
+<p class="text-slate-500 text-sm font-medium mb-2 uppercase tracking-widest">Total facturado</p>
+<h3 class="text-3xl font-display font-bold text-white">780€</h3>
+<div class="mt-4 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-teal-500 w-[85%]"></div>
+</div>
+</div>
+<div class="glass-dark p-6 rounded-2xl border border-orange-500/20 bg-orange-500/5">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-slate-500 text-sm font-medium mb-2 uppercase tracking-widest">Pendiente de cobro</p>
+<h3 class="text-3xl font-display font-bold text-orange-400">65€</h3>
+</div>
+<span class="material-symbols-outlined text-orange-400 bg-orange-400/10 p-2 rounded-lg">priority_high</span>
+</div>
+<p class="mt-4 text-xs text-orange-400/80 font-medium italic">1 factura vence en 2 días</p>
+</div>
+<div class="glass-dark p-6 rounded-2xl border border-slate-800/50">
+<p class="text-slate-500 text-sm font-medium mb-2 uppercase tracking-widest">Sesiones pagadas</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-display font-bold text-white">11</h3>
+<span class="text-slate-500 font-medium">de 12</span>
+</div>
+<div class="mt-4 flex gap-1.5">
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-teal-500 rounded-full"></div>
+<div class="h-2 flex-1 bg-slate-700 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Transactions Table Card -->
+<div class="glass-dark rounded-2xl border border-slate-800/50 overflow-hidden mb-8">
+<div class="px-6 py-5 border-b border-slate-800/50 flex justify-between items-center">
+<h3 class="font-headline font-bold text-lg">Historial de Sesiones</h3>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 transition-all">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 transition-all">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead>
+<tr class="text-slate-500 border-b border-slate-800/50">
+<th class="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Fecha</th>
+<th class="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Tipo</th>
+<th class="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Duración</th>
+<th class="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Importe</th>
+<th class="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Método</th>
+<th class="px-6 py-4 font-semibold uppercase tracking-wider text-xs">Estado</th>
+<th class="px-6 py-4 font-semibold uppercase tracking-wider text-xs text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800/30">
+<tr class="hover:bg-slate-800/20 transition-colors">
+<td class="px-6 py-4 text-slate-300 font-medium">18 Oct 2023</td>
+<td class="px-6 py-4">
+<span class="bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">Presencial</span>
+</td>
+<td class="px-6 py-4 text-slate-400">60 min</td>
+<td class="px-6 py-4 font-bold text-white">65€</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-slate-500">credit_card</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-teal-400 font-semibold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span> Pagado
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/20 transition-colors">
+<td class="px-6 py-4 text-slate-300 font-medium">11 Oct 2023</td>
+<td class="px-6 py-4">
+<span class="bg-teal-500/10 text-teal-400 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">Online</span>
+</td>
+<td class="px-6 py-4 text-slate-400">45 min</td>
+<td class="px-6 py-4 font-bold text-white">65€</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-slate-500">account_balance</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-orange-400 font-semibold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-400 animate-pulse"></span> Pendiente
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/20 transition-colors">
+<td class="px-6 py-4 text-slate-300 font-medium">04 Oct 2023</td>
+<td class="px-6 py-4">
+<span class="bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">Presencial</span>
+</td>
+<td class="px-6 py-4 text-slate-400">60 min</td>
+<td class="px-6 py-4 font-bold text-white">0€</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-slate-500">card_giftcard</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-blue-400 font-semibold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> Bonificado
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-800/20 transition-colors">
+<td class="px-6 py-4 text-slate-300 font-medium">27 Sep 2023</td>
+<td class="px-6 py-4">
+<span class="bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-tight">Presencial</span>
+</td>
+<td class="px-6 py-4 text-slate-400">60 min</td>
+<td class="px-6 py-4 font-bold text-white">65€</td>
+<td class="px-6 py-4">
+<span class="material-symbols-outlined text-slate-500">credit_card</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-red-400 font-semibold text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> Fallido
+                                    </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Configuration & Progress Section (Asymmetric Layout) -->
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+<!-- Payment Config Card -->
+<div class="lg:col-span-3 glass-dark p-8 rounded-2xl border border-slate-800/50">
+<div class="flex items-center justify-between mb-8">
+<h4 class="font-headline font-bold text-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-teal-400">settings_applications</span> Configuración de pago
+                        </h4>
+<span class="bg-teal-500/10 text-teal-400 text-[10px] font-bold px-3 py-1 rounded-full tracking-widest uppercase">Auto-Save Activo</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Precio por sesión</label>
+<div class="relative">
+<input class="w-full bg-slate-900/50 border-slate-700 rounded-xl px-4 py-3 text-white font-bold text-lg focus:ring-teal-500/20 focus:border-teal-500/40 transition-all" type="text" value="65"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">€</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Frecuencia de facturación</label>
+<select class="w-full bg-slate-900/50 border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-teal-500/20 focus:border-teal-500/40 appearance-none">
+<option>Por sesión realizada</option>
+<option>Mensual vencido</option>
+<option>Bono prepago</option>
+</select>
+</div>
+<div class="md:col-span-2 flex items-center justify-between p-4 bg-slate-800/30 rounded-xl border border-slate-700/30">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-400">calendar_month</span>
+<div>
+<p class="text-sm font-semibold text-white">Permitir pago aplazado</p>
+<p class="text-xs text-slate-500">Permite a la paciente pagar hasta 15 días después</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+</label>
+</div>
+</div>
+</div>
+<!-- Active Bonus Progress -->
+<div class="lg:col-span-2 glass-dark p-8 rounded-2xl border border-slate-800/50 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-6">
+<h4 class="font-headline font-bold text-xl">Bono de Bienestar</h4>
+<span class="bg-indigo-500/20 text-indigo-300 text-[10px] font-bold px-2 py-1 rounded-md">Vence 31 Dic</span>
+</div>
+<p class="text-slate-400 text-sm mb-8">Bono de 12 sesiones de terapia individual profunda. Renovación automática al finalizar.</p>
+<div class="space-y-4">
+<div class="flex justify-between text-sm font-medium">
+<span class="text-slate-300">Sesiones consumidas</span>
+<span class="text-white">11 / 12</span>
+</div>
+<div class="h-4 w-full bg-slate-800 rounded-full overflow-hidden p-1">
+<div class="h-full bg-gradient-to-r from-teal-500 to-indigo-500 rounded-full" style="width: 91.6%"></div>
+</div>
+<p class="text-right text-[10px] text-slate-500 font-bold uppercase tracking-widest">92% Completado</p>
+</div>
+</div>
+<button class="mt-8 w-full border border-teal-500/30 text-teal-400 py-3 rounded-xl font-bold hover:bg-teal-500/10 transition-all">
+                        Gestionar Bono
+                    </button>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-3 pb-safe bg-slate-950/80 backdrop-blur-lg border-t border-slate-800/30 shadow-[0_-10px_30px_rgba(0,0,0,0.5)] z-50">
+<div class="flex flex-col items-center justify-center text-slate-500">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-teal-400 bg-teal-400/10 rounded-xl px-3 py-1">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Payments</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Billing</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Profile</span>
+</div>
+</nav>
+
+  <div id="error-msg"   class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <script type="module">
+    import { guardaPaciente }   from '../js/paciente.js'
+    import { supabase }         from '../js/supabase-client.js'
+    import { mostrarError }     from '../js/auth.js'
+
+    const { data: { session } } = await supabase.auth.getSession()
+    const modoDemo = !session
+    if (!modoDemo) await guardaPaciente()
+
+    try {
+      if (modoDemo) { mostrarError('Conectá tu cuenta para ver tu historial de pagos.'); throw new Error() }
+      const uid = (await supabase.auth.getUser()).data.user?.id
+      const { data: paciente } = await supabase.from('pacientes').select('*').eq('usuario_id', uid).single()
+
+      // Mostrar nombre del paciente
+      document.querySelectorAll('*').forEach(el => {
+        if (el.children.length === 0 && el.textContent.trim() === 'Eleanor Vance')
+          el.textContent = `${paciente?.nombre} ${paciente?.apellido}`
+      })
+
+      // Cargar citas completadas como historial de "sesiones pagadas"
+      const { data: citas } = await supabase.from('citas')
+        .select('id, fecha, hora_inicio, tipo, usuarios(nombre, apellido), clinicas(nombre)')
+        .eq('paciente_id', paciente.id)
+        .eq('estado', 'completada')
+        .order('fecha', { ascending: false })
+
+      const tbody = document.querySelector('tbody')
+      if (tbody && citas?.length) {
+        tbody.innerHTML = citas.map(c => `
+          <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+            <td class="px-4 py-3 text-sm">${new Date(c.fecha).toLocaleDateString('es-AR')}</td>
+            <td class="px-4 py-3 text-sm">Dr. ${c.usuarios?.nombre} ${c.usuarios?.apellido}</td>
+            <td class="px-4 py-3 text-sm">${c.tipo === 'telemedicina' ? '📹 Video' : '🏥 Presencial'}</td>
+            <td class="px-4 py-3">
+              <span class="px-3 py-1 rounded-full text-xs font-bold bg-tertiary-container text-on-tertiary-container">Completada</span>
+            </td>
+          </tr>`).join('')
+      }
+    } catch(e) { mostrarError(e.message) }
+  </script>
+</body></html>

@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Editor SOAP</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  * { box-sizing: border-box; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+
+  /* SOAP letter badge */
+  .soap-letter {
+    width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+    font-family: 'Manrope', sans-serif; font-size: 22px; font-weight: 900; flex-shrink: 0;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    color: #475569; transition: all 0.3s; user-select: none;
+  }
+  .soap-section:focus-within .soap-letter {
+    background: rgba(139,92,246,0.18); border-color: rgba(139,92,246,0.4); color: #a78bfa;
+    box-shadow: 0 0 20px rgba(139,92,246,0.15);
+  }
+
+  /* Textareas */
+  .soap-textarea {
+    width: 100%; min-height: 160px; resize: vertical;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px; padding: 20px; font-family: 'Inter', sans-serif;
+    font-size: 13px; line-height: 1.7; color: #cbd5e1;
+    outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .soap-textarea::placeholder { color: #334155; }
+  .soap-textarea:focus {
+    border-color: rgba(139,92,246,0.35);
+    box-shadow: 0 0 0 3px rgba(139,92,246,0.08);
+  }
+
+  /* Right panel cards */
+  .panel-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 20px; padding: 1.25rem;
+  }
+  .panel-card h3 {
+    font-family: 'Manrope', sans-serif; font-size: 10px; font-weight: 800;
+    color: #334155; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px;
+  }
+
+  /* Status button */
+  .status-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px; border-radius: 12px; font-size: 12px; font-weight: 700;
+    font-family: 'Manrope', sans-serif; cursor: pointer; transition: all 0.15s; border: 1px solid;
+  }
+  .status-active { background: rgba(139,92,246,0.15); color: #a78bfa; border-color: rgba(139,92,246,0.35); }
+  .status-inactive { background: rgba(255,255,255,0.03); color: #475569; border-color: rgba(255,255,255,0.07); }
+  .status-inactive:hover { background: rgba(255,255,255,0.05); color: #94a3b8; }
+
+  /* Tag pills */
+  .tag-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 8px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
+    font-size: 11px; font-weight: 600; color: #64748b; cursor: pointer; transition: all 0.15s;
+  }
+  .tag-pill:hover { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); color: #f87171; }
+
+  /* Toggle */
+  .toggle-track {
+    width: 44px; height: 24px; border-radius: 12px; background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1); position: relative; cursor: pointer; transition: all 0.2s;
+  }
+  .toggle-track.on { background: rgba(139,92,246,0.3); border-color: rgba(139,92,246,0.5); }
+  .toggle-thumb {
+    position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%;
+    background: #475569; transition: all 0.2s;
+  }
+  .toggle-track.on .toggle-thumb { left: 23px; background: #a78bfa; }
+
+  /* Bottom bar */
+  .bottom-bar {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    width: calc(100% - 48px); max-width: 860px; z-index: 50;
+    background: rgba(10,22,40,0.85); backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 24px;
+    padding: 10px; display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  }
+
+  /* IA button per section */
+  .btn-ia-section {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 5px 10px; border-radius: 8px;
+    background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2);
+    color: #a78bfa; font-size: 11px; font-weight: 700; font-family: 'Manrope', sans-serif;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-ia-section:hover { background: rgba(139,92,246,0.15); }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+
+  /* Dictation */
+  .btn-dictar {
+    display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:12px;
+    background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);
+    color:#f87171;font-size:13px;font-weight:700;font-family:Manrope,sans-serif;
+    cursor:pointer;transition:all 0.15s;
+  }
+  .btn-dictar:hover { background:rgba(239,68,68,0.15); }
+  .btn-dictar.recording {
+    background:rgba(239,68,68,0.2);border-color:rgba(239,68,68,0.5);
+    animation:pulse-btn 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse-btn {
+    0%,100% { box-shadow:0 0 0 0 rgba(239,68,68,0.3); }
+    50% { box-shadow:0 0 0 8px rgba(239,68,68,0); }
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .rec-dot {
+    width:8px;height:8px;border-radius:50%;background:#ef4444;flex-shrink:0;
+    animation:blink 1s ease-in-out infinite;
+  }
+  .dictation-overlay {
+    position:fixed;inset:0;z-index:200;background:rgba(2,6,23,0.88);
+    backdrop-filter:blur(10px);display:flex;align-items:flex-end;justify-content:center;
+    padding:0 24px 110px;opacity:0;pointer-events:none;transition:opacity 0.25s;
+  }
+  .dictation-overlay.visible { opacity:1;pointer-events:all; }
+  .dictation-panel {
+    width:100%;max-width:760px;background:#0f172a;
+    border:1px solid rgba(239,68,68,0.2);border-radius:28px;
+    padding:24px;box-shadow:0 32px 80px rgba(0,0,0,0.6);
+    transform:translateY(20px);transition:transform 0.25s;
+  }
+  .dictation-overlay.visible .dictation-panel { transform:translateY(0); }
+  .dictation-transcript {
+    width:100%;min-height:130px;max-height:200px;overflow-y:auto;
+    background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);
+    border-radius:16px;padding:16px;font-size:14px;line-height:1.75;
+    color:#cbd5e1;font-family:Inter,sans-serif;resize:none;outline:none;
+  }
+  .dictation-transcript::placeholder { color:#334155; }
+</style>
+</head>
+<body class="min-h-screen antialiased">
+
+<!-- IA BANNER (visible when note was IA-assisted) -->
+<div id="ia-banner" class="hidden fixed top-0 left-0 right-0 z-[70] flex items-center justify-center gap-3 py-2.5 px-6" style="background:linear-gradient(90deg,rgba(139,92,246,0.9),rgba(109,40,217,0.9));backdrop-filter:blur(8px);">
+  <span class="material-symbols-outlined text-white" style="font-size:16px;font-variation-settings:'FILL' 1;">auto_awesome</span>
+  <span style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.95);">Borrador generado con asistencia de IA</span>
+  <button onclick="document.getElementById('ia-banner').classList.add('hidden')" style="margin-left:12px;padding:2px 10px;border-radius:20px;background:rgba(255,255,255,0.2);border:none;color:white;font-size:10px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;">Entendido</button>
+</div>
+
+<!-- HEADER -->
+<header id="editor-header" class="fixed left-0 right-0 z-50 flex items-center justify-between px-8 py-4" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.06);">
+  <div class="flex items-center gap-4">
+    <button onclick="history.back()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;color:#475569;">
+      <span class="material-symbols-outlined" style="font-size:20px;">arrow_back</span>
+    </button>
+    <div>
+      <h1 id="paciente-titulo" class="font-headline text-lg font-extrabold text-white tracking-tight">Nueva nota SOAP</h1>
+      <p id="sesion-info" class="text-xs flex items-center gap-1.5 mt-0.5" style="color:#475569;">
+        <span id="estado-dot" class="w-1.5 h-1.5 rounded-full inline-block" style="background:#a78bfa;"></span>
+        <span id="estado-texto">Borrador en edición</span>
+      </p>
+    </div>
+  </div>
+  <div class="flex items-center gap-2">
+    <button id="btn-cancelar" class="px-4 py-2 rounded-xl text-sm font-bold transition-colors hover:bg-white/5" style="background:none;border:none;cursor:pointer;color:#475569;font-family:Manrope,sans-serif;">
+      Cancelar
+    </button>
+    <button id="btn-dictar-header" class="btn-dictar">
+      <span class="material-symbols-outlined" style="font-size:16px;">mic</span>
+      Dictar sesión
+    </button>
+    <button id="btn-guardar-header" class="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);font-family:Manrope,sans-serif;cursor:pointer;">
+      <span class="material-symbols-outlined" style="font-size:16px;">save</span>
+      Guardar cambios
+    </button>
+  </div>
+</header>
+
+<!-- MAIN EDITOR -->
+<main id="editor-main" class="pb-32 px-8 max-w-[1380px] mx-auto" style="padding-top:88px;">
+  <div class="grid gap-8" style="grid-template-columns:1fr 300px;">
+
+    <!-- LEFT: SOAP sections -->
+    <div class="flex flex-col gap-8">
+
+      <!-- S — Subjetivo -->
+      <div class="soap-section">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="soap-letter">S</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <h2 class="font-headline text-base font-extrabold text-white">Subjetivo</h2>
+                <p style="font-size:11px;color:#475569;margin-top:2px;">Perspectiva y sentimientos del paciente</p>
+              </div>
+              <button class="btn-ia-section" id="btn-ia-s">
+                <span class="material-symbols-outlined" style="font-size:13px;font-variation-settings:'FILL' 1;">auto_awesome</span>
+                Asistir con IA
+              </button>
+            </div>
+            <textarea id="textarea-s" class="soap-textarea" placeholder="¿Qué reporta el paciente? Síntomas, sentimientos, preocupaciones en sus propias palabras..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- O — Objetivo -->
+      <div class="soap-section">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="soap-letter">O</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <h2 class="font-headline text-base font-extrabold text-white">Objetivo</h2>
+                <p style="font-size:11px;color:#475569;margin-top:2px;">Observaciones clínicas y datos medibles</p>
+              </div>
+              <button class="btn-ia-section" id="btn-ia-o">
+                <span class="material-symbols-outlined" style="font-size:13px;font-variation-settings:'FILL' 1;">auto_awesome</span>
+                Asistir con IA
+              </button>
+            </div>
+            <textarea id="textarea-o" class="soap-textarea" placeholder="Observaciones del terapeuta: lenguaje corporal, escalas aplicadas, conductas observadas..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- A — Evaluación -->
+      <div class="soap-section">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="soap-letter">A</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <h2 class="font-headline text-base font-extrabold text-white">Evaluación</h2>
+                <p style="font-size:11px;color:#475569;margin-top:2px;">Análisis clínico e interpretación de la sesión</p>
+              </div>
+              <button class="btn-ia-section" id="btn-ia-a">
+                <span class="material-symbols-outlined" style="font-size:13px;font-variation-settings:'FILL' 1;">auto_awesome</span>
+                Asistir con IA
+              </button>
+            </div>
+            <textarea id="textarea-a" class="soap-textarea" placeholder="Diagnóstico diferencial, progreso hacia objetivos, hipótesis clínicas..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- P — Plan -->
+      <div class="soap-section">
+        <div style="display:flex;align-items:flex-start;gap:16px;">
+          <div class="soap-letter">P</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <h2 class="font-headline text-base font-extrabold text-white">Plan</h2>
+                <p style="font-size:11px;color:#475569;margin-top:2px;">Próximas intervenciones y tareas asignadas</p>
+              </div>
+              <button class="btn-ia-section" id="btn-ia-p">
+                <span class="material-symbols-outlined" style="font-size:13px;font-variation-settings:'FILL' 1;">auto_awesome</span>
+                Asistir con IA
+              </button>
+            </div>
+            <textarea id="textarea-p" class="soap-textarea" placeholder="Intervenciones planificadas, tareas para el paciente, próxima sesión..."></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Clinical context -->
+    <aside class="flex flex-col gap-4" style="position:sticky;top:88px;height:fit-content;">
+
+      <!-- Estado de sesión -->
+      <div class="panel-card">
+        <h3>Estado de sesión</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button id="btn-estado-completa" class="status-btn status-active" onclick="setEstado('completa')">
+            <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1;">task_alt</span>
+            Completa
+          </button>
+          <button id="btn-estado-borrador" class="status-btn status-inactive" onclick="setEstado('borrador')">
+            <span class="material-symbols-outlined" style="font-size:14px;">edit_note</span>
+            Borrador
+          </button>
+        </div>
+      </div>
+
+      <!-- Tags clínicos -->
+      <div class="panel-card">
+        <h3>Tags clínicos</h3>
+        <div id="tags-container" class="flex flex-wrap gap-2">
+          <span class="tag-pill" onclick="removeTag(this)">Ansiedad <span class="material-symbols-outlined" style="font-size:11px;">close</span></span>
+          <span class="tag-pill" onclick="removeTag(this)">TCC <span class="material-symbols-outlined" style="font-size:11px;">close</span></span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:10px;">
+          <input id="tag-input" type="text" placeholder="Nuevo tag..." onkeydown="if(event.key==='Enter')addTag()" style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:9px;padding:6px 10px;font-size:11px;color:#e2e8f0;outline:none;" onfocus="this.style.borderColor='rgba(139,92,246,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"/>
+          <button onclick="addTag()" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:9px;padding:6px 10px;font-size:11px;font-weight:700;color:#a78bfa;cursor:pointer;">+</button>
+        </div>
+      </div>
+
+      <!-- Tarea asignada al paciente -->
+      <div class="panel-card">
+        <h3>Tarea para el paciente</h3>
+        <div style="display:flex;align-items:flex-start;gap:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:10px 12px;">
+          <span class="material-symbols-outlined" style="font-size:16px;color:#a78bfa;margin-top:1px;font-variation-settings:'FILL' 1;">assignment</span>
+          <textarea id="tarea-texto" placeholder="Tarea o ejercicio para la próxima sesión..." style="flex:1;background:none;border:none;outline:none;font-size:12px;color:#94a3b8;resize:none;min-height:52px;line-height:1.5;font-family:Inter,sans-serif;">Registro de pensamientos disfuncionales (DTR)</textarea>
+        </div>
+      </div>
+
+      <!-- Compartir resumen con paciente -->
+      <div class="panel-card" style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <p class="font-headline font-bold text-white text-sm">Compartir con paciente</p>
+          <p style="font-size:10px;color:#475569;margin-top:2px;">Envía resumen simplificado al portal</p>
+        </div>
+        <div id="toggle-compartir" class="toggle-track" onclick="toggleCompartir()">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+
+      <!-- Link a ficha paciente -->
+      <a id="link-ficha" href="ficha_paciente.html" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'">
+        <div style="width:32px;height:32px;border-radius:10px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span class="material-symbols-outlined" style="font-size:16px;color:#a78bfa;font-variation-settings:'FILL' 1;">person</span>
+        </div>
+        <div style="flex:1;">
+          <p id="link-ficha-nombre" style="font-size:12px;font-weight:700;color:#e2e8f0;font-family:Manrope,sans-serif;">Ver ficha del paciente</p>
+          <p style="font-size:10px;color:#475569;">Historial completo →</p>
+        </div>
+      </a>
+
+    </aside>
+  </div>
+</main>
+
+<!-- FLOATING BOTTOM BAR -->
+<div class="bottom-bar">
+  <button id="btn-borrador" class="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-headline font-bold text-sm transition-all hover:bg-white/5" style="background:none;border:none;cursor:pointer;color:#475569;">
+    <span class="material-symbols-outlined" style="font-size:16px;">edit_note</span>
+    Guardar borrador
+  </button>
+  <button id="btn-guardar" class="flex items-center justify-center gap-2 py-3.5 rounded-2xl font-headline font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="flex:1.6;background:linear-gradient(135deg,rgba(139,92,246,0.9),rgba(109,40,217,0.85));color:white;border:1px solid rgba(139,92,246,0.4);cursor:pointer;box-shadow:0 8px 24px rgba(139,92,246,0.25);">
+    <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1;">save</span>
+    Guardar nota clínica
+  </button>
+  <button id="btn-informe" class="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-2xl font-headline font-bold text-sm transition-all hover:bg-white/5" style="background:none;border:1px solid rgba(255,255,255,0.07);cursor:pointer;color:#64748b;">
+    <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1;">description</span>
+    Generar informe
+  </button>
+</div>
+
+<!-- DICTATION OVERLAY -->
+<div id="dictation-overlay" class="dictation-overlay">
+  <div class="dictation-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div id="rec-dot" class="rec-dot"></div>
+        <span style="font-family:Manrope,sans-serif;font-weight:800;font-size:15px;color:white;">Dictando sesión</span>
+        <span id="rec-status" style="font-size:12px;color:#64748b;">Escuchando...</span>
+      </div>
+      <button onclick="cerrarDictado()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:6px 14px;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">✕ Cerrar</button>
+    </div>
+    <textarea id="dictation-text" class="dictation-transcript" readonly placeholder="Habla ahora... el texto aparecerá aquí en tiempo real."></textarea>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button id="btn-toggle-dictation" onclick="toggleDictation()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-weight:700;font-size:13px;font-family:Manrope,sans-serif;cursor:pointer;">
+        <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1;">stop_circle</span>
+        Detener
+      </button>
+      <button id="btn-procesar-dictado" onclick="procesarDictadoConIA()" style="flex:2;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:14px;background:linear-gradient(135deg,rgba(139,92,246,0.9),rgba(109,40,217,0.85));color:white;border:1px solid rgba(139,92,246,0.4);font-weight:700;font-size:13px;font-family:Manrope,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(139,92,246,0.25);">
+        <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1;">auto_awesome</span>
+        Estructurar con IA → SOAP
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="hidden" style="position:fixed;bottom:100px;right:24px;z-index:300;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px 18px;font-size:13px;font-weight:600;color:#e2e8f0;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:320px;"></div>
+
+<!-- UI script (non-module) -->
+<script>
+var estadoActual = 'completa';
+var compartirActivo = false;
+
+function setEstado(s) {
+  estadoActual = s;
+  var eC = document.getElementById('btn-estado-completa');
+  var eB = document.getElementById('btn-estado-borrador');
+  if (s === 'completa') {
+    eC.className = 'status-btn status-active';
+    eB.className = 'status-btn status-inactive';
+    document.getElementById('estado-dot').style.background = '#34d399';
+    document.getElementById('estado-texto').textContent = 'Nota completa';
+  } else {
+    eC.className = 'status-btn status-inactive';
+    eB.className = 'status-btn status-active';
+    document.getElementById('estado-dot').style.background = '#fbbf24';
+    document.getElementById('estado-texto').textContent = 'Borrador en edición';
+  }
+}
+
+function toggleCompartir() {
+  compartirActivo = !compartirActivo;
+  document.getElementById('toggle-compartir').classList.toggle('on', compartirActivo);
+  mostrarToast(compartirActivo ? 'Resumen compartido con el paciente' : 'Resumen ocultado al paciente');
+}
+
+function removeTag(el) { el.remove(); }
+
+function addTag() {
+  var input = document.getElementById('tag-input');
+  var val = input.value.trim();
+  if (!val) return;
+  var span = document.createElement('span');
+  span.className = 'tag-pill';
+  span.innerHTML = val + ' <span class="material-symbols-outlined" style="font-size:11px;">close</span>';
+  span.onclick = function(){ span.remove(); };
+  document.getElementById('tags-container').appendChild(span);
+  input.value = '';
+}
+
+// Adjust header top when IA banner is shown
+function adjustLayout() {
+  var banner = document.getElementById('ia-banner');
+  var header = document.getElementById('editor-header');
+  var main   = document.getElementById('editor-main');
+  var bannerH = banner.classList.contains('hidden') ? 0 : 44;
+  header.style.top = bannerH + 'px';
+  main.style.paddingTop = (bannerH + 72) + 'px';
+  document.querySelector('aside').style.top = (bannerH + 88) + 'px';
+}
+
+var _tt = null;
+function mostrarToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  if (_tt) clearTimeout(_tt);
+  _tt = setTimeout(function(){ t.classList.add('hidden'); }, 3000);
+}
+
+// ── Dictation ──────────────────────────────────────────────────────────────
+var recognition = null;
+var dictationActive = false;
+var finalTranscript = '';
+
+function initRecognition() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { mostrarToast('Tu navegador no soporta dictado. Usa Chrome.'); return null; }
+  var r = new SR();
+  r.lang = 'es-ES';
+  r.continuous = true;
+  r.interimResults = true;
+  r.onresult = function(event) {
+    var interim = '';
+    for (var i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) finalTranscript += event.results[i][0].transcript + ' ';
+      else interim += event.results[i][0].transcript;
+    }
+    document.getElementById('dictation-text').value = finalTranscript + interim;
+  };
+  r.onerror = function(e) {
+    if (e.error !== 'aborted') mostrarToast('Error de micrófono: ' + e.error);
+    dictationActive = false;
+    setRecordingUI(false);
+  };
+  r.onend = function() { if (dictationActive) r.start(); };
+  return r;
+}
+
+function setRecordingUI(active) {
+  var dot = document.getElementById('rec-dot');
+  var status = document.getElementById('rec-status');
+  var btn = document.getElementById('btn-toggle-dictation');
+  var headerBtn = document.getElementById('btn-dictar-header');
+  dot.style.display = active ? 'block' : 'none';
+  status.textContent = active ? 'Escuchando...' : 'Grabación detenida — revisa el texto';
+  btn.innerHTML = active
+    ? '<span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:\'FILL\' 1;">stop_circle</span> Detener'
+    : '<span class="material-symbols-outlined" style="font-size:16px;">mic</span> Reanudar';
+  headerBtn.classList.toggle('recording', active);
+}
+
+function startDictation() {
+  finalTranscript = '';
+  document.getElementById('dictation-text').value = '';
+  recognition = initRecognition();
+  if (!recognition) return;
+  dictationActive = true;
+  recognition.start();
+  document.getElementById('dictation-overlay').classList.add('visible');
+  setRecordingUI(true);
+}
+
+function stopDictation() {
+  dictationActive = false;
+  if (recognition) { recognition.stop(); recognition = null; }
+  setRecordingUI(false);
+}
+
+function toggleDictation() {
+  if (dictationActive) {
+    stopDictation();
+  } else {
+    finalTranscript = document.getElementById('dictation-text').value;
+    recognition = initRecognition();
+    if (!recognition) return;
+    dictationActive = true;
+    recognition.start();
+    setRecordingUI(true);
+  }
+}
+
+function cerrarDictado() {
+  stopDictation();
+  document.getElementById('dictation-overlay').classList.remove('visible');
+  document.getElementById('btn-dictar-header').classList.remove('recording');
+}
+
+async function procesarDictadoConIA() {
+  var texto = document.getElementById('dictation-text').value.trim();
+  if (!texto) { mostrarToast('No hay texto dictado para procesar.'); return; }
+  var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o';
+  var btn = document.getElementById('btn-procesar-dictado');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite;">progress_activity</span> Procesando...';
+
+  try {
+    var res = await fetch('https://wnuwuxenzwfqmhxagryk.supabase.co/functions/v1/openai-proxy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': ANON_KEY },
+      body: JSON.stringify({
+        model: 'gpt-4o', temperature: 0.35,
+        messages: [
+          { role: 'system', content: 'Eres un psicólogo clínico experto en notas SOAP. Recibirás una transcripción de sesión terapéutica y debes estructurarla en formato SOAP. Responde ÚNICAMENTE con JSON válido con las claves: subjetivo, objetivo, evaluacion, plan. Sin texto extra.' },
+          { role: 'user', content: 'Transcripción:\n\n' + texto + '\n\nEstructura en SOAP. Solo JSON: {"subjetivo":"...","objetivo":"...","evaluacion":"...","plan":"..."}' }
+        ]
+      })
+    });
+    var json = await res.json();
+    var content = (json.choices && json.choices[0] && json.choices[0].message && json.choices[0].message.content) || '';
+    var match = content.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('Respuesta inesperada');
+    var soap = JSON.parse(match[0]);
+    if (soap.subjetivo)  document.getElementById('textarea-s').value = soap.subjetivo;
+    if (soap.objetivo)   document.getElementById('textarea-o').value = soap.objetivo;
+    if (soap.evaluacion) document.getElementById('textarea-a').value = soap.evaluacion;
+    if (soap.plan)       document.getElementById('textarea-p').value = soap.plan;
+    document.getElementById('ia-banner').classList.remove('hidden');
+    adjustLayout();
+    cerrarDictado();
+    mostrarToast('Nota SOAP estructurada con IA');
+  } catch(e) {
+    mostrarToast('Error al procesar: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:\'FILL\' 1;">auto_awesome</span> Estructurar con IA → SOAP';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('btn-dictar-header').addEventListener('click', startDictation);
+});
+
+// Init UI
+(function() {
+  var params    = new URLSearchParams(window.location.search);
+  var pacNombre = params.get('nombre') || '';
+  var pacFecha  = params.get('fecha')  || '';
+  var pacHora   = params.get('hora')   || '';
+  var pacDur    = params.get('dur')    || '';
+
+  if (pacNombre) {
+    document.getElementById('paciente-titulo').textContent = pacNombre;
+    document.getElementById('link-ficha-nombre').textContent = pacNombre;
+    var pacId = params.get('paciente') || '';
+    if (pacId) document.getElementById('link-ficha').href = 'ficha_paciente.html?paciente=' + pacId;
+  }
+
+  // Mostrar fecha, hora y duración en el subtítulo del header
+  if (pacFecha || pacHora) {
+    var info = [];
+    if (pacFecha) info.push(pacFecha);
+    if (pacHora)  info.push(pacHora);
+    if (pacDur)   info.push('Duración: ' + pacDur);
+    document.getElementById('estado-texto').textContent = info.join(' · ');
+    document.getElementById('estado-dot').style.background = '#34d399';
+  }
+
+  if (params.get('auto') === 'dictar') {
+    var overlay  = document.getElementById('post-session-overlay');
+    var nombreEl = document.getElementById('post-session-nombre');
+    var infoEl   = document.getElementById('post-session-info');
+    if (nombreEl) nombreEl.textContent = pacNombre || 'Sesión de hoy';
+    if (infoEl && (pacFecha || pacHora)) {
+      var partes = [];
+      if (pacFecha) partes.push(pacFecha);
+      if (pacHora)  partes.push(pacHora);
+      if (pacDur)   partes.push(pacDur);
+      infoEl.textContent = partes.join(' · ');
+      infoEl.style.display = 'block';
+    }
+    if (overlay) overlay.style.display = 'flex';
+  }
+  adjustLayout();
+
+  // Btn cancelar (non-module)
+  document.getElementById('btn-cancelar').addEventListener('click', function() { history.back(); });
+})();
+</script>
+
+<!-- SUPABASE + IA logic (ES module) -->
+<script type="module">
+import { supabase, getNotasSOAP, upsertNotaSOAP, llamarOpenAI } from '../js/supabase-client.js';
+import { cerrarSesion } from '../js/auth.js';
+
+window._cerrarSesion = cerrarSesion;
+
+const { data: { session } } = await supabase.auth.getSession();
+if (!session) { window.location.href = '../login.html'; }
+
+const params     = new URLSearchParams(window.location.search);
+const pacienteId = params.get('paciente') || params.get('id');
+const notaId     = params.get('nota');
+
+const campos = {
+  subjetivo:  document.getElementById('textarea-s'),
+  objetivo:   document.getElementById('textarea-o'),
+  evaluacion: document.getElementById('textarea-a'),
+  plan:       document.getElementById('textarea-p'),
+};
+
+// ── Cargar nota existente ──
+if (notaId && pacienteId) {
+  try {
+    const notas = await getNotasSOAP(pacienteId);
+    const nota  = notas.find(n => n.id === notaId);
+    if (nota) {
+      campos.subjetivo.value  = nota.subjetivo  || '';
+      campos.objetivo.value   = nota.objetivo   || '';
+      campos.evaluacion.value = nota.evaluacion || nota.analisis || '';
+      campos.plan.value       = nota.plan       || '';
+      if (nota.asistida_por_ia) {
+        document.getElementById('ia-banner').classList.remove('hidden');
+        adjustLayout();
+      }
+    }
+  } catch(e) { console.warn('No se pudo cargar la nota:', e.message); }
+}
+
+// ── Guardar nota ──
+async function guardar(borrador = false) {
+  if (!pacienteId) { window.mostrarToast('ID de paciente no encontrado.'); return; }
+  const btn = borrador ? document.getElementById('btn-borrador') : document.getElementById('btn-guardar');
+  btn.disabled = true;
+  try {
+    await upsertNotaSOAP({
+      id:              notaId || undefined,
+      paciente_id:     pacienteId,
+      subjetivo:       campos.subjetivo.value  || '',
+      objetivo:        campos.objetivo.value   || '',
+      evaluacion:      campos.evaluacion.value || '',
+      plan:            campos.plan.value       || '',
+    });
+    window.mostrarToast(borrador ? 'Borrador guardado' : 'Nota guardada correctamente');
+    if (!borrador) setTimeout(() => history.back(), 1200);
+  } catch(e) { window.mostrarToast('Error: ' + e.message); }
+  finally { btn.disabled = false; }
+}
+
+document.getElementById('btn-guardar').addEventListener('click', () => guardar(false));
+document.getElementById('btn-guardar-header').addEventListener('click', () => guardar(false));
+document.getElementById('btn-borrador').addEventListener('click', () => guardar(true));
+
+// ── Generar informe ──
+document.getElementById('btn-informe').addEventListener('click', () => {
+  if (pacienteId) {
+    window.location.href = 'config_informe_ia.html?paciente=' + encodeURIComponent(pacienteId);
+  } else {
+    window.mostrarToast('Guarda la nota primero para generar el informe');
+  }
+});
+
+// ── IA por sección ──
+async function asistirIA(campo, seccion) {
+  const btn = document.getElementById('btn-ia-' + seccion);
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px;animation:spin 1s linear infinite;">progress_activity</span> Generando...';
+  try {
+    const contexto  = `S: ${campos.subjetivo.value}\nO: ${campos.objetivo.value}\nA: ${campos.evaluacion.value}\nP: ${campos.plan.value}`;
+    const secciones = { s:'Subjetivo (perspectiva del paciente)', o:'Objetivo (observaciones clínicas)', a:'Evaluación (análisis clínico)', p:'Plan (próximos pasos terapéuticos)' };
+    const resp = await llamarOpenAI([
+      { role: 'system', content: 'Eres un psicólogo clínico experto. Completa notas SOAP de forma profesional, concisa y en español.' },
+      { role: 'user',   content: `Nota SOAP actual:\n${contexto}\n\nCompleta únicamente el campo "${secciones[seccion]}" de manera profesional y clínica.` },
+    ], { temperature: 0.6 });
+    const texto = resp.choices?.[0]?.message?.content || '';
+    if (texto) { campo.value = texto; document.getElementById('ia-banner').classList.remove('hidden'); adjustLayout(); }
+  } catch(e) { window.mostrarToast('Error al conectar con la IA.'); }
+  finally {
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:13px;font-variation-settings:\'FILL\' 1;">auto_awesome</span> Asistir con IA';
+  }
+}
+
+document.getElementById('btn-ia-s').addEventListener('click', () => asistirIA(campos.subjetivo, 's'));
+document.getElementById('btn-ia-o').addEventListener('click', () => asistirIA(campos.objetivo, 'o'));
+document.getElementById('btn-ia-a').addEventListener('click', () => asistirIA(campos.evaluacion, 'a'));
+document.getElementById('btn-ia-p').addEventListener('click', () => asistirIA(campos.plan, 'p'));
+</script>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+#post-session-overlay { display:none;position:fixed;inset:0;z-index:500;background:rgba(2,6,23,0.92);backdrop-filter:blur(14px);align-items:center;justify-content:center; }
+#post-session-card { animation:slideUp 0.4s cubic-bezier(0.16,1,0.3,1) both;background:#0d1b2e;border:1px solid rgba(167,139,250,0.2);border-radius:2rem;padding:2.5rem;max-width:420px;width:calc(100% - 2rem);text-align:center;box-shadow:0 40px 80px rgba(0,0,0,0.6); }
+</style>
+
+<!-- POST-SESSION OVERLAY: aparece al venir de telemedicina con auto=dictar -->
+<div id="post-session-overlay">
+  <div id="post-session-card">
+    <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(139,92,246,0.25),rgba(167,139,250,0.1));border:1px solid rgba(167,139,250,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+      <span class="material-symbols-outlined" style="font-size:30px;color:#a78bfa;font-variation-settings:'FILL' 1;">check_circle</span>
+    </div>
+    <p style="font-family:Manrope,sans-serif;font-size:1.1rem;font-weight:800;color:#f1f5f9;margin:0 0 4px;">Sesión finalizada</p>
+    <p id="post-session-nombre" style="font-size:0.875rem;color:#a78bfa;font-weight:700;margin:0 0 4px;"></p>
+    <p id="post-session-info" style="display:none;font-size:0.72rem;color:#475569;font-weight:600;margin:0 0 1.25rem;letter-spacing:0.01em;"></p>
+    <p style="font-size:0.82rem;color:#64748b;line-height:1.6;margin:0 0 2rem;">Dictá el resumen de la sesión y la IA estructurará la nota SOAP automáticamente.</p>
+    <button id="btn-iniciar-dictado-auto" onclick="iniciarDictadoDesdeOverlay()" style="width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;color:white;font-family:Manrope,sans-serif;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;transition:opacity 0.15s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
+      <span class="material-symbols-outlined" style="font-size:18px;font-variation-settings:'FILL' 1;">mic</span>
+      Iniciar dictado
+    </button>
+    <button onclick="cerrarPostSession()" style="background:none;border:none;color:#475569;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;">Escribir manualmente</button>
+  </div>
+</div>
+
+<script>
+function iniciarDictadoDesdeOverlay() {
+  cerrarPostSession();
+  startDictation();
+}
+function cerrarPostSession() {
+  document.getElementById('post-session-overlay').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

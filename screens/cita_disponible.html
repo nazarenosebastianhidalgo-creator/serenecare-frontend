@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#dce4e6",
+                    "on-secondary": "#effbff",
+                    "surface-container-highest": "#dce4e6",
+                    "on-secondary-fixed-variant": "#266372",
+                    "secondary-fixed-dim": "#a4ddef",
+                    "tertiary-container": "#d7fde4",
+                    "surface-container": "#eaeff0",
+                    "on-surface-variant": "#596063",
+                    "on-primary-fixed-variant": "#1d5e6d",
+                    "on-surface": "#2c3436",
+                    "on-tertiary-fixed": "#2f503f",
+                    "tertiary": "#456653",
+                    "on-error": "#fff7f6",
+                    "primary-fixed-dim": "#9ad5e7",
+                    "on-error-container": "#6e0a12",
+                    "on-tertiary": "#e6ffee",
+                    "on-secondary-fixed": "#004653",
+                    "on-background": "#2c3436",
+                    "error-container": "#fa746f",
+                    "tertiary-dim": "#395a48",
+                    "on-tertiary-fixed-variant": "#4c6d5a",
+                    "on-tertiary-container": "#416350",
+                    "primary": "#296777",
+                    "secondary": "#2b6775",
+                    "inverse-on-surface": "#9a9d9e",
+                    "error-dim": "#67040d",
+                    "outline-variant": "#acb3b6",
+                    "secondary-dim": "#1b5a69",
+                    "secondary-container": "#b2ecfd",
+                    "surface-tint": "#296777",
+                    "primary-dim": "#195a6a",
+                    "on-primary-fixed": "#00404d",
+                    "outline": "#747c7e",
+                    "tertiary-fixed": "#d7fde4",
+                    "on-primary-container": "#0e5463",
+                    "surface-dim": "#d4dbde",
+                    "surface-bright": "#f8fafb",
+                    "on-secondary-container": "#195968",
+                    "surface-container-low": "#f0f4f6",
+                    "surface-container-high": "#e3e9eb",
+                    "secondary-fixed": "#b2ecfd",
+                    "surface": "#f8fafb",
+                    "tertiary-fixed-dim": "#c9eed6",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#f0fbff",
+                    "background": "#f8fafb",
+                    "primary-container": "#a8e3f6",
+                    "inverse-primary": "#a8e3f6",
+                    "inverse-surface": "#0b0f10",
+                    "error": "#a83836",
+                    "primary-fixed": "#a8e3f6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "display": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        }
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .bg-primary-gradient {
+        background: linear-gradient(135deg, #296777 0%, #195a6a 100%);
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="bg-[#f8fafb] dark:bg-[#0f1112] flex justify-between items-center w-full px-10 py-6 max-w-[1920px] mx-auto sticky top-0 z-50">
+<div class="flex items-center gap-2">
+<span class="font-manrope text-2xl font-bold text-[#4A90A4] tracking-tighter">SereneCare</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8 items-center">
+<span class="text-[#4A90A4] font-bold font-manrope tracking-tight font-semibold cursor-pointer">Citas</span>
+<span class="text-[#596063] dark:text-[#acb3b6] font-manrope tracking-tight font-semibold hover:text-[#296777] transition-colors duration-300 cursor-pointer">Mensajes</span>
+<span class="text-[#596063] dark:text-[#acb3b6] font-manrope tracking-tight font-semibold hover:text-[#296777] transition-colors duration-300 cursor-pointer">Mi Perfil</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">settings</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-high">
+<img alt="Clinical Director Profile" data-alt="professional clinical director headshot with a friendly smile, clean medical background, soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1TEj5SLNBq0B3_fZ9dEIcvJBE_SkUUV8tahbxdTxaiH4ERKXkbEWDUVbHtd7Ih8Wdly_r6tIdCdyG01ikvDZSxO5lgUZxi25hAJQgxZqpDGswi0OzEXZRXo7t90ORZqAJapAQG4COt35Gom2ItHoyqyoR8rmIAZPcaoy8ojufufNDsimGxR_61krEZoaSMino7D_txvHX770gsiXsljBLP1-19NQ2Dy7WznlNTFIMVfkpfOYXxeN1VzPFtJ8STkh6UJ9bB3XFRRIL"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-6 py-12">
+<!-- Badge Availability -->
+<div class="flex justify-center mb-8">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-tertiary-container text-on-tertiary-container rounded-full animate-pulse">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs font-bold tracking-wider uppercase">¡Hay disponibilidad para ti!</span>
+</div>
+</div>
+<!-- Editorial Intro -->
+<div class="text-center mb-12">
+<h1 class="font-display text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-4">Tu bienestar no puede esperar.</h1>
+<p class="text-on-surface-variant text-lg max-w-xl mx-auto leading-relaxed">
+                Hemos encontrado un espacio prioritario que coincide con tu perfil terapéutico. Confirma tu asistencia antes de que expire el tiempo de reserva.
+            </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+<!-- Main Featured Card (Bento Style) -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-3xl p-8 shadow-[0_20px_40px_rgba(44,52,54,0.06)] relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-container/20 rounded-bl-full -mr-16 -mt-16"></div>
+<div class="flex flex-col md:flex-row gap-8 items-center md:items-start relative z-10">
+<div class="relative">
+<div class="w-32 h-40 rounded-2xl overflow-hidden shadow-lg">
+<img alt="Dr. Julian Rivera" class="w-full h-full object-cover" data-alt="portrait of a compassionate male psychologist in a warm, sunlit office, professional and calm demeanor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc8zBqshyaQCE0P9uPgH15tG1pFLt7rI3YEzngH4eIoSLFqkpu9RXGKR6OaJjtYRQYKllEV2-Pw8A4yBqJMISYe20EDFz1LyId1LahBFeOAK8wEH-bhR7TzcxmWb8RgVHSpGiSTPzaqN2_xnCx9DGiKksiMsu4FQOSPa0RDbpp0u7JBK48Ei6OpWJFJJaAS1Hj6jCD8zu_Q-qA_NrKVFgWYEp-2Of_sdEmPH-nN_qx3OKqR3V7HXesmJy-4hcDJhFT3LxX4yyMQN9j"/>
+</div>
+<div class="absolute -bottom-3 -right-3 bg-secondary-container p-2 rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div class="flex-1 text-center md:text-left">
+<h2 class="font-display text-2xl font-bold text-on-surface">Dr. Julian Rivera</h2>
+<p class="text-on-surface-variant font-medium mb-6">Especialista en Ansiedad y Trauma</p>
+<div class="space-y-4">
+<div class="flex flex-col gap-1">
+<span class="text-on-surface-variant text-xs font-bold uppercase tracking-widest">Próxima Cita</span>
+<div class="font-display text-3xl font-extrabold text-primary tracking-tight">
+                                    Mañana, 14 de Mayo <span class="text-on-surface-variant/30 ml-2">|</span> 16:30
+                                </div>
+</div>
+<div class="flex flex-wrap gap-3 justify-center md:justify-start">
+<div class="px-3 py-1.5 bg-surface-container rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">videocam</span>
+<span class="text-xs font-medium">Sesión Online</span>
+</div>
+<div class="px-3 py-1.5 bg-surface-container rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">payments</span>
+<span class="text-xs font-medium">65€ / Sesión</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Urgency Counter -->
+<div class="mt-10 pt-8 border-t border-outline-variant/15">
+<div class="flex justify-between items-end mb-3">
+<div class="flex items-center gap-2 text-error">
+<span class="material-symbols-outlined text-xl animate-pulse">timer</span>
+<span class="font-display font-bold text-lg">Expira en 23:47</span>
+</div>
+<span class="text-on-surface-variant text-xs font-medium">Reserva temporal bloqueada</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error-container w-3/4 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Action Cluster -->
+<div class="md:col-span-4 flex flex-col gap-4">
+<button class="bg-primary-gradient text-white w-full py-5 rounded-3xl font-manrope font-bold text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3">
+                    Confirmar esta cita
+                    <span class="material-symbols-outlined">calendar_today</span>
+</button>
+<button class="bg-surface-container-lowest border-2 border-surface-container-high text-on-surface w-full py-5 rounded-3xl font-manrope font-bold text-lg hover:bg-surface-container-low transition-colors flex items-center justify-center gap-3">
+                    Ver otras opciones
+                </button>
+<!-- Trust Badges -->
+<div class="mt-4 p-6 space-y-4">
+<div class="flex items-center gap-3 group">
+<div class="w-8 h-8 rounded-lg bg-tertiary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-sm" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Cumple RGPD</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Psicólogo Colegiado</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" style="font-variation-settings: 'FILL' 1;">event_busy</span>
+</div>
+<span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Cancelación gratuita</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Content Area (Bento) -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-surface-container-low rounded-3xl p-8">
+<h3 class="font-display font-bold text-xl mb-4">¿Por qué este terapeuta?</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                    Basado en tu evaluación inicial, el Dr. Rivera tiene una tasa de éxito del 94% en casos de estrés laboral similares al tuyo. Su enfoque cognitivo-conductual es ideal para los objetivos que marcaste.
+                </p>
+</div>
+<div class="bg-surface-container-low rounded-3xl p-8 flex items-center justify-between group cursor-pointer hover:bg-primary/5 transition-colors">
+<div>
+<h3 class="font-display font-bold text-xl mb-1">¿Necesitas ayuda técnica?</h3>
+<p class="text-on-surface-variant text-sm">Chatea con nuestro equipo de soporte ahora.</p>
+</div>
+<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-sm">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-[#acb3b6]/15 bg-[#f8fafb] dark:bg-[#0f1112] mt-24">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-8 w-full max-w-[1920px] mx-auto">
+<div class="text-[#596063] font-inter text-xs tracking-wide mb-4 md:mb-0">
+                © 2024 SereneCare Therapeutic Perspective. All rights reserved.
+            </div>
+<div class="flex gap-8">
+<a class="text-[#596063] font-inter text-xs tracking-wide hover:text-[#4A90A4] transition-colors" href="#">Privacy Policy</a>
+<a class="text-[#596063] font-inter text-xs tracking-wide hover:text-[#4A90A4] transition-colors" href="#">Terms of Service</a>
+<a class="text-[#596063] font-inter text-xs tracking-wide hover:text-[#4A90A4] transition-colors" href="#">Patient Rights</a>
+<a class="text-[#596063] font-inter text-xs tracking-wide hover:text-[#4A90A4] transition-colors" href="#">Accessibility</a>
+</div>
+</div>
+</footer>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+
+const params = new URLSearchParams(location.search)
+const citaId = params.get('cita_id')
+const pacienteId = params.get('paciente_id')
+
+// Temporizador de expiración (23 minutos y 47 segundos)
+let totalSeg = 23 * 60 + 47
+const timerEl = document.querySelector('.font-display.font-bold.text-lg')
+const barraEl = document.querySelector('.h-2.w-full.bg-surface-container .h-full')
+
+const interval = setInterval(() => {
+  totalSeg--
+  if (totalSeg <= 0) {
+    clearInterval(interval)
+    if (timerEl) timerEl.textContent = 'Expirado'
+    document.querySelector('button.bg-primary-gradient')?.setAttribute('disabled', true)
+    return
+  }
+  const m = Math.floor(totalSeg / 60)
+  const s = totalSeg % 60
+  if (timerEl) timerEl.textContent = `Expira en ${m}:${String(s).padStart(2, '0')}`
+  if (barraEl) barraEl.style.width = (totalSeg / (23 * 60 + 47) * 100) + '%'
+}, 1000)
+
+// Cargar datos de la cita disponible
+if (citaId) {
+  const { data: cita } = await supabase.from('citas')
+    .select('id, fecha, hora_inicio, tipo, usuarios(nombre, apellido), clinicas(nombre)')
+    .eq('id', citaId).single()
+
+  if (cita) {
+    const fecha = new Date(cita.fecha + 'T00:00:00').toLocaleDateString('es-AR', {
+      weekday: 'long', day: 'numeric', month: 'long'
+    })
+    const psicoNombre = `Dr. ${cita.usuarios?.nombre} ${cita.usuarios?.apellido}`
+
+    document.querySelectorAll('h2').forEach(el => {
+      if (el.textContent.includes('Julian Rivera')) el.textContent = psicoNombre
+    })
+    document.querySelectorAll('p').forEach(el => {
+      if (el.textContent.includes('Ansiedad y Trauma')) el.textContent = 'Especialista en Psicología Clínica'
+    })
+    const fechaEl = document.querySelector('.font-display.text-3xl.font-extrabold')
+    if (fechaEl) fechaEl.innerHTML = `${fecha} <span class="text-on-surface-variant/30 ml-2">|</span> ${cita.hora_inicio?.substring(0, 5)}`
+  }
+}
+
+// Confirmar cita
+const btnConfirmar = document.querySelector('button.bg-primary-gradient')
+if (btnConfirmar) btnConfirmar.addEventListener('click', async () => {
+  clearInterval(interval)
+  btnConfirmar.disabled = true
+  btnConfirmar.textContent = 'Confirmando...'
+
+  if (citaId && pacienteId) {
+    await supabase.from('citas').update({ estado: 'confirmada', paciente_id: pacienteId }).eq('id', citaId)
+    sessionStorage.setItem('tp_ultima_cita', JSON.stringify({ cita_id: citaId }))
+  }
+
+  window.location.href = `/screens/confirmacion_registro.html?cita_id=${citaId || ''}`
+})
+
+// Ver otras opciones
+const btnOtras = document.querySelector('button.bg-surface-container-lowest')
+if (btnOtras) btnOtras.addEventListener('click', () => {
+  window.location.href = '/screens/directorio_clinicas.html'
+})
+</script>
+</body></html>

@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error": "#a83836",
+                        "primary-fixed": "#a8e3f6",
+                        "inverse-primary": "#a8e3f6",
+                        "primary-container": "#a8e3f6",
+                        "inverse-surface": "#0b0f10",
+                        "secondary-fixed": "#b2ecfd",
+                        "surface-container-high": "#e3e9eb",
+                        "surface": "#f8fafb",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "on-primary": "#f0fbff",
+                        "background": "#020617",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#d4dbde",
+                        "surface-bright": "#f8fafb",
+                        "on-secondary-container": "#195968",
+                        "surface-container-low": "#f0f4f6",
+                        "on-primary-fixed": "#00404d",
+                        "outline": "#747c7e",
+                        "on-primary-container": "#0e5463",
+                        "tertiary-fixed": "#d7fde4",
+                        "surface-tint": "#296777",
+                        "primary-dim": "#195a6a",
+                        "outline-variant": "#acb3b6",
+                        "secondary-dim": "#1b5a69",
+                        "secondary-container": "#b2ecfd",
+                        "on-tertiary-container": "#416350",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "secondary": "#2b6775",
+                        "primary": "#296777",
+                        "inverse-on-surface": "#9a9d9e",
+                        "error-dim": "#67040d",
+                        "on-background": "#f8fafb",
+                        "error-container": "#fa746f",
+                        "tertiary-dim": "#395a48",
+                        "on-secondary-fixed": "#004653",
+                        "on-error-container": "#6e0a12",
+                        "on-tertiary": "#e6ffee",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "on-tertiary-fixed": "#2f503f",
+                        "on-surface": "#f8fafb",
+                        "on-error": "#fff7f6",
+                        "tertiary": "#456653",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "tertiary-container": "#d7fde4",
+                        "surface-container": "#eaeff0",
+                        "on-surface-variant": "#94a3b8",
+                        "on-secondary-fixed-variant": "#266372",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "surface-variant": "#dce4e6",
+                        "on-secondary": "#effbff",
+                        "surface-container-highest": "#1e293b"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope", "sans-serif"],
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #020617;
+            color: #f8fafb;
+            font-family: 'Inter', sans-serif;
+        }
+        .sidebar-dark { background-color: #0a1628; }
+        .nav-item { color: #94a3b8; transition: all 0.2s; text-decoration: none; }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+        .app-card { display:flex; flex-direction:column; align-items:center; gap:0.6rem; padding:1.25rem 0.75rem; border-radius:1.25rem; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); text-decoration:none; transition:all 0.2s; cursor:pointer; }
+    </style>
+</head>
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Portal Clínico</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="agenda_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Mi Agenda</span>
+    </a>
+    <a href="pacientes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Mis Pacientes</span>
+    </a>
+    <a href="mensajes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="sala_espera_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline" style="color:#4ade80;">
+      <span class="material-symbols-outlined text-lg" style="color:#4ade80;font-variation-settings:'FILL' 1;">videocam</span><span>Videollamadas</span>
+    </a>
+    <a href="consentimientos_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">history_edu</span><span>Consentimientos</span>
+    </a>
+  </nav>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;" onclick="document.getElementById('user-menu').classList.toggle('hidden')">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(139,92,246,0.2);color:#a78bfa;">AM</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Ana Martínez</p>
+        <p class="text-[10px] text-slate-500">Psicóloga clínica</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+<main class="pl-64 min-h-screen">
+
+  <!-- Header sticky -->
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/20" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(16px);">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Informe IA #7</h2>
+      <p class="text-slate-500 text-xs">Eleanor Vance · Evaluación Psicológica Progresiva</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
+      <button id="btn-notif-psi" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400">notifications</span>
+        <span id="notif-dot-psi" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Panel de notificaciones -->
+  <div id="notif-panel-psi" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
+      <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
+      <button id="btn-marcar-psi" class="text-xs font-bold" style="color:#a78bfa;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+    </div>
+    <div id="notif-list-psi" class="max-h-72 overflow-y-auto"></div>
+    <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+      <a href="notificaciones_psicologo.html" style="font-size:11px;font-weight:700;color:#a78bfa;text-decoration:none;">Ver todas las notificaciones →</a>
+    </div>
+  </div>
+
+  <div class="px-8 pb-12 pt-8 max-w-7xl mx-auto">
+<header class="mb-10">
+<nav class="flex items-center gap-2 text-sm font-medium text-slate-500 mb-4">
+<a class="hover:text-cyan-400 transition-colors" href="#">Pacientes</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:text-cyan-400 transition-colors" href="#">Eleanor Vance</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-slate-200">Informe IA #7</span>
+</nav>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-4xl font-extrabold font-headline tracking-tight text-slate-50 mb-2">Evaluación Psicológica Progresiva</h1>
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-bold rounded-full flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                            Generado por IA · Requiere revisión clínica
+                        </span>
+<span class="text-slate-500 text-sm">Sesión del 12 de Octubre, 2023</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<button onclick="abrirEditar()" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-all">
+<span class="material-symbols-outlined text-lg">edit</span> Editar
+                    </button>
+<button onclick="exportarPDF()" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-all">
+<span class="material-symbols-outlined text-lg">picture_as_pdf</span> Exportar PDF
+                    </button>
+<button onclick="abrirModalSeguro()" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl transition-all" style="color:#34d399;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);" onmouseover="this.style.background='rgba(52,211,153,0.15)'" onmouseout="this.style.background='rgba(52,211,153,0.08)'">
+<span class="material-symbols-outlined text-lg">health_and_safety</span> Exportar para seguro
+                    </button>
+<button onclick="abrirCompartir()" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-all">
+<span class="material-symbols-outlined text-lg">share</span> Compartir
+                    </button>
+<button onclick="abrirFirmar()" class="flex items-center gap-2 px-6 py-2 bg-gradient-to-br from-primary to-primary-dim text-white text-sm font-bold rounded-2xl transition-all active:scale-95 shadow-xl shadow-cyan-900/20">
+<span class="material-symbols-outlined text-lg">draw</span> Firmar
+                    </button>
+</div>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+<div class="lg:col-span-8 space-y-10">
+<section class="p-8 glass-card rounded-2xl">
+<h3 class="text-lg font-bold font-headline text-slate-100 mb-6 flex items-center gap-2">
+<span class="w-1 h-6 bg-cyan-500 rounded-full"></span>
+                        Resumen Ejecutivo
+                    </h3>
+<p class="text-slate-300 leading-relaxed body-md">
+                        La paciente Eleanor Vance muestra una notable mejoría en la regulación emocional durante la última quincena. Se observa una reducción del 40% en los episodios reportados de ansiedad nocturna. La narrativa terapéutica ha pasado de una rumiación centrada en eventos pasados a una proyección más proactiva de estrategias de afrontamiento.
+                    </p>
+</section>
+<section class="p-8 glass-card rounded-2xl">
+<h3 class="text-lg font-bold font-headline text-slate-100 mb-6 flex items-center gap-2">
+<span class="w-1 h-6 bg-cyan-500 rounded-full"></span>
+                        Evolución Clínica
+                    </h3>
+<div class="flex items-end gap-3 h-32 mb-6">
+<div class="flex-1 bg-slate-800 rounded-t-lg transition-all hover:bg-cyan-500/30" style="height: 40%"></div>
+<div class="flex-1 bg-slate-800 rounded-t-lg transition-all hover:bg-cyan-500/30" style="height: 55%"></div>
+<div class="flex-1 bg-slate-800 rounded-t-lg transition-all hover:bg-cyan-500/30" style="height: 45%"></div>
+<div class="flex-1 bg-slate-800 rounded-t-lg transition-all hover:bg-cyan-500/30" style="height: 70%"></div>
+<div class="flex-1 bg-cyan-500 rounded-t-lg shadow-lg shadow-cyan-500/20" style="height: 85%"></div>
+</div>
+<p class="text-sm text-slate-400 italic">Puntuación de estabilidad emocional (Semanas 1-5)</p>
+</section>
+<section class="p-8 glass-card rounded-2xl">
+<h3 class="text-lg font-bold font-headline text-slate-100 mb-6 flex items-center gap-2">
+<span class="w-1 h-6 bg-cyan-500 rounded-full"></span>
+                        Patrones Detectados
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 bg-slate-900/50 rounded-xl border border-slate-800">
+<div class="flex justify-between items-start mb-2">
+<span class="text-sm font-semibold text-slate-200">Racionalización Defensiva</span>
+<span class="px-2 py-0.5 bg-tertiary-container/10 text-tertiary-fixed text-[10px] font-bold rounded uppercase tracking-wider">Alta Confianza</span>
+</div>
+<p class="text-xs text-slate-500 leading-relaxed">Persistencia en el uso de lógica formal para evitar el contacto emocional con el trauma reciente.</p>
+</div>
+<div class="p-4 bg-slate-900/50 rounded-xl border border-slate-800">
+<div class="flex justify-between items-start mb-2">
+<span class="text-sm font-semibold text-slate-200">Mejoría en Introyección</span>
+<span class="px-2 py-0.5 bg-primary-container/10 text-primary-fixed text-[10px] font-bold rounded uppercase tracking-wider">Media Confianza</span>
+</div>
+<p class="text-xs text-slate-500 leading-relaxed">Integración de las herramientas de mindfulness discutidas en la sesión #4.</p>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<section class="p-6 glass-card rounded-2xl">
+<h3 class="text-md font-bold font-headline text-slate-100 mb-4">Hitos Alcanzados</h3>
+<ul class="space-y-3">
+<li class="flex gap-3 text-sm text-slate-400">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+                                Identificación de disparadores laborales.
+                            </li>
+<li class="flex gap-3 text-sm text-slate-400">
+<span class="material-symbols-outlined text-tertiary-fixed text-lg">check_circle</span>
+                                Reducción de respuesta galvánica al hablar de "la mudanza".
+                            </li>
+</ul>
+</section>
+<section class="p-6 glass-card rounded-2xl">
+<h3 class="text-md font-bold font-headline text-slate-100 mb-4">Áreas de Trabajo</h3>
+<ul class="space-y-3">
+<li class="flex gap-3 text-sm text-slate-400">
+<span class="material-symbols-outlined text-cyan-400 text-lg">pending</span>
+                                Establecimiento de límites con la figura materna.
+                            </li>
+<li class="flex gap-3 text-sm text-slate-400">
+<span class="material-symbols-outlined text-cyan-400 text-lg">pending</span>
+                                Exposición gradual a entornos sociales cerrados.
+                            </li>
+</ul>
+</section>
+</div>
+<section class="p-8 glass-card rounded-2xl bg-gradient-to-br from-slate-900/40 to-cyan-950/20">
+<h3 class="text-lg font-bold font-headline text-slate-100 mb-6 flex items-center gap-2">
+<span class="w-1 h-6 bg-cyan-500 rounded-full"></span>
+                        Recomendaciones IA
+                    </h3>
+<div class="space-y-4">
+<div class="flex gap-4 items-start">
+<div class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-cyan-400">psychology</span>
+</div>
+<div>
+<p class="text-slate-200 font-medium text-sm mb-1">Técnica de la Silla Vacía</p>
+<p class="text-xs text-slate-500">Se sugiere implementar en la siguiente sesión para abordar el conflicto no resuelto con el supervisor.</p>
+</div>
+</div>
+<div class="flex gap-4 items-start">
+<div class="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-cyan-400">help_clinic</span>
+</div>
+<div>
+<p class="text-slate-200 font-medium text-sm mb-1">Registro de Gratitud Sesgado</p>
+<p class="text-xs text-slate-500">Continuar con el diario, pero enfocar los registros en el autocuidado físico.</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<div class="lg:col-span-4 lg:sticky lg:top-24 space-y-6 self-start">
+<section class="p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+<h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Metadatos del Informe</h4>
+<div class="space-y-4">
+<div class="flex justify-between">
+<span class="text-xs text-slate-500">ID Informe</span>
+<span class="text-xs font-mono text-slate-300">#INF-2023-0007</span>
+</div>
+<div class="flex justify-between">
+<span class="text-xs text-slate-500">Modelo IA</span>
+<span class="text-xs text-cyan-400">Serene-Llama 4.0</span>
+</div>
+<div class="flex justify-between">
+<span class="text-xs text-slate-500">Tokens Procesados</span>
+<span class="text-xs text-slate-300">12,402</span>
+</div>
+<div class="flex justify-between">
+<span class="text-xs text-slate-500">Tiempo de Generación</span>
+<span class="text-xs text-slate-300">4.2s</span>
+</div>
+</div>
+</section>
+<section class="p-6 bg-slate-900/60 rounded-2xl border border-slate-800">
+<h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Acciones Rápidas</h4>
+<div class="grid grid-cols-2 gap-3">
+<button onclick="window.location.href='notas_soap.html'" class="p-3 bg-slate-800 hover:bg-slate-700 rounded-xl transition-all text-center group">
+<span class="material-symbols-outlined block mb-1 text-slate-400 group-hover:text-cyan-400">history_edu</span>
+<span class="text-[10px] font-semibold text-slate-300">Ver Notas</span>
+</button>
+<button onclick="document.getElementById('modal-comparar').style.display='flex'" class="p-3 bg-slate-800 hover:bg-slate-700 rounded-xl transition-all text-center group">
+<span class="material-symbols-outlined block mb-1 text-slate-400 group-hover:text-cyan-400">compare</span>
+<span class="text-[10px] font-semibold text-slate-300">Comparar</span>
+</button>
+</div>
+</section>
+<section class="p-6 bg-gradient-to-b from-slate-900 to-slate-950 rounded-2xl border border-primary/20 shadow-2xl shadow-cyan-950/40">
+<h4 class="text-sm font-bold text-slate-100 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400">verified</span>
+                        Validación Clínica
+                    </h4>
+<form class="space-y-4">
+<label class="flex items-start gap-3 p-3 bg-slate-800/40 rounded-xl cursor-pointer group">
+<input id="chk-validar" class="mt-1 rounded bg-slate-900 border-slate-700 text-primary focus:ring-primary/20" type="checkbox"/>
+<span class="text-xs text-slate-400 group-hover:text-slate-200 transition-colors leading-relaxed">
+                                He revisado el contenido generado por la IA y certifico que su precisión clínica es correcta para el expediente.
+                            </span>
+</label>
+<div class="space-y-2">
+<label class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-1">Firma del Profesional</label>
+<div class="h-24 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center relative overflow-hidden group" onclick="iniciarCanvasInline(this)">
+<span id="firma-inline-hint" class="text-slate-700 text-xs italic">Dibuje su firma aquí o haga click para cargar</span>
+<canvas id="firma-inline-canvas" class="absolute inset-0 w-full h-full cursor-crosshair"></canvas>
+</div>
+<button type="button" onclick="limpiarFirmaInline()" class="text-[10px] text-slate-600 hover:text-slate-400 transition-colors ml-1">Limpiar firma</button>
+</div>
+<button onclick="validarYArchivar()" class="w-full py-3 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-dim transition-all active:scale-95 shadow-lg shadow-cyan-900/20" type="button">
+                            Validar y Archivar
+                        </button>
+</form>
+</section>
+</div>
+</div>
+  </div>
+</main>
+<footer class="pl-64 p-8 border-t border-slate-800/50">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-slate-600 text-xs">© 2023 Serene Curator AI. Sistema de apoyo a la decisión clínica.</p>
+<div class="flex items-center gap-6">
+<a class="text-xs text-slate-500 hover:text-slate-300" href="#">Privacidad</a>
+<a class="text-xs text-slate-500 hover:text-slate-300" href="#">Términos</a>
+<a class="text-xs text-slate-500 hover:text-slate-300" href="#">Soporte Técnico</a>
+</div>
+</div>
+</footer>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+
+<!-- Toast -->
+<div id="toast" class="hidden" style="position:fixed;bottom:24px;right:24px;z-index:300;background:#1e293b;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px 18px;font-size:13px;font-weight:600;color:#e2e8f0;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:320px;"></div>
+
+<!-- Apps overlay -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:480px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal Clínico</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+      <a href="notas_soap.html" class="app-card" onmouseover="this.style.background='rgba(251,191,36,0.1)';this.style.borderColor='rgba(251,191,36,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">description</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Notas SOAP</span>
+      </a>
+      <a href="perfil_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">account_circle</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mi Perfil</span>
+      </a>
+      <a href="recursos_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(96,165,250,0.1)';this.style.borderColor='rgba(96,165,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.25);">
+          <span class="material-symbols-outlined" style="color:#60a5fa;font-size:22px;font-variation-settings:'FILL' 1;">menu_book</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Recursos</span>
+      </a>
+      <a href="mis_estadisticas.html" class="app-card" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mis Estadísticas</span>
+      </a>
+      <a href="gestion_documentos_ia.html" class="app-card" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">folder_special</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Docs IA</span>
+      </a>
+      <a href="revisor_conversaciones_ia.html" class="app-card" onmouseover="this.style.background='rgba(239,68,68,0.08)';this.style.borderColor='rgba(239,68,68,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">mark_chat_unread</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Revisor IA</span>
+      </a>
+    </div>
+    <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div id="apps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#a78bfa;">AM</div>
+        <div>
+          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">Ana Martínez</p>
+          <p id="apps-clinica" style="font-size:0.7rem;color:#64748b;">Clínica Sol</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem;">
+        <button onclick="toggleTema()" title="Cambiar tema" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+          <span class="material-symbols-outlined" style="font-size:16px;">contrast</span>
+        </button>
+        <button onclick="document.getElementById('btn-logout').click()" title="Cerrar sesión" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#f87171;">
+          <span class="material-symbols-outlined" style="font-size:16px;">logout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Exportar para Seguro -->
+<div id="modal-seguro" onclick="if(event.target===this)this.style.display='none'" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:16px;">
+  <div onclick="event.stopPropagation()" style="background:#0d1b2e;border:1px solid rgba(52,211,153,0.2);border-radius:24px;width:100%;max-width:640px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 40px 100px rgba(0,0,0,0.7);">
+
+    <!-- Header -->
+    <div style="padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:18px;font-variation-settings:'FILL' 1;">health_and_safety</span>
+        </div>
+        <div>
+          <p style="font-family:Manrope,sans-serif;font-size:15px;font-weight:800;color:#f1f5f9;margin:0;">Informe para aseguradora</p>
+          <p style="font-size:11px;color:#475569;margin:2px 0 0;">Formato estructurado · Eleanor Vance</p>
+        </div>
+      </div>
+      <button onclick="document.getElementById('modal-seguro').style.display='none'" style="width:32px;height:32px;border-radius:9px;border:none;background:rgba(255,255,255,0.05);cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;">
+        <span class="material-symbols-outlined" style="font-size:17px;">close</span>
+      </button>
+    </div>
+
+    <!-- Contenido scrollable -->
+    <div style="overflow-y:auto;flex:1;padding:20px 24px;" id="seguro-contenido">
+
+      <!-- Aviso -->
+      <div style="display:flex;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.2);margin-bottom:18px;">
+        <span class="material-symbols-outlined" style="color:#fbbf24;font-size:16px;flex-shrink:0;margin-top:1px;">info</span>
+        <p style="font-size:11px;color:#92710f;color:#b69325;line-height:1.5;margin:0;">Revisá los campos antes de enviar. Los datos son editables — ajustá lo que no coincida con el criterio clínico.</p>
+      </div>
+
+      <!-- Sección: Datos del paciente -->
+      <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin:0 0 10px;font-family:Manrope,sans-serif;">Datos del paciente</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Nombre completo</label>
+          <input type="text" value="Eleanor Vance" id="seg-nombre" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">N.º historia clínica</label>
+          <input type="text" value="HC-2023-0047" id="seg-hc" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Fecha de nacimiento</label>
+          <input type="text" value="14/03/1989" id="seg-fnac" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">N.º póliza / afiliado</label>
+          <input type="text" value="" placeholder="Ej: POL-00123456" id="seg-poliza" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+      </div>
+
+      <!-- Sección: Diagnóstico -->
+      <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin:0 0 10px;font-family:Manrope,sans-serif;">Diagnóstico</p>
+      <div style="display:grid;grid-template-columns:140px 1fr;gap:10px;margin-bottom:18px;">
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Código CIE-10</label>
+          <input type="text" value="F41.1" id="seg-cie" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#34d399;font-size:13px;font-weight:700;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Descripción diagnóstica</label>
+          <input type="text" value="Trastorno de ansiedad generalizada" id="seg-diag" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+      </div>
+
+      <!-- Sección: Tratamiento -->
+      <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin:0 0 10px;font-family:Manrope,sans-serif;">Tratamiento</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Fecha inicio</label>
+          <input type="text" value="05/06/2023" id="seg-finicio" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Fecha informe</label>
+          <input type="text" value="12/10/2023" id="seg-ffin" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Sesiones realizadas</label>
+          <input type="number" value="7" min="1" id="seg-sesiones" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+      </div>
+      <div style="margin-bottom:18px;">
+        <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Modalidad terapéutica</label>
+        <input type="text" value="Terapia Cognitivo-Conductual (TCC) — sesiones individuales semanales de 50 min." id="seg-modalidad" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+      </div>
+
+      <!-- Sección: Evolución y pronóstico -->
+      <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin:0 0 10px;font-family:Manrope,sans-serif;">Evolución y pronóstico</p>
+      <div style="margin-bottom:10px;">
+        <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Evolución clínica</label>
+        <textarea id="seg-evolucion" rows="3" style="width:100%;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:12.5px;font-family:Inter,sans-serif;outline:none;resize:vertical;line-height:1.55;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'">La paciente presenta evolución favorable. Se observa reducción significativa de los síntomas de ansiedad generalizada y mejora en la regulación emocional. Adherencia al tratamiento: adecuada.</textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Pronóstico</label>
+          <select id="seg-pronostico" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(15,23,42,0.8);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'">
+            <option value="favorable">Favorable</option>
+            <option value="reservado">Reservado</option>
+            <option value="grave">Grave</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Sesiones adicionales solicitadas</label>
+          <input type="number" value="12" min="1" id="seg-sesadc" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+      </div>
+
+      <!-- Sección: Profesional -->
+      <p style="font-size:9px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin:0 0 10px;font-family:Manrope,sans-serif;">Profesional tratante</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">Nombre</label>
+          <input type="text" value="Dra. Ana Martínez" id="seg-prof" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+        <div>
+          <label style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;">N.º matrícula</label>
+          <input type="text" value="MP-14872" id="seg-matricula" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#e2e8f0;font-size:13px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.09)'"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:14px 24px;border-top:1px solid rgba(255,255,255,0.07);flex-shrink:0;display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="document.getElementById('modal-seguro').style.display='none'" style="padding:9px 18px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
+      <button onclick="copiarInformeSeguro()" style="padding:9px 18px;border-radius:12px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.25);color:#34d399;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;gap:6px;" onmouseover="this.style.background='rgba(52,211,153,0.15)'" onmouseout="this.style.background='rgba(52,211,153,0.08)'">
+        <span class="material-symbols-outlined" style="font-size:15px;">content_copy</span>Copiar texto
+      </button>
+      <button onclick="descargarInformeSeguro()" style="padding:9px 20px;border-radius:12px;background:linear-gradient(135deg,rgba(52,211,153,0.85),rgba(16,185,129,0.85));border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;gap:6px;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+        <span class="material-symbols-outlined" style="font-size:15px;">download</span>Descargar .txt
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Comparar Informes -->
+<div id="modal-comparar" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;width:100%;max-width:720px;margin:16px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 40px 80px rgba(0,0,0,0.6);">
+    <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:16px;font-weight:800;color:#f1f5f9;">Comparar Informes</p>
+        <p style="font-size:12px;color:#475569;margin-top:2px;">Eleanor Vance — Evolución entre sesiones</p>
+      </div>
+      <button onclick="document.getElementById('modal-comparar').style.display='none'" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;flex-shrink:0;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="overflow-y:auto;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <!-- Informe anterior -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;background:rgba(100,116,139,0.15);color:#94a3b8;font-family:Manrope,sans-serif;">ANTERIOR</span>
+          <span style="font-size:11px;color:#475569;">28 Sep 2023</span>
+        </div>
+        <div style="margin-bottom:12px;">
+          <p style="font-size:11px;color:#64748b;margin-bottom:4px;font-weight:600;">ESTABILIDAD EMOCIONAL</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;"><div style="width:52%;height:100%;background:#60a5fa;border-radius:3px;"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#60a5fa;">52%</span>
+          </div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <p style="font-size:11px;color:#64748b;margin-bottom:4px;font-weight:600;">ANSIEDAD NOCTURNA</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;"><div style="width:78%;height:100%;background:#f87171;border-radius:3px;"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#f87171;">78%</span>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:11px;color:#64748b;margin-bottom:4px;font-weight:600;">ADHERENCIA AL PLAN</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;"><div style="width:60%;height:100%;background:#fbbf24;border-radius:3px;"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#fbbf24;">60%</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#475569;margin-top:14px;line-height:1.5;">Rumiación centrada en eventos pasados. Alta activación emocional ante el tema de la mudanza.</p>
+      </div>
+      <!-- Informe actual -->
+      <div style="background:rgba(6,182,212,0.04);border:1px solid rgba(6,182,212,0.2);border-radius:16px;padding:18px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <span style="font-size:10px;font-weight:700;padding:3px 10px;border-radius:99px;background:rgba(6,182,212,0.15);color:#22d3ee;font-family:Manrope,sans-serif;">ACTUAL</span>
+          <span style="font-size:11px;color:#475569;">12 Oct 2023</span>
+        </div>
+        <div style="margin-bottom:12px;">
+          <p style="font-size:11px;color:#64748b;margin-bottom:4px;font-weight:600;">ESTABILIDAD EMOCIONAL</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;"><div style="width:85%;height:100%;background:#22d3ee;border-radius:3px;"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#22d3ee;">85% <span style="color:#34d399;font-size:10px;">▲33%</span></span>
+          </div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <p style="font-size:11px;color:#64748b;margin-bottom:4px;font-weight:600;">ANSIEDAD NOCTURNA</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;"><div style="width:38%;height:100%;background:#a78bfa;border-radius:3px;"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#a78bfa;">38% <span style="color:#34d399;font-size:10px;">▼40%</span></span>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:11px;color:#64748b;margin-bottom:4px;font-weight:600;">ADHERENCIA AL PLAN</p>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;"><div style="width:88%;height:100%;background:#34d399;border-radius:3px;"></div></div>
+            <span style="font-size:12px;font-weight:700;color:#34d399;">88% <span style="font-size:10px;">▲28%</span></span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:#475569;margin-top:14px;line-height:1.5;">Proyección proactiva de estrategias. Notable integración de técnicas mindfulness de sesión #4.</p>
+      </div>
+    </div>
+    <div style="padding:16px 24px;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0;display:flex;justify-content:flex-end;gap:10px;">
+      <button onclick="document.getElementById('modal-comparar').style.display='none'" style="padding:9px 20px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Cerrar</button>
+      <button onclick="mostrarToast('Comparación exportada')" style="padding:9px 20px;border-radius:12px;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);color:#22d3ee;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;gap:6px;"><span class="material-symbols-outlined" style="font-size:16px;">download</span>Exportar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Editar -->
+<div id="modal-editar" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;width:100%;max-width:680px;margin:16px;box-shadow:0 40px 80px rgba(0,0,0,0.6);display:flex;flex-direction:column;max-height:85vh;">
+    <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:16px;font-weight:800;color:#f1f5f9;">Editar Informe</p>
+        <p style="font-size:12px;color:#475569;margin-top:2px;">Informe IA #7 — Eleanor Vance</p>
+      </div>
+      <button onclick="document.getElementById('modal-editar').style.display='none'" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="padding:24px;overflow-y:auto;flex:1;">
+      <div style="margin-bottom:16px;">
+        <label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px;">Título</label>
+        <input type="text" value="Evaluación Psicológica Progresiva" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#f1f5f9;outline:none;font-family:Inter,sans-serif;" onfocus="this.style.borderColor='rgba(6,182,212,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px;">Resumen Ejecutivo</label>
+        <textarea rows="5" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:13px;color:#e2e8f0;outline:none;resize:vertical;font-family:Inter,sans-serif;line-height:1.6;" onfocus="this.style.borderColor='rgba(6,182,212,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">La paciente Eleanor Vance muestra una notable mejoría en la regulación emocional durante la última quincena. Se observa una reducción del 40% en los episodios reportados de ansiedad nocturna.</textarea>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px;">Recomendaciones</label>
+        <textarea rows="3" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:13px;color:#e2e8f0;outline:none;resize:vertical;font-family:Inter,sans-serif;line-height:1.6;" onfocus="this.style.borderColor='rgba(6,182,212,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">Técnica de la Silla Vacía en la siguiente sesión. Continuar con el diario enfocado en autocuidado físico.</textarea>
+      </div>
+    </div>
+    <div style="padding:16px 24px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:flex-end;gap:10px;flex-shrink:0;">
+      <button onclick="document.getElementById('modal-editar').style.display='none'" style="padding:9px 20px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
+      <button onclick="document.getElementById('modal-editar').style.display='none';mostrarToast('Cambios guardados correctamente')" style="padding:9px 20px;border-radius:12px;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);color:#22d3ee;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;gap:6px;"><span class="material-symbols-outlined" style="font-size:16px;">save</span>Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Compartir -->
+<div id="modal-compartir" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;width:100%;max-width:440px;margin:16px;box-shadow:0 40px 80px rgba(0,0,0,0.6);">
+    <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <p style="font-family:Manrope,sans-serif;font-size:16px;font-weight:800;color:#f1f5f9;">Compartir Informe</p>
+      <button onclick="document.getElementById('modal-compartir').style.display='none'" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="padding:24px;">
+      <p style="font-size:13px;color:#64748b;margin-bottom:18px;">Selecciona con quién compartir este informe:</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+        <label style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;">
+          <input type="checkbox" checked style="accent-color:#22d3ee;width:16px;height:16px;"/>
+          <div>
+            <p style="font-size:13px;font-weight:600;color:#e2e8f0;margin:0;">Paciente (Eleanor Vance)</p>
+            <p style="font-size:11px;color:#475569;margin:2px 0 0;">Acceso de solo lectura vía app</p>
+          </div>
+        </label>
+        <label style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;">
+          <input type="checkbox" style="accent-color:#22d3ee;width:16px;height:16px;"/>
+          <div>
+            <p style="font-size:13px;font-weight:600;color:#e2e8f0;margin:0;">Supervisión clínica</p>
+            <p style="font-size:11px;color:#475569;margin:2px 0 0;">Comparte con el equipo de revisión</p>
+          </div>
+        </label>
+        <label style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;">
+          <input type="checkbox" style="accent-color:#22d3ee;width:16px;height:16px;"/>
+          <div>
+            <p style="font-size:13px;font-weight:600;color:#e2e8f0;margin:0;">Exportar enlace</p>
+            <p style="font-size:11px;color:#475569;margin:2px 0 0;">Genera enlace seguro con expiración</p>
+          </div>
+        </label>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="document.getElementById('modal-compartir').style.display='none'" style="flex:1;padding:10px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
+        <button onclick="document.getElementById('modal-compartir').style.display='none';mostrarToast('Informe compartido correctamente')" style="flex:1;padding:10px;border-radius:12px;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);color:#22d3ee;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Compartir</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Firmar -->
+<div id="modal-firmar" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;width:100%;max-width:480px;margin:16px;box-shadow:0 40px 80px rgba(0,0,0,0.6);">
+    <div style="padding:20px 24px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:16px;font-weight:800;color:#f1f5f9;">Firmar Informe</p>
+        <p style="font-size:12px;color:#475569;margin-top:2px;">Informe IA #7 — 12 Oct 2023</p>
+      </div>
+      <button onclick="document.getElementById('modal-firmar').style.display='none'" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="padding:24px;">
+      <p style="font-size:12px;color:#64748b;margin-bottom:14px;">Dibuje su firma en el área de abajo:</p>
+      <canvas id="firma-canvas" width="432" height="150" style="width:100%;height:150px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:14px;cursor:crosshair;display:block;"></canvas>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+        <button onclick="limpiarFirma()" style="font-size:11px;color:#475569;background:none;border:none;cursor:pointer;font-weight:600;">Limpiar</button>
+      </div>
+      <label style="display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding:12px;background:rgba(255,255,255,0.03);border-radius:12px;cursor:pointer;">
+        <input type="checkbox" id="chk-certifico" style="accent-color:#22d3ee;margin-top:2px;width:15px;height:15px;flex-shrink:0;"/>
+        <span style="font-size:12px;color:#94a3b8;line-height:1.5;">Certifico que he revisado el contenido y que su precisión clínica es correcta para el expediente.</span>
+      </label>
+      <div style="display:flex;gap:10px;margin-top:18px;">
+        <button onclick="document.getElementById('modal-firmar').style.display='none'" style="flex:1;padding:10px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
+        <button onclick="validarFirma()" style="flex:1;padding:10px;border-radius:12px;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3);color:#22d3ee;font-size:13px;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;"><span class="material-symbols-outlined" style="font-size:16px;">verified</span>Validar y Archivar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var toastTimer;
+function mostrarToast(msg) {
+  var t = document.getElementById('toast');
+  if (!t) { t = document.getElementById('success-msg'); }
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.add('hidden'); }, 2800);
+}
+
+window.toggleAppsPanel = function() {
+  var o = document.getElementById('apps-overlay');
+  o.style.display = o.style.display === 'flex' ? 'none' : 'flex';
+};
+window.cerrarApps = function(e) {
+  if (e && e.target !== document.getElementById('apps-overlay')) return;
+  document.getElementById('apps-overlay').style.display = 'none';
+};
+
+function toggleTema() {
+  var nuevo = (localStorage.getItem('tp_tema') || 'oscuro') === 'oscuro' ? 'claro' : 'oscuro';
+  localStorage.setItem('tp_tema', nuevo);
+  document.documentElement.style.filter = nuevo === 'claro' ? 'invert(1) hue-rotate(180deg)' : '';
+  document.getElementById('icon-tema').textContent = nuevo === 'claro' ? 'light_mode' : 'dark_mode';
+  document.getElementById('label-tema').textContent = nuevo === 'claro' ? 'Modo oscuro' : 'Modo claro';
+}
+
+var NOTIFS_PSI = [
+  { icon:'pending_actions', color:'#fbbf24', msg:'Nota SOAP de Eleanor Vance sin completar', hora:'Hace 1 h', leida:false },
+  { icon:'auto_awesome',    color:'#a78bfa', msg:'Informe IA #7 generado correctamente',      hora:'Hace 2 h', leida:false },
+  { icon:'schedule',        color:'#60a5fa', msg:'Recordatorio: supervisión clínica mañana',  hora:'Ayer',     leida:true  },
+];
+var notifOpenPsi = false;
+
+function renderNotifsPsi() {
+  var dot = document.getElementById('notif-dot-psi');
+  var unread = NOTIFS_PSI.filter(function(n){ return !n.leida; }).length;
+  if (dot) dot.style.display = unread > 0 ? 'block' : 'none';
+  var list = document.getElementById('notif-list-psi');
+  if (!list) return;
+  list.innerHTML = NOTIFS_PSI.map(function(n, i) {
+    var bg = n.leida ? 'transparent' : 'rgba(255,255,255,0.02)';
+    return '<div onclick="leerNotifPsi('+i+')" style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);background:'+bg+';transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\''+bg+'\'"><div style="width:32px;height:32px;border-radius:10px;background:rgba(30,41,59,0.8);border:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-symbols-outlined" style="font-size:15px;color:'+n.color+';font-variation-settings:\'FILL\' 1;">'+n.icon+'</span></div><div style="flex:1;min-width:0;"><p style="font-size:12px;color:'+(n.leida?'#64748b':'#e2e8f0')+';line-height:1.4;font-weight:'+(n.leida?'400':'600')+';">'+n.msg+'</p><p style="font-size:10px;color:#475569;margin-top:2px;">'+n.hora+'</p></div>'+(!n.leida?'<span style="width:7px;height:7px;border-radius:50%;background:#a78bfa;flex-shrink:0;margin-top:5px;"></span>':'')+'</div>';
+  }).join('');
+}
+window.leerNotifPsi = function(i) { NOTIFS_PSI[i].leida = true; renderNotifsPsi(); };
+
+document.addEventListener('DOMContentLoaded', function() {
+  var nombre  = localStorage.getItem('tp_nombre')  || 'Ana Martínez';
+  var clinica = localStorage.getItem('tp_clinica') || 'Clínica Sol';
+  var partes  = nombre.trim().split(' ');
+  var ini     = ((partes[0]||'A')[0] + ((partes[1]||'M')[0])).toUpperCase();
+
+  var elCl = document.getElementById('nombre-clinica');   if (elCl) elCl.textContent = clinica;
+  var elUn = document.getElementById('user-nombre');      if (elUn) elUn.textContent = nombre;
+  var elUa = document.getElementById('user-avatar');      if (elUa) elUa.textContent = ini;
+  var elAa = document.getElementById('apps-avatar');      if (elAa) elAa.textContent = ini;
+  var elAn = document.getElementById('apps-nombre');      if (elAn) elAn.textContent = nombre;
+  var elAc = document.getElementById('apps-clinica');     if (elAc) elAc.textContent = clinica;
+
+  var tema = localStorage.getItem('tp_tema') || 'oscuro';
+  var elIt = document.getElementById('icon-tema');  if (elIt) elIt.textContent  = tema === 'claro' ? 'light_mode' : 'dark_mode';
+  var elLt = document.getElementById('label-tema'); if (elLt) elLt.textContent = tema === 'claro' ? 'Modo oscuro' : 'Modo claro';
+
+  renderNotifsPsi();
+
+  var btnN = document.getElementById('btn-notif-psi');
+  if (btnN) btnN.addEventListener('click', function(e) {
+    e.stopPropagation();
+    notifOpenPsi = !notifOpenPsi;
+    document.getElementById('notif-panel-psi').classList.toggle('hidden', !notifOpenPsi);
+  });
+  var btnM = document.getElementById('btn-marcar-psi');
+  if (btnM) btnM.addEventListener('click', function() {
+    NOTIFS_PSI.forEach(function(n){ n.leida = true; });
+    renderNotifsPsi();
+  });
+  document.addEventListener('click', function(e) {
+    var panel = document.getElementById('notif-panel-psi');
+    var btn   = document.getElementById('btn-notif-psi');
+    if (panel && btn && !panel.contains(e.target) && !btn.contains(e.target)) {
+      notifOpenPsi = false;
+      panel.classList.add('hidden');
+    }
+    var um = document.getElementById('user-menu');
+    var bu = document.getElementById('btn-user');
+    if (um && bu && !um.contains(e.target) && !bu.contains(e.target)) {
+      um.classList.add('hidden');
+    }
+  });
+});
+
+function abrirEditar() { document.getElementById('modal-editar').style.display = 'flex'; }
+function abrirCompartir() { document.getElementById('modal-compartir').style.display = 'flex'; }
+function abrirFirmar() {
+  document.getElementById('modal-firmar').style.display = 'flex';
+  setTimeout(iniciarCanvas, 50);
+}
+
+function exportarPDF() {
+  mostrarToast('Generando PDF...');
+  setTimeout(function() { window.print(); }, 400);
+}
+
+// Canvas firma
+var _canvas, _ctx, _drawing = false;
+function iniciarCanvas() {
+  _canvas = document.getElementById('firma-canvas');
+  if (!_canvas) return;
+  _ctx = _canvas.getContext('2d');
+  _ctx.strokeStyle = '#22d3ee';
+  _ctx.lineWidth = 2;
+  _ctx.lineCap = 'round';
+  _canvas.onmousedown = function(e) { _drawing = true; _ctx.beginPath(); _ctx.moveTo(e.offsetX, e.offsetY); };
+  _canvas.onmousemove = function(e) { if (!_drawing) return; _ctx.lineTo(e.offsetX, e.offsetY); _ctx.stroke(); };
+  _canvas.onmouseup = function() { _drawing = false; };
+  _canvas.onmouseleave = function() { _drawing = false; };
+  _canvas.ontouchstart = function(e) { e.preventDefault(); _drawing = true; var r = _canvas.getBoundingClientRect(); _ctx.beginPath(); _ctx.moveTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); };
+  _canvas.ontouchmove = function(e) { e.preventDefault(); if (!_drawing) return; var r = _canvas.getBoundingClientRect(); _ctx.lineTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); _ctx.stroke(); };
+  _canvas.ontouchend = function() { _drawing = false; };
+}
+
+function limpiarFirma() {
+  if (_ctx && _canvas) _ctx.clearRect(0, 0, _canvas.width, _canvas.height);
+}
+
+function validarFirma() {
+  var chk = document.getElementById('chk-certifico');
+  if (!chk.checked) { mostrarToast('Debe marcar la casilla de certificación'); return; }
+  document.getElementById('modal-firmar').style.display = 'none';
+  mostrarToast('Informe firmado y archivado correctamente');
+}
+
+// Canvas de firma inline (sección Validación Clínica)
+var _iCanvas, _iCtx, _iDrawing = false, _iInitialized = false;
+
+function iniciarCanvasInline(contenedor) {
+  var canvas = document.getElementById('firma-inline-canvas');
+  if (!canvas) return;
+  if (_iInitialized) return;
+  _iInitialized = true;
+  _iCanvas = canvas;
+  var dpr = window.devicePixelRatio || 1;
+  _iCanvas.width = _iCanvas.offsetWidth * dpr;
+  _iCanvas.height = _iCanvas.offsetHeight * dpr;
+  _iCtx = _iCanvas.getContext('2d');
+  _iCtx.scale(dpr, dpr);
+  _iCtx.strokeStyle = '#22d3ee';
+  _iCtx.lineWidth = 2;
+  _iCtx.lineCap = 'round';
+  document.getElementById('firma-inline-hint').style.display = 'none';
+
+  _iCanvas.onmousedown = function(e) { _iDrawing = true; var r = _iCanvas.getBoundingClientRect(); _iCtx.beginPath(); _iCtx.moveTo(e.clientX - r.left, e.clientY - r.top); };
+  _iCanvas.onmousemove = function(e) { if (!_iDrawing) return; var r = _iCanvas.getBoundingClientRect(); _iCtx.lineTo(e.clientX - r.left, e.clientY - r.top); _iCtx.stroke(); };
+  _iCanvas.onmouseup = function() { _iDrawing = false; };
+  _iCanvas.onmouseleave = function() { _iDrawing = false; };
+  _iCanvas.ontouchstart = function(e) { e.preventDefault(); _iDrawing = true; var r = _iCanvas.getBoundingClientRect(); _iCtx.beginPath(); _iCtx.moveTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); };
+  _iCanvas.ontouchmove = function(e) { e.preventDefault(); if (!_iDrawing) return; var r = _iCanvas.getBoundingClientRect(); _iCtx.lineTo(e.touches[0].clientX - r.left, e.touches[0].clientY - r.top); _iCtx.stroke(); };
+  _iCanvas.ontouchend = function() { _iDrawing = false; };
+}
+
+function limpiarFirmaInline() {
+  if (_iCtx && _iCanvas) {
+    _iCtx.clearRect(0, 0, _iCanvas.width, _iCanvas.height);
+    _iInitialized = false;
+    document.getElementById('firma-inline-hint').style.display = '';
+  }
+}
+
+function validarYArchivar() {
+  var chk = document.getElementById('chk-validar');
+  if (!chk.checked) {
+    var e = document.getElementById('error-msg');
+    e.textContent = 'Debe marcar la casilla de revisión clínica';
+    e.classList.remove('hidden');
+    setTimeout(function(){ e.classList.add('hidden'); }, 2500);
+    return;
+  }
+  var btn = document.querySelector('button[onclick="validarYArchivar()"]');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined text-lg" style="font-variation-settings:\'FILL\' 1;">verified</span> Archivado';
+  btn.classList.remove('bg-primary', 'hover:bg-primary-dim');
+  btn.classList.add('bg-tertiary-dim', 'cursor-default');
+  var badge = document.querySelector('.bg-amber-500\\/10');
+  if (badge) {
+    badge.className = 'px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full flex items-center gap-1.5';
+    badge.innerHTML = '<span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\' 1;">verified</span> Validado · Archivado';
+  }
+  mostrarToast('Informe validado y archivado correctamente');
+}
+
+function abrirModalSeguro() {
+  document.getElementById('modal-seguro').style.display = 'flex';
+}
+
+function generarTextoSeguro() {
+  var g = function(id){ return document.getElementById(id) ? document.getElementById(id).value : ''; };
+  return [
+    '═══════════════════════════════════════════════════',
+    '         INFORME PARA ASEGURADORA — SERENCARE',
+    '═══════════════════════════════════════════════════',
+    '',
+    'DATOS DEL PACIENTE',
+    '───────────────────────────────────────────────────',
+    'Nombre completo : ' + g('seg-nombre'),
+    'Fecha nacimiento: ' + g('seg-fnac'),
+    'N.º hist. clínica: ' + g('seg-hc'),
+    'N.º póliza       : ' + (g('seg-poliza') || '—'),
+    '',
+    'DIAGNÓSTICO',
+    '───────────────────────────────────────────────────',
+    'Código CIE-10   : ' + g('seg-cie'),
+    'Descripción     : ' + g('seg-diag'),
+    '',
+    'TRATAMIENTO',
+    '───────────────────────────────────────────────────',
+    'Fecha inicio    : ' + g('seg-finicio'),
+    'Fecha informe   : ' + g('seg-ffin'),
+    'Sesiones reali. : ' + g('seg-sesiones'),
+    'Modalidad       : ' + g('seg-modalidad'),
+    '',
+    'EVOLUCIÓN CLÍNICA',
+    '───────────────────────────────────────────────────',
+    g('seg-evolucion'),
+    '',
+    'PRONÓSTICO Y SOLICITUD',
+    '───────────────────────────────────────────────────',
+    'Pronóstico      : ' + g('seg-pronostico').charAt(0).toUpperCase() + g('seg-pronostico').slice(1),
+    'Ses. adicionales: ' + g('seg-sesadc'),
+    '',
+    'PROFESIONAL TRATANTE',
+    '───────────────────────────────────────────────────',
+    'Nombre          : ' + g('seg-prof'),
+    'N.º matrícula   : ' + g('seg-matricula'),
+    '',
+    '═══════════════════════════════════════════════════',
+    'Generado con SereneCare — ' + new Date().toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' }),
+    '═══════════════════════════════════════════════════',
+  ].join('\n');
+}
+
+function copiarInformeSeguro() {
+  navigator.clipboard.writeText(generarTextoSeguro()).then(function() {
+    mostrarToast('Informe copiado al portapapeles');
+  });
+}
+
+function descargarInformeSeguro() {
+  var texto = generarTextoSeguro();
+  var blob = new Blob([texto], { type: 'text/plain;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'informe_seguro_' + (document.getElementById('seg-nombre') ? document.getElementById('seg-nombre').value.replace(/\s+/g,'_').toLowerCase() : 'paciente') + '.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+  mostrarToast('Informe descargado');
+}
+</script>
+<script type="module">
+import { verificarSesion, cerrarSesion } from '../js/auth.js';
+import { supabase } from '../js/supabase-client.js';
+window._cerrarSesion = cerrarSesion;
+(async () => {
+  const perfil = await verificarSesion(['psicologo']);
+  if (!perfil) return;
+  const n = perfil.nombre||'', a = perfil.apellido||'';
+  const ini = ((n[0]||'')+(a[0]||'')).toUpperCase()||'PS';
+  const el = document.getElementById('user-nombre'); if (el) el.textContent = (n+' '+a).trim();
+  const av = document.getElementById('user-avatar'); if (av) av.textContent = ini;
+  if (perfil.clinica_id) {
+    const { data } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single();
+    const nc = document.getElementById('nombre-clinica'); if (nc && data) nc.textContent = data.nombre;
+  }
+})();
+</script>
+</body></html>

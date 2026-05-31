@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Nuevo Paciente</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+
+  /* Tabs */
+  .tab-btn { padding: 12px 4px; font-size: 13px; font-weight: 700; font-family: 'Manrope', sans-serif; cursor: pointer; border: none; background: none; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+  .tab-btn:hover { color: #94a3b8; }
+  .tab-btn.active { color: #a78bfa; border-bottom-color: #a78bfa; }
+  .tab-btn.active-ia { color: #818cf8; border-bottom-color: #818cf8; }
+
+  /* Inputs */
+  .field-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #e2e8f0; font-size: 13px; padding: 10px 14px; width: 100%; outline: none; font-family: 'Inter', sans-serif; transition: border-color 0.2s; color-scheme: dark; }
+  .field-input:focus { border-color: rgba(167,139,250,0.5); }
+  .field-input::placeholder { color: #475569; }
+  select.field-input option { background: #0d1b2e; }
+  textarea.field-input { resize: vertical; min-height: 80px; }
+
+  /* Labels */
+  .field-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+
+  /* Cards */
+  .section-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 24px; }
+
+  /* Chips */
+  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 5px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #94a3b8; transition: all 0.15s; font-family: 'Manrope', sans-serif; }
+  .chip:hover { border-color: rgba(167,139,250,0.4); color: #a78bfa; }
+  .chip.selected { background: rgba(167,139,250,0.15); border-color: rgba(167,139,250,0.4); color: #a78bfa; }
+  .chip.selected-ia { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.4); color: #818cf8; }
+
+  /* Tags */
+  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; background: rgba(167,139,250,0.15); color: #a78bfa; border: 1px solid rgba(167,139,250,0.3); }
+  .tag button { background: none; border: none; cursor: pointer; color: #a78bfa; padding: 0; line-height: 1; font-size: 14px; }
+
+  /* Toggle */
+  .toggle-wrap { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 12px 16px; }
+  .toggle { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.1); border-radius: 99px; transition: 0.2s; }
+  .toggle-slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px; background: #94a3b8; border-radius: 50%; transition: 0.2s; }
+  .toggle input:checked + .toggle-slider { background: rgba(167,139,250,0.5); }
+  .toggle input:checked + .toggle-slider:before { transform: translateX(20px); background: #a78bfa; }
+
+  /* Upload */
+  .upload-zone { border: 2px dashed rgba(167,139,250,0.3); border-radius: 16px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .upload-zone:hover { border-color: rgba(167,139,250,0.6); background: rgba(167,139,250,0.04); }
+
+  /* Risk card */
+  .risk-card { background: rgba(248,113,113,0.06); border: 1px solid rgba(248,113,113,0.2); border-radius: 16px; padding: 20px; }
+
+  /* IA card glow */
+  .ia-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(99,102,241,0.2); border-radius: 20px; padding: 24px; position: relative; overflow: hidden; }
+  .ia-card::before { content: ''; position: absolute; top: -40px; right: -40px; width: 200px; height: 200px; background: rgba(99,102,241,0.08); border-radius: 50%; filter: blur(40px); pointer-events: none; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+
+  /* User menu */
+  #apps-overlay { display:none; position:fixed; inset:0; z-index:100; }
+  #apps-overlay.show { display:block; }
+  #apps-panel { position:fixed; top:0; right:0; bottom:0; width:260px; background:#0d1b2e; border-left:1px solid rgba(255,255,255,0.08); padding:1.5rem 1rem; overflow-y:auto; transform:translateX(100%); transition:transform 0.25s cubic-bezier(0.16,1,0.3,1); z-index:101; }
+  #apps-overlay.show #apps-panel { transform:translateX(0); }
+  #apps-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100; }
+</style>
+</head>
+<body class="text-slate-200 antialiased">
+
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Portal Clínico</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="agenda_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Mi Agenda</span>
+    </a>
+    <a href="pacientes_psicologo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline font-semibold" style="background:rgba(139,92,246,0.1);color:#a78bfa;">
+      <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">group</span><span>Mis Pacientes</span>
+    </a>
+    <a href="mensajes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    
+  
+    <a href="sala_espera_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline" style="color:#4ade80;">
+      <span class="material-symbols-outlined text-lg" style="color:#4ade80;font-variation-settings:'FILL' 1;">videocam</span><span>Videollamadas</span>
+    </a>
+    <a href="consentimientos_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">history_edu</span><span>Consentimientos</span>
+    </a>
+  </nav>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(139,92,246,0.2);color:#a78bfa;">PS</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Psicólogo</p>
+        <p class="text-[10px] text-slate-500">Terapeuta</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="pl-64 pr-72 min-h-screen">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/20" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(16px);">
+    <a href="pacientes_psicologo.html" class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-semibold" style="text-decoration:none;">
+      <span class="material-symbols-outlined text-base">arrow_back</span>
+      Volver a Pacientes
+    </a>
+    <div class="flex items-center gap-3">
+      <button onclick="guardarPaciente()" class="flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-base">save</span>
+        Guardar Paciente
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE TITLE -->
+  <div class="px-8 pt-7 pb-4">
+    <h2 class="font-headline text-2xl font-extrabold text-white tracking-tight">Alta de Nuevo Paciente</h2>
+    <p class="text-slate-500 text-sm mt-1">Complete la ficha clínica para iniciar el proceso de admisión.</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="px-8 flex gap-6 border-b border-slate-800/30 mb-6">
+    <button id="btn-tab-personal"  onclick="cambiarTab('personal')"  class="tab-btn active">
+      <span class="material-symbols-outlined text-base">person</span>Datos Personales
+    </button>
+    <button id="btn-tab-clinico"   onclick="cambiarTab('clinico')"   class="tab-btn">
+      <span class="material-symbols-outlined text-base">medical_information</span>Datos Clínicos
+    </button>
+    <button id="btn-tab-cobertura" onclick="cambiarTab('cobertura')" class="tab-btn">
+      <span class="material-symbols-outlined text-base">payments</span>Cobertura y Facturación
+    </button>
+    <button id="btn-tab-docs"      onclick="cambiarTab('docs')"      class="tab-btn">
+      <span class="material-symbols-outlined text-base">folder_open</span>Documentos
+    </button>
+    <button id="btn-tab-ia"        onclick="cambiarTab('ia')"        class="tab-btn">
+      <span class="material-symbols-outlined text-base" style="font-variation-settings:'FILL' 1;">smart_toy</span>Para la IA
+    </button>
+  </div>
+
+  <!-- ══════════════════ TAB 1: DATOS PERSONALES ══════════════════ -->
+  <div id="tab-personal" class="px-8 pb-12 space-y-6">
+
+    <!-- Foto + datos básicos -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Identificación</p>
+      <div class="flex items-start gap-8">
+        <!-- Avatar -->
+        <div class="flex flex-col items-center gap-2">
+          <div id="avatar-circle" class="w-24 h-24 rounded-2xl flex items-center justify-center text-2xl font-extrabold font-headline cursor-pointer hover:opacity-80 transition-opacity" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:2px dashed rgba(139,92,246,0.3);" onclick="document.getElementById('foto-input').click()">
+            <span class="material-symbols-outlined text-3xl" style="color:#a78bfa;">add_a_photo</span>
+          </div>
+          <input type="file" id="foto-input" accept="image/*" class="hidden" onchange="previsualizarFoto(this)"/>
+          <span class="text-[10px] text-slate-500">Subir foto</span>
+        </div>
+        <!-- Campos -->
+        <div class="flex-1 grid grid-cols-3 gap-4">
+          <div class="col-span-2">
+            <label class="field-label">Nombre completo *</label>
+            <input id="f-nombre" type="text" class="field-input" placeholder="Ej. Martina García Ruiz" oninput="actualizarAvatar()" autocomplete="off"/>
+          </div>
+          <div>
+            <label class="field-label">DNI / Pasaporte</label>
+            <input id="f-dni" type="text" class="field-input" placeholder="Número de documento"/>
+          </div>
+          <div>
+            <label class="field-label">Fecha de nacimiento</label>
+            <input id="f-nacimiento" type="date" class="field-input" onchange="calcularEdad()"/>
+          </div>
+          <div>
+            <label class="field-label">Edad</label>
+            <input id="f-edad" type="text" class="field-input" placeholder="—" readonly style="color:#a78bfa;"/>
+          </div>
+          <div>
+            <label class="field-label">Género</label>
+            <select id="f-genero" class="field-input">
+              <option value="">Seleccionar...</option>
+              <option>Femenino</option>
+              <option>Masculino</option>
+              <option>No binario</option>
+              <option>Otro</option>
+              <option>Prefiero no decir</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Estado civil</label>
+            <select id="f-civil" class="field-input">
+              <option value="">Seleccionar...</option>
+              <option>Soltero/a</option>
+              <option>Casado/a</option>
+              <option>Unión de hecho</option>
+              <option>Divorciado/a</option>
+              <option>Viudo/a</option>
+              <option>Separado/a</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Nivel de estudios</label>
+            <select id="f-estudios" class="field-input">
+              <option value="">Seleccionar...</option>
+              <option>Primario</option>
+              <option>Secundario</option>
+              <option>Terciario</option>
+              <option>Universitario</option>
+              <option>Posgrado</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Ocupación / Profesión</label>
+            <input type="text" class="field-input" placeholder="Ej. Docente, Comerciante..."/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contacto -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Contacto</p>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="field-label">Email *</label>
+          <input id="f-email" type="email" class="field-input" placeholder="correo@ejemplo.com" autocomplete="off"/>
+        </div>
+        <div>
+          <label class="field-label">Teléfono principal *</label>
+          <input id="f-tel" type="tel" class="field-input" placeholder="+54 9 11 0000 0000" autocomplete="off"/>
+        </div>
+        <div>
+          <label class="field-label">Teléfono alternativo</label>
+          <input type="tel" class="field-input" placeholder="Opcional"/>
+        </div>
+        <div class="col-span-2">
+          <label class="field-label">Dirección</label>
+          <input type="text" class="field-input" placeholder="Calle, número, piso, depto."/>
+        </div>
+        <div>
+          <label class="field-label">Ciudad</label>
+          <input type="text" class="field-input" placeholder="Ciudad o localidad"/>
+        </div>
+        <div>
+          <label class="field-label">Código postal</label>
+          <input type="text" class="field-input" placeholder="CP"/>
+        </div>
+        <div>
+          <label class="field-label">País</label>
+          <input type="text" class="field-input" placeholder="Argentina" value="Argentina"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contacto de emergencia -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Contacto de Emergencia</p>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="field-label">Nombre completo</label>
+          <input type="text" class="field-input" placeholder="Nombre del contacto"/>
+        </div>
+        <div>
+          <label class="field-label">Vínculo / Relación</label>
+          <select class="field-input">
+            <option value="">Seleccionar...</option>
+            <option>Madre</option>
+            <option>Padre</option>
+            <option>Pareja</option>
+            <option>Hermano/a</option>
+            <option>Amigo/a</option>
+            <option>Otro familiar</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Teléfono</label>
+          <input type="tel" class="field-input" placeholder="+54 9 11 0000 0000"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menor de edad -->
+    <div class="section-card">
+      <div class="toggle-wrap mb-4">
+        <div>
+          <p class="text-sm font-semibold text-slate-200">¿Es menor de edad?</p>
+          <p class="text-xs text-slate-500 mt-0.5">Activa para registrar datos del tutor legal</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-menor" onchange="toggleMenor()"/>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div id="bloque-tutor" class="hidden grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-slate-800/30">
+        <div>
+          <label class="field-label">Nombre del tutor legal</label>
+          <input type="text" class="field-input" placeholder="Nombre completo"/>
+        </div>
+        <div>
+          <label class="field-label">DNI del tutor</label>
+          <input type="text" class="field-input" placeholder="Documento"/>
+        </div>
+        <div>
+          <label class="field-label">Vínculo con el menor</label>
+          <select class="field-input">
+            <option>Madre</option>
+            <option>Padre</option>
+            <option>Tutor legal</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Teléfono del tutor</label>
+          <input type="tel" class="field-input" placeholder="+54 9 11..."/>
+        </div>
+        <div>
+          <label class="field-label">Email del tutor</label>
+          <input type="email" class="field-input" placeholder="correo@ejemplo.com"/>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-personal -->
+
+  <!-- ══════════════════ TAB 2: DATOS CLÍNICOS ══════════════════ -->
+  <div id="tab-clinico" class="px-8 pb-12 space-y-6 hidden">
+
+    <!-- Admisión -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Admisión</p>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="field-label">Fecha de primera consulta</label>
+          <input type="date" class="field-input" id="f-primera-consulta"/>
+        </div>
+        <div>
+          <label class="field-label">¿Cómo llegó al psicólogo?</label>
+          <select id="f-como-llego" class="field-input" onchange="toggleDerivante()">
+            <option value="">Seleccionar...</option>
+            <option value="derivacion-medico">Derivación — médico clínico</option>
+            <option value="derivacion-psiq">Derivación — psiquiatra</option>
+            <option value="derivacion-otro">Derivación — otro profesional</option>
+            <option value="red">Red de contactos / conocido</option>
+            <option value="obra-social">Obra social / seguro</option>
+            <option value="busqueda">Búsqueda propia (web, redes)</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div id="bloque-derivante" class="hidden">
+          <label class="field-label">Nombre del profesional derivante</label>
+          <input type="text" class="field-input" placeholder="Dr./Dra. Apellido + especialidad"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Motivo y diagnóstico -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Motivo y Diagnóstico</p>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Motivo de consulta (en palabras del paciente)</label>
+          <textarea class="field-input" rows="4" placeholder="Verbatim — lo que el paciente dice sobre por qué viene..."></textarea>
+        </div>
+        <div>
+          <label class="field-label">Motivo de consulta clínico</label>
+          <textarea class="field-input" rows="4" placeholder="Redacción del profesional desde la perspectiva clínica..."></textarea>
+        </div>
+        <div>
+          <label class="field-label">Diagnóstico presuntivo (CIE-10 / DSM-5)</label>
+          <input type="text" class="field-input" placeholder="Ej. F41.1 Trastorno de ansiedad generalizada"/>
+        </div>
+        <div>
+          <label class="field-label">Diagnóstico confirmado (se puede actualizar)</label>
+          <input type="text" class="field-input" placeholder="A completar en el seguimiento..."/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Antecedentes -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Antecedentes</p>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Antecedentes psicológicos / psiquiátricos previos</label>
+          <textarea class="field-input" rows="3" placeholder="¿Tuvo tratamientos anteriores? ¿Con quién? ¿Cuánto tiempo? ¿Por qué terminó?"></textarea>
+        </div>
+        <div>
+          <label class="field-label">Antecedentes médicos relevantes</label>
+          <textarea class="field-input" rows="3" placeholder="Enfermedades crónicas, cirugías, neurológicos..."></textarea>
+        </div>
+        <div>
+          <label class="field-label">Historia familiar relevante</label>
+          <textarea class="field-input" rows="3" placeholder="Antecedentes psiquiátricos en familia, contexto familiar..."></textarea>
+        </div>
+        <div>
+          <label class="field-label">Medicación actual</label>
+          <textarea class="field-input" rows="3" placeholder="Fármaco — dosis — prescriptor (dejar vacío si ninguna)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuración del tratamiento -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Configuración del Tratamiento</p>
+
+      <div class="mb-5">
+        <label class="field-label mb-3">Tipo de terapia</label>
+        <div class="flex flex-wrap gap-2" id="chips-terapia">
+          <span class="chip" onclick="toggleChip(this)">TCC</span>
+          <span class="chip" onclick="toggleChip(this)">Psicoanalítica</span>
+          <span class="chip" onclick="toggleChip(this)">Sistémica</span>
+          <span class="chip" onclick="toggleChip(this)">EMDR</span>
+          <span class="chip" onclick="toggleChip(this)">Gestalt</span>
+          <span class="chip" onclick="toggleChip(this)">ACT</span>
+          <span class="chip" onclick="toggleChip(this)">Mindfulness</span>
+          <span class="chip" onclick="toggleChip(this)">Integrativa</span>
+          <span class="chip" onclick="toggleChip(this)">Otra</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 mb-5">
+        <div>
+          <label class="field-label">Modalidad</label>
+          <div class="flex rounded-xl overflow-hidden border border-slate-800/50" style="background:rgba(255,255,255,0.03);">
+            <button class="flex-1 py-2 text-xs font-bold transition-all" id="mod-presencial" onclick="setModalidad('presencial')" style="background:rgba(139,92,246,0.15);color:#a78bfa;">Presencial</button>
+            <button class="flex-1 py-2 text-xs font-bold transition-all text-slate-500" id="mod-online" onclick="setModalidad('online')">Online</button>
+            <button class="flex-1 py-2 text-xs font-bold transition-all text-slate-500" id="mod-hibrida" onclick="setModalidad('hibrida')">Híbrida</button>
+          </div>
+        </div>
+        <div>
+          <label class="field-label">Frecuencia de sesiones</label>
+          <select class="field-input">
+            <option>Semanal</option>
+            <option>Quincenal</option>
+            <option>Mensual</option>
+            <option>Según necesidad</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Duración de sesión</label>
+          <select class="field-input">
+            <option>45 min</option>
+            <option>50 min</option>
+            <option selected>60 min</option>
+            <option>90 min</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="field-label">Estado inicial del tratamiento</label>
+        <div class="flex gap-3">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="estado-tto" value="activo" checked style="accent-color:#a78bfa;"/>
+            <span class="text-sm text-slate-300">Activo</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="estado-tto" value="evaluacion" style="accent-color:#a78bfa;"/>
+            <span class="text-sm text-slate-300">En evaluación</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="estado-tto" value="pausa" style="accent-color:#a78bfa;"/>
+            <span class="text-sm text-slate-300">En pausa</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Evaluación de riesgo -->
+    <div class="risk-card">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="material-symbols-outlined text-base" style="color:#f87171;">warning</span>
+        <p class="text-sm font-bold font-headline" style="color:#f87171;">Evaluación de Riesgo Inicial</p>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="field-label">Ideación suicida</label>
+          <select class="field-input">
+            <option>No presente</option>
+            <option>Pasiva (sin plan)</option>
+            <option>Con plan activo</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Autolesiones</label>
+          <select class="field-input">
+            <option>No presente</option>
+            <option>Historial previo</option>
+            <option>Activo actualmente</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">Nivel de riesgo global</label>
+          <div class="flex gap-2 mt-1">
+            <button class="chip selected" onclick="setRiesgo(this,'bajo')" style="background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.4);color:#4ade80;">Bajo</button>
+            <button class="chip" onclick="setRiesgo(this,'medio')" style="">Medio</button>
+            <button class="chip" onclick="setRiesgo(this,'alto')" style="">Alto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-clinico -->
+
+  <!-- ══════════════════ TAB 3: COBERTURA Y FACTURACIÓN ══════════════════ -->
+  <div id="tab-cobertura" class="px-8 pb-12 space-y-6 hidden">
+
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Obra Social / Seguro</p>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="field-label">Obra social / Seguro médico</label>
+          <input type="text" class="field-input" placeholder="Ej. OSDE, Swiss Medical, PAMI..."/>
+        </div>
+        <div>
+          <label class="field-label">Plan / Cobertura</label>
+          <input type="text" class="field-input" placeholder="Ej. 210, Básico, Premium..."/>
+        </div>
+        <div>
+          <label class="field-label">Número de afiliado</label>
+          <input type="text" class="field-input" placeholder="N° de afiliado"/>
+        </div>
+      </div>
+      <div class="toggle-wrap mt-4">
+        <div>
+          <p class="text-sm font-semibold text-slate-200">¿Tiene reintegro?</p>
+          <p class="text-xs text-slate-500 mt-0.5">El paciente tramita reintegro con su obra social</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox"/>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Honorarios</p>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="field-label">Honorario por sesión</label>
+          <div class="flex gap-2">
+            <select class="field-input" style="width:80px;flex-shrink:0;">
+              <option>ARS</option>
+              <option>USD</option>
+              <option>EUR</option>
+            </select>
+            <input type="number" class="field-input" placeholder="0.00"/>
+          </div>
+        </div>
+        <div class="col-span-2">
+          <label class="field-label mb-3">Forma de pago preferida</label>
+          <div class="flex flex-wrap gap-2" id="chips-pago">
+            <span class="chip" onclick="toggleChip(this)">Efectivo</span>
+            <span class="chip" onclick="toggleChip(this)">Transferencia</span>
+            <span class="chip" onclick="toggleChip(this)">Débito</span>
+            <span class="chip" onclick="toggleChip(this)">Crédito</span>
+            <span class="chip" onclick="toggleChip(this)">Obra social</span>
+            <span class="chip" onclick="toggleChip(this)">Bizum / MercadoPago</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="toggle-wrap mt-4" id="toggle-descuento-wrap">
+        <div>
+          <p class="text-sm font-semibold text-slate-200">¿Tiene descuento especial?</p>
+          <p class="text-xs text-slate-500 mt-0.5">Tarifa reducida por convenio, estudiante, etc.</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" onchange="toggleDescuento()"/>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div id="bloque-descuento" class="hidden mt-4 grid grid-cols-2 gap-4">
+        <div>
+          <label class="field-label">Porcentaje de descuento (%)</label>
+          <input type="number" class="field-input" placeholder="Ej. 20" min="0" max="100"/>
+        </div>
+        <div>
+          <label class="field-label">Motivo del descuento</label>
+          <input type="text" class="field-input" placeholder="Ej. Estudiante, derivado por colega..."/>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Notas de Facturación</p>
+      <textarea class="field-input" rows="3" placeholder="Ej. Factura a nombre del tutor, pago en cuotas, acuerdo especial..."></textarea>
+    </div>
+
+  </div><!-- /tab-cobertura -->
+
+  <!-- ══════════════════ TAB 4: DOCUMENTOS ══════════════════ -->
+  <div id="tab-docs" class="px-8 pb-12 space-y-6 hidden">
+
+    <!-- Upload -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Subir Archivos</p>
+      <div class="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+        <span class="material-symbols-outlined text-4xl mb-3" style="color:#a78bfa;">cloud_upload</span>
+        <p class="text-sm font-bold text-slate-300">Arrastrá archivos aquí o hacé clic para seleccionar</p>
+        <p class="text-xs text-slate-500 mt-1">PDF, JPG, PNG, DOCX — máx. 20 MB por archivo</p>
+      </div>
+      <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.docx" class="hidden" onchange="handleFileSelect(this)"/>
+
+      <!-- Categoria chips -->
+      <div class="mt-4">
+        <label class="field-label mb-2">Categoría para el próximo archivo</label>
+        <div class="flex flex-wrap gap-2" id="chips-doc-cat">
+          <span class="chip selected" onclick="toggleChipSingle(this, 'chips-doc-cat')">Historia clínica previa</span>
+          <span class="chip" onclick="toggleChipSingle(this, 'chips-doc-cat')">Informe de derivación</span>
+          <span class="chip" onclick="toggleChipSingle(this, 'chips-doc-cat')">Estudio médico</span>
+          <span class="chip" onclick="toggleChipSingle(this, 'chips-doc-cat')">Evaluación psicométrica</span>
+          <span class="chip" onclick="toggleChipSingle(this, 'chips-doc-cat')">Consentimiento firmado</span>
+          <span class="chip" onclick="toggleChipSingle(this, 'chips-doc-cat')">Otro</span>
+        </div>
+      </div>
+
+      <!-- Lista de archivos simulados -->
+      <div class="mt-5" id="file-list">
+        <p class="text-xs text-slate-600 mb-3 font-bold uppercase tracking-wide">Archivos cargados</p>
+        <div class="flex items-center justify-between p-3 rounded-xl mb-2" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-base" style="color:#f87171;">picture_as_pdf</span>
+            <div>
+              <p class="text-sm font-semibold text-slate-200">historia_clinica_previa.pdf</p>
+              <p class="text-xs text-slate-500">Historia clínica previa · 2.3 MB · hoy</p>
+            </div>
+          </div>
+          <button class="text-slate-600 hover:text-red-400 transition-colors" style="background:none;border:none;cursor:pointer;">
+            <span class="material-symbols-outlined text-base">delete</span>
+          </button>
+        </div>
+        <div id="file-list-dynamic"></div>
+      </div>
+    </div>
+
+    <!-- Consentimientos -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-5">Consentimientos</p>
+      <div class="space-y-3">
+        <div class="toggle-wrap">
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Consentimiento informado firmado</p>
+            <p class="text-xs text-slate-500 mt-0.5">El paciente firmó el documento de consentimiento</p>
+          </div>
+          <label class="toggle"><input type="checkbox"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-wrap">
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Autorización de uso de IA en análisis de sesiones</p>
+            <p class="text-xs text-slate-500 mt-0.5">El paciente acepta que sus datos sean procesados por IA para apoyo clínico</p>
+          </div>
+          <label class="toggle"><input type="checkbox"/><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-wrap">
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Autorización de grabación de sesiones</p>
+            <p class="text-xs text-slate-500 mt-0.5">El paciente acepta la grabación para supervisión o formación</p>
+          </div>
+          <label class="toggle"><input type="checkbox"/><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="field-label">Fecha de firma de consentimientos</label>
+        <input type="date" class="field-input" style="max-width:200px;"/>
+      </div>
+    </div>
+
+  </div><!-- /tab-docs -->
+
+  <!-- ══════════════════ TAB 5: PARA LA IA ══════════════════ -->
+  <div id="tab-ia" class="px-8 pb-12 space-y-6 hidden">
+
+    <div class="ia-card">
+      <div class="flex items-center gap-3 mb-1">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(99,102,241,0.15);">
+          <span class="material-symbols-outlined text-base" style="color:#818cf8;font-variation-settings:'FILL' 1;">smart_toy</span>
+        </div>
+        <div>
+          <p class="font-headline font-bold text-white text-sm">Módulo IA — Contexto del caso</p>
+          <p class="text-xs text-slate-500">Esta información alimenta al asistente IA para análisis de sesiones, sugerencias clínicas y generación de informes.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen narrativo -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Resumen Narrativo del Caso</p>
+      <textarea class="field-input" rows="5" placeholder="Describí libremente la situación del paciente para que la IA entienda el contexto completo. Incluí historia relevante, dinámica actual, factores de riesgo y protectores..."></textarea>
+    </div>
+
+    <!-- Objetivos + Áreas -->
+    <div class="grid grid-cols-2 gap-6">
+      <div class="section-card">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Objetivos Terapéuticos (tags)</p>
+        <div class="flex flex-wrap gap-2 mb-3" id="tags-objetivos">
+          <span class="tag">Reducir ansiedad <button onclick="removeTag(this)">×</button></span>
+          <span class="tag">Mejorar autoestima <button onclick="removeTag(this)">×</button></span>
+        </div>
+        <div class="flex gap-2">
+          <input id="input-objetivo" type="text" class="field-input flex-1" placeholder="Escribí un objetivo y Enter..." onkeydown="if(event.key==='Enter'){addTag('tags-objetivos','input-objetivo');event.preventDefault();}"/>
+          <button onclick="addTag('tags-objetivos','input-objetivo')" class="px-3 rounded-xl text-xs font-bold" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">+ Añadir</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Áreas de Trabajo</p>
+        <div class="flex flex-wrap gap-2" id="chips-areas">
+          <span class="chip" onclick="toggleChip(this)">Ansiedad</span>
+          <span class="chip" onclick="toggleChip(this)">Depresión</span>
+          <span class="chip" onclick="toggleChip(this)">Trauma</span>
+          <span class="chip" onclick="toggleChip(this)">Duelo</span>
+          <span class="chip" onclick="toggleChip(this)">Autoestima</span>
+          <span class="chip" onclick="toggleChip(this)">Relaciones</span>
+          <span class="chip" onclick="toggleChip(this)">Familia</span>
+          <span class="chip" onclick="toggleChip(this)">Identidad</span>
+          <span class="chip" onclick="toggleChip(this)">Fobias</span>
+          <span class="chip" onclick="toggleChip(this)">TDAH</span>
+          <span class="chip" onclick="toggleChip(this)">TOC</span>
+          <span class="chip" onclick="toggleChip(this)">T. alimentario</span>
+          <span class="chip" onclick="toggleChip(this)">Adicciones</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recursos y barreras -->
+    <div class="grid grid-cols-2 gap-6">
+      <div class="section-card">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Recursos y Fortalezas del Paciente</p>
+        <textarea class="field-input" rows="3" placeholder="Red de apoyo, habilidades, motivación, recursos económicos, espiritualidad, etc."></textarea>
+      </div>
+      <div class="section-card">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Barreras Identificadas</p>
+        <textarea class="field-input" rows="3" placeholder="Resistencias al cambio, contexto adverso, limitaciones socioeconómicas, baja motivación, etc."></textarea>
+      </div>
+    </div>
+
+    <!-- Cuestionarios basales -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Cuestionarios Basales Completados</p>
+      <div class="flex flex-wrap gap-2 mb-4" id="chips-cuestionarios">
+        <span class="chip" onclick="toggleChip(this)">PHQ-9</span>
+        <span class="chip" onclick="toggleChip(this)">GAD-7</span>
+        <span class="chip" onclick="toggleChip(this)">BDI-II</span>
+        <span class="chip" onclick="toggleChip(this)">STAI</span>
+        <span class="chip" onclick="toggleChip(this)">PCL-5</span>
+        <span class="chip" onclick="toggleChip(this)">AUDIT</span>
+        <span class="chip" onclick="toggleChip(this)">Otro</span>
+      </div>
+      <div class="grid grid-cols-4 gap-3">
+        <div class="text-center p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">PHQ-9</p>
+          <input type="number" class="field-input text-center text-lg font-bold p-1" placeholder="—" min="0" max="27" style="color:#a78bfa;"/>
+        </div>
+        <div class="text-center p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">GAD-7</p>
+          <input type="number" class="field-input text-center text-lg font-bold p-1" placeholder="—" min="0" max="21" style="color:#a78bfa;"/>
+        </div>
+        <div class="text-center p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">BDI-II</p>
+          <input type="number" class="field-input text-center text-lg font-bold p-1" placeholder="—" min="0" max="63" style="color:#a78bfa;"/>
+        </div>
+        <div class="text-center p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <p class="text-[10px] text-slate-500 uppercase font-bold mb-1">Otro</p>
+          <input type="number" class="field-input text-center text-lg font-bold p-1" placeholder="—" style="color:#a78bfa;"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keywords -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Etiquetas / Keywords del caso</p>
+      <div class="flex flex-wrap gap-2 mb-3" id="tags-keywords"></div>
+      <div class="flex gap-2">
+        <input id="input-keyword" type="text" class="field-input flex-1" placeholder="Palabra clave para búsqueda y filtrado IA..." onkeydown="if(event.key==='Enter'){addTag('tags-keywords','input-keyword');event.preventDefault();}"/>
+        <button onclick="addTag('tags-keywords','input-keyword')" class="px-3 rounded-xl text-xs font-bold" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">+ Añadir</button>
+      </div>
+    </div>
+
+    <!-- Notas clínicas -->
+    <div class="grid grid-cols-2 gap-6">
+      <div class="section-card">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Notas de Anamnesis</p>
+        <textarea class="field-input" rows="5" placeholder="Historia de vida relevante, hitos evolutivos, contexto socio-familiar..."></textarea>
+      </div>
+      <div class="section-card">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Impresión Clínica Inicial</p>
+        <textarea class="field-input" rows="5" placeholder="Observaciones del profesional tras la primera entrevista..."></textarea>
+      </div>
+    </div>
+
+    <!-- Plan de tratamiento -->
+    <div class="section-card">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Plan de Tratamiento y Metas</p>
+      <div class="mb-4">
+        <label class="field-label">Plan de tratamiento inicial</label>
+        <textarea class="field-input" rows="3" placeholder="Enfoque terapéutico, técnicas a utilizar, estructura del proceso..."></textarea>
+      </div>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="field-label">Metas a corto plazo</label>
+          <textarea class="field-input" rows="3" placeholder="Primeras 4-8 semanas..."></textarea>
+        </div>
+        <div>
+          <label class="field-label">Metas a mediano plazo</label>
+          <textarea class="field-input" rows="3" placeholder="2-6 meses..."></textarea>
+        </div>
+        <div>
+          <label class="field-label">Metas a largo plazo</label>
+          <textarea class="field-input" rows="3" placeholder="6+ meses, alta terapéutica..."></textarea>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-ia -->
+
+</main>
+
+<!-- SIDEBAR DERECHO — Agenda -->
+<aside class="w-64 fixed right-0 top-0 bottom-0 border-l border-slate-800/30 p-6 flex flex-col" style="background:#05101f;">
+  <div class="flex items-center gap-2 mb-6">
+    <span class="material-symbols-outlined text-base" style="color:#a78bfa;font-variation-settings:'FILL' 1;">event_repeat</span>
+    <p class="font-headline font-bold text-white text-sm">Datos de Agenda</p>
+  </div>
+
+  <!-- Día habitual -->
+  <div class="mb-5">
+    <label class="field-label mb-2">Día habitual de sesión</label>
+    <div class="grid grid-cols-4 gap-1.5" id="dias-grid">
+      <button class="text-xs py-2 rounded-lg text-slate-500 transition-all hover:bg-white/5" onclick="toggleDia(this)">Lun</button>
+      <button class="text-xs py-2 rounded-lg transition-all" onclick="toggleDia(this)" style="background:rgba(139,92,246,0.15);color:#a78bfa;">Mar</button>
+      <button class="text-xs py-2 rounded-lg text-slate-500 transition-all hover:bg-white/5" onclick="toggleDia(this)">Mié</button>
+      <button class="text-xs py-2 rounded-lg text-slate-500 transition-all hover:bg-white/5" onclick="toggleDia(this)">Jue</button>
+      <button class="text-xs py-2 rounded-lg text-slate-500 transition-all hover:bg-white/5" onclick="toggleDia(this)">Vie</button>
+      <button class="text-xs py-2 rounded-lg text-slate-500 transition-all hover:bg-white/5" onclick="toggleDia(this)">Sáb</button>
+    </div>
+  </div>
+
+  <!-- Hora -->
+  <div class="mb-5">
+    <label class="field-label">Hora habitual</label>
+    <input type="time" class="field-input" value="10:00"/>
+  </div>
+
+  <!-- Canal recordatorio -->
+  <div class="mb-6">
+    <label class="field-label mb-2">Canal de recordatorio</label>
+    <div class="space-y-2">
+      <label class="flex items-center justify-between p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-all" style="background:rgba(255,255,255,0.03);">
+        <div class="flex items-center gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span class="text-xs font-semibold">WhatsApp</span>
+        </div>
+        <input type="radio" name="canal" checked style="accent-color:#25d366;"/>
+      </label>
+      <label class="flex items-center justify-between p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-all" style="background:rgba(255,255,255,0.03);">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm" style="color:#60a5fa;">mail</span>
+          <span class="text-xs font-semibold">Email</span>
+        </div>
+        <input type="radio" name="canal" style="accent-color:#60a5fa;"/>
+      </label>
+      <label class="flex items-center justify-between p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-all" style="background:rgba(255,255,255,0.03);">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm" style="color:#64748b;">notifications_off</span>
+          <span class="text-xs font-semibold text-slate-400">Sin recordatorio</span>
+        </div>
+        <input type="radio" name="canal" style="accent-color:#64748b;"/>
+      </label>
+    </div>
+  </div>
+
+  <!-- Próxima sesión -->
+  <div class="mt-auto p-4 rounded-xl" style="background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.15);">
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Primera sesión</p>
+      <span class="material-symbols-outlined text-sm" style="color:#a78bfa;">schedule</span>
+    </div>
+    <p class="text-sm font-bold text-white">Sin agendar aún</p>
+    <p class="text-[10px] text-slate-500 mt-0.5">Se habilitará al guardar la ficha.</p>
+  </div>
+</aside>
+
+<!-- Toast -->
+<div id="toast" class="hidden" style="position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:500;background:#1e293b;border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:12px 24px;font-size:13px;font-weight:700;color:#e2e8f0;box-shadow:0 8px 32px rgba(0,0,0,0.5);white-space:nowrap;"></div>
+
+<!-- Widgets flotantes -->
+<div id="cw-panel" style="position:fixed;bottom:160px;right:16px;z-index:9998;width:300px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
+  <div style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);padding:14px 16px;text-align:center;">
+    <p style="font-size:12px;color:#64748b;">Mini chat</p>
+    <a href="mensajes_psicologo.html" style="font-size:11px;color:#a78bfa;font-weight:700;text-decoration:none;">Ir a Mensajes →</a>
+  </div>
+</div>
+<button id="fab-mensajes" onclick="toggleCW()" style="position:fixed;bottom:96px;right:16px;z-index:9998;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(139,92,246,0.95),rgba(109,40,217,0.95));box-shadow:0 8px 28px rgba(139,92,246,0.4);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Mensajes">
+  <span class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+</button>
+<div id="wa-widget" style="position:fixed;bottom:24px;right:16px;z-index:9999;">
+  <button onclick="window.location.href='mensajes_psicologo.html?wa=1'" style="width:52px;height:52px;border-radius:50%;background:#25d366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,0.35);">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </button>
+</div>
+
+<script>
+var TABS = ['personal','clinico','cobertura','docs','ia'];
+
+function cambiarTab(tab) {
+  TABS.forEach(function(t) {
+    document.getElementById('tab-' + t).classList.add('hidden');
+    var btn = document.getElementById('btn-tab-' + t);
+    btn.classList.remove('active');
+    btn.classList.remove('active-ia');
+  });
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+  var activeBtn = document.getElementById('btn-tab-' + tab);
+  activeBtn.classList.add(tab === 'ia' ? 'active-ia' : 'active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Toggle menor
+function toggleMenor() {
+  var bloque = document.getElementById('bloque-tutor');
+  bloque.classList.toggle('hidden');
+  if (!bloque.classList.contains('hidden')) {
+    bloque.classList.add('grid');
+  } else {
+    bloque.classList.remove('grid');
+  }
+}
+
+// Toggle derivante
+function toggleDerivante() {
+  var val = document.getElementById('f-como-llego').value;
+  var bloque = document.getElementById('bloque-derivante');
+  var esDerivacion = val.startsWith('derivacion');
+  bloque.classList.toggle('hidden', !esDerivacion);
+}
+
+// Modalidad
+function setModalidad(modo) {
+  ['presencial','online','hibrida'].forEach(function(m) {
+    var btn = document.getElementById('mod-' + m);
+    if (m === modo) {
+      btn.style.background = 'rgba(139,92,246,0.15)';
+      btn.style.color = '#a78bfa';
+    } else {
+      btn.style.background = '';
+      btn.style.color = '#64748b';
+    }
+  });
+}
+
+// Descuento
+function toggleDescuento() {
+  document.getElementById('bloque-descuento').classList.toggle('hidden');
+}
+
+// Chips multiselect
+function toggleChip(el) {
+  el.classList.toggle('selected');
+}
+
+// Chips single select
+function toggleChipSingle(el, groupId) {
+  var parent = document.getElementById(groupId);
+  parent.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+}
+
+// Riesgo buttons
+function setRiesgo(el, nivel) {
+  var colores = {
+    bajo:  { bg:'rgba(74,222,128,0.15)',  border:'rgba(74,222,128,0.4)',  color:'#4ade80' },
+    medio: { bg:'rgba(251,191,36,0.15)',  border:'rgba(251,191,36,0.4)',  color:'#fbbf24' },
+    alto:  { bg:'rgba(248,113,113,0.15)', border:'rgba(248,113,113,0.4)', color:'#f87171' },
+  };
+  el.parentElement.querySelectorAll('.chip').forEach(function(c) {
+    c.classList.remove('selected');
+    c.style.background = '';
+    c.style.borderColor = '';
+    c.style.color = '';
+  });
+  var col = colores[nivel];
+  el.style.background = col.bg;
+  el.style.borderColor = col.border;
+  el.style.color = col.color;
+}
+
+// Tags input
+function addTag(listId, inputId) {
+  var input = document.getElementById(inputId);
+  var val = input.value.trim();
+  if (!val) return;
+  var list = document.getElementById(listId);
+  var span = document.createElement('span');
+  span.className = 'tag';
+  span.innerHTML = val + ' <button onclick="removeTag(this)">×</button>';
+  list.appendChild(span);
+  input.value = '';
+}
+
+function removeTag(btn) {
+  btn.parentElement.remove();
+}
+
+// Avatar
+function actualizarAvatar() {
+  var nombre = document.getElementById('f-nombre').value;
+  var partes = nombre.trim().split(' ').filter(Boolean);
+  var iniciales = partes.map(function(p){ return p[0]; }).slice(0,2).join('').toUpperCase();
+  var av = document.getElementById('avatar-circle');
+  if (iniciales) {
+    av.innerHTML = iniciales;
+    av.style.fontSize = '24px';
+  } else {
+    av.innerHTML = '<span class="material-symbols-outlined text-3xl" style="color:#a78bfa;">add_a_photo</span>';
+  }
+}
+
+// Foto preview
+function previsualizarFoto(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var av = document.getElementById('avatar-circle');
+    av.style.backgroundImage = 'url(' + e.target.result + ')';
+    av.style.backgroundSize = 'cover';
+    av.style.backgroundPosition = 'center';
+    av.innerHTML = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+// Calcular edad
+function calcularEdad() {
+  var val = document.getElementById('f-nacimiento').value;
+  if (!val) return;
+  var hoy = new Date();
+  var nac = new Date(val);
+  var edad = hoy.getFullYear() - nac.getFullYear();
+  var m = hoy.getMonth() - nac.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+  document.getElementById('f-edad').value = edad + ' años';
+}
+
+// Días
+function toggleDia(btn) {
+  var activo = btn.style.background !== '';
+  document.querySelectorAll('#dias-grid button').forEach(function(b) {
+    b.style.background = '';
+    b.style.color = '';
+    b.classList.add('text-slate-500');
+  });
+  if (!activo) {
+    btn.style.background = 'rgba(139,92,246,0.15)';
+    btn.style.color = '#a78bfa';
+    btn.classList.remove('text-slate-500');
+  }
+}
+
+// Fecha inicial por defecto
+document.getElementById('f-primera-consulta').value = new Date().toISOString().split('T')[0];
+
+// Files
+function handleDrop(e) {
+  e.preventDefault();
+  addFilesToList(e.dataTransfer.files);
+}
+function handleFileSelect(input) {
+  addFilesToList(input.files);
+}
+function addFilesToList(files) {
+  var list = document.getElementById('file-list-dynamic');
+  Array.from(files).forEach(function(f) {
+    var ext = f.name.split('.').pop().toLowerCase();
+    var iconColor = ext === 'pdf' ? '#f87171' : ext === 'docx' ? '#60a5fa' : '#34d399';
+    var icon = ext === 'pdf' ? 'picture_as_pdf' : ext === 'docx' ? 'description' : 'image';
+    var size = (f.size / 1024 / 1024).toFixed(1) + ' MB';
+    var div = document.createElement('div');
+    div.className = 'flex items-center justify-between p-3 rounded-xl mb-2';
+    div.style.cssText = 'background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);';
+    div.innerHTML = '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-base" style="color:' + iconColor + ';">' + icon + '</span><div><p class="text-sm font-semibold text-slate-200">' + f.name + '</p><p class="text-xs text-slate-500">' + size + ' · hoy</p></div></div><button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#475569;" onmouseover="this.style.color=\'#f87171\'" onmouseout="this.style.color=\'#475569\'"><span class="material-symbols-outlined text-base">delete</span></button>';
+    list.appendChild(div);
+  });
+}
+
+// Guardar
+function guardarPaciente() {
+  var nombre = document.getElementById('f-nombre').value.trim();
+  var email = document.getElementById('f-email').value.trim();
+  var tel = document.getElementById('f-tel').value.trim();
+  if (!nombre || !email || !tel) {
+    mostrarToast('Completá al menos Nombre, Email y Teléfono antes de guardar.');
+    return;
+  }
+  mostrarToast('Paciente guardado correctamente.');
+  setTimeout(function(){ window.location.href = 'pacientes_psicologo.html'; }, 1500);
+}
+
+// Toast
+var _tt = null;
+function mostrarToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  if (_tt) clearTimeout(_tt);
+  _tt = setTimeout(function(){ t.classList.add('hidden'); }, 3000);
+}
+
+// User menu
+function toggleUserMenu() {
+  document.getElementById('user-menu').classList.toggle('hidden');
+}
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('btn-user').contains(e.target))
+    document.getElementById('user-menu').classList.add('hidden');
+});
+
+function toggleTema() {
+  var t = localStorage.getItem('tp_tema') === 'claro' ? 'oscuro' : 'claro';
+  localStorage.setItem('tp_tema', t);
+  location.reload();
+}
+
+window.addEventListener('pageshow', function(e) {
+  if (e.persisted) window.location.reload();
+});
+
+// Mini chat toggle
+var cwOpen = false;
+function toggleCW() {
+  cwOpen = !cwOpen;
+  var p = document.getElementById('cw-panel');
+  p.style.opacity = cwOpen ? '1' : '0';
+  p.style.transform = cwOpen ? 'translateY(0) scale(1)' : 'translateY(14px) scale(0.97)';
+  p.style.pointerEvents = cwOpen ? 'auto' : 'none';
+}
+</script>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { cerrarSesion } from '../js/auth.js'
+import { crearPaciente } from '../js/clinica.js'
+window._cerrarSesion = cerrarSesion
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = '../login.html' }
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido, clinica_id').eq('id', session.user.id).single()
+if (usu) {
+  const nombre = ((usu.nombre || '') + ' ' + (usu.apellido || '')).trim()
+  const ini = nombre.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2)
+  const n = document.getElementById('user-nombre'); if (n) n.textContent = nombre
+  const a = document.getElementById('user-avatar'); if (a) a.textContent = ini
+  if (usu.clinica_id) {
+    const { data: cl } = await supabase.from('clinicas').select('nombre').eq('id', usu.clinica_id).single()
+    if (cl) { const nc = document.getElementById('nombre-clinica'); if (nc) nc.textContent = cl.nombre }
+  }
+}
+window.guardarPaciente = async function() {
+  var nombre = (document.getElementById('f-nombre') || {}).value || ''
+  var email  = (document.getElementById('f-email')  || {}).value || ''
+  var tel    = (document.getElementById('f-tel')    || {}).value || ''
+  nombre = nombre.trim(); email = email.trim(); tel = tel.trim()
+  if (!nombre || !email || !tel) {
+    if (typeof mostrarToast === 'function') mostrarToast('Completá al menos Nombre, Email y Teléfono antes de guardar.')
+    return
+  }
+  try {
+    const apellido = nombre.split(' ').slice(1).join(' ') || ''
+    const solo_nombre = nombre.split(' ')[0] || nombre
+    await crearPaciente({ nombre: solo_nombre, apellido, email, telefono: tel })
+    if (typeof mostrarToast === 'function') mostrarToast('Paciente guardado correctamente.')
+    setTimeout(function(){ window.location.href = 'pacientes_psicologo.html' }, 1500)
+  } catch(e) {
+    if (typeof mostrarToast === 'function') mostrarToast('Error al guardar: ' + (e.message || 'intente nuevamente'))
+  }
+}
+</script>
+
+</body>
+</html>

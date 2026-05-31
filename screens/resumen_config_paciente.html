@@ -1,0 +1,289 @@
+﻿<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed": "#004653",
+                    "on-tertiary-fixed-variant": "#4c6d5a",
+                    "tertiary": "#456653",
+                    "inverse-on-surface": "#9a9d9e",
+                    "background": "#f8fafb",
+                    "tertiary-fixed": "#d7fde4",
+                    "secondary": "#2b6775",
+                    "on-primary-fixed-variant": "#1d5e6d",
+                    "surface-bright": "#f8fafb",
+                    "surface-container-highest": "#dce4e6",
+                    "on-tertiary": "#e6ffee",
+                    "primary": "#296777",
+                    "on-secondary-fixed-variant": "#266372",
+                    "on-background": "#2c3436",
+                    "tertiary-container": "#d7fde4",
+                    "primary-fixed": "#a8e3f6",
+                    "on-surface-variant": "#596063",
+                    "tertiary-dim": "#395a48",
+                    "on-secondary": "#effbff",
+                    "surface-tint": "#296777",
+                    "outline-variant": "#acb3b6",
+                    "secondary-container": "#b2ecfd",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-dim": "#1b5a69",
+                    "surface-container-low": "#f0f4f6",
+                    "inverse-primary": "#a8e3f6",
+                    "on-primary": "#f0fbff",
+                    "error-container": "#fa746f",
+                    "surface-container": "#eaeff0",
+                    "error-dim": "#67040d",
+                    "surface-dim": "#d4dbde",
+                    "on-primary-fixed": "#00404d",
+                    "outline": "#747c7e",
+                    "error": "#a83836",
+                    "primary-dim": "#195a6a",
+                    "primary-container": "#a8e3f6",
+                    "secondary-fixed-dim": "#a4ddef",
+                    "surface-container-high": "#e3e9eb",
+                    "primary-fixed-dim": "#9ad5e7",
+                    "surface-variant": "#dce4e6",
+                    "on-primary-container": "#0e5463",
+                    "secondary-fixed": "#b2ecfd",
+                    "on-secondary-container": "#195968",
+                    "on-tertiary-container": "#416350",
+                    "inverse-surface": "#0b0f10",
+                    "on-error": "#fff7f6",
+                    "on-surface": "#2c3436",
+                    "on-tertiary-fixed": "#2f503f",
+                    "on-error-container": "#6e0a12",
+                    "surface": "#f8fafb",
+                    "tertiary-fixed-dim": "#c9eed6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "display": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .confetti-decoration {
+            background-image: 
+                radial-gradient(circle, #296777 10%, transparent 10.5%),
+                radial-gradient(circle, #b2ecfd 10%, transparent 10.5%),
+                radial-gradient(circle, #d7fde4 10%, transparent 10.5%);
+            background-size: 20px 20px, 15px 15px, 25px 25px;
+            background-position: 0 0, 10px 10px, 5px 20px;
+            opacity: 0.15;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<nav class="flex justify-between items-center w-full px-6 py-4 bg-[#f8fafb] dark:bg-slate-950 sticky top-0 z-50">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#296777] dark:text-[#4A90A4]" style="font-size: 28px;">spa</span>
+<span class="text-2xl font-bold tracking-tighter text-[#296777] dark:text-[#4A90A4] font-headline">SereneCare</span>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden">
+<img alt="Patient profile" class="w-full h-full object-cover" data-alt="close-up portrait of a serene woman with a peaceful expression, soft natural lighting, high-end photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaah33D9Q5nRQKjvpa6vbz97g5bvC4t0Uhrv4IBM56kKyzIVEE6ddTxmBw0zpO2_NaoyGaIfyoVO3xNfLPVG-KSRFqdpgs0yfms2bPb4rbnchARumTXFwWljEMkDG6YGSLZSIdnW0mR7V627fCQYq2hXgkr-bUb3o3eOx62BXy9dweUy6DwqG5p0H9Sts1e-jQfSZEYlRovGOPjRz-zA2x3tPQ-ZOozA7zN_waKB5LIix89KgY_eiyXHEYBA3a0opRdOM4awk4to3-"/>
+</div>
+</nav>
+<div class="bg-[#f0f4f6] dark:bg-slate-900 h-[1px] w-full"></div>
+<main class="flex-1 px-6 pt-8 pb-32 max-w-md mx-auto w-full relative overflow-hidden">
+<!-- Decoration Background (Simulating Confetti) -->
+<div class="absolute inset-0 confetti-decoration pointer-events-none -z-10 h-64"></div>
+<!-- Progress Bar -->
+<div class="mb-10">
+<div class="flex justify-between items-center mb-3">
+<span class="text-on-surface-variant font-label text-sm">Paso 3 de 3</span>
+<div class="flex items-center gap-1 text-tertiary font-semibold text-sm">
+<span class="material-symbols-outlined" style="font-size: 18px; font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Completado</span>
+</div>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full w-full bg-gradient-to-r from-primary to-secondary"></div>
+</div>
+</div>
+<!-- Hero Title -->
+<div class="text-center mb-10">
+<h1 class="text-4xl font-extrabold font-headline tracking-tighter text-on-surface mb-2">¡Todo listo!</h1>
+<p class="text-on-surface-variant text-lg">Tu camino hacia el bienestar comienza ahora mismo.</p>
+</div>
+<!-- Status Grid (Bento Style) -->
+<div class="grid grid-cols-1 gap-4 mb-10">
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 transition-all active:scale-95 border border-outline-variant/10">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-semibold text-on-surface">Perfil creado</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 transition-all active:scale-95 border border-outline-variant/10">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-semibold text-on-surface">Recordatorios activados</span>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex items-center gap-4 transition-all active:scale-95 border border-outline-variant/10">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<span class="font-semibold text-on-surface">Psicólogo asignado</span>
+</div>
+</div>
+<!-- Featured Card: Next Session -->
+<div class="bg-surface-container-lowest rounded-[1.5rem] overflow-hidden mb-10 shadow-[0_20px_40px_rgba(44,52,54,0.06)]">
+<div class="p-6">
+<span class="inline-block bg-secondary-container text-on-secondary-container text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider">Tu primera sesión</span>
+<div class="flex items-center gap-4 mb-6">
+<div class="w-16 h-16 rounded-2xl overflow-hidden ring-4 ring-surface-container-low">
+<img alt="Psychologist profile" class="w-full h-full object-cover" data-alt="professional portrait of a friendly male therapist in a bright modern office setting, warm natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt4_zwX2ShvcH2pw-tlK3VCUGUPyTv2ovhGrxKvLV4YEbUJYcCW-DiPXtmAih1E_ZWzoOdgzQcvkRGJ8F4zlGmu8yFi7h1Xhjc7R_slu9z0ES12aUEosiWtmrXwvWAH-ufththF820bEAxsxo6eOGLezNx_l2bs4T8GiPUWpKg1WdTX5Wz-w1RXv4VAU6ho3okJVcSQ3KeJYcCl9gR3DybkDlRbxVqUOJBb2M5ewylduQrbj6oVUHt-OspXbIkr0fdOofmXK5seUKb"/>
+</div>
+<div>
+<h3 class="text-xl font-bold font-headline leading-tight">Dr. Julián Ortega</h3>
+<p class="text-on-surface-variant text-sm">Psicología Clínica y Cognitiva</p>
+</div>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex items-center gap-3 text-on-surface">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+<span class="font-medium">Jueves, 24 de Octubre</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span class="font-medium">10:00 AM — 11:00 AM</span>
+</div>
+</div>
+<button class="w-full bg-surface-container-low text-primary font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined" style="font-size: 20px;">event_available</span>
+                    Añadir a mi calendario
+                </button>
+</div>
+</div>
+<!-- Quick Access Buttons -->
+<div class="grid grid-cols-1 gap-3 mb-12">
+<button class="flex items-center justify-between p-4 bg-white/70 backdrop-blur-xl border border-outline-variant/15 rounded-2xl transition-all hover:bg-white active:scale-95">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-secondary-container rounded-xl flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">dashboard</span>
+</div>
+<span class="font-semibold">Ver mi portal</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</button>
+<button class="flex items-center justify-between p-4 bg-white/70 backdrop-blur-xl border border-outline-variant/15 rounded-2xl transition-all hover:bg-white active:scale-95">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<span class="font-semibold">Hablar con IA</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</button>
+<button class="flex items-center justify-between p-4 bg-white/70 backdrop-blur-xl border border-outline-variant/15 rounded-2xl transition-all hover:bg-white active:scale-95">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-tertiary-fixed rounded-xl flex items-center justify-center text-on-tertiary-fixed">
+<span class="material-symbols-outlined">library_books</span>
+</div>
+<span class="font-semibold">Ver recursos</span>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</button>
+</div>
+<!-- Final CTA Button -->
+<div class="fixed bottom-0 left-0 w-full p-6 bg-gradient-to-t from-surface via-surface/95 to-transparent">
+<button class="w-full bg-gradient-to-br from-primary to-primary-dim text-on-primary font-bold py-4 px-8 rounded-full text-lg shadow-[0_10px_30px_rgba(41,103,119,0.2)] transition-all active:scale-90 flex items-center justify-center gap-3">
+                Ir a mi portal
+                <span class="material-symbols-outlined" style="font-size: 24px;">arrow_forward</span>
+</button>
+</div>
+</main>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+
+// Verificar sesión paciente (sin redirigir forzado, puede ser post-onboarding)
+const { data: { user } } = await supabase.auth.getUser()
+
+if (user) {
+  const { data: perfil } = await supabase.from('usuarios').select('nombre, apellido, clinica_id').eq('id', user.id).single()
+
+  if (perfil) {
+    // Próxima cita
+    const { data: cita } = await supabase.from('citas')
+      .select('fecha, hora_inicio, usuarios(nombre, apellido)')
+      .eq('paciente_id', user.id)
+      .gte('fecha', new Date().toISOString().split('T')[0])
+      .in('estado', ['confirmada', 'pendiente'])
+      .order('fecha').order('hora_inicio').limit(1).single()
+
+    if (cita) {
+      const fecha = new Date(cita.fecha + 'T00:00:00').toLocaleDateString('es-AR', {
+        weekday: 'long', day: 'numeric', month: 'long'
+      })
+      const h3El = document.querySelector('h3.text-xl.font-bold.font-headline')
+      if (h3El) h3El.textContent = `Dr/a. ${cita.usuarios?.nombre} ${cita.usuarios?.apellido}`
+      document.querySelectorAll('.flex.items-center.gap-3.text-on-surface').forEach(el => {
+        if (el.querySelector('span[class*="calendar"]')) {
+          el.querySelector('span.font-medium')?.textContent && (el.querySelector('span.font-medium').textContent = `${fecha}`)
+        }
+        if (el.querySelector('span[class*="schedule"]')) {
+          el.querySelector('span.font-medium')?.textContent && (el.querySelector('span.font-medium').textContent = `${cita.hora_inicio?.substring(0,5)} AM — ${parseInt(cita.hora_inicio) + 1}:00 AM`)
+        }
+      })
+    }
+  }
+}
+
+// Botón ir al portal
+const btnPortal = document.querySelector('button.w-full.bg-gradient-to-br')
+if (btnPortal) btnPortal.addEventListener('click', () => {
+  window.location.href = '/screens/portal_paciente_inicio.html'
+})
+
+// Accesos rápidos
+const quickBtns = document.querySelectorAll('button.flex.items-center.justify-between')
+quickBtns.forEach(btn => {
+  const label = btn.querySelector('span.font-semibold')?.textContent?.trim()
+  btn.addEventListener('click', () => {
+    if (label?.includes('portal')) window.location.href = '/screens/portal_paciente_inicio.html'
+    if (label?.includes('IA'))    window.location.href = '/screens/asistente_ia_paciente.html'
+    if (label?.includes('recursos')) window.location.href = '/screens/historial_sesiones.html'
+  })
+})
+
+// Añadir al calendario
+const btnCal = document.querySelector('button.w-full.bg-surface-container-low')
+if (btnCal) btnCal.addEventListener('click', () => alert('Función de calendario disponible próximamente'))
+</script>
+</body></html>

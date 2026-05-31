@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SereneCare — Acceso Demo Clínica</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, p.headline { font-family: 'Manrope', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+    .fade-up { animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+    @keyframes spin { to { transform:rotate(360deg) } }
+    .spin { animation: spin 0.7s linear infinite; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6" style="background: #020617;">
+
+  <div class="w-full max-w-md fade-up">
+
+    <!-- Logo -->
+    <div class="text-center mb-10">
+      <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.3);">
+        <span class="material-symbols-outlined text-4xl" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+      </div>
+      <h1 class="text-3xl font-extrabold text-white tracking-tight">SereneCare</h1>
+      <p class="text-slate-500 text-sm mt-1">Portal de Clínica</p>
+    </div>
+
+    <!-- Card -->
+    <div class="rounded-3xl p-8" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);">
+
+      <!-- Demo badge -->
+      <div class="flex items-center justify-center gap-2 px-4 py-2 rounded-full mb-7 mx-auto w-fit" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);">
+        <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+        <span class="text-teal-400 text-xs font-bold tracking-widest uppercase">Modo Demo</span>
+      </div>
+
+      <p class="text-slate-400 text-sm text-center mb-8 leading-relaxed">
+        Acceso directo al panel de Admin Clínica.<br/>
+        Sin Supabase — para desarrollo y guía de diseño.
+      </p>
+
+      <!-- Selector de perfil demo -->
+      <div class="space-y-3 mb-6">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Entrar como</p>
+
+        <label class="flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.25);" id="card-admin">
+          <input type="radio" name="perfil" value="admin_clinica" checked class="hidden"/>
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(20,184,166,0.15);">
+            <span class="material-symbols-outlined" style="color:#2dd4bf;">manage_accounts</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-bold text-white">Admin Clínica</p>
+            <p class="text-xs text-slate-500">Nazareno Hidalgo · Clínica Sol</p>
+          </div>
+          <span id="check-admin" class="material-symbols-outlined text-teal-400">check_circle</span>
+        </label>
+
+        <label class="flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all hover:border-slate-600" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);" id="card-psi">
+          <input type="radio" name="perfil" value="psicologo" class="hidden"/>
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.15);">
+            <span class="material-symbols-outlined" style="color:#a78bfa;">psychology</span>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-bold text-white">Terapeuta</p>
+            <p class="text-xs text-slate-500">Ana Martínez · Clínica Sol</p>
+          </div>
+          <span id="check-psi" class="material-symbols-outlined text-slate-700">radio_button_unchecked</span>
+        </label>
+      </div>
+
+      <!-- Botón entrar -->
+      <button id="btn-entrar" class="w-full py-4 rounded-2xl font-bold text-base transition-all hover:opacity-90 active:scale-95 flex items-center justify-center gap-2" style="background:linear-gradient(135deg,rgba(20,184,166,0.3),rgba(6,182,212,0.2));color:#2dd4bf;border:1px solid rgba(20,184,166,0.35);">
+        <span class="material-symbols-outlined">login</span>
+        Entrar al portal
+      </button>
+
+    </div>
+
+    <p class="text-center text-xs text-slate-700 mt-5 font-mono">demo_clinica.html · solo desarrollo</p>
+
+  </div>
+
+  <script>
+    var perfiles = {
+      admin_clinica: {
+        rol:        'admin_clinica',
+        nombre:     'Nazareno Hidalgo',
+        clinica_id: 'demo-clinica-sol-001',
+        clinica:    'Clínica Sol',
+      },
+      psicologo: {
+        rol:        'psicologo',
+        nombre:     'Ana Martínez',
+        clinica_id: 'demo-clinica-sol-001',
+        clinica:    'Clínica Sol',
+      }
+    }
+
+    // Toggle selección visual
+    var radios = document.querySelectorAll('input[type="radio"]')
+    radios.forEach(function(r) {
+      r.addEventListener('change', function() {
+        // reset
+        document.getElementById('card-admin').style.borderColor = 'rgba(255,255,255,0.07)'
+        document.getElementById('card-admin').style.background   = 'rgba(255,255,255,0.02)'
+        document.getElementById('card-psi').style.borderColor   = 'rgba(255,255,255,0.07)'
+        document.getElementById('card-psi').style.background    = 'rgba(255,255,255,0.02)'
+        document.getElementById('check-admin').textContent = 'radio_button_unchecked'
+        document.getElementById('check-admin').style.color = '#334155'
+        document.getElementById('check-psi').textContent  = 'radio_button_unchecked'
+        document.getElementById('check-psi').style.color  = '#334155'
+
+        if (this.value === 'admin_clinica') {
+          document.getElementById('card-admin').style.borderColor = 'rgba(20,184,166,0.35)'
+          document.getElementById('card-admin').style.background  = 'rgba(20,184,166,0.08)'
+          document.getElementById('check-admin').textContent = 'check_circle'
+          document.getElementById('check-admin').style.color = '#2dd4bf'
+        } else {
+          document.getElementById('card-psi').style.borderColor = 'rgba(139,92,246,0.35)'
+          document.getElementById('card-psi').style.background  = 'rgba(139,92,246,0.08)'
+          document.getElementById('check-psi').textContent = 'check_circle'
+          document.getElementById('check-psi').style.color = '#a78bfa'
+        }
+      })
+    })
+
+    document.getElementById('btn-entrar').addEventListener('click', function() {
+      var selected = document.querySelector('input[name="perfil"]:checked').value
+      var p = perfiles[selected]
+
+      // Guardar sesión demo en localStorage
+      localStorage.setItem('tp_rol',        p.rol)
+      localStorage.setItem('tp_nombre',     p.nombre)
+      localStorage.setItem('tp_clinica_id', p.clinica_id)
+      localStorage.setItem('tp_clinica',    p.clinica)
+      localStorage.setItem('tp_demo',       'true')
+
+      // Animación de carga
+      var btn = this
+      btn.innerHTML = '<span class="material-symbols-outlined spin">progress_activity</span> Entrando...'
+      btn.disabled = true
+
+      setTimeout(function() {
+        window.location.href = selected === 'psicologo'
+          ? 'dashboard_psicologo.html'
+          : 'dashboard_admin_clinica.html'
+      }, 800)
+    })
+  </script>
+
+</body>
+</html>

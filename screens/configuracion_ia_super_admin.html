@@ -1,0 +1,779 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#004653",
+                        "on-primary-container": "#0e5463",
+                        "inverse-primary": "#a8e3f6",
+                        "error-container": "#fa746f",
+                        "secondary": "#2b6775",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "tertiary-container": "#d7fde4",
+                        "surface-container-high": "#e3e9eb",
+                        "surface-container": "#eaeff0",
+                        "background": "#f8fafb",
+                        "secondary-dim": "#1b5a69",
+                        "surface-container-low": "#f0f4f6",
+                        "on-secondary-container": "#195968",
+                        "on-error-container": "#6e0a12",
+                        "primary": "#296777",
+                        "error": "#a83836",
+                        "outline-variant": "#acb3b6",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#dce4e6",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "outline": "#747c7e",
+                        "on-background": "#2c3436",
+                        "primary-fixed": "#a8e3f6",
+                        "primary-dim": "#195a6a",
+                        "surface-tint": "#296777",
+                        "on-secondary": "#effbff",
+                        "on-surface-variant": "#596063",
+                        "error-dim": "#67040d",
+                        "secondary-container": "#b2ecfd",
+                        "primary-container": "#a8e3f6",
+                        "on-tertiary-fixed": "#2f503f",
+                        "tertiary-dim": "#395a48",
+                        "surface-variant": "#dce4e6",
+                        "on-primary-fixed": "#00404d",
+                        "on-tertiary": "#e6ffee",
+                        "inverse-on-surface": "#9a9d9e",
+                        "on-surface": "#2c3436",
+                        "on-tertiary-container": "#416350",
+                        "secondary-fixed": "#b2ecfd",
+                        "tertiary-fixed": "#d7fde4",
+                        "on-primary": "#f0fbff",
+                        "surface": "#f8fafb",
+                        "inverse-surface": "#0b0f10",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "surface-dim": "#d4dbde",
+                        "on-secondary-fixed-variant": "#266372",
+                        "on-error": "#fff7f6",
+                        "tertiary": "#456653",
+                        "surface-bright": "#f8fafb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+        }
+        .apps-ov-glass { background: rgba(15,23,42,0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .apps-ov-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease; }
+        .apps-ov-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+        .apps-ov-card:active { transform: scale(0.96); }
+        @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+        .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+    </style>
+</head>
+<body class="bg-[#020617] text-slate-100 min-h-screen selection:bg-indigo-500/30">
+<!-- SideNavBar Anchor -->
+<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 bg-slate-900 dark:bg-[#0f172a] font-manrope tracking-tight text-slate-200 shadow-2xl shadow-slate-950/50 z-50">
+<div class="flex flex-col h-full p-6 border-r border-slate-800/20">
+<div class="mb-10 px-2">
+<span class="text-2xl font-bold tracking-tighter text-slate-50 dark:text-white">SereneCare</span>
+<p class="text-xs text-slate-500 font-medium tracking-widest mt-1 uppercase">SaaS Enterprise</p>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="dashboard_maestro_super_admin.html">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="gestion_clinicas_super_admin.html">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+<span class="font-medium">Clínicas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="revenue_super_admin.html">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-medium">Revenue</span>
+</a>
+<!-- Active Tab: AI Config -->
+<a class="flex items-center gap-3 px-4 py-3 bg-indigo-500/10 text-indigo-400 rounded-xl font-semibold transition-all duration-300" href="configuracion_ia_super_admin.html">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-medium">IA Config</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="soporte_super_admin.html">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-medium">Soporte</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="gestion_planes_super_admin.html">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-medium">Planes SaaS</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-800/40">
+<div class="flex items-center gap-3 px-4 py-3 mb-4 rounded-xl bg-emerald-500/5 text-emerald-400 text-sm font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    System Status: Healthy
+                </div>
+<a id="btn-logout" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-medium">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="pl-72 pb-32">
+<!-- TopNavBar Anchor -->
+<header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between pl-8 pr-8 w-full z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors" data-icon="search">search</span>
+<input class="bg-slate-900/50 border-none rounded-full pl-12 pr-6 py-2.5 w-full focus:ring-2 focus:ring-indigo-500/50 text-slate-200 placeholder:text-slate-600 transition-all" placeholder="Buscar parámetros de IA..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2 relative">
+
+  <!-- Notificaciones -->
+  <div class="relative">
+    <button id="btn-notifications" class="relative p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">notifications</span>
+      <span id="notif-dot" class="absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full border-2 border-slate-950"></span>
+    </button>
+    <div id="panel-notifications" class="hidden absolute right-0 top-12 w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+        <span class="font-bold text-slate-100 text-sm">Notificaciones</span>
+        <button id="btn-mark-read" class="text-xs text-indigo-400 hover:text-indigo-300">Marcar todas leídas</button>
+      </div>
+      <div id="lista-notificaciones" class="divide-y divide-slate-800 max-h-72 overflow-y-auto">
+        <p class="text-slate-500 text-sm text-center py-8">Sin notificaciones nuevas</p>
+      </div>
+      <div class="px-5 py-3 border-t border-slate-800">
+        <a href="alertas_globales_super_admin.html" class="block text-center text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Ver todas las alertas →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ajustes -->
+  <div class="relative">
+    <button id="btn-settings" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">settings</span>
+    </button>
+    <div id="panel-settings" class="hidden absolute right-0 top-12 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 p-4">
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Apariencia</p>
+      <div id="toggle-tema-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span id="icon-tema" class="material-symbols-outlined text-indigo-400">dark_mode</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Tema oscuro</p>
+            <p id="label-tema" class="text-xs text-slate-500">Activo</p>
+          </div>
+        </div>
+        <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 my-3"></div>
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Notificaciones</p>
+      <div id="toggle-email-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-blue-400">mail</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Alertas por email</p>
+            <p class="text-xs text-slate-500">Incidencias críticas</p>
+          </div>
+        </div>
+        <div id="toggle-email" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-email-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 my-3"></div>
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Seguridad</p>
+      <button id="btn-cerrar-sesiones" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/10 transition-colors text-left">
+        <span class="material-symbols-outlined text-rose-400">no_accounts</span>
+        <div>
+          <p class="text-sm font-semibold text-slate-200">Cerrar todas las sesiones</p>
+          <p class="text-xs text-slate-500">Expira todos los tokens activos</p>
+        </div>
+      </button>
+      <div id="toggle-mantenimiento-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-amber-400">construction</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Modo mantenimiento</p>
+            <p class="text-xs text-slate-500">Bloquea acceso a clínicas</p>
+          </div>
+        </div>
+        <div id="toggle-mantenimiento" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-mantenimiento-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative">
+    <button id="btn-apps" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">apps</span>
+    </button>
+    <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
+      <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+        <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
+          <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
+            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+            <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
+          </div>
+          <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+          <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
+              <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
+          </a>
+          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
+              <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
+          </a>
+          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
+              <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
+          </a>
+          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
+          </a>
+          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
+          </a>
+          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
+          </a>
+        </div>
+        <div class="mt-8 flex items-center justify-between py-4 border-t" style="border-color: rgba(255,255,255,0.07);">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-400/50 text-sm">security</span>
+            <span class="text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold">Super Administrador • Acceso Restringido</span>
+          </div>
+          <span class="text-[10px] text-slate-700 font-mono">ESC para cerrar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-slate-800">
+    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi1b2VE-elRx6_Q6bZvfJ64ZOj1lr_seM_yiQoXpgtDrtYadvM4r_N1EeYMlIIKjGFJgBa0KrnVVbYqbu7pUfshL3oT-2HSfCIeCfkS0JXtfZ8dUkz4WVt4DWgMFEmDFHTqL319iNH9hcVAKcPbvfFbZuEqCln0qtxSm6nVrWsE7merzFQmlicn3iUC8_qS7JC0k3FuBtzxbx4IB3fkYpwKbzNSKdkXZmPAAHZYEpMQKnQUHQedpNdsK3BFv_k4UOitP4ZkfMvlScK"/>
+  </div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="px-12 py-10 max-w-7xl mx-auto">
+<div class="mb-12">
+<h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">Configuración del Motor de IA</h1>
+<p class="text-slate-400 text-lg">Ajuste los parámetros del modelo lingüístico para optimizar la precisión clínica y los costes.</p>
+</div>
+<div class="grid grid-cols-12 gap-10 items-start">
+<!-- Columna Izquierda: Configuración -->
+<div class="col-span-12 lg:col-span-7 space-y-10">
+<!-- Model Selection Cards -->
+<section>
+<h2 class="text-xl font-bold text-slate-100 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-indigo-400" data-icon="neurology">neurology</span>
+                            Modelo Activo
+                        </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Card Sonnet -->
+<label class="relative cursor-pointer group">
+<input checked="" class="peer sr-only" name="model" type="radio"/>
+<div class="p-6 rounded-2xl bg-slate-900/50 border-2 border-transparent peer-checked:border-indigo-500/50 peer-checked:bg-indigo-500/5 transition-all group-hover:bg-slate-900">
+<div class="flex justify-between items-start mb-4">
+<div class="h-12 w-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</div>
+<div class="w-5 h-5 rounded-full border-2 border-slate-700 peer-checked:bg-indigo-500 peer-checked:border-indigo-500 flex items-center justify-center transition-colors">
+<div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+</div>
+<h3 class="font-bold text-slate-100 text-lg">claude-sonnet</h3>
+<p class="text-slate-400 text-sm mt-2 leading-relaxed">Balance ideal entre velocidad y razonamiento clínico. Recomendado para uso diario.</p>
+<div class="mt-6 flex items-center justify-between">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Coste</span>
+<span class="text-indigo-400 font-bold">$3.00 / 1M tokens</span>
+</div>
+</div>
+</label>
+<!-- Card Opus -->
+<label class="relative cursor-pointer group">
+<input class="peer sr-only" name="model" type="radio"/>
+<div class="p-6 rounded-2xl bg-slate-900/50 border-2 border-transparent peer-checked:border-indigo-500/50 peer-checked:bg-indigo-500/5 transition-all group-hover:bg-slate-900">
+<div class="flex justify-between items-start mb-4">
+<div class="h-12 w-12 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="w-5 h-5 rounded-full border-2 border-slate-700 peer-checked:bg-indigo-500 peer-checked:border-indigo-500 flex items-center justify-center transition-colors">
+<div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
+</div>
+</div>
+<h3 class="font-bold text-slate-100 text-lg">claude-opus</h3>
+<p class="text-slate-400 text-sm mt-2 leading-relaxed">Máxima capacidad analítica. Ideal para diagnósticos complejos y análisis profundo.</p>
+<div class="mt-6 flex items-center justify-between">
+<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Coste</span>
+<span class="text-amber-400 font-bold">$15.00 / 1M tokens</span>
+</div>
+</div>
+</label>
+</div>
+</section>
+<!-- Advanced Sliders & Toggles -->
+<section class="space-y-8 bg-slate-900/30 p-8 rounded-3xl">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+<!-- Temperature Slider -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<label class="text-sm font-semibold text-slate-300">Temperatura (Creatividad)</label>
+<span class="text-indigo-400 font-bold text-lg">0.2</span>
+</div>
+<input class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" max="1" min="0" step="0.1" type="range" value="0.2"/>
+<div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-widest">
+<span>Conservador</span>
+<span>Creativo</span>
+</div>
+</div>
+<!-- Max Tokens Slider -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<label class="text-sm font-semibold text-slate-300">Máximo de tokens por informe</label>
+<span class="text-indigo-400 font-bold text-lg">4,096</span>
+</div>
+<input class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" max="8192" min="1024" step="512" type="range" value="4096"/>
+<div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-widest">
+<span>1K</span>
+<span>8K</span>
+</div>
+</div>
+<!-- Default Language -->
+<div class="space-y-3">
+<label class="text-sm font-semibold text-slate-300 block">Idioma por defecto</label>
+<select class="w-full bg-slate-950 border-none rounded-xl px-4 py-3 text-slate-200 focus:ring-2 focus:ring-indigo-500/50">
+<option selected="">Español (España)</option>
+<option>English (US)</option>
+<option>Português</option>
+<option>Français</option>
+</select>
+</div>
+<!-- Clinical Toggle -->
+<div class="flex items-center justify-between pt-4">
+<div class="space-y-1 pr-4">
+<label class="text-sm font-bold text-slate-100 block">Modo seguro clínico activado</label>
+<p class="text-xs text-slate-500">Filtra terminología inapropiada y asegura protocolos de privacidad HIPAA.</p>
+</div>
+<label class="inline-flex relative items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-12 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+</label>
+</div>
+</div>
+</section>
+</div>
+<!-- Columna Derecha: Métricas -->
+<div class="col-span-12 lg:col-span-5 space-y-10">
+<!-- Metrics Overview -->
+<div class="glass-panel p-8 rounded-3xl space-y-8">
+<h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+<span class="material-symbols-outlined text-teal-400" data-icon="query_stats">query_stats</span>
+                            Rendimiento Mensual
+                        </h2>
+<!-- Progress Bar Tokens -->
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<span class="text-slate-400 text-sm font-medium">Consumo de Tokens</span>
+<span class="text-slate-100 font-bold">12.4M / 20M</span>
+</div>
+<div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-teal-500 to-indigo-500 w-[62%] rounded-full"></div>
+</div>
+<p class="text-xs text-slate-500 italic">Quedan 7.6M tokens antes del límite de cuota.</p>
+</div>
+<!-- Estimated Cost -->
+<div class="p-6 rounded-2xl bg-white/5 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+<span class="material-symbols-outlined" data-icon="euro">euro</span>
+</div>
+<span class="text-slate-300 font-medium">Coste Estimado</span>
+</div>
+<span class="text-2xl font-black text-white">428,50€</span>
+</div>
+<!-- Top Clinics Table -->
+<div class="space-y-4">
+<h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest">Top 5 Clínicas por Consumo</h3>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">01</div>
+<span class="text-slate-200 text-sm font-medium">Clínica Dental Serenity</span>
+</div>
+<span class="text-indigo-400 font-bold text-sm">3.2M</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">02</div>
+<span class="text-slate-200 text-sm font-medium">Centro Médico Avanzado</span>
+</div>
+<span class="text-indigo-400 font-bold text-sm">2.8M</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">03</div>
+<span class="text-slate-200 text-sm font-medium">NeuroCare Integrativo</span>
+</div>
+<span class="text-indigo-400 font-bold text-sm">1.5M</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">04</div>
+<span class="text-slate-200 text-sm font-medium">PsicoSalud Global</span>
+</div>
+<span class="text-indigo-400 font-bold text-sm">1.1M</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">05</div>
+<span class="text-slate-200 text-sm font-medium">Rehab Pro BCN</span>
+</div>
+<span class="text-indigo-400 font-bold text-sm">0.9M</span>
+</div>
+</div>
+</div>
+<!-- Usage Chart Placeholder -->
+<div class="space-y-4">
+<h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest">Uso Diario (30 días)</h3>
+<div class="h-40 w-full flex items-end gap-1.5 px-2">
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 40%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 55%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 35%"></div>
+<div class="flex-1 bg-indigo-500/40 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 75%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 50%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 45%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 60%"></div>
+<div class="flex-1 bg-indigo-500/80 hover:bg-indigo-500 transition-colors rounded-t-sm" style="height: 90%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 30%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 65%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 80%"></div>
+<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 40%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Footer CTA -->
+<footer class="fixed bottom-0 right-0 left-72 bg-slate-950/90 backdrop-blur-2xl border-t border-slate-800/50 px-12 py-6 flex items-center justify-between z-40">
+<div class="flex items-center gap-4 text-slate-400 text-sm">
+<span class="material-symbols-outlined text-amber-500" data-icon="info">info</span>
+                Los cambios se aplicarán instantáneamente a todas las instancias activas.
+            </div>
+<div class="flex gap-4">
+<button class="px-8 py-3 rounded-xl border border-slate-700 font-semibold text-slate-300 hover:bg-white/5 transition-all">
+                    Descartar
+                </button>
+<button class="px-10 py-3 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white font-bold shadow-lg shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="save" style="font-variation-settings: 'FILL' 1;">save</span>
+                    Guardar configuración global
+                </button>
+</div>
+</footer>
+</main>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btnNotif    = document.getElementById('btn-notifications')
+      var panelNotif  = document.getElementById('panel-notifications')
+      var btnSettings = document.getElementById('btn-settings')
+      var btnApps     = document.getElementById('btn-apps')
+      var panelApps   = document.getElementById('panel-apps')
+      document.body.appendChild(panelApps)
+      var panelSettings = document.getElementById('panel-settings')
+
+      function closeAll() {
+        panelNotif    && panelNotif.classList.add('hidden')
+        panelSettings && panelSettings.classList.add('hidden')
+        panelApps     && panelApps.classList.add('hidden')
+      }
+
+      btnNotif && btnNotif.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelNotif.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) panelNotif.classList.remove('hidden')
+      })
+
+      btnSettings && btnSettings.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelSettings.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) panelSettings.classList.remove('hidden')
+      })
+
+      btnApps && btnApps.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelApps.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) {
+          panelApps.classList.remove('hidden')
+          var inner = document.getElementById('apps-inner')
+          if (inner) { inner.classList.remove('apps-ov-enter'); void inner.offsetWidth; inner.classList.add('apps-ov-enter') }
+        }
+      })
+
+      document.addEventListener('click', closeAll)
+      var appsInner = document.getElementById('apps-inner')
+      appsInner && appsInner.addEventListener('click', function(e) { e.stopPropagation() })
+      var btnCloseApps = document.getElementById('btn-close-apps')
+      btnCloseApps && btnCloseApps.addEventListener('click', function(e) {
+        e.stopPropagation()
+        panelApps && panelApps.classList.add('hidden')
+      })
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && panelApps && !panelApps.classList.contains('hidden')) {
+          panelApps.classList.add('hidden')
+        }
+      })
+
+      var btnRead = document.getElementById('btn-mark-read')
+      btnRead && btnRead.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var dot = document.getElementById('notif-dot')
+        if (dot) dot.classList.add('hidden')
+        var lista = document.getElementById('lista-notificaciones')
+        if (lista) lista.innerHTML = '<p style="color:#64748b;font-size:13px;text-align:center;padding:32px">Sin notificaciones nuevas</p>'
+      })
+
+      _initSeguridad(panelSettings)
+    })
+
+    function _toastSeg(msg, warn) {
+      var t = document.createElement('div')
+      t.textContent = msg
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' + (warn ? '#92400e' : '#1e293b') + ';color:#fff;padding:12px 24px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;border:1px solid ' + (warn ? '#d97706' : '#334155') + ';box-shadow:0 4px 20px rgba(0,0,0,.4)'
+      document.body.appendChild(t)
+      setTimeout(function() { t.remove() }, 3500)
+    }
+
+    function _initSeguridad(panelSett) {
+      var btnCerrar = document.getElementById('btn-cerrar-sesiones')
+      btnCerrar && btnCerrar.addEventListener('click', function(e) {
+        e.stopPropagation()
+        if (confirm('¿Cerrar TODAS las sesiones activas? Los usuarios tendrán que volver a iniciar sesión.')) {
+          panelSett && panelSett.classList.add('hidden')
+          _toastSeg('Todas las sesiones han sido cerradas.', false)
+        }
+      })
+
+      var modoMant = localStorage.getItem('tp_modo_mantenimiento') === 'true'
+      var tRow = document.getElementById('toggle-mantenimiento-row')
+      var tBar = document.getElementById('toggle-mantenimiento')
+      var tDot = document.getElementById('toggle-mantenimiento-dot')
+
+      function syncToggle() {
+        if (!tBar || !tDot) return
+        tBar.style.background = modoMant ? '#f59e0b' : '#334155'
+        tDot.style.left       = modoMant ? '22px'   : '2px'
+        tDot.style.background = modoMant ? '#fff'   : '#94a3b8'
+      }
+      syncToggle()
+
+      tRow && tRow.addEventListener('click', function(e) {
+        e.stopPropagation()
+        modoMant = !modoMant
+        localStorage.setItem('tp_modo_mantenimiento', modoMant)
+        syncToggle()
+        _toastSeg(modoMant ? 'Modo mantenimiento ACTIVADO — Clínicas bloqueadas' : 'Modo mantenimiento desactivado', modoMant)
+      })
+      var temaOscuro = localStorage.getItem('tp_tema') !== 'claro'
+      var tRowTema = document.getElementById('toggle-tema-row')
+      var tBarTema = document.getElementById('toggle-tema')
+      var tDotTema = document.getElementById('toggle-tema-dot')
+      var iconTema = document.getElementById('icon-tema')
+      var labelTema = document.getElementById('label-tema')
+      function syncTema() {
+        if (tBarTema) tBarTema.style.background = temaOscuro ? '#6366f1' : '#334155'
+        if (tDotTema) { tDotTema.style.left = temaOscuro ? '22px' : '2px'; tDotTema.style.background = temaOscuro ? '#fff' : '#94a3b8' }
+        if (iconTema) iconTema.textContent = temaOscuro ? 'dark_mode' : 'light_mode'
+        if (labelTema) labelTema.textContent = temaOscuro ? 'Activo' : 'Desactivado'
+        document.documentElement.style.filter = temaOscuro ? '' : 'invert(1) hue-rotate(180deg)'
+      }
+      syncTema()
+      tRowTema && tRowTema.addEventListener('click', function(e) {
+        e.stopPropagation()
+        temaOscuro = !temaOscuro
+        localStorage.setItem('tp_tema', temaOscuro ? 'oscuro' : 'claro')
+        syncTema()
+      })
+      var emailNotif = localStorage.getItem('tp_email_notif') !== 'false'
+      var tRowEmail = document.getElementById('toggle-email-row')
+      var tBarEmail = document.getElementById('toggle-email')
+      var tDotEmail = document.getElementById('toggle-email-dot')
+      function syncEmail() {
+        if (tBarEmail) tBarEmail.style.background = emailNotif ? '#3b82f6' : '#334155'
+        if (tDotEmail) { tDotEmail.style.left = emailNotif ? '22px' : '2px'; tDotEmail.style.background = emailNotif ? '#fff' : '#94a3b8' }
+      }
+      syncEmail()
+      tRowEmail && tRowEmail.addEventListener('click', function(e) {
+        e.stopPropagation()
+        emailNotif = !emailNotif
+        localStorage.setItem('tp_email_notif', emailNotif)
+        syncEmail()
+        _toastSeg(emailNotif ? 'Alertas por email activadas' : 'Alertas por email desactivadas', false)
+      })
+    }
+  </script>
+
+  <script type="module">
+    import { guardaSuperAdmin, obtenerConfigIA, guardarConfigIA } from '../js/admin.js'
+    import { mostrarError, setBotonCargando } from '../js/auth.js'
+    import { supabase } from '../js/supabase-client.js'
+
+    await guardaSuperAdmin()
+
+    // ── Cargar config actual ──────────────────────────────────────
+    const config = await obtenerConfigIA()
+
+    // Rellenar campos existentes en el HTML
+    const setInput = (selector, valor) => {
+      const el = document.querySelector(selector)
+      if (!el) return
+      if (el.type === 'checkbox') el.checked = Boolean(valor)
+      else if (el.tagName === 'SELECT') el.value = valor
+      else el.value = valor
+    }
+
+    // Temperatura (slider o input number)
+    const sliderTemp = document.querySelector('input[type="range"]')
+    if (sliderTemp) {
+      sliderTemp.value = config.temperatura
+      const tempLabel = document.querySelector('[data-temperatura]') 
+        || sliderTemp.nextElementSibling
+      if (tempLabel) tempLabel.textContent = config.temperatura
+
+      sliderTemp.addEventListener('input', () => {
+        if (tempLabel) tempLabel.textContent = sliderTemp.value
+      })
+    }
+
+    // Checkboxes de módulos
+    document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
+      const labelText = cb.closest('label')?.textContent?.toLowerCase() || ''
+      if (labelText.includes('soap') || labelText.includes('nota')) cb.checked = config.notas_soap_habilitado
+      if (labelText.includes('informe') || labelText.includes('report')) cb.checked = config.informes_habilitado
+      if (labelText.includes('paciente') || labelText.includes('asistente')) cb.checked = config.asistente_paciente_habilitado
+    })
+
+    // Textarea del prompt de sistema
+    const textarea = document.querySelector('textarea')
+    if (textarea) textarea.value = config.prompt_sistema
+
+    // Select del modelo
+    const selectModelo = document.querySelector('select')
+    if (selectModelo) selectModelo.value = config.modelo
+
+    // ── Guardar configuración ─────────────────────────────────────
+    const btnGuardar = Array.from(document.querySelectorAll('button')).find(b =>
+      b.textContent.toLowerCase().includes('guardar') || b.textContent.toLowerCase().includes('save')
+    )
+
+    if (btnGuardar) {
+      btnGuardar.addEventListener('click', async () => {
+        const nuevaConfig = {
+          modelo:      selectModelo?.value || config.modelo,
+          temperatura: parseFloat(sliderTemp?.value || config.temperatura),
+          max_tokens:  config.max_tokens,
+          prompt_sistema: textarea?.value || config.prompt_sistema,
+          notas_soap_habilitado:       true,
+          informes_habilitado:         true,
+          asistente_paciente_habilitado: true,
+        }
+
+        // Leer checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+          const label = cb.closest('label')?.textContent?.toLowerCase() || ''
+          if (label.includes('soap')) nuevaConfig.notas_soap_habilitado = cb.checked
+          if (label.includes('informe')) nuevaConfig.informes_habilitado = cb.checked
+          if (label.includes('paciente')) nuevaConfig.asistente_paciente_habilitado = cb.checked
+        })
+
+        setBotonCargando(btnGuardar, true)
+        try {
+          await guardarConfigIA(nuevaConfig)
+          const ok = document.getElementById('success-msg')
+          ok.textContent = 'Configuración guardada correctamente.'
+          ok.classList.remove('hidden')
+          setTimeout(() => ok.classList.add('hidden'), 3000)
+        } catch (err) {
+          mostrarError(err.message)
+        } finally {
+          setBotonCargando(btnGuardar, false)
+        }
+      })
+    }
+
+    document.getElementById('btn-logout')?.addEventListener('click', async (e) => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      localStorage.removeItem('tp_rol')
+      localStorage.removeItem('tp_user_id')
+      localStorage.removeItem('tp_email')
+      window.location.href = 'acceso_super_admin.html'
+    })
+  </script>
+</body></html>

@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Configuración de Informe - Serene Curator AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "error": "#a83836",
+                "primary-fixed": "#a8e3f6",
+                "inverse-primary": "#a8e3f6",
+                "primary-container": "#a8e3f6",
+                "inverse-surface": "#0b0f10",
+                "secondary-fixed": "#b2ecfd",
+                "surface-container-high": "#e3e9eb",
+                "surface": "#f8fafb",
+                "tertiary-fixed-dim": "#c9eed6",
+                "on-primary": "#f0fbff",
+                "background": "#f8fafb",
+                "surface-container-lowest": "#ffffff",
+                "surface-dim": "#d4dbde",
+                "surface-bright": "#f8fafb",
+                "on-secondary-container": "#195968",
+                "surface-container-low": "#f0f4f6",
+                "on-primary-fixed": "#00404d",
+                "outline": "#747c7e",
+                "on-primary-container": "#0e5463",
+                "tertiary-fixed": "#d7fde4",
+                "surface-tint": "#296777",
+                "primary-dim": "#195a6a",
+                "outline-variant": "#acb3b6",
+                "secondary-dim": "#1b5a69",
+                "secondary-container": "#b2ecfd",
+                "on-tertiary-container": "#416350",
+                "on-tertiary-fixed-variant": "#4c6d5a",
+                "secondary": "#2b6775",
+                "primary": "#296777",
+                "inverse-on-surface": "#9a9d9e",
+                "error-dim": "#67040d",
+                "on-background": "#2c3436",
+                "error-container": "#fa746f",
+                "tertiary-dim": "#395a48",
+                "on-secondary-fixed": "#004653",
+                "on-error-container": "#6e0a12",
+                "on-tertiary": "#e6ffee",
+                "on-primary-fixed-variant": "#1d5e6d",
+                "on-tertiary-fixed": "#2f503f",
+                "on-surface": "#2c3436",
+                "on-error": "#fff7f6",
+                "tertiary": "#456653",
+                "primary-fixed-dim": "#9ad5e7",
+                "tertiary-container": "#d7fde4",
+                "surface-container": "#eaeff0",
+                "on-surface-variant": "#596063",
+                "on-secondary-fixed-variant": "#266372",
+                "secondary-fixed-dim": "#a4ddef",
+                "surface-variant": "#dce4e6",
+                "on-secondary": "#effbff",
+                "surface-container-highest": "#dce4e6"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+              },
+              "fontFamily": {
+                "headline": ["Manrope"],
+                "display": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body { background-color: #020617; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-modal { background: rgba(11, 15, 16, 0.7); backdrop-filter: blur(24px); }
+        .bg-gradient-teal { background: linear-gradient(135deg, #296777 0%, #195a6a 100%); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="font-body text-on-surface overflow-hidden">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-slate-50/80 dark:bg-slate-950/80 backdrop-blur-xl">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-slate-900 dark:text-slate-50 font-['Manrope'] tracking-tight">Serene Curator AI</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300 font-['Manrope'] tracking-tight" href="#">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-300 font-['Manrope'] tracking-tight" href="#">Pacientes</a>
+<a class="text-cyan-700 dark:text-cyan-400 font-semibold border-b-2 border-cyan-700 dark:border-cyan-400 pb-1 font-['Manrope'] tracking-tight" href="#">Informes</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-gradient-teal text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-all active:scale-95">Nuevo Informe</button>
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400 cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-full transition-colors">notifications</span>
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400 cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-full transition-colors">settings</span>
+<img alt="Avatar del psicólogo" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-800 object-cover" data-alt="professional psychologist with a calm expression in a modern office setting, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA21xiIl1bD92asB0pRJR6AO1I17u8Yo_phw4qINwZJ5ABb8Icwi6HODKKql2iorNIFCyog90mf-x4nPSVQJy-5k_rXzKwmBNU1V7MGHl3-W5B0uYbVe03T2fEtx9E690rO6C6IElUldYCr7tHbuQcDgvgJFLC-s_dXfDrFW61ARZELoi79pIvgAW55q0oE_QHT945LOYnZVOPyIJrv_iuL8LDMXCLhHT6Y7e4Y-YHvIlvBuTkzOFktIZWZMnQ4IalFGKzwSzGhKI7k"/>
+</div>
+</nav>
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-100 dark:bg-slate-900 flex flex-col p-4 gap-2 border-r border-slate-200/10 dark:border-slate-800/10 z-40 pt-20">
+<div class="mb-6 px-2">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<h2 class="font-['Manrope'] font-bold text-slate-800 dark:text-slate-100">Gestión Clínica</h2>
+</div>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold px-1">Sesión Activa</p>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 text-cyan-700 dark:text-cyan-400 rounded-xl shadow-sm font-medium cursor-pointer">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-['Inter'] text-sm">Inicio</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-xl cursor-pointer hover:translate-x-1 transition-transform duration-200">
+<span class="material-symbols-outlined">history</span>
+<span class="font-['Inter'] text-sm">Historial</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-xl cursor-pointer hover:translate-x-1 transition-transform duration-200">
+<span class="material-symbols-outlined">description</span>
+<span class="font-['Inter'] text-sm">Plantillas</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-xl cursor-pointer hover:translate-x-1 transition-transform duration-200">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-['Inter'] text-sm">IA Analytics</span>
+</div>
+<div class="flex items-center gap-3 p-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800/50 rounded-xl cursor-pointer hover:translate-x-1 transition-transform duration-200">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-['Inter'] text-sm">Ayuda</span>
+</div>
+</div>
+<div class="mt-auto p-4 bg-primary-container/10 rounded-2xl border border-primary-container/20">
+<button class="w-full bg-primary text-white py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">auto_awesome</span>
+                Generar con IA
+            </button>
+</div>
+</aside>
+<!-- Modal Backdrop -->
+<main class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+<div class="absolute inset-0 bg-[#020617]/80 backdrop-blur-md"></div>
+<!-- Centered Modal -->
+<div class="glass-modal w-full max-w-2xl rounded-[2rem] overflow-hidden shadow-2xl relative border border-white/5 animate-in fade-in zoom-in duration-300">
+<div class="p-8 md:p-10">
+<!-- Header -->
+<div class="flex justify-between items-start mb-8">
+<div>
+<h1 class="text-3xl font-extrabold text-white font-headline tracking-tight mb-1">Generar Informe Clínico IA</h1>
+<p class="text-on-surface-variant text-sm font-medium">Selecciona qué información incluir en el análisis</p>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-all">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Patient Profile Card -->
+<div class="bg-surface-container-lowest/5 rounded-2xl p-4 flex items-center gap-4 mb-10 border border-white/5">
+<img alt="Elena Rodriguez" class="w-14 h-14 rounded-full object-cover" data-alt="portrait of a professional woman with a soft, thoughtful gaze, warm interior lighting, cinematic depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGrTUDkDbuyvcRP3zanXxg_aFwoxL0fRZn0fKarfXZXTiZges6ruINa8Ij334DLFh48Udv8P6GWsEdg5l4eEkpslhH1_sTVhj6OhWdJ5r1dr9qw96O0cv2h1PmdsU26buHn_Gy-ZXHWrNEBxNQBJreZ_8VT1WM6sAVuo_WEWllwb_Q76Qvez_mCZaJWkV0-QboD2OSHjD2b1LCZ_t9FT-rpe7lgDTycV_1laGKSOzqW8_TkEyUBsbhQyg91d9-q4NOzpcvpdQ6qk6_"/>
+<div>
+<h3 class="text-lg font-bold text-white font-headline">Elena Rodríguez</h3>
+<span class="inline-flex items-center gap-1 px-3 py-1 bg-tertiary-container/10 text-tertiary-fixed-dim text-[10px] font-bold uppercase tracking-wider rounded-full border border-tertiary-container/20">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+                            12 sesiones registradas
+                        </span>
+</div>
+</div>
+<div class="space-y-8 overflow-y-auto max-h-[614px] pr-2 no-scrollbar">
+<!-- Fuentes de datos -->
+<section>
+<h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                            Fuentes de datos
+                        </h4>
+<div class="flex flex-wrap gap-2">
+<div class="px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full text-xs font-semibold cursor-pointer shadow-sm hover:translate-y-[-1px] transition-all">Notas de sesión</div>
+<div class="px-4 py-2 bg-white/5 text-on-surface-variant rounded-full text-xs font-semibold cursor-pointer border border-white/10 hover:bg-white/10 transition-all">Formulario de intake</div>
+<div class="px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full text-xs font-semibold cursor-pointer shadow-sm hover:translate-y-[-1px] transition-all">Feedback post-sesión</div>
+<div class="px-4 py-2 bg-white/5 text-on-surface-variant rounded-full text-xs font-semibold cursor-pointer border border-white/10 hover:bg-white/10 transition-all">Registros emocionales</div>
+</div>
+</section>
+<!-- Tipo de informe -->
+<section>
+<h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                            Tipo de informe
+                        </h4>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Card 1 -->
+<div class="group bg-white/5 border border-white/10 p-4 rounded-2xl cursor-pointer hover:bg-primary/20 hover:border-primary/40 transition-all">
+<span class="material-symbols-outlined text-primary mb-3 block group-hover:scale-110 transition-transform">monitoring</span>
+<h5 class="text-white text-sm font-bold mb-1">Resumen de progreso</h5>
+<p class="text-on-surface-variant text-[11px] leading-tight">Enfoque en evolución de síntomas y objetivos.</p>
+<span class="mt-3 block text-[10px] text-tertiary-fixed-dim font-medium">Est: ~45 seg</span>
+</div>
+<!-- Card 2 (Active) -->
+<div class="group bg-primary/20 border border-primary/40 p-4 rounded-2xl cursor-pointer shadow-lg shadow-primary/5">
+<span class="material-symbols-outlined text-primary-fixed mb-3 block" style="font-variation-settings: 'FILL' 1;">assignment_turned_in</span>
+<h5 class="text-white text-sm font-bold mb-1">Informe diagnóstico</h5>
+<p class="text-on-surface-variant text-[11px] leading-tight">Análisis completo según criterios clínicos.</p>
+<span class="mt-3 block text-[10px] text-tertiary-fixed-dim font-medium">Est: ~2 min</span>
+</div>
+<!-- Card 3 -->
+<div class="group bg-white/5 border border-white/10 p-4 rounded-2xl cursor-pointer hover:bg-primary/20 hover:border-primary/40 transition-all">
+<span class="material-symbols-outlined text-primary mb-3 block group-hover:scale-110 transition-transform">clinical_notes</span>
+<h5 class="text-white text-sm font-bold mb-1">Plan de tratamiento</h5>
+<p class="text-on-surface-variant text-[11px] leading-tight">Sugerencias terapéuticas personalizadas.</p>
+<span class="mt-3 block text-[10px] text-tertiary-fixed-dim font-medium">Est: ~90 seg</span>
+</div>
+</div>
+</section>
+<!-- Opciones adicionales -->
+<section>
+<h4 class="text-white text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                            Opciones adicionales
+                        </h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">format_quote</span>
+<span class="text-white text-sm font-medium">Incluir citas textuales relevantes</span>
+</div>
+<div class="w-10 h-5 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-3.5 h-3.5 bg-white rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">bar_chart</span>
+<span class="text-white text-sm font-medium">Generar gráficos de evolución emocional</span>
+</div>
+<div class="w-10 h-5 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-3.5 h-3.5 bg-white rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">person_search</span>
+<span class="text-white text-sm font-medium">Adaptar versión para el paciente</span>
+</div>
+<div class="w-10 h-5 bg-white/20 rounded-full relative flex items-center px-1">
+<div class="w-3.5 h-3.5 bg-white/40 rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Action -->
+<div class="mt-12 flex flex-col md:flex-row gap-4">
+<button class="flex-1 bg-gradient-teal text-white py-4 px-8 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:brightness-110 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                        Generar informe clínico
+                    </button>
+<button class="px-8 py-4 text-on-surface-variant font-bold hover:text-white transition-colors">
+                        Cancelar
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Content (Simulated for Depth) -->
+<div class="pl-64 pt-16 h-screen w-full bg-slate-950 flex flex-col gap-8 p-12 opacity-20 pointer-events-none">
+<div class="grid grid-cols-4 gap-6">
+<div class="h-32 bg-slate-800 rounded-3xl"></div>
+<div class="h-32 bg-slate-800 rounded-3xl"></div>
+<div class="h-32 bg-slate-800 rounded-3xl"></div>
+<div class="h-32 bg-slate-800 rounded-3xl"></div>
+</div>
+<div class="h-full bg-slate-800 rounded-[2.5rem]"></div>
+</div>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <script type="module">
+    import { guardaClinica, generarInformeIA, obtenerPaciente } from '../js/clinica.js'
+    import { mostrarError, setBotonCargando } from '../js/auth.js'
+
+    await guardaClinica()
+    const params     = new URLSearchParams(window.location.search)
+    const pacienteId = params.get('paciente')
+
+    if (pacienteId) {
+      try {
+        const p = await obtenerPaciente(pacienteId)
+        document.querySelectorAll('*').forEach(el => {
+          if (el.children.length === 0 && (el.textContent.trim() === 'Eleanor Vance' || el.textContent.trim() === 'Paciente'))
+            el.textContent = `${p.nombre} ${p.apellido}`
+        })
+      } catch {}
+    }
+
+    const btnGenerar = Array.from(document.querySelectorAll('button')).find(b =>
+      b.textContent.toLowerCase().includes('generar') || b.textContent.toLowerCase().includes('crear informe'))
+
+    if (btnGenerar) {
+      btnGenerar.addEventListener('click', async () => {
+        if (!pacienteId) { mostrarError('No se especificó el paciente.'); return }
+        const tipoSelect = document.querySelector('select')
+        const contextoTA = document.querySelector('textarea')
+        const tipo       = tipoSelect?.value || 'progreso'
+        const contexto   = contextoTA?.value || ''
+
+        setBotonCargando(btnGenerar, true)
+        try {
+          location.href = `generando_informe.html?paciente=${pacienteId}&tipo=${tipo}&contexto=${encodeURIComponent(contexto)}`
+        } finally { setBotonCargando(btnGenerar, false) }
+      })
+    }
+
+    document.querySelectorAll('button').forEach(b => {
+      if (b.textContent.toLowerCase().includes('volver')) b.addEventListener('click', () => history.back())
+    })
+  </script>
+</body></html>

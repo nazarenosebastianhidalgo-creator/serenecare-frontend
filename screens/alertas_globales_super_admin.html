@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #020617; color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+</style>
+</head>
+<body class="min-h-screen flex overflow-hidden">
+
+<!-- Sidebar -->
+<aside class="w-72 bg-slate-900 border-r border-slate-800/20 flex flex-col px-6 py-8 fixed h-full z-30">
+  <div class="mb-10 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
+      <span class="material-symbols-outlined text-white filled">health_and_safety</span>
+    </div>
+    <div>
+      <h1 class="text-xl font-extrabold text-white font-headline tracking-tight">SereneCare</h1>
+      <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">SaaS Enterprise</p>
+    </div>
+  </div>
+  <nav class="flex-1 space-y-2">
+    <a href="dashboard_maestro_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">dashboard</span><span class="font-medium">Dashboard</span>
+    </a>
+    <a href="gestion_clinicas_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">medical_services</span><span class="font-medium">Clinics</span>
+    </a>
+    <a href="revenue_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">payments</span><span class="font-medium">Revenue</span>
+    </a>
+    <a href="configuracion_ia_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">settings_input_component</span><span class="font-medium">AI Config</span>
+    </a>
+    <a href="soporte_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">contact_support</span><span class="font-medium">Support</span>
+    </a>
+    <a href="sugerencias_mejora.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+      <span class="material-symbols-outlined">lightbulb</span><span class="font-medium">Sugerencias</span>
+    </a>
+  </nav>
+  <div class="mt-auto pt-6 border-t border-slate-800/40">
+    <div class="p-4 bg-slate-800/50 rounded-2xl mb-4">
+      <div class="flex items-center gap-2 text-xs font-bold text-teal-400 uppercase tracking-widest mb-1">
+        <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>System Healthy
+      </div>
+      <p id="uptime-text" class="text-[10px] text-slate-500">Verificando nodos...</p>
+    </div>
+    <button id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-rose-400 rounded-xl transition-all">
+      <span class="material-symbols-outlined">logout</span><span class="font-medium">Logout</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Header -->
+<header class="fixed top-0 left-72 right-0 h-20 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/10 flex items-center justify-between px-8 z-20">
+  <div>
+    <h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Alertas Globales</h2>
+    <p class="text-slate-500 text-xs">Centro de notificaciones — Solo Super Admin</p>
+  </div>
+  <div class="flex items-center gap-3">
+    <span id="contador-alertas" class="bg-indigo-500/20 text-indigo-400 text-xs font-bold px-3 py-1 rounded-full">Cargando...</span>
+    <button id="btn-mark-all" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold px-4 py-2 rounded-xl hover:bg-indigo-500/10 transition-colors">Marcar todas leídas</button>
+    <button onclick="window.location.href='dashboard_maestro_super_admin.html'" class="p-2 rounded-xl hover:bg-slate-800 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">close</span>
+    </button>
+  </div>
+</header>
+
+<!-- Main layout -->
+<main class="ml-72 mt-20 flex flex-1 min-h-[calc(100vh-5rem)]">
+
+  <!-- Background dimmed content -->
+  <div class="flex-1 p-10 opacity-30 pointer-events-none select-none">
+    <h2 class="text-4xl font-extrabold text-white mb-8 tracking-tighter font-headline">Plataforma Overview</h2>
+    <div class="grid grid-cols-3 gap-8">
+      <div class="bg-slate-900/50 aspect-video rounded-3xl"></div>
+      <div class="bg-slate-900/50 aspect-video rounded-3xl"></div>
+      <div class="bg-slate-900/50 aspect-video rounded-3xl"></div>
+    </div>
+  </div>
+
+  <!-- Panel de alertas -->
+  <div class="w-[440px] flex-shrink-0 border-l border-slate-800/40 bg-[#020617] flex flex-col h-[calc(100vh-5rem)] sticky top-0">
+
+    <!-- Filtros -->
+    <div class="px-6 pt-6 pb-4">
+      <div class="flex gap-2 overflow-x-auto pb-1">
+        <button data-filtro="todas"    class="filtro-btn activo px-4 py-2 bg-indigo-500 text-white rounded-full text-xs font-bold whitespace-nowrap">Todas</button>
+        <button data-filtro="sistema"  class="filtro-btn px-4 py-2 bg-slate-900 text-slate-400 rounded-full text-xs font-bold whitespace-nowrap hover:bg-slate-800 transition-colors">Sistema</button>
+        <button data-filtro="clinicas" class="filtro-btn px-4 py-2 bg-slate-900 text-slate-400 rounded-full text-xs font-bold whitespace-nowrap hover:bg-slate-800 transition-colors">Clínicas</button>
+        <button data-filtro="pagos"    class="filtro-btn px-4 py-2 bg-slate-900 text-slate-400 rounded-full text-xs font-bold whitespace-nowrap hover:bg-slate-800 transition-colors">Pagos</button>
+      </div>
+    </div>
+
+    <!-- Lista -->
+    <div id="lista-alertas" class="flex-1 overflow-y-auto px-5 pb-4 space-y-4">
+      <p class="text-slate-500 text-sm text-center py-12">Cargando alertas...</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-4 bg-slate-900/20 border-t border-slate-800/40 flex items-center justify-between">
+      <span id="sync-text" class="text-slate-500 text-[11px] italic">Sincronizando...</span>
+      <button id="btn-refresh" class="text-indigo-400 text-xs font-bold hover:underline flex items-center gap-1">
+        <span class="material-symbols-outlined text-sm">refresh</span> Actualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- FAB terminal -->
+  <div class="fixed bottom-10 right-[460px] z-30">
+    <button onclick="window.location.href='soporte_super_admin.html'" class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-full flex items-center justify-center text-white shadow-2xl shadow-indigo-950/50 hover:scale-110 transition-transform">
+      <span class="material-symbols-outlined filled">terminal</span>
+    </button>
+  </div>
+
+</main>
+
+<script type="module">
+  import { guardaSuperAdmin } from '../js/admin.js'
+  import { supabase } from '../js/supabase-client.js'
+
+  await guardaSuperAdmin()
+
+  // ── Estado ────────────────────────────────────────────────────────
+  let todasAlertas = []
+  let filtroActivo = 'todas'
+
+  // ── Helpers ───────────────────────────────────────────────────────
+  const lista = document.getElementById('lista-alertas')
+  const contador = document.getElementById('contador-alertas')
+
+  function tiempoRelativo(fecha) {
+    const diff = (Date.now() - new Date(fecha)) / 1000
+    if (diff < 60)    return 'hace unos segundos'
+    if (diff < 3600)  return `hace ${Math.floor(diff/60)} min`
+    if (diff < 86400) return `hace ${Math.floor(diff/3600)}h`
+    return `hace ${Math.floor(diff/86400)} días`
+  }
+
+  function colorCategoria(cat) {
+    return { sistema:'amber', clinicas:'teal', pagos:'indigo', error:'red' }[cat] || 'slate'
+  }
+
+  function iconoCategoria(cat) {
+    return { sistema:'dns', clinicas:'add_business', pagos:'payments', error:'psychology' }[cat] || 'info'
+  }
+
+  function accionCategoria(alerta) {
+    if (alerta.categoria === 'clinicas' && alerta.clinica_id)
+      return `gestion_clinicas_super_admin.html`
+    if (alerta.categoria === 'pagos')
+      return 'revenue_super_admin.html'
+    if (alerta.categoria === 'sistema' || alerta.categoria === 'error')
+      return 'configuracion_ia_super_admin.html'
+    return 'dashboard_maestro_super_admin.html'
+  }
+
+  function renderAlertas(alertas) {
+    if (alertas.length === 0) {
+      lista.innerHTML = `<div class="text-center py-16"><span class="material-symbols-outlined text-4xl text-slate-700">notifications_off</span><p class="text-slate-500 mt-3 text-sm">Sin alertas en esta categoría</p></div>`
+      return
+    }
+    lista.innerHTML = alertas.map(a => {
+      const color = colorCategoria(a.categoria)
+      const icono = iconoCategoria(a.categoria)
+      const urgente = ['sistema','error'].includes(a.categoria)
+      const btnColor = urgente
+        ? `background:${color === 'red' ? '#ef4444' : '#f59e0b'};color:${color === 'red' ? '#fff' : '#1c1917'};`
+        : 'background:rgba(255,255,255,.05);color:#e2e8f0;border:1px solid rgba(255,255,255,.08);'
+      return `
+        <div class="relative group" data-categoria="${a.categoria}">
+          ${urgente ? `<div class="absolute -left-2 top-0 bottom-0 w-1 bg-${color}-500 rounded-full"></div>` : ''}
+          <div style="background:rgba(15,23,42,.4);border:1px solid rgba(51,65,85,.2);border-radius:16px;padding:20px;transition:background .2s" onmouseover="this.style.background='rgba(51,65,85,.3)'" onmouseout="this.style.background='rgba(15,23,42,.4)'">
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:40px;height:40px;border-radius:12px;background:rgba(${color === 'teal' ? '20,184,166' : color === 'amber' ? '245,158,11' : color === 'red' ? '239,68,68' : '99,102,241'},.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:${color === 'teal' ? '#2dd4bf' : color === 'amber' ? '#fbbf24' : color === 'red' ? '#f87171' : '#818cf8'}">
+                <span class="material-symbols-outlined filled">${icono}</span>
+              </div>
+              <div style="flex:1">
+                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${color === 'teal' ? '#2dd4bf' : color === 'amber' ? '#fbbf24' : color === 'red' ? '#f87171' : '#94a3b8'};margin-bottom:4px">${a.categoria}</p>
+                <h3 style="color:#f1f5f9;font-weight:600;line-height:1.4;margin-bottom:6px">${a.titulo}</h3>
+                <p style="color:#64748b;font-size:13px;margin-bottom:6px">${a.descripcion}</p>
+                <p style="color:#475569;font-size:11px;margin-bottom:14px">${tiempoRelativo(a.fecha)}</p>
+                <button onclick="window.location.href='${accionCategoria(a)}'" style="${btnColor}width:100%;padding:10px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                  Gestionar Incidencia →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>`
+    }).join('')
+  }
+
+  // ── Construir alertas desde datos reales ──────────────────────────
+  async function cargarAlertas() {
+    lista.innerHTML = `<p style="text-align:center;padding:48px;color:#475569;font-size:14px">Cargando...</p>`
+    const ahora = new Date()
+
+    const [{ data: clinicas }, { data: usuarios }] = await Promise.all([
+      supabase.from('clinicas').select('id, nombre, status, created_at, plan_id, planes(nombre, precio_mensual)').order('created_at', { ascending: false }),
+      supabase.from('usuarios').select('id, rol, created_at').eq('rol', 'admin_clinica'),
+    ])
+
+    todasAlertas = []
+
+    // ── Alertas de clínicas ────────────────────────────────────────
+    ;(clinicas || []).forEach(c => {
+      const diasDesdeCreacion = (ahora - new Date(c.created_at)) / 86400000
+      if (diasDesdeCreacion <= 7) {
+        todasAlertas.push({
+          categoria: 'clinicas',
+          titulo: `Nueva clínica registrada: ${c.nombre}`,
+          descripcion: `Plan: ${c.planes?.nombre || 'Sin plan'}. Accede para verificar el onboarding.`,
+          fecha: c.created_at,
+          clinica_id: c.id,
+          urgencia: 0,
+        })
+      }
+      if (c.status === 'suspendida') {
+        todasAlertas.push({
+          categoria: 'clinicas',
+          titulo: `Clínica suspendida: ${c.nombre}`,
+          descripcion: `Esta clínica tiene el acceso suspendido. Revisar estado de pago.`,
+          fecha: c.created_at,
+          clinica_id: c.id,
+          urgencia: 2,
+        })
+      }
+    })
+
+    // ── Alertas de pagos ───────────────────────────────────────────
+    const activas = (clinicas || []).filter(c => c.status === 'activa' && c.planes?.precio_mensual > 0)
+    if (activas.length > 0) {
+      todasAlertas.push({
+        categoria: 'pagos',
+        titulo: `${activas.length} suscripciones activas generando MRR`,
+        descripcion: `MRR total: $${activas.reduce((s, c) => s + Number(c.planes.precio_mensual), 0).toFixed(0)}. Pagos al corriente.`,
+        fecha: new Date(ahora - 3600000).toISOString(),
+        urgencia: 0,
+      })
+    }
+
+    const sinPlan = (clinicas || []).filter(c => c.status === 'trial' && !c.plan_id)
+    if (sinPlan.length > 0) {
+      todasAlertas.push({
+        categoria: 'pagos',
+        titulo: `${sinPlan.length} clínicas en trial sin plan asignado`,
+        descripcion: `Estas clínicas pueden convertirse en clientes de pago. Revisar estrategia de conversión.`,
+        fecha: new Date(ahora - 7200000).toISOString(),
+        urgencia: 1,
+      })
+    }
+
+    // ── Alertas de sistema (estado Supabase) ───────────────────────
+    todasAlertas.push({
+      categoria: 'sistema',
+      titulo: 'Conexión a base de datos operativa',
+      descripcion: `Supabase respondiendo correctamente. ${(clinicas || []).length} registros accesibles.`,
+      fecha: new Date().toISOString(),
+      urgencia: 0,
+    })
+
+    // Alerta si no hay clínicas activas
+    const totalActivas = (clinicas || []).filter(c => c.status === 'activa').length
+    if (totalActivas === 0) {
+      todasAlertas.push({
+        categoria: 'error',
+        titulo: 'Sin clínicas activas detectadas',
+        descripcion: 'No hay clínicas con estado "activa". Revisar conversiones desde trial.',
+        fecha: new Date().toISOString(),
+        urgencia: 3,
+      })
+    }
+
+    // Ordenar por urgencia desc, luego fecha desc
+    todasAlertas.sort((a, b) => b.urgencia - a.urgencia || new Date(b.fecha) - new Date(a.fecha))
+
+    aplicarFiltro()
+
+    contador.textContent = `${todasAlertas.length} alertas`
+    document.getElementById('sync-text').textContent = `Sincronizado ${tiempoRelativo(new Date().toISOString())}`
+    document.getElementById('uptime-text').textContent = `${(clinicas || []).length} clínicas accesibles`
+  }
+
+  function aplicarFiltro() {
+    const filtradas = filtroActivo === 'todas'
+      ? todasAlertas
+      : todasAlertas.filter(a => a.categoria === filtroActivo || (filtroActivo === 'sistema' && a.categoria === 'error'))
+    renderAlertas(filtradas)
+  }
+
+  // ── Filtros ───────────────────────────────────────────────────────
+  document.querySelectorAll('.filtro-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filtro-btn').forEach(b => {
+        b.style.background = '#1e293b'
+        b.style.color = '#94a3b8'
+        b.classList.remove('activo')
+      })
+      btn.style.background = '#6366f1'
+      btn.style.color = '#fff'
+      btn.classList.add('activo')
+      filtroActivo = btn.dataset.filtro
+      aplicarFiltro()
+    })
+  })
+
+  // ── Marcar leídas ─────────────────────────────────────────────────
+  document.getElementById('btn-mark-all').addEventListener('click', () => {
+    todasAlertas = []
+    renderAlertas([])
+    contador.textContent = '0 alertas'
+  })
+
+  // ── Actualizar ────────────────────────────────────────────────────
+  document.getElementById('btn-refresh').addEventListener('click', cargarAlertas)
+
+  // ── Realtime: nuevas clínicas ─────────────────────────────────────
+  supabase.channel('alertas-clinicas')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'clinicas' }, payload => {
+      todasAlertas.unshift({
+        categoria: 'clinicas',
+        titulo: `Nueva clínica: ${payload.new.nombre}`,
+        descripcion: 'Acaba de completar el registro. Requiere verificación.',
+        fecha: new Date().toISOString(),
+        clinica_id: payload.new.id,
+        urgencia: 1,
+      })
+      contador.textContent = `${todasAlertas.length} alertas`
+      aplicarFiltro()
+    })
+    .subscribe()
+
+  // ── Logout ────────────────────────────────────────────────────────
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+    await supabase.auth.signOut()
+    localStorage.removeItem('tp_rol')
+    localStorage.removeItem('tp_user_id')
+    localStorage.removeItem('tp_email')
+    window.location.href = 'acceso_super_admin.html'
+  })
+
+  await cargarAlertas()
+</script>
+</body>
+</html>

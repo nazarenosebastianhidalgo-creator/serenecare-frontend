@@ -1,0 +1,375 @@
+﻿<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#596063",
+                    "tertiary": "#456653",
+                    "tertiary-fixed-dim": "#c9eed6",
+                    "surface-bright": "#f8fafb",
+                    "on-surface": "#2c3436",
+                    "on-tertiary": "#e6ffee",
+                    "on-secondary-fixed": "#004653",
+                    "on-tertiary-container": "#416350",
+                    "secondary": "#2b6775",
+                    "on-primary-fixed": "#00404d",
+                    "error": "#a83836",
+                    "on-secondary-container": "#195968",
+                    "inverse-surface": "#0b0f10",
+                    "inverse-on-surface": "#9a9d9e",
+                    "surface-tint": "#296777",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#dce4e6",
+                    "tertiary-dim": "#395a48",
+                    "tertiary-container": "#d7fde4",
+                    "surface-dim": "#d4dbde",
+                    "secondary-fixed": "#b2ecfd",
+                    "primary-fixed": "#a8e3f6",
+                    "secondary-dim": "#1b5a69",
+                    "surface-container-low": "#f0f4f6",
+                    "error-dim": "#67040d",
+                    "on-tertiary-fixed": "#2f503f",
+                    "surface-container-high": "#e3e9eb",
+                    "outline-variant": "#acb3b6",
+                    "on-secondary": "#effbff",
+                    "surface": "#f8fafb",
+                    "on-background": "#2c3436",
+                    "primary-dim": "#195a6a",
+                    "on-primary-fixed-variant": "#1d5e6d",
+                    "surface-variant": "#dce4e6",
+                    "error-container": "#fa746f",
+                    "outline": "#747c7e",
+                    "secondary-container": "#b2ecfd",
+                    "on-tertiary-fixed-variant": "#4c6d5a",
+                    "surface-container": "#eaeff0",
+                    "tertiary-fixed": "#d7fde4",
+                    "on-error-container": "#6e0a12",
+                    "on-error": "#fff7f6",
+                    "inverse-primary": "#a8e3f6",
+                    "primary-fixed-dim": "#9ad5e7",
+                    "on-primary-container": "#0e5463",
+                    "background": "#f8fafb",
+                    "secondary-fixed-dim": "#a4ddef",
+                    "on-secondary-fixed-variant": "#266372",
+                    "primary-container": "#a8e3f6",
+                    "primary": "#296777",
+                    "on-primary": "#f0fbff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "display": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafb; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #296777 0%, #195a6a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #296777 0%, #195a6a 100%);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Top Navigation Bar (Shared Component Logic) -->
+<header class="bg-white/70 backdrop-blur-xl font-['Manrope'] tracking-tight shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold text-slate-900 font-['Manrope']">SereneCare</span>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-slate-500 hover:text-[#4A90A4] transition-colors" href="#">Dashboard</a>
+<a class="text-slate-500 hover:text-[#4A90A4] transition-colors" href="#">Analytics</a>
+<a class="text-slate-500 hover:text-[#4A90A4] transition-colors" href="#">Schedule</a>
+<a class="text-[#4A90A4] font-semibold border-b-2 border-[#4A90A4]" href="#">Patients</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-slate-500 hover:bg-slate-50 p-2 rounded-full transition-colors">notifications</button>
+<button class="material-symbols-outlined text-slate-500 hover:bg-slate-50 p-2 rounded-full transition-colors">settings</button>
+<button class="bg-[#4A90A4] text-white px-5 py-2 rounded-full font-medium hover:opacity-90 transition-opacity">Publish Profile</button>
+<img alt="Psychologist Profile" class="w-10 h-10 rounded-full object-cover" data-alt="Professional headshot of a female psychologist with a warm and empathetic expression, soft studio lighting, neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfEJ1xx_zrtSHB9Np2vTHLyGMuCz7i-80mburQVijxouAgj46xOMmwmoGzPqn6M8HKGdYhRaI71yCyRVERqzuEei5Jx_KhwjWOEMLc_0cazKuJC6o7corj7EsnL8hWQ4-h9XP-ymiu6E8jDtnMcon-Jlyvv0pFzjSPpGqOQ9bCPcw1XSvjeN3k-CHMOD1B1eOvbsNZjQLtMM3PAYZl7P4X4eu04MPtzDNwzYLyvdoxOvKtUEjy0umDE_nKIQ-BNu7DWjErkec7dA9L"/>
+</div>
+</div>
+</header>
+<!-- Preview Context Header -->
+<div class="w-full bg-surface-container-low py-3 px-8 flex justify-between items-center">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary font-medium transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+            Volver a editar
+        </button>
+<div class="flex items-center gap-2 px-4 py-1.5 bg-tertiary-container text-on-tertiary-container rounded-full text-sm font-semibold">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">visibility</span>
+            Así te ven los pacientes
+        </div>
+</div>
+<main class="max-w-7xl mx-auto px-8 py-12">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+<!-- Left Column: Hero Content & Tabs -->
+<div class="lg:col-span-8 space-y-12">
+<!-- Hero Section: Editorial Layout -->
+<section class="flex flex-col md:flex-row gap-8 items-center md:items-end">
+<div class="relative group">
+<div class="absolute inset-0 bg-primary/10 rounded-3xl -rotate-3 transition-transform group-hover:rotate-0"></div>
+<img alt="Dr. Julianne Moore" class="relative w-64 h-80 object-cover rounded-3xl shadow-lg" data-alt="Modern professional portrait of a woman in business casual attire smiling warmly against a soft office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzF5BNh5BDYV5zblsjrPaUojUwUnDmOQlxvwGwBgykPQdZxse3cunMMEesRYZy9lN_kEdBDUx--rRi-T7wEyLNUp6L8p5hR4v_4Vl0KHzGRCDPs5zadkn9iln8cp42Mzy1OFK4HuinXzKND184SpWfP6HNwwf1AMghKqo9n8m4dVub3Z8TmdpeNlUzP2oeVqyrKOmGRZ7FRJn0N9C0JzpcbOUGzd9R5UUCHQnUf2bx8CxrA4MmTv-WraylNtRfGf4I5Y524Qho3k7j"/>
+</div>
+<div class="flex-1 space-y-4 text-center md:text-left">
+<div class="space-y-1">
+<div class="flex items-center justify-center md:justify-start gap-2">
+<h1 class="text-4xl font-extrabold font-display tracking-tight text-on-surface">Dra. Julianne Moore</h1>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-on-surface-variant font-medium">Colegiado: M-34281 • Psicología Clínica y Cognitivo-Conductual</p>
+</div>
+<div class="flex flex-wrap gap-2 justify-center md:justify-start">
+<span class="px-3 py-1 bg-surface-container-high text-on-surface rounded-full text-xs font-semibold">Ansiedad</span>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface rounded-full text-xs font-semibold">Depresión</span>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface rounded-full text-xs font-semibold">Terapia de Pareja</span>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface rounded-full text-xs font-semibold">Mindfulness</span>
+</div>
+<div class="flex items-center justify-center md:justify-start gap-6 pt-4">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-yellow-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-on-surface">4.9</span>
+<span class="text-on-surface-variant text-sm">(124 reseñas)</span>
+</div>
+<div class="h-4 w-px bg-outline-variant/30"></div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary">payments</span>
+<span class="font-bold text-on-surface">75€</span>
+<span class="text-on-surface-variant text-sm">/ sesión</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Navigation Tabs -->
+<section class="space-y-8">
+<div class="flex gap-8 border-b border-outline-variant/10">
+<button class="pb-4 text-primary font-bold border-b-2 border-primary">Sobre mí</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface font-medium transition-colors">Formación</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface font-medium transition-colors">Disponibilidad</button>
+</div>
+<!-- Content: Sobre mí (Bio) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-surface-container-lowest p-8 rounded-3xl space-y-4">
+<h3 class="text-xl font-bold font-display text-on-surface">Mi Enfoque</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                                Mi práctica se centra en crear un espacio seguro donde la curiosidad supere al juicio. Utilizo un enfoque integrador, combinando la Terapia Cognitivo-Conductual con técnicas de Tercera Generación para ayudarte a navegar los desafíos de la vida moderna.
+                            </p>
+</div>
+<div class="bg-surface-container-lowest p-8 rounded-3xl space-y-4">
+<h3 class="text-xl font-bold font-display text-on-surface">Biografía</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                                Con más de 12 años de experiencia clínica, he acompañado a cientos de personas en procesos de cambio personal. Mi objetivo es proporcionarte herramientas prácticas y profundas para mejorar tu bienestar emocional.
+                            </p>
+</div>
+</div>
+<!-- Content: Disponibilidad Grid (Preview) -->
+<div class="space-y-6">
+<div class="flex justify-between items-center">
+<h3 class="text-xl font-bold font-display text-on-surface">Próximos huecos disponibles</h3>
+<button class="text-primary text-sm font-bold flex items-center gap-1">
+                                Ver calendario completo <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest border border-outline-variant/10 p-4 rounded-2xl text-center group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Mañana</p>
+<p class="text-lg font-bold text-on-surface">09:00</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant/10 p-4 rounded-2xl text-center group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Mañana</p>
+<p class="text-lg font-bold text-on-surface">11:30</p>
+</div>
+<div class="bg-tertiary-container/30 border border-tertiary-container p-4 rounded-2xl text-center">
+<p class="text-xs font-bold text-tertiary uppercase tracking-wider mb-1">Jueves</p>
+<p class="text-lg font-bold text-on-surface">16:00</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant/10 p-4 rounded-2xl text-center group hover:bg-primary/5 transition-colors cursor-pointer">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Viernes</p>
+<p class="text-lg font-bold text-on-surface">10:00</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sticky Booking Card -->
+<aside class="lg:col-span-4 lg:sticky lg:top-28">
+<div class="bg-surface-container-lowest rounded-3xl p-8 shadow-xl shadow-on-surface/5 border border-outline-variant/5 space-y-8">
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<div>
+<p class="text-on-surface-variant text-sm font-medium">Próxima cita libre</p>
+<p class="text-xl font-bold text-on-surface">Mañana, 09:00h</p>
+</div>
+<div class="text-right">
+<p class="text-2xl font-black text-primary">75€</p>
+<p class="text-xs text-on-surface-variant">Sesión 50 min</p>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-2xl space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">videocam</span>
+</div>
+<span class="text-sm font-medium text-on-surface">Videoconsulta online</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">event_available</span>
+</div>
+<span class="text-sm font-medium text-on-surface">Confirmación inmediata</span>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<button class="w-full btn-gradient text-white py-4 rounded-3xl font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                            Reservar cita
+                        </button>
+<p class="text-center text-xs text-on-surface-variant px-4">
+                            Sin compromiso de permanencia. Puedes cancelar hasta 24h antes.
+                        </p>
+</div>
+<div class="h-px bg-outline-variant/10"></div>
+<div class="space-y-4">
+<h4 class="font-bold text-on-surface">Otras especialidades</h4>
+<ul class="space-y-3">
+<li class="flex items-center justify-between text-sm">
+<span class="text-on-surface-variant">Primera sesión informativa</span>
+<span class="font-bold text-on-surface">Gratis (15 min)</span>
+</li>
+<li class="flex items-center justify-between text-sm">
+<span class="text-on-surface-variant">Bono 5 sesiones</span>
+<span class="font-bold text-on-surface">325€</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Secondary Info: Quick Contact -->
+<div class="mt-6 px-4">
+<div class="flex items-center gap-4 text-on-surface-variant">
+<div class="w-10 h-10 rounded-full border border-outline-variant/20 flex items-center justify-center">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div>
+<p class="text-xs font-bold uppercase tracking-widest">Contacto</p>
+<p class="text-sm font-medium">julianne.care@serenecare.com</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Success Message Ghost Toast -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface py-3 px-6 rounded-full shadow-2xl flex items-center gap-3 z-[60]">
+<span class="material-symbols-outlined text-tertiary-fixed-dim">check_circle</span>
+<span class="text-sm font-medium">Perfil optimizado para buscadores activado</span>
+</div>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+
+const params = new URLSearchParams(location.search)
+const psicologoId = params.get('psicologo_id')
+
+// Cargar perfil del psicólogo
+async function cargarPerfil() {
+  let uid = psicologoId
+  if (!uid) {
+    const { data: { user } } = await supabase.auth.getUser()
+    uid = user?.id
+  }
+  if (!uid) return
+
+  const { data: p } = await supabase.from('usuarios')
+    .select('id, nombre, apellido, email, clinica_id, clinicas(nombre, config_ia)')
+    .eq('id', uid).single()
+  if (!p) return
+
+  const nombreCompleto = `Dr/a. ${p.nombre} ${p.apellido}`
+  const clinicaNombre = p.clinicas?.nombre || 'Clínica'
+  const configIA = p.clinicas?.config_ia || {}
+
+  // Nombre
+  document.querySelectorAll('h1').forEach(el => {
+    if (el.textContent.includes('Julianne Moore')) el.childNodes[0].textContent = nombreCompleto
+  })
+  // Email
+  document.querySelectorAll('p').forEach(el => {
+    if (el.textContent.includes('@serenecare.com') || el.textContent.includes('@')) {
+      if (el.textContent.includes('julianne')) el.textContent = p.email
+    }
+  })
+  // Clínica
+  document.querySelectorAll('.text-on-surface-variant').forEach(el => {
+    if (el.textContent.includes('M-34281')) el.textContent = `Clínica: ${clinicaNombre}`
+  })
+
+  // Horarios disponibles (próximas citas libres)
+  const { data: citas } = await supabase.from('citas')
+    .select('fecha, hora_inicio')
+    .eq('psicologo_id', uid)
+    .gte('fecha', new Date().toISOString().split('T')[0])
+    .in('estado', ['pendiente'])
+    .order('fecha').order('hora_inicio').limit(4)
+
+  const slots = document.querySelectorAll('.grid-cols-2.md\\:grid-cols-4 > div')
+  citas?.forEach((c, i) => {
+    if (!slots[i]) return
+    const pEl = slots[i].querySelector('p:first-child')
+    const h3El = slots[i].querySelector('p.text-lg')
+    if (pEl) pEl.textContent = new Date(c.fecha + 'T00:00:00').toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric' })
+    if (h3El) h3El.textContent = c.hora_inicio?.substring(0, 5) || ''
+  })
+}
+
+cargarPerfil()
+
+// Botón "Reservar cita"
+const btnReservar = document.querySelector('button.btn-gradient, button.w-full.btn-gradient')
+if (btnReservar) btnReservar.addEventListener('click', () => {
+  if (psicologoId) sessionStorage.setItem('tp_psicologo_seleccionado_id', psicologoId)
+  window.location.href = '/screens/registro_intake.html'
+})
+
+// Botón volver
+const btnVolver = document.querySelector('button.flex.items-center.gap-2')
+if (btnVolver) btnVolver.addEventListener('click', () => history.back())
+
+// Toast - quitar después de 3s
+const toast = document.querySelector('.fixed.bottom-8')
+if (toast) setTimeout(() => toast.remove(), 3000)
+</script>
+</body></html>

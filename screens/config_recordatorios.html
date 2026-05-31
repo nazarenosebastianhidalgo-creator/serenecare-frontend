@@ -1,0 +1,410 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-dim": "#1b5a69",
+                        "surface-container": "#eaeff0",
+                        "secondary-fixed": "#b2ecfd",
+                        "outline": "#747c7e",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "tertiary": "#456653",
+                        "surface-container-highest": "#dce4e6",
+                        "tertiary-dim": "#395a48",
+                        "on-surface-variant": "#596063",
+                        "on-tertiary-container": "#416350",
+                        "error": "#a83836",
+                        "surface": "#f8fafb",
+                        "primary-container": "#a8e3f6",
+                        "surface-container-high": "#e3e9eb",
+                        "tertiary-container": "#d7fde4",
+                        "secondary-container": "#b2ecfd",
+                        "on-tertiary-fixed": "#2f503f",
+                        "on-secondary-container": "#195968",
+                        "on-primary-fixed": "#00404d",
+                        "surface-tint": "#296777",
+                        "surface-bright": "#f8fafb",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#9a9d9e",
+                        "on-secondary": "#effbff",
+                        "on-secondary-fixed": "#004653",
+                        "surface-dim": "#d4dbde",
+                        "primary-dim": "#195a6a",
+                        "inverse-surface": "#0b0f10",
+                        "error-dim": "#67040d",
+                        "on-background": "#2c3436",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "secondary": "#2b6775",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "surface-variant": "#dce4e6",
+                        "inverse-primary": "#a8e3f6",
+                        "on-surface": "#2c3436",
+                        "tertiary-fixed": "#d7fde4",
+                        "outline-variant": "#acb3b6",
+                        "on-error": "#fff7f6",
+                        "primary": "#296777",
+                        "on-secondary-fixed-variant": "#266372",
+                        "error-container": "#fa746f",
+                        "surface-container-low": "#f0f4f6",
+                        "on-tertiary": "#e6ffee",
+                        "on-primary-container": "#0e5463",
+                        "background": "#f8fafb",
+                        "on-primary": "#f0fbff",
+                        "primary-fixed": "#a8e3f6",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "on-error-container": "#6e0a12"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #020617; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .whatsapp-bubble {
+            background: #075e54;
+            position: relative;
+        }
+        .whatsapp-bubble::after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-top: 0px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-right: 12px solid #075e54;
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface antialiased overflow-x-hidden">
+<!-- Sidebar Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto bg-slate-950 flex flex-col p-4 gap-2 z-50 shadow-2xl shadow-slate-900">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-dim flex items-center justify-center text-white font-bold text-xl">S</div>
+<div>
+<h1 class="text-lg font-black tracking-tighter text-cyan-200">Serene Admin</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Psicología Avanzada</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-medium text-sm">Citas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-cyan-900/20 text-cyan-300 rounded-xl shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+<span class="font-medium text-sm">Recordatorios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium text-sm">Pacientes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-medium text-sm">Analíticas</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-800/50 pt-4 gap-1 flex flex-col">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-medium text-sm">Ayuda</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-error-container hover:bg-error-dim/20 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-medium text-sm">Cerrar Sesión</span>
+</a>
+</div>
+</aside>
+<main class="ml-64 p-8 min-h-screen">
+<!-- Header -->
+<header class="flex justify-between items-end mb-10">
+<div>
+<div class="flex items-center gap-4 mb-2">
+<h2 class="text-3xl font-bold font-headline text-slate-100 tracking-tight">Recordatorios Automáticos</h2>
+<span class="px-3 py-1 bg-tertiary/20 text-tertiary-fixed text-xs font-bold rounded-full border border-tertiary/30">ACTIVO</span>
+</div>
+<p class="text-slate-400 font-medium">Gestiona la comunicación automática con tus pacientes para reducir ausencias.</p>
+</div>
+<div class="flex items-center gap-6 bg-slate-900/50 p-4 rounded-2xl border border-slate-800/50">
+<span class="text-sm font-semibold text-slate-300">Sistema Global</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</header>
+<div class="grid grid-cols-12 gap-8 items-start">
+<!-- Left Column: Rules -->
+<div class="col-span-12 lg:col-span-7 space-y-6">
+<!-- Rule Card 1 -->
+<section class="glass-card p-6 rounded-3xl relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-sm">1</div>
+<h3 class="text-lg font-bold text-slate-100">Recordatorio 1</h3>
+</div>
+<button class="text-slate-500 hover:text-error transition-colors p-2 hover:bg-error/10 rounded-xl">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Tiempo de antelación</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">15min</button>
+<button class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">1h</button>
+<button class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">2h</button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-xl text-sm font-bold shadow-lg shadow-primary/20">24h</button>
+<button class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">48h</button>
+<button class="px-4 py-2 border border-slate-700 text-slate-400 rounded-xl text-sm font-medium">Personalizado</button>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-800/50 flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-500 uppercase">Email</span>
+<input checked="" class="rounded text-primary focus:ring-primary bg-slate-800 border-slate-700" type="checkbox"/>
+</div>
+<span class="material-symbols-outlined text-slate-400">mail</span>
+</div>
+<div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-800/50 flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-500 uppercase">WhatsApp</span>
+<input checked="" class="rounded text-emerald-500 focus:ring-emerald-500 bg-slate-800 border-slate-700" type="checkbox"/>
+</div>
+<span class="material-symbols-outlined text-emerald-500">chat</span>
+</div>
+<div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-800/50 flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-500 uppercase">SMS</span>
+<input class="rounded text-primary focus:ring-primary bg-slate-800 border-slate-700" type="checkbox"/>
+</div>
+<span class="material-symbols-outlined text-slate-400">sms</span>
+</div>
+</div>
+<div class="flex items-center gap-3 pt-2">
+<input class="w-5 h-5 rounded border-slate-700 bg-slate-800 text-primary focus:ring-primary" id="only_unconfirmed_1" type="checkbox"/>
+<label class="text-sm font-medium text-slate-300" for="only_unconfirmed_1">Solo enviar si la cita no está confirmada</label>
+</div>
+</div>
+</section>
+<!-- Rule Card 2 -->
+<section class="glass-card p-6 rounded-3xl relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+<div class="flex justify-between items-start mb-6">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-secondary/20 text-secondary-fixed flex items-center justify-center font-bold text-sm">2</div>
+<h3 class="text-lg font-bold text-slate-100">Recordatorio 2</h3>
+</div>
+<button class="text-slate-500 hover:text-error transition-colors p-2 hover:bg-error/10 rounded-xl">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Tiempo de antelación</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">2h</button>
+<button class="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-700 transition-colors">24h</button>
+<button class="px-4 py-2 bg-secondary text-on-secondary rounded-xl text-sm font-bold shadow-lg shadow-secondary/20">48h</button>
+<button class="px-4 py-2 border border-slate-700 text-slate-400 rounded-xl text-sm font-medium">Personalizado</button>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-800/50 flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-500 uppercase">Email</span>
+<input checked="" class="rounded text-primary focus:ring-primary bg-slate-800 border-slate-700" type="checkbox"/>
+</div>
+<span class="material-symbols-outlined text-slate-400">mail</span>
+</div>
+<div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-800/50 flex flex-col gap-3 opacity-50">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-500 uppercase">WhatsApp</span>
+<input class="rounded text-emerald-500 focus:ring-emerald-500 bg-slate-800 border-slate-700" type="checkbox"/>
+</div>
+<span class="material-symbols-outlined">chat</span>
+</div>
+<div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-800/50 flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="text-xs font-bold text-slate-500 uppercase">SMS</span>
+<input checked="" class="rounded text-primary focus:ring-primary bg-slate-800 border-slate-700" type="checkbox"/>
+</div>
+<span class="material-symbols-outlined text-slate-400">sms</span>
+</div>
+</div>
+<div class="flex items-center gap-3 pt-2">
+<input checked="" class="w-5 h-5 rounded border-slate-700 bg-slate-800 text-primary focus:ring-primary" id="only_unconfirmed_2" type="checkbox"/>
+<label class="text-sm font-medium text-slate-300" for="only_unconfirmed_2">Solo enviar si la cita no está confirmada</label>
+</div>
+</div>
+</section>
+<button class="w-full py-6 border-2 border-dashed border-slate-800 rounded-3xl text-slate-500 font-bold flex items-center justify-center gap-2 hover:border-primary/50 hover:text-primary transition-all group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">add_circle</span>
+                    Añadir otra regla
+                </button>
+</div>
+<!-- Right Column: Preview & Stats -->
+<div class="col-span-12 lg:col-span-5 space-y-6 lg:sticky lg:top-8">
+<!-- Preview Card -->
+<section class="glass-card rounded-3xl overflow-hidden">
+<div class="p-6 pb-0">
+<h3 class="text-lg font-bold text-slate-100 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">visibility</span>
+                            Vista previa del mensaje
+                        </h3>
+<div class="flex gap-1 bg-slate-900/80 p-1 rounded-2xl mb-6">
+<button class="flex-1 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-colors">EMAIL</button>
+<button class="flex-1 py-2 text-xs font-bold rounded-xl bg-primary text-on-primary shadow-lg">WHATSAPP</button>
+<button class="flex-1 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 transition-colors">SMS</button>
+</div>
+</div>
+<div class="bg-slate-950/40 p-8 pt-4">
+<!-- WhatsApp Mockup -->
+<div class="max-w-[280px] mx-auto">
+<div class="whatsapp-bubble p-3 rounded-xl rounded-tl-none text-[13px] text-white shadow-lg">
+<p class="mb-2">Hola <span class="bg-emerald-400/30 text-emerald-200 px-1 rounded font-mono">[NOMBRE_PACIENTE]</span>,</p>
+<p class="mb-2">Te recordamos tu cita en SereneCare para el próximo <span class="bg-emerald-400/30 text-emerald-200 px-1 rounded font-mono">[FECHA_CITA]</span> a las <span class="bg-emerald-400/30 text-emerald-200 px-1 rounded font-mono">[HORA_CITA]</span>.</p>
+<p>Por favor, confirma tu asistencia respondiendo a este mensaje.</p>
+<div class="text-[10px] text-white/60 text-right mt-1">10:42 AM</div>
+</div>
+</div>
+<!-- Editor -->
+<div class="mt-8 space-y-4">
+<div class="flex flex-wrap gap-2 mb-2">
+<span class="px-2 py-1 bg-slate-800 text-[10px] font-bold text-primary-fixed-dim rounded-md border border-primary/20 cursor-pointer hover:bg-slate-700 transition-colors">+[NOMBRE_PACIENTE]</span>
+<span class="px-2 py-1 bg-slate-800 text-[10px] font-bold text-primary-fixed-dim rounded-md border border-primary/20 cursor-pointer hover:bg-slate-700 transition-colors">+[FECHA_CITA]</span>
+<span class="px-2 py-1 bg-slate-800 text-[10px] font-bold text-primary-fixed-dim rounded-md border border-primary/20 cursor-pointer hover:bg-slate-700 transition-colors">+[HORA_CITA]</span>
+<span class="px-2 py-1 bg-slate-800 text-[10px] font-bold text-primary-fixed-dim rounded-md border border-primary/20 cursor-pointer hover:bg-slate-700 transition-colors">+[ENLACE_CONFIRMAR]</span>
+</div>
+<textarea class="w-full bg-slate-900/50 border border-slate-800 rounded-2xl p-4 text-sm text-slate-300 focus:ring-primary focus:border-primary placeholder-slate-600" placeholder="Escribe el mensaje aquí..." rows="4">Hola [NOMBRE_PACIENTE], te recordamos tu cita en SereneCare para el próximo [FECHA_CITA] a las [HORA_CITA]. Por favor, confirma tu asistencia respondiendo a este mensaje.</textarea>
+</div>
+</div>
+</section>
+<!-- Stats Card -->
+<section class="glass-card p-6 rounded-3xl">
+<h3 class="text-lg font-bold text-slate-100 mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">query_stats</span>
+                        Estadísticas (Últimos 30 días)
+                    </h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 bg-slate-900/30 rounded-2xl border border-slate-800/50">
+<p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Enviados</p>
+<p class="text-2xl font-bold text-slate-100">1,248</p>
+</div>
+<div class="p-4 bg-slate-900/30 rounded-2xl border border-slate-800/50">
+<p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Tasa Apertura</p>
+<p class="text-2xl font-bold text-primary">94.2%</p>
+</div>
+<div class="p-4 bg-slate-900/30 rounded-2xl border border-slate-800/50">
+<p class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter mb-1">Respuesta</p>
+<p class="text-2xl font-bold text-slate-100">68%</p>
+</div>
+<div class="p-4 bg-tertiary/10 rounded-2xl border border-tertiary/20">
+<p class="text-[10px] font-bold text-tertiary uppercase tracking-tighter mb-1">No-shows</p>
+<div class="flex items-center gap-2">
+<p class="text-2xl font-bold text-tertiary-fixed">-22%</p>
+<span class="material-symbols-outlined text-tertiary text-sm">trending_down</span>
+</div>
+</div>
+</div>
+</section>
+<div class="flex justify-end gap-3 pt-4">
+<button class="px-6 py-3 rounded-xl font-bold text-slate-400 hover:text-slate-100 transition-colors">Descartar</button>
+<button class="px-8 py-3 bg-gradient-to-tr from-primary to-primary-dim text-on-primary rounded-xl font-bold shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+                        Guardar Configuración
+                    </button>
+</div>
+</div>
+</div>
+</main>
+
+  <div id="error-msg"   class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <script type="module">
+    import { guardaClinica }                                   from '../js/clinica.js'
+    import { obtenerHistorialRecordatorios, enviarRecordatorioManual } from '../js/pagos.js'
+    import { mostrarError, setBotonCargando }                  from '../js/auth.js'
+
+    await guardaClinica()
+
+    // Historial de envíos
+    try {
+      const historial  = await obtenerHistorialRecordatorios()
+      const contenedor = document.querySelector('tbody, [data-historial], ul')
+
+      if (contenedor && historial.length) {
+        const tag = contenedor.tagName === 'TBODY' ? 'tr' : 'div'
+        contenedor.innerHTML = historial.map(r => `
+          <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+            <td class="px-4 py-3 text-sm">${r.pacientes?.nombre} ${r.pacientes?.apellido}</td>
+            <td class="px-4 py-3 text-sm">${r.citas?.fecha || '—'} ${r.citas?.hora_inicio?.substring(0,5) || ''}</td>
+            <td class="px-4 py-3"><span class="px-3 py-1 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">${r.canal}</span></td>
+            <td class="px-4 py-3">
+              <span class="px-3 py-1 rounded-full text-xs font-bold ${r.enviado ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-error-container text-on-error-container'}">
+                ${r.enviado ? '✓ Enviado' : '✗ Falló'}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-xs text-on-surface-variant">${r.fecha_envio ? new Date(r.fecha_envio).toLocaleString('es-AR') : '—'}</td>
+          </tr>`).join('')
+      } else if (contenedor && !historial.length) {
+        contenedor.innerHTML = '<tr><td colspan="5" class="text-center py-12 text-on-surface-variant">No hay recordatorios enviados aún.</td></tr>'
+      }
+    } catch(e) { mostrarError(e.message) }
+
+    // Botón enviar recordatorio manual
+    const btnEnviar = Array.from(document.querySelectorAll('button')).find(b =>
+      b.textContent.toLowerCase().includes('enviar') || b.textContent.toLowerCase().includes('probar') || b.textContent.toLowerCase().includes('test'))
+
+    if (btnEnviar) {
+      btnEnviar.addEventListener('click', async () => {
+        setBotonCargando(btnEnviar, true)
+        try {
+          const resultado = await enviarRecordatorioManual()
+          const ok = document.getElementById('success-msg')
+          ok.textContent = `Recordatorios enviados: ${resultado.enviados} de ${resultado.total} citas para mañana.`
+          ok.classList.remove('hidden')
+          setTimeout(() => { ok.classList.add('hidden'); location.reload() }, 3000)
+        } catch(e) { mostrarError(e.message) }
+        finally { setBotonCargando(btnEnviar, false) }
+      })
+    }
+  </script>
+</body></html>

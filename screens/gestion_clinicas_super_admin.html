@@ -1,0 +1,1014 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare Super Admin — Gestión de Clínicas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#004653",
+                        "on-primary-container": "#0e5463",
+                        "inverse-primary": "#a8e3f6",
+                        "error-container": "#fa746f",
+                        "secondary": "#2b6775",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "tertiary-container": "#d7fde4",
+                        "surface-container-high": "#e3e9eb",
+                        "surface-container": "#eaeff0",
+                        "background": "#f8fafb",
+                        "secondary-dim": "#1b5a69",
+                        "surface-container-low": "#f0f4f6",
+                        "on-secondary-container": "#195968",
+                        "on-error-container": "#6e0a12",
+                        "primary": "#296777",
+                        "error": "#a83836",
+                        "outline-variant": "#acb3b6",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#dce4e6",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "outline": "#747c7e",
+                        "on-background": "#2c3436",
+                        "primary-fixed": "#a8e3f6",
+                        "primary-dim": "#195a6a",
+                        "surface-tint": "#296777",
+                        "on-secondary": "#effbff",
+                        "on-surface-variant": "#596063",
+                        "error-dim": "#67040d",
+                        "secondary-container": "#b2ecfd",
+                        "primary-container": "#a8e3f6",
+                        "on-tertiary-fixed": "#2f503f",
+                        "tertiary-dim": "#395a48",
+                        "surface-variant": "#dce4e6",
+                        "on-primary-fixed": "#00404d",
+                        "on-tertiary": "#e6ffee",
+                        "inverse-on-surface": "#9a9d9e",
+                        "on-surface": "#2c3436",
+                        "on-tertiary-container": "#416350",
+                        "secondary-fixed": "#b2ecfd",
+                        "tertiary-fixed": "#d7fde4",
+                        "on-primary": "#f0fbff",
+                        "surface": "#f8fafb",
+                        "inverse-surface": "#0b0f10",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "surface-dim": "#d4dbde",
+                        "on-secondary-fixed-variant": "#266372",
+                        "on-error": "#fff7f6",
+                        "tertiary": "#456653",
+                        "surface-bright": "#f8fafb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #020617; /* Explicit user request override */
+            color: #f8fafb;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .apps-ov-glass { background: rgba(15,23,42,0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .apps-ov-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease; }
+        .apps-ov-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+        .apps-ov-card:active { transform: scale(0.96); }
+        @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+        .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+    </style>
+</head>
+<body class="font-body selection:bg-primary/30">
+<!-- Sidebar Navigation -->
+<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 bg-slate-900 dark:bg-[#0f172a] font-manrope tracking-tight text-slate-200 shadow-2xl shadow-slate-950/50 z-50">
+<div class="flex flex-col h-full p-6 border-r border-slate-800/20">
+<!-- Brand Logo -->
+<div class="mb-10 px-4">
+<h1 class="text-2xl font-bold tracking-tighter text-slate-50 dark:text-white">SereneCare</h1>
+<p class="text-xs font-medium text-slate-500 uppercase tracking-widest mt-1">SaaS Enterprise</p>
+</div>
+<!-- Main Tabs -->
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95 rounded-xl" href="dashboard_maestro_super_admin.html">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Active Tab: Clinics -->
+<a class="flex items-center gap-3 px-4 py-3 bg-indigo-500/10 text-indigo-400 rounded-xl font-semibold" href="gestion_clinicas_super_admin.html">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+<span>Clínicas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95 rounded-xl" href="revenue_super_admin.html">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Revenue</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95 rounded-xl" href="configuracion_ia_super_admin.html">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span>IA Config</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95 rounded-xl" href="soporte_super_admin.html">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span>Soporte</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95 rounded-xl" href="gestion_planes_super_admin.html">
+<span class="material-symbols-outlined">inventory_2</span>
+<span>Planes SaaS</span>
+</a>
+</nav>
+<!-- Footer Section -->
+<div class="pt-6 mt-6 border-t border-slate-800/50">
+<div class="px-4 py-3 mb-4 rounded-xl bg-teal-500/5 border border-teal-500/10 text-xs text-teal-400 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></div>
+                    System Status: Healthy
+                </div>
+<button id="btn-logout" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-rose-400 w-full transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pl-72 min-h-screen bg-[#020617]">
+<!-- Top Navigation Bar -->
+<header class="w-full h-20 sticky top-0 bg-slate-950/80 dark:bg-[#020617]/80 backdrop-blur-xl flex items-center justify-between pl-8 pr-8 w-full z-40 font-manrope text-slate-100">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors">search</span>
+<input class="w-full bg-slate-900/50 border-none rounded-full py-2.5 pl-12 pr-4 text-sm focus:ring-2 focus:ring-indigo-500/30 text-slate-200 placeholder:text-slate-600 transition-all" placeholder="Buscar clínicas, administradores o dominios..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+
+  <!-- Notificaciones -->
+  <div class="relative">
+    <button id="btn-notifications" class="relative p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">notifications</span>
+      <span id="notif-dot" class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-[#020617]"></span>
+    </button>
+    <div id="panel-notifications" class="hidden absolute right-0 top-12 w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+        <span class="font-bold text-slate-100 text-sm">Notificaciones</span>
+        <button id="btn-mark-read" class="text-xs text-indigo-400 hover:text-indigo-300">Marcar todas leídas</button>
+      </div>
+      <div id="lista-notificaciones" class="divide-y divide-slate-800 max-h-72 overflow-y-auto">
+        <p class="text-slate-500 text-sm text-center py-8">Sin notificaciones nuevas</p>
+      </div>
+      <div class="px-5 py-3 border-t border-slate-800">
+        <a href="alertas_globales_super_admin.html" class="block text-center text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Ver todas las alertas →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ajustes -->
+  <div class="relative">
+    <button id="btn-settings" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">settings</span>
+    </button>
+    <div id="panel-settings" class="hidden absolute right-0 top-12 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 p-4">
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Apariencia</p>
+      <div id="toggle-tema-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span id="icon-tema" class="material-symbols-outlined text-indigo-400">dark_mode</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Tema oscuro</p>
+            <p id="label-tema" class="text-xs text-slate-500">Activo</p>
+          </div>
+        </div>
+        <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 my-3"></div>
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Notificaciones</p>
+      <div id="toggle-email-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-blue-400">mail</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Alertas por email</p>
+            <p class="text-xs text-slate-500">Incidencias críticas</p>
+          </div>
+        </div>
+        <div id="toggle-email" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-email-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 my-3"></div>
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Seguridad</p>
+      <button id="btn-cerrar-sesiones" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/10 transition-colors text-left">
+        <span class="material-symbols-outlined text-rose-400">no_accounts</span>
+        <div>
+          <p class="text-sm font-semibold text-slate-200">Cerrar todas las sesiones</p>
+          <p class="text-xs text-slate-500">Expira todos los tokens activos</p>
+        </div>
+      </button>
+      <div id="toggle-mantenimiento-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-amber-400">construction</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Modo mantenimiento</p>
+            <p class="text-xs text-slate-500">Bloquea acceso a clínicas</p>
+          </div>
+        </div>
+        <div id="toggle-mantenimiento" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-mantenimiento-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative">
+    <button id="btn-apps" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">apps</span>
+    </button>
+    <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
+      <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+        <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
+          <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
+            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+            <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
+          </div>
+          <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+          <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
+              <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
+          </a>
+          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
+              <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
+          </a>
+          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
+              <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
+          </a>
+          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
+          </a>
+          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
+          </a>
+          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
+          </a>
+        </div>
+        <div class="mt-8 flex items-center justify-between py-4 border-t" style="border-color: rgba(255,255,255,0.07);">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-400/50 text-sm">security</span>
+            <span class="text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold">Super Administrador • Acceso Restringido</span>
+          </div>
+          <span class="text-[10px] text-slate-700 font-mono">ESC para cerrar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="h-8 w-[1px] bg-slate-800"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right">
+<p class="text-sm font-bold text-slate-100">SereneCare Super Admin</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-tighter">Master Access</p>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-indigo-500/20">
+<img class="w-full h-full object-cover" data-alt="Corporate headshot of a senior system administrator in a modern office setting, professional and clean" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-ebcqOtaXyUT7KKqMlfVjf0SityDjD9LEJDEv14ZoVTl31eiYcsx4194ap7FOrkyb_QUCIbM-XyGHdxprVZPFK-YlC1Hu1MkleNO1wl3M5cnKGLymD9_PvHkDoKe-tnMnOYn916SsEilWtjP76GzzGkNnDL3fVtl7CamuJ-4cSzqrhc7KZNgcK2AHNj9wBHzQflYkj29lxhuJIYj65Tn7eLFU-S3Clk-5N2ZhMaAhjfD_C70Gm7eJBtkXzlkh6UWqEznyQX96UI33"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 pb-20">
+<!-- Page Header & Filters -->
+<div class="mb-10">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-4xl font-extrabold tracking-tight text-white mb-2 font-display">Gestión de Clínicas</h2>
+<p class="text-slate-400 font-medium">Control centralizado de suscripciones, uso de IA y estados operativos.</p>
+</div>
+<button id="btn-nueva-clinica" class="bg-gradient-to-br from-primary to-primary-dim text-white px-6 py-3 rounded-xl font-semibold title-sm flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-xl">add</span>
+Nueva Clínica
+</button>
+</div>
+<!-- Filter Chips Group -->
+<div class="flex flex-wrap items-center gap-4 bg-slate-900/30 p-4 rounded-2xl">
+<div class="flex items-center gap-3 pr-6 border-r border-slate-800/50">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Plan</span>
+<div class="flex gap-2">
+<button class="px-4 py-1.5 rounded-full bg-indigo-500 text-white text-xs font-semibold">Todos</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-800 text-slate-400 text-xs font-semibold hover:bg-slate-700 transition-colors">Free</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-800 text-slate-400 text-xs font-semibold hover:bg-slate-700 transition-colors">Basic</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-800 text-slate-400 text-xs font-semibold hover:bg-slate-700 transition-colors">Premium</button>
+</div>
+</div>
+<div class="flex items-center gap-3 pl-2">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Estado</span>
+<div class="flex gap-2">
+<button class="px-4 py-1.5 rounded-full bg-slate-800 text-slate-400 text-xs font-semibold hover:bg-slate-700 transition-colors">Activa</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-800 text-slate-400 text-xs font-semibold hover:bg-slate-700 transition-colors">Trial</button>
+<button class="px-4 py-1.5 rounded-full bg-slate-800 text-slate-400 text-xs font-semibold hover:bg-slate-700 transition-colors">Suspendida</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-slate-900/20 rounded-3xl overflow-hidden backdrop-blur-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-900/40">
+<th class="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-widest">Clínica / Admin</th>
+<th class="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-widest">Plan</th>
+<th class="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-widest text-center">Uso (Psic/Pac)</th>
+<th class="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-widest">MRR</th>
+<th class="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-widest">Registro</th>
+<th class="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-widest">Estado</th>
+<th class="px-6 py-5 text-xs font-bold text-slate-500 uppercase tracking-widest text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800/30">
+<!-- Row 1: Overdue Payment -->
+<tr class="hover:bg-slate-800/20 transition-colors group cursor-pointer border-l-4 border-rose-500 bg-rose-500/5">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-indigo-400 font-bold overflow-hidden border border-slate-700">
+<img class="w-full h-full object-cover" data-alt="Modern logo for a medical clinic with minimalist cross symbol and soft blue and white palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRnDup9OVU9lv7IyPR-KkK9hOLNxBkRTCNSnPQzRMfJDlQ-wSepI0vzls2Iu5UyjYGZbOYvNm-cf6hpXLGVPZRQofvFvrq-zxeB1KydVvAQjChxQ3__0ZhNVKuVZyERHlXaL5GgeNTxQJyUn8_N-Y16Sx-cB8uk50S5ZTE_yu2CNTgpgyKbBLACB6FodmwrKy6pH_KyquXhME4iMBtKBFTAdYzOzipfPvmJotSSU_GKOlG8atqbn8X5k03F9Fi6zYVWLzEOdHF7q55"/>
+</div>
+<div>
+<p class="font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">Mente Sana CDMX</p>
+<p class="text-xs text-slate-500">Dr. Ricardo Gómez</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="bg-indigo-500/10 text-indigo-400 text-[10px] font-black uppercase tracking-tighter px-2 py-1 rounded">Premium</span>
+</td>
+<td class="px-6 py-6 text-center">
+<div class="flex flex-col items-center">
+<span class="text-sm font-semibold text-slate-200">24 / 480</span>
+<div class="w-16 h-1 bg-slate-800 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-indigo-500 h-full w-[80%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-mono text-teal-400 font-bold">$1,250.00</td>
+<td class="px-6 py-6 text-sm text-slate-500 font-medium">12 Mar 2023</td>
+<td class="px-6 py-6">
+<div class="flex flex-col gap-1.5">
+<span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Activa
+                                    </span>
+<span class="px-2 py-0.5 rounded bg-rose-500 text-white text-[9px] font-black uppercase w-fit tracking-tighter">Pago Vencido</span>
+</div>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-indigo-500/20 hover:text-indigo-400 transition-all" title="Ver detalle">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+</button>
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-teal-500/20 hover:text-teal-400 transition-all" title="Editar plan">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 transition-all" title="Suspender">
+<span class="material-symbols-outlined text-lg" data-icon="pause">pause</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-800/20 transition-colors group cursor-pointer">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 font-bold overflow-hidden border border-slate-800">
+<img class="w-full h-full object-cover" data-alt="Clean medical office interior with modern furniture and soft lighting, professional and peaceful atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwmQVwk6LVW5e3zQJ52OCdvnkCDHgn7AMr_eZXAFMs-B1MiOeZneeLtaldHOmVJwYpRC2Nkc6MVZ7YidU_W8X4J0oLOmJeEvPUzsrdbLJQC92DtieC7v1X-3tph9ZsIw5l8glBarg2fi0tvfeSm_JymCFesLBxA02gEWidMc-gPUkPRlR62BK7H11Kb-X-2BBSUE3NLRRQdeGXh3FkIGhugekGKpT5vQJxtfGrjw-h6VuXHc2NUFW2-2TuVp8E3trZLxp9S8rtq5na"/>
+</div>
+<div>
+<p class="font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">NeuroBalance S.C.</p>
+<p class="text-xs text-slate-500">Mtra. Elena Vargas</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="bg-slate-800 text-slate-400 text-[10px] font-black uppercase tracking-tighter px-2 py-1 rounded">Basic</span>
+</td>
+<td class="px-6 py-6 text-center">
+<div class="flex flex-col items-center">
+<span class="text-sm font-semibold text-slate-200">5 / 85</span>
+<div class="w-16 h-1 bg-slate-800 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-indigo-500 h-full w-[45%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-mono text-teal-400 font-bold">$240.00</td>
+<td class="px-6 py-6 text-sm text-slate-500 font-medium">05 Jun 2023</td>
+<td class="px-6 py-6">
+<span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Activa
+                                </span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-indigo-500/20 hover:text-indigo-400 transition-all"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-teal-500/20 hover:text-teal-400 transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 transition-all"><span class="material-symbols-outlined text-lg">pause</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Trial -->
+<tr class="hover:bg-slate-800/20 transition-colors group cursor-pointer">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 font-bold overflow-hidden border border-slate-800">
+<img class="w-full h-full object-cover" data-alt="Abstract health icon in purple and teal tones, modern vector style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKezy_hsIl_Ge5DeJlIbbwyclJ3cdbxrk7mXBdxXaECUE5WO8pljvOf4oqc9iVJgWsVx1Z728C4ZPjj5HTJRMbuUCUltt3ztnSKtE2lEJiZ1C8ytD8nlPUqVB2j20drlF1i1VWJLRAqymi0XD7jEFHiuXBcvO4wLp4FLDDnP-qsOV5xdKEYXm6cqfJEJnrX1j7vCROtz_PfLbTUTEfRvsN3JYZsDdrHaaPcS8audPm1xePThCScloREPDk74aOjti7x0RroLTFShcW"/>
+</div>
+<div>
+<p class="font-bold text-slate-100 group-hover:text-indigo-400 transition-colors">Clínica Integral Azcapo</p>
+<p class="text-xs text-slate-500">Admin Staff</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="bg-slate-800 text-slate-500 text-[10px] font-black uppercase tracking-tighter px-2 py-1 rounded">Free</span>
+</td>
+<td class="px-6 py-6 text-center">
+<div class="flex flex-col items-center">
+<span class="text-sm font-semibold text-slate-200">1 / 12</span>
+<div class="w-16 h-1 bg-slate-800 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-indigo-500 h-full w-[10%]"></div>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-mono text-slate-600 font-bold">$0.00</td>
+<td class="px-6 py-6 text-sm text-slate-500 font-medium">18 Nov 2023</td>
+<td class="px-6 py-6">
+<span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-[10px] font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span> Trial (3d)
+                                </span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-indigo-500/20 hover:text-indigo-400 transition-all"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-teal-500/20 hover:text-teal-400 transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 transition-all"><span class="material-symbols-outlined text-lg">pause</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Suspended -->
+<tr class="hover:bg-slate-800/20 transition-colors group cursor-pointer opacity-70 grayscale-[0.5]">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-slate-600 font-bold overflow-hidden border border-slate-800/50">
+<span class="material-symbols-outlined">block</span>
+</div>
+<div>
+<p class="font-bold text-slate-300">Psicoterapia Express</p>
+<p class="text-xs text-slate-600">Juan Carlos Ruíz</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6">
+<span class="bg-slate-900 text-slate-600 text-[10px] font-black uppercase tracking-tighter px-2 py-1 rounded">Basic</span>
+</td>
+<td class="px-6 py-6 text-center">
+<span class="text-sm font-semibold text-slate-600">—</span>
+</td>
+<td class="px-6 py-6 font-mono text-slate-600 font-bold">$0.00</td>
+<td class="px-6 py-6 text-sm text-slate-600 font-medium">02 Feb 2023</td>
+<td class="px-6 py-6">
+<span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/10 text-rose-500 text-[10px] font-bold w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Suspendida
+                                </span>
+</td>
+<td class="px-6 py-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-indigo-500/20 hover:text-indigo-400 transition-all"><span class="material-symbols-outlined text-lg">visibility</span></button>
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-teal-500/20 hover:text-teal-400 transition-all"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-2 rounded-lg bg-slate-800 hover:bg-emerald-500/20 hover:text-emerald-400 transition-all"><span class="material-symbols-outlined text-lg">play_arrow</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Detail Panel (Slide-out Overlay) — oculto por defecto, se abre al hacer click en una fila -->
+<div id="panel-detalle" class="fixed top-0 right-0 h-screen w-[480px] bg-slate-900 shadow-[-20px_0_60px_rgba(0,0,0,0.8)] border-l border-slate-800/50 z-[60] flex-col p-8 overflow-y-auto" style="display:none;">
+  <div class="flex items-center justify-between mb-8">
+    <button id="btn-close-panel" class="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center transition-colors">
+      <span class="material-symbols-outlined text-slate-400">close</span>
+    </button>
+    <span id="panel-status" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border">—</span>
+  </div>
+  <!-- Header Info -->
+  <div class="flex items-center gap-6 mb-10">
+    <div class="w-20 h-20 rounded-2xl bg-indigo-500/20 flex items-center justify-center">
+      <span id="panel-avatar" class="text-4xl font-extrabold text-indigo-400">—</span>
+    </div>
+    <div>
+      <h3 id="panel-nombre" class="text-2xl font-extrabold text-white font-display">—</h3>
+      <div class="mt-2 flex gap-2 flex-wrap">
+        <span id="panel-plan" class="text-xs bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded font-bold">—</span>
+        <span id="panel-desde" class="text-xs bg-slate-800 text-slate-500 px-2 py-0.5 rounded font-bold">—</span>
+      </div>
+    </div>
+  </div>
+  <!-- Bento Grid -->
+  <div class="grid grid-cols-2 gap-4 mb-10">
+    <div class="bg-slate-950/40 p-4 rounded-2xl">
+      <p class="text-[10px] uppercase font-black text-slate-600 tracking-widest mb-1">Email contacto</p>
+      <p id="panel-email" class="text-slate-200 font-bold text-sm truncate">—</p>
+    </div>
+    <div class="bg-slate-950/40 p-4 rounded-2xl">
+      <p class="text-[10px] uppercase font-black text-slate-600 tracking-widest mb-1">MRR</p>
+      <p id="panel-mrr" class="text-teal-400 font-bold text-lg">—</p>
+    </div>
+    <div class="bg-slate-950/40 p-4 rounded-2xl">
+      <p class="text-[10px] uppercase font-black text-slate-600 tracking-widest mb-1">Usuarios</p>
+      <p id="panel-staff" class="text-slate-200 font-bold text-lg">—</p>
+    </div>
+    <div class="bg-slate-950/40 p-4 rounded-2xl">
+      <p class="text-[10px] uppercase font-black text-slate-600 tracking-widest mb-1">Estado</p>
+      <p id="panel-estado-texto" class="text-slate-200 font-bold text-lg">—</p>
+    </div>
+  </div>
+  <!-- Footer Actions -->
+  <div class="mt-auto pt-8 flex flex-col gap-3">
+    <a id="panel-btn-detalle" href="#" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2">
+      <span class="material-symbols-outlined">open_in_new</span>
+      Ver detalle completo
+    </a>
+    <button id="panel-btn-suspender" class="w-full bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-300 font-bold py-4 rounded-2xl transition-all active:scale-95 flex items-center justify-center gap-2 border border-slate-700">
+      <span class="material-symbols-outlined">block</span>
+      Suspender cuenta
+    </button>
+  </div>
+</div>
+</main>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var btnNotif    = document.getElementById('btn-notifications')
+      var panelNotif  = document.getElementById('panel-notifications')
+      var btnSettings = document.getElementById('btn-settings')
+      var btnApps     = document.getElementById('btn-apps')
+      var panelApps   = document.getElementById('panel-apps')
+      document.body.appendChild(panelApps)
+      var panelSettings = document.getElementById('panel-settings')
+
+      function closeAll() {
+        panelNotif    && panelNotif.classList.add('hidden')
+        panelSettings && panelSettings.classList.add('hidden')
+        panelApps     && panelApps.classList.add('hidden')
+      }
+
+      btnNotif && btnNotif.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelNotif.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) panelNotif.classList.remove('hidden')
+      })
+
+      btnSettings && btnSettings.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelSettings.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) panelSettings.classList.remove('hidden')
+      })
+
+      btnApps && btnApps.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelApps.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) {
+          panelApps.classList.remove('hidden')
+          var inner = document.getElementById('apps-inner')
+          if (inner) { inner.classList.remove('apps-ov-enter'); void inner.offsetWidth; inner.classList.add('apps-ov-enter') }
+        }
+      })
+
+      document.addEventListener('click', closeAll)
+      var appsInner = document.getElementById('apps-inner')
+      appsInner && appsInner.addEventListener('click', function(e) { e.stopPropagation() })
+      var btnCloseApps = document.getElementById('btn-close-apps')
+      btnCloseApps && btnCloseApps.addEventListener('click', function(e) {
+        e.stopPropagation()
+        panelApps && panelApps.classList.add('hidden')
+      })
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && panelApps && !panelApps.classList.contains('hidden')) {
+          panelApps.classList.add('hidden')
+        }
+      })
+
+      var btnRead = document.getElementById('btn-mark-read')
+      btnRead && btnRead.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var dot = document.getElementById('notif-dot')
+        if (dot) dot.classList.add('hidden')
+        var lista = document.getElementById('lista-notificaciones')
+        if (lista) lista.innerHTML = '<p style="color:#64748b;font-size:13px;text-align:center;padding:32px">Sin notificaciones nuevas</p>'
+      })
+
+      // ── Panel de detalle de clínica ────────────────────────────────
+      var panelDetalle = document.getElementById('panel-detalle')
+      var btnClosePanel = document.getElementById('btn-close-panel')
+
+      btnClosePanel && btnClosePanel.addEventListener('click', function() {
+        panelDetalle.style.display = 'none'
+      })
+
+      var fmt = function(n) {
+        return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
+      }
+
+      window.abrirPanel = function(c) {
+        var statusMap = {
+          activa:     { label: 'Activa',      cls: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+          trial:      { label: 'Trial',       cls: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' },
+          suspendida: { label: 'Suspendida',  cls: 'bg-rose-500/10 text-rose-400 border-rose-500/20' }
+        }
+        var s = statusMap[c.status] || { label: c.status, cls: '' }
+
+        document.getElementById('panel-status').textContent = s.label
+        document.getElementById('panel-status').className = 'px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ' + s.cls
+        document.getElementById('panel-avatar').textContent = (c.nombre || '?').charAt(0).toUpperCase()
+        document.getElementById('panel-nombre').textContent = c.nombre || '—'
+        document.getElementById('panel-plan').textContent = c.planes?.nombre ? 'Plan ' + c.planes.nombre : 'Sin plan'
+        document.getElementById('panel-desde').textContent = c.created_at
+          ? 'Desde ' + new Date(c.created_at).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })
+          : '—'
+        document.getElementById('panel-email').textContent = c.email_contacto || '—'
+        document.getElementById('panel-mrr').textContent = (c.planes?.precio_mensual && c.status === 'activa')
+          ? fmt(c.planes.precio_mensual)
+          : '—'
+        document.getElementById('panel-staff').textContent = (c.usuarios?.length || 0) + ' usuarios'
+        document.getElementById('panel-estado-texto').textContent = s.label
+
+        var btnDetalle = document.getElementById('panel-btn-detalle')
+        if (btnDetalle) btnDetalle.href = 'detalle_clinica_super_admin.html?id=' + c.id
+
+        var btnSuspender = document.getElementById('panel-btn-suspender')
+        if (btnSuspender) {
+          btnSuspender.onclick = function() {
+            if (confirm('¿Confirmar suspensión de ' + c.nombre + '?')) {
+              window.cambiarEstado && window.cambiarEstado(c.id, 'suspendida')
+              panelDetalle.style.display = 'none'
+            }
+          }
+        }
+
+        panelDetalle.style.display = 'flex'
+        panelDetalle.style.flexDirection = 'column'
+      }
+
+      _initSeguridad(panelSettings)
+    })
+
+    function _toastSeg(msg, warn) {
+      var t = document.createElement('div')
+      t.textContent = msg
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' + (warn ? '#92400e' : '#1e293b') + ';color:#fff;padding:12px 24px;border-radius:999px;font-size:13px;font-weight:600;z-index:9999;border:1px solid ' + (warn ? '#d97706' : '#334155') + ';box-shadow:0 4px 20px rgba(0,0,0,.4)'
+      document.body.appendChild(t)
+      setTimeout(function() { t.remove() }, 3500)
+    }
+
+    function _initSeguridad(panelSett) {
+      var btnCerrar = document.getElementById('btn-cerrar-sesiones')
+      btnCerrar && btnCerrar.addEventListener('click', function(e) {
+        e.stopPropagation()
+        if (confirm('¿Cerrar TODAS las sesiones activas? Los usuarios tendrán que volver a iniciar sesión.')) {
+          panelSett && panelSett.classList.add('hidden')
+          _toastSeg('Todas las sesiones han sido cerradas.', false)
+        }
+      })
+
+      var modoMant = localStorage.getItem('tp_modo_mantenimiento') === 'true'
+      var tRow = document.getElementById('toggle-mantenimiento-row')
+      var tBar = document.getElementById('toggle-mantenimiento')
+      var tDot = document.getElementById('toggle-mantenimiento-dot')
+
+      function syncToggle() {
+        if (!tBar || !tDot) return
+        tBar.style.background = modoMant ? '#f59e0b' : '#334155'
+        tDot.style.left       = modoMant ? '22px'   : '2px'
+        tDot.style.background = modoMant ? '#fff'   : '#94a3b8'
+      }
+      syncToggle()
+
+      tRow && tRow.addEventListener('click', function(e) {
+        e.stopPropagation()
+        modoMant = !modoMant
+        localStorage.setItem('tp_modo_mantenimiento', modoMant)
+        syncToggle()
+        _toastSeg(modoMant ? 'Modo mantenimiento ACTIVADO — Clínicas bloqueadas' : 'Modo mantenimiento desactivado', modoMant)
+      })
+      var temaOscuro = localStorage.getItem('tp_tema') !== 'claro'
+      var tRowTema = document.getElementById('toggle-tema-row')
+      var tBarTema = document.getElementById('toggle-tema')
+      var tDotTema = document.getElementById('toggle-tema-dot')
+      var iconTema = document.getElementById('icon-tema')
+      var labelTema = document.getElementById('label-tema')
+      function syncTema() {
+        if (tBarTema) tBarTema.style.background = temaOscuro ? '#6366f1' : '#334155'
+        if (tDotTema) { tDotTema.style.left = temaOscuro ? '22px' : '2px'; tDotTema.style.background = temaOscuro ? '#fff' : '#94a3b8' }
+        if (iconTema) iconTema.textContent = temaOscuro ? 'dark_mode' : 'light_mode'
+        if (labelTema) labelTema.textContent = temaOscuro ? 'Activo' : 'Desactivado'
+        document.documentElement.style.filter = temaOscuro ? '' : 'invert(1) hue-rotate(180deg)'
+      }
+      syncTema()
+      tRowTema && tRowTema.addEventListener('click', function(e) {
+        e.stopPropagation()
+        temaOscuro = !temaOscuro
+        localStorage.setItem('tp_tema', temaOscuro ? 'oscuro' : 'claro')
+        syncTema()
+      })
+      var emailNotif = localStorage.getItem('tp_email_notif') !== 'false'
+      var tRowEmail = document.getElementById('toggle-email-row')
+      var tBarEmail = document.getElementById('toggle-email')
+      var tDotEmail = document.getElementById('toggle-email-dot')
+      function syncEmail() {
+        if (tBarEmail) tBarEmail.style.background = emailNotif ? '#3b82f6' : '#334155'
+        if (tDotEmail) { tDotEmail.style.left = emailNotif ? '22px' : '2px'; tDotEmail.style.background = emailNotif ? '#fff' : '#94a3b8' }
+      }
+      syncEmail()
+      tRowEmail && tRowEmail.addEventListener('click', function(e) {
+        e.stopPropagation()
+        emailNotif = !emailNotif
+        localStorage.setItem('tp_email_notif', emailNotif)
+        syncEmail()
+        _toastSeg(emailNotif ? 'Alertas por email activadas' : 'Alertas por email desactivadas', false)
+      })
+    }
+  </script>
+
+  <script type="module">
+    import { guardaSuperAdmin, obtenerClinicas, cambiarEstadoClinica, badgeEstado, formatearMoneda, crearClinica, obtenerPlanes } from '../js/admin.js'
+    import { mostrarError } from '../js/auth.js'
+    import { supabase } from '../js/supabase-client.js'
+
+    await guardaSuperAdmin()
+
+    let clinicasData = []
+    let filtroStatus = null
+    let filtroPlan   = null
+
+    // ── Cargar y renderizar clínicas ──────────────────────────────
+    async function cargarClinicas() {
+      try {
+        clinicasData = await obtenerClinicas({ status: filtroStatus, plan: filtroPlan })
+        renderizarClinicas(clinicasData)
+      } catch (err) {
+        mostrarError(err.message)
+      }
+    }
+
+    function renderizarClinicas(lista) {
+      const tbody = document.querySelector('tbody') || document.querySelector('[data-lista-clinicas]')
+      if (!tbody) return
+
+      if (lista.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-12 text-on-surface-variant">No hay clínicas con este filtro.</td></tr>`
+        return
+      }
+
+      // Guardar mapa para acceso desde el panel
+      window._clinicasMap = {}
+      lista.forEach(c => { window._clinicasMap[c.id] = c })
+
+      tbody.innerHTML = lista.map(c => {
+        const staff = c.usuarios?.length || 0
+        const plan  = c.planes?.nombre || 'Sin plan'
+        const precio = c.planes?.precio_mensual ? formatearMoneda(c.planes.precio_mensual) + '/mes' : 'Gratis'
+        return `
+        <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors cursor-pointer"
+            onclick="window.abrirPanel(window._clinicasMap['${c.id}'])">
+          <td class="px-6 py-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center font-bold text-primary text-sm">
+                ${c.nombre.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p class="font-semibold text-on-surface text-sm">${c.nombre}</p>
+                <p class="text-xs text-on-surface-variant">${c.email_contacto || '—'}</p>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 text-sm text-on-surface-variant">${plan}</td>
+          <td class="px-6 py-4 text-sm text-on-surface-variant">${precio}</td>
+          <td class="px-6 py-4 text-sm text-on-surface-variant">${staff} usuarios</td>
+          <td class="px-6 py-4">${badgeEstado(c.status)}</td>
+          <td class="px-6 py-4">
+            <div class="flex gap-2" onclick="event.stopPropagation()">
+              ${c.status !== 'activa' ? `<button onclick="cambiarEstado('${c.id}','activa')" class="px-3 py-1 text-xs bg-tertiary-container text-on-tertiary-container rounded-full font-semibold hover:opacity-80">Activar</button>` : ''}
+              ${c.status !== 'suspendida' ? `<button onclick="cambiarEstado('${c.id}','suspendida')" class="px-3 py-1 text-xs bg-error-container text-on-error-container rounded-full font-semibold hover:opacity-80">Suspender</button>` : ''}
+            </div>
+          </td>
+        </tr>`
+      }).join('')
+    }
+
+    // ── Cambiar estado desde botón en tabla ───────────────────────
+    window.cambiarEstado = async (id, status) => {
+      if (!confirm(`¿Confirmar cambio a "${status}"?`)) return
+      try {
+        await cambiarEstadoClinica(id, status)
+        await cargarClinicas()
+      } catch (err) {
+        mostrarError(err.message)
+      }
+    }
+
+    // ── Filtros de plan (Todos / Free / Basic / Premium) ─────────
+    document.querySelectorAll('button').forEach(btn => {
+      const texto = btn.textContent.trim()
+      const planMap = { 'Free': 'Trial', 'Basic': 'Basico', 'Premium': 'Profesional' }
+
+      if (texto === 'Todos') {
+        btn.addEventListener('click', () => { filtroPlan = null; cargarClinicas() })
+      } else if (planMap[texto]) {
+        btn.addEventListener('click', () => { filtroPlan = planMap[texto]; cargarClinicas() })
+      }
+
+      // Filtros de estado
+      const statusMap = { 'Activa': 'activa', 'Trial': 'trial', 'Suspendida': 'suspendida' }
+      if (statusMap[texto]) {
+        btn.addEventListener('click', () => { filtroStatus = statusMap[texto]; cargarClinicas() })
+      }
+    })
+
+    // ── Búsqueda por nombre ───────────────────────────────────────
+    const buscador = document.querySelector('input[type="search"], input[placeholder*="buscar" i], input[placeholder*="search" i]')
+    if (buscador) {
+      buscador.addEventListener('input', () => {
+        const q = buscador.value.toLowerCase()
+        const filtradas = clinicasData.filter(c => c.nombre.toLowerCase().includes(q))
+        renderizarClinicas(filtradas)
+      })
+    }
+
+    // Carga inicial
+    await cargarClinicas()
+
+    // ── Modal Nueva Clínica ───────────────────────────────────────
+    const modal       = document.getElementById('modal-nueva-clinica')
+    const modalOverlay= document.getElementById('modal-overlay')
+    const modalCerrar = document.getElementById('modal-cerrar')
+    const modalCancel = document.getElementById('modal-cancelar')
+    const formModal   = document.getElementById('form-nueva-clinica')
+    const inputNombre = document.getElementById('input-nombre')
+    const inputEmail  = document.getElementById('input-email')
+    const inputPlan   = document.getElementById('input-plan')
+    const inputStatus = document.getElementById('input-status')
+    const modalError  = document.getElementById('modal-error')
+    const submitBtn   = document.getElementById('modal-submit')
+    const submitTxt   = document.getElementById('modal-submit-txt')
+
+    async function abrirModal() {
+      modal.style.display = 'flex'
+      modalError.classList.add('hidden')
+      formModal.reset()
+      inputPlan.innerHTML = '<option value="">Cargando...</option>'
+      try {
+        const planes = await obtenerPlanes()
+        inputPlan.innerHTML = planes.map(p =>
+          `<option value="${p.id}">${p.nombre} — $${p.precio_mensual}/mes</option>`
+        ).join('')
+      } catch {
+        inputPlan.innerHTML = '<option value="">Error al cargar planes</option>'
+      }
+    }
+
+    function cerrarModal() {
+      modal.style.display = 'none'
+    }
+
+    document.getElementById('btn-nueva-clinica').addEventListener('click', abrirModal)
+    modalCerrar.addEventListener('click', cerrarModal)
+    modalCancel.addEventListener('click', cerrarModal)
+    modalOverlay.addEventListener('click', cerrarModal)
+
+    formModal.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      modalError.classList.add('hidden')
+      submitBtn.disabled = true
+      submitTxt.textContent = 'Creando...'
+      try {
+        await crearClinica({
+          nombre:          inputNombre.value.trim(),
+          email_contacto:  inputEmail.value.trim(),
+          plan_id:         inputPlan.value,
+          status:          inputStatus.value,
+        })
+        cerrarModal()
+        await cargarClinicas()
+      } catch (err) {
+        modalError.textContent = err.message
+        modalError.classList.remove('hidden')
+      } finally {
+        submitBtn.disabled = false
+        submitTxt.textContent = 'Crear clínica'
+      }
+    })
+
+    document.getElementById('btn-logout')?.addEventListener('click', async () => {
+      await supabase.auth.signOut()
+      localStorage.removeItem('tp_rol')
+      localStorage.removeItem('tp_user_id')
+      localStorage.removeItem('tp_email')
+      window.location.href = 'acceso_super_admin.html'
+    })
+  </script>
+
+  <!-- Modal Nueva Clínica -->
+  <div id="modal-nueva-clinica" style="display:none" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="modal-overlay"></div>
+    <div class="relative bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-md p-6 z-10">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-bold text-slate-100">Nueva Clínica</h3>
+        <button id="modal-cerrar" class="p-2 rounded-full hover:bg-slate-800 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">close</span>
+        </button>
+      </div>
+      <form id="form-nueva-clinica" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Nombre de la clínica</label>
+          <input id="input-nombre" type="text" required placeholder="Ej: Clínica Bienestar" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Email de contacto</label>
+          <input id="input-email" type="email" required placeholder="admin@clinica.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 transition-colors"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Plan</label>
+          <select id="input-plan" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+            <option value="">Cargando planes...</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1.5">Estado inicial</label>
+          <select id="input-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-100 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+            <option value="trial">Trial</option>
+            <option value="activa">Activa</option>
+            <option value="suspendida">Suspendida</option>
+          </select>
+        </div>
+        <div id="modal-error" class="hidden text-rose-400 text-sm bg-rose-500/10 border border-rose-500/20 rounded-xl px-4 py-2.5"></div>
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="modal-cancelar" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 text-slate-400 text-sm font-semibold hover:bg-slate-800 transition-colors">Cancelar</button>
+          <button type="submit" id="modal-submit" class="flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2">
+            <span id="modal-submit-txt">Crear clínica</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body></html>

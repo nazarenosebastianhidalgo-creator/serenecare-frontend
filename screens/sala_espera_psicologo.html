@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Sala de Espera</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+  @keyframes pulse-green { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,0.4)} 50%{opacity:.7;box-shadow:0 0 0 8px rgba(74,222,128,0)} }
+  .pulse-green { animation: pulse-green 2s ease-in-out infinite; }
+  @keyframes pulse-violet { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .pulse-violet { animation: pulse-violet 1.5s ease-in-out infinite; }
+  .btn-ctrl { width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;color:#e2e8f0; }
+  .btn-ctrl:hover { background:rgba(255,255,255,0.14); }
+  .btn-ctrl.off { background:rgba(248,113,113,0.15);border-color:rgba(248,113,113,0.3);color:#f87171; }
+  .metric-chip { display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px; }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Portal Clínico</p>
+    </div>
+  </div>
+
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="agenda_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Mi Agenda</span>
+    </a>
+    <a href="pacientes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Mis Pacientes</span>
+    </a>
+    <a href="mensajes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="sala_espera_psicologo.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm font-headline" style="background:rgba(74,222,128,0.12);color:#4ade80;">
+      <span class="material-symbols-outlined text-lg" style="color:#4ade80;font-variation-settings:'FILL' 1;">videocam</span><span>Videollamadas</span>
+    </a>
+    <a href="consentimientos_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">history_edu</span><span>Consentimientos</span>
+    </a>
+  </nav>
+
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(139,92,246,0.2);color:#a78bfa;">SP</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Sara Palacios</p>
+        <p class="text-[10px] text-slate-500">Psicóloga clínica</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="pl-64 min-h-screen">
+
+  <!-- HEADER -->
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/20" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(16px);">
+    <div class="flex items-center gap-4">
+      <h2 class="font-headline text-lg font-extrabold text-white tracking-tight">Sala de Espera</h2>
+      <span class="text-slate-600">·</span>
+      <span class="text-slate-400 text-sm font-semibold" id="header-sesion">Sesión #24</span>
+      <!-- Timer -->
+      <div class="flex items-center gap-2 px-3 py-1.5 rounded-full" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);">
+        <span class="w-2 h-2 rounded-full pulse-violet" style="background:#a78bfa;"></span>
+        <span id="timer-display" class="font-mono font-bold text-sm" style="color:#a78bfa;">00:00</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-xs text-slate-500 italic" id="espera-msg">El paciente lleva <span id="espera-min" style="color:#4ade80;font-weight:700;">0 min</span> esperando</span>
+      <button onclick="cancelarSesion()" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-colors hover:bg-red-500/10" style="color:#f87171;border:1px solid rgba(248,113,113,0.2);background:none;cursor:pointer;">
+        Cancelar sesión
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="px-8 py-8">
+
+    <!-- BUSCADOR DE PACIENTE -->
+    <div class="mb-6 rounded-2xl p-5" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);">
+      <!-- Banner auto-carga -->
+      <div id="banner-auto" style="display:none;align-items:center;gap:8px;padding:7px 12px;border-radius:10px;background:rgba(52,211,153,0.07);border:1px solid rgba(52,211,153,0.2);margin-bottom:12px;">
+        <span class="material-symbols-outlined" style="font-size:14px;color:#34d399;font-variation-settings:'FILL' 1;">auto_awesome</span>
+        <span id="banner-auto-txt" style="font-size:11px;font-weight:700;color:#34d399;flex:1;"></span>
+        <button onclick="document.getElementById('banner-auto').style.display='none'" style="background:none;border:none;cursor:pointer;color:#34d399;padding:0;line-height:1;">
+          <span class="material-symbols-outlined" style="font-size:14px;">close</span>
+        </button>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <span class="material-symbols-outlined text-base" style="color:#a78bfa;">person_search</span>
+          <p class="text-sm font-bold font-headline text-white">Paciente para esta sesión</p>
+        </div>
+        <div class="flex-1 relative" id="search-container">
+          <div class="flex items-center gap-3 px-4 py-2.5 rounded-xl" style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.1);">
+            <span class="material-symbols-outlined text-slate-500 text-base">search</span>
+            <input id="paciente-search" type="text" placeholder="Buscar paciente por nombre…" autocomplete="off"
+              class="flex-1 bg-transparent outline-none text-sm text-slate-200 placeholder-slate-600"
+              oninput="filtrarPacientes(this.value)" onfocus="mostrarLista()" />
+            <button id="clear-search" onclick="limpiarBusqueda()" class="hidden text-slate-600 hover:text-slate-400 transition-colors" style="background:none;border:none;cursor:pointer;">
+              <span class="material-symbols-outlined text-base">close</span>
+            </button>
+          </div>
+          <!-- Dropdown resultados -->
+          <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden z-50" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);box-shadow:0 16px 48px rgba(0,0,0,0.6);max-height:240px;overflow-y:auto;">
+          </div>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-2 rounded-xl flex-shrink-0" id="paciente-seleccionado-badge" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);display:none!important;">
+          <span class="w-2 h-2 rounded-full" style="background:#4ade80;"></span>
+          <span class="text-xs font-bold" style="color:#4ade80;" id="badge-nombre">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-12 gap-6 items-start">
+
+      <!-- COL IZQUIERDA: Tarjeta paciente -->
+      <section class="col-span-3 space-y-4">
+        <!-- Patient card -->
+        <div class="rounded-3xl p-6 relative overflow-hidden" style="background:#0b1321;border:1px solid rgba(255,255,255,0.06);">
+          <span class="absolute top-4 right-4 text-[10px] font-bold px-3 py-1 rounded-full" style="background:rgba(139,92,246,0.2);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">#24</span>
+          <div class="flex flex-col items-center text-center">
+            <div id="card-init" class="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-extrabold text-white mb-4 font-headline" style="background:linear-gradient(135deg,rgba(167,139,250,0.3),rgba(124,58,237,0.4));border:2px solid rgba(167,139,250,0.3);">ER</div>
+            <h3 id="card-nombre" class="font-headline text-lg font-bold text-white mb-0.5">Elena Rodríguez</h3>
+            <p id="card-dx" class="text-xs font-semibold mb-5" style="color:#a78bfa;">Trastorno de ansiedad</p>
+            <div class="w-full space-y-3 py-4 mb-4" style="border-top:1px solid rgba(255,255,255,0.06);border-bottom:1px solid rgba(255,255,255,0.06);">
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500">Hora</span>
+                <span id="card-hora" class="font-semibold text-slate-200">Hoy · 14:30</span>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500">Duración</span>
+                <span class="font-semibold text-slate-200">50 min</span>
+              </div>
+              <div class="flex justify-between items-center text-xs">
+                <span class="text-slate-500">Sesiones</span>
+                <span id="card-sesion" class="font-semibold text-slate-200">24 realizadas</span>
+              </div>
+            </div>
+            <!-- Status badge -->
+            <div class="flex items-center gap-2 w-full justify-center px-4 py-3 rounded-2xl" style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);">
+              <span class="w-2.5 h-2.5 rounded-full pulse-green" style="background:#4ade80;"></span>
+              <span class="text-xs font-bold uppercase tracking-widest" style="color:#4ade80;">En sala de espera</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Próximos pasos -->
+        <div class="rounded-2xl p-5" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">Agenda de sesión</p>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-base flex-shrink-0" style="color:#4ade80;font-variation-settings:'FILL' 1;">check_circle</span>
+              <span class="text-xs text-slate-300 leading-snug">Revisar cuestionario PHQ-9</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-base flex-shrink-0" style="color:#475569;">radio_button_unchecked</span>
+              <span class="text-xs text-slate-400 leading-snug">Establecer objetivos de la sesión</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="material-symbols-outlined text-base flex-shrink-0" style="color:#475569;">radio_button_unchecked</span>
+              <span class="text-xs text-slate-400 leading-snug">Técnica de regulación emocional</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- COL CENTRAL: Webcam preview -->
+      <section class="col-span-5 space-y-6">
+        <!-- Camera preview -->
+        <div class="relative rounded-3xl overflow-hidden" style="background:#05101f;border:1px solid rgba(255,255,255,0.08);aspect-ratio:16/9;">
+          <!-- Simulated camera feed -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+              <span class="material-symbols-outlined" id="cam-icon" style="color:rgba(167,139,250,0.4);font-size:64px;font-variation-settings:'FILL' 0;">videocam</span>
+              <p class="text-xs font-semibold" style="color:rgba(255,255,255,0.2);" id="cam-label">Vista previa de cámara</p>
+            </div>
+          </div>
+          <!-- Live badge -->
+          <div class="absolute top-4 left-4 flex items-center gap-2 px-3 py-1 rounded-full" style="background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);">
+            <span class="w-2 h-2 rounded-full pulse-green" style="background:#4ade80;"></span>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-white/70">Vista previa HD</span>
+          </div>
+          <!-- Audio meter -->
+          <div class="absolute top-4 right-4 flex items-center gap-1 px-3 py-1 rounded-full" style="background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);">
+            <span class="material-symbols-outlined text-sm" id="mic-indicator" style="color:#4ade80;">mic</span>
+            <span class="text-[10px] font-bold text-white/60" id="mic-label">Mic ON</span>
+          </div>
+          <!-- Controls overlay -->
+          <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-2 rounded-2xl" style="background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);">
+            <button class="btn-ctrl" id="btn-mic" onclick="toggleMic()" title="Micrófono">
+              <span class="material-symbols-outlined text-base">mic</span>
+            </button>
+            <button class="btn-ctrl" id="btn-cam" onclick="toggleCam()" title="Cámara">
+              <span class="material-symbols-outlined text-base">videocam</span>
+            </button>
+            <button class="btn-ctrl" onclick="testSpeaker()" title="Altavoz">
+              <span class="material-symbols-outlined text-base">volume_up</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Admit button -->
+        <div class="flex flex-col items-center gap-4">
+          <button onclick="admitirPaciente()" class="flex items-center gap-3 px-10 py-4 rounded-3xl font-headline font-extrabold text-lg transition-all hover:scale-105 active:scale-95" style="background:linear-gradient(135deg,#4ade80,#22c55e);color:#052e16;box-shadow:0 16px 48px rgba(74,222,128,0.25);border:none;cursor:pointer;">
+            <span class="material-symbols-outlined text-2xl" style="font-variation-settings:'FILL' 1;">video_call</span>
+            Admitir y comenzar sesión
+          </button>
+          <p class="text-xs text-slate-500 italic">El paciente lleva <span id="espera-min-2" style="color:#4ade80;font-weight:700;">0 min</span> esperando — puede ingresar cuando estés listo</p>
+        </div>
+      </section>
+
+      <!-- COL DERECHA: Contexto clínico -->
+      <section class="col-span-4 space-y-5">
+        <!-- Última nota SOAP -->
+        <div class="rounded-2xl p-5" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <h4 class="font-headline font-bold text-white text-sm mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-base" style="color:#a78bfa;">description</span>
+            Última nota SOAP
+          </h4>
+          <div class="rounded-xl p-4 mb-3" style="background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.05);">
+            <p class="text-xs text-slate-400 leading-relaxed">"Paciente reporta mejoría en higiene del sueño tras implementar técnica de relajación progresiva. Persisten episodios de rumiación leve ante estresores laborales..."</p>
+            <div class="flex items-center justify-between mt-3">
+              <span class="text-[10px] text-slate-600 font-bold uppercase">Sesión #23 · Hace 7 días</span>
+              <a href="notas_soap.html" class="text-[10px] font-bold hover:underline" style="color:#a78bfa;text-decoration:none;">Ver historial →</a>
+            </div>
+          </div>
+
+          <!-- Métricas -->
+          <div class="space-y-2">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">Métricas actuales</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="metric-chip" style="background:rgba(245,158,11,0.1);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);">
+                <span class="material-symbols-outlined text-xs" style="font-size:13px;">psychology</span>
+                PHQ-9: 12 · Moderado
+              </span>
+              <span class="metric-chip" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);">
+                <span class="material-symbols-outlined text-xs" style="font-size:13px;">trending_up</span>
+                Adherencia: 85%
+              </span>
+              <span class="metric-chip" style="background:rgba(20,184,166,0.1);color:#2dd4bf;border:1px solid rgba(20,184,166,0.2);">
+                <span class="material-symbols-outlined text-xs" style="font-size:13px;">mood</span>
+                GAD-7: 8 · Leve
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notas pre-sesión -->
+        <div class="rounded-2xl p-5" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 block mb-3">Notas pre-sesión</label>
+          <div class="relative">
+            <textarea id="notas-pre" rows="5" placeholder="Escribí objetivos o recordatorios para esta sesión..." class="w-full text-sm text-slate-300 placeholder-slate-600 rounded-xl p-4 outline-none resize-none transition-colors" style="background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.06);color:#e2e8f0;font-family:'Inter',sans-serif;" onfocus="this.style.borderColor='rgba(167,139,250,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.06)'"></textarea>
+            <div class="absolute bottom-3 right-3 flex items-center gap-1" style="color:rgba(255,255,255,0.2);">
+              <span class="material-symbols-outlined" style="font-size:14px;">edit_note</span>
+              <span class="text-[9px] font-bold uppercase tracking-widest">Auto</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accesos rápidos -->
+        <div class="grid grid-cols-2 gap-3">
+          <a href="ficha_paciente.html" class="flex items-center gap-2 p-3 rounded-xl transition-all hover:scale-105" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);text-decoration:none;">
+            <span class="material-symbols-outlined text-base" style="color:#a78bfa;">person</span>
+            <span class="text-xs font-bold text-slate-300">Ver ficha</span>
+          </a>
+          <a href="editor_soap.html" class="flex items-center gap-2 p-3 rounded-xl transition-all hover:scale-105" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.15);text-decoration:none;">
+            <span class="material-symbols-outlined text-base" style="color:#2dd4bf;">edit_note</span>
+            <span class="text-xs font-bold text-slate-300">Nueva SOAP</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- Toast -->
+<div id="toast" class="hidden" style="position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:500;background:#1e293b;border:1px solid rgba(139,92,246,0.3);border-radius:14px;padding:12px 24px;font-size:13px;font-weight:700;color:#e2e8f0;box-shadow:0 8px 32px rgba(0,0,0,0.5);white-space:nowrap;"></div>
+
+<!-- Floating widgets -->
+<button id="fab-mensajes" onclick="window.location.href='mensajes_psicologo.html'" style="position:fixed;bottom:96px;right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(139,92,246,0.95),rgba(109,40,217,0.95));box-shadow:0 8px 28px rgba(139,92,246,0.4),0 2px 8px rgba(0,0,0,0.4);border:none;cursor:pointer;" title="Mensajes">
+  <span class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+</button>
+<button onclick="window.location.href='mensajes_psicologo.html?wa=1'" style="position:fixed;bottom:24px;right:24px;z-index:9999;width:52px;height:52px;border-radius:50%;background:#25d366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,0.35);" title="WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</button>
+
+<script>
+window.addEventListener('pageshow', function(e){ if(e.persisted) window.location.reload(); });
+
+// ── DATOS PACIENTES ──────────────────────────────────────────────
+var PACIENTES = [
+  { nombre:'Elena Rodríguez',   init:'ER', dx:'Trastorno de ansiedad',    sesion:24, hora:'14:30' },
+  { nombre:'Carlos Mendoza',    init:'CM', dx:'Depresión moderada',        sesion:11, hora:'15:30' },
+  { nombre:'Lucía Fernández',   init:'LF', dx:'Trastorno adaptativo',      sesion:7,  hora:'16:00' },
+  { nombre:'Marcos Vidal',      init:'MV', dx:'TDAH en adultos',           sesion:18, hora:'17:00' },
+  { nombre:'Ana Beltrán',       init:'AB', dx:'Ansiedad social',           sesion:5,  hora:'10:00' },
+  { nombre:'Roberto Fuentes',   init:'RF', dx:'Estrés postraumático',      sesion:32, hora:'11:30' },
+  { nombre:'Isabel Castro',     init:'IC', dx:'Trastorno bipolar II',      sesion:9,  hora:'12:00' },
+  { nombre:'Diego Morales',     init:'DM', dx:'Burnout laboral',           sesion:3,  hora:'13:00' },
+];
+
+var pacienteActual = PACIENTES[0]; // Elena por defecto
+
+function filtrarPacientes(q) {
+  var lista = document.getElementById('search-results');
+  var clear = document.getElementById('clear-search');
+  q = q.trim().toLowerCase();
+  clear.classList.toggle('hidden', q.length === 0);
+  if (!q) { lista.classList.add('hidden'); return; }
+  var matches = PACIENTES.filter(function(p){ return p.nombre.toLowerCase().includes(q); });
+  if (!matches.length) {
+    lista.innerHTML = '<div class="px-4 py-3 text-xs text-slate-500">Sin resultados</div>';
+  } else {
+    lista.innerHTML = matches.map(function(p){
+      return '<button onclick="seleccionarPaciente(\'' + p.nombre + '\')" class="flex items-center gap-3 w-full px-4 py-3 hover:bg-white/5 transition-colors text-left" style="border:none;background:none;cursor:pointer;">' +
+        '<div class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(167,139,250,0.2);color:#a78bfa;">' + p.init + '</div>' +
+        '<div><p class="text-sm font-semibold text-white">' + p.nombre + '</p>' +
+        '<p class="text-xs text-slate-500">' + p.dx + ' · Sesión #' + p.sesion + '</p></div>' +
+        '</button>';
+    }).join('<div style="height:1px;background:rgba(255,255,255,0.04);margin:0 12px;"></div>');
+  }
+  lista.classList.remove('hidden');
+}
+
+function mostrarLista() {
+  var q = document.getElementById('paciente-search').value.trim();
+  if (q) filtrarPacientes(q);
+}
+
+function seleccionarPaciente(nombre) {
+  var p = PACIENTES.find(function(x){ return x.nombre === nombre; });
+  if (!p) return;
+  pacienteActual = p;
+
+  // Cerrar dropdown y actualizar input
+  document.getElementById('search-results').classList.add('hidden');
+  document.getElementById('paciente-search').value = p.nombre;
+  document.getElementById('clear-search').classList.remove('hidden');
+
+  // Badge seleccionado
+  var badge = document.getElementById('paciente-seleccionado-badge');
+  badge.style.display = 'flex';
+  document.getElementById('badge-nombre').textContent = p.nombre;
+
+  // Actualizar tarjeta paciente
+  document.getElementById('card-init').textContent = p.init;
+  document.getElementById('card-nombre').textContent = p.nombre;
+  document.getElementById('card-dx').textContent = p.dx;
+  document.getElementById('card-hora').textContent = 'Hoy · ' + p.hora;
+  document.getElementById('card-sesion').textContent = p.sesion + ' realizadas';
+  document.getElementById('header-sesion').textContent = 'Sesión #' + p.sesion;
+
+  mostrarToast('Paciente seleccionado: ' + p.nombre);
+}
+
+function autoDetectarPaciente() {
+  var ahora = new Date();
+  var horaActual = ahora.getHours() * 60 + ahora.getMinutes();
+
+  // Buscar sesión activa (±30 min de la hora actual) o la próxima del día
+  var candidato = null;
+  var menorDiff = Infinity;
+
+  PACIENTES.forEach(function(p) {
+    if (!p.hora) return;
+    var parts = p.hora.split(':');
+    var minSesion = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+    var diff = minSesion - horaActual;
+    // Priorizar: sesión en curso (hasta 50 min pasados) o próxima (hasta 30 min antes)
+    if (diff >= -50 && diff < menorDiff) {
+      menorDiff = diff;
+      candidato = p;
+    }
+  });
+
+  // Si no hay ninguna próxima, tomar la primera del día
+  if (!candidato) candidato = PACIENTES[0];
+
+  seleccionarPaciente(candidato.nombre);
+
+  // Mostrar banner informativo
+  var banner = document.getElementById('banner-auto');
+  var txt    = document.getElementById('banner-auto-txt');
+  banner.style.display = 'flex';
+  if (menorDiff < 0) {
+    txt.textContent = 'Sesión en curso con ' + candidato.nombre + ' (comenzó hace ' + Math.abs(menorDiff) + ' min) · cargado desde agenda';
+  } else if (menorDiff === 0) {
+    txt.textContent = 'Sesión ahora con ' + candidato.nombre + ' · cargado desde agenda';
+  } else if (menorDiff <= 30) {
+    txt.textContent = 'Próxima sesión en ' + menorDiff + ' min con ' + candidato.nombre + ' · cargado desde agenda';
+  } else {
+    txt.textContent = 'Próxima sesión hoy: ' + candidato.nombre + ' a las ' + candidato.hora + ' · cargado desde agenda';
+  }
+}
+
+function limpiarBusqueda() {
+  document.getElementById('paciente-search').value = '';
+  document.getElementById('search-results').classList.add('hidden');
+  document.getElementById('clear-search').classList.add('hidden');
+  document.getElementById('paciente-seleccionado-badge').style.display = 'none';
+}
+
+// Cerrar dropdown al hacer click fuera
+document.addEventListener('click', function(e){
+  if (!document.getElementById('search-container').contains(e.target))
+    document.getElementById('search-results').classList.add('hidden');
+});
+
+// User info
+(function(){
+  var n = localStorage.getItem('tp_nombre') || 'Sara Palacios';
+  var c = localStorage.getItem('tp_clinica') || 'Clínica Sol';
+  var init = n.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+  document.getElementById('user-nombre').textContent = n;
+  document.getElementById('nombre-clinica').textContent = c;
+  document.getElementById('user-avatar').textContent = init;
+})();
+
+// Auto-detectar paciente de la agenda al cargar
+autoDetectarPaciente();
+
+// Timer — cuenta cuánto lleva esperando el paciente
+var esperaSegundos = 0;
+var timerInterval = setInterval(function(){
+  esperaSegundos++;
+  var m = Math.floor(esperaSegundos / 60);
+  var s = esperaSegundos % 60;
+  document.getElementById('timer-display').textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  document.getElementById('espera-min').textContent = m === 0 ? 'menos de 1 min' : m + ' min';
+  document.getElementById('espera-min-2').textContent = m === 0 ? 'menos de 1 min' : m + ' min';
+}, 1000);
+
+// Mic toggle
+var micOn = true;
+function toggleMic() {
+  micOn = !micOn;
+  var btn = document.getElementById('btn-mic');
+  var icon = btn.querySelector('.material-symbols-outlined');
+  var ind = document.getElementById('mic-indicator');
+  var lbl = document.getElementById('mic-label');
+  if (micOn) {
+    btn.classList.remove('off');
+    icon.textContent = 'mic';
+    ind.textContent = 'mic'; ind.style.color = '#4ade80';
+    lbl.textContent = 'Mic ON';
+  } else {
+    btn.classList.add('off');
+    icon.textContent = 'mic_off';
+    ind.textContent = 'mic_off'; ind.style.color = '#f87171';
+    lbl.textContent = 'Mic OFF';
+  }
+}
+
+// Camera toggle
+var camOn = true;
+function toggleCam() {
+  camOn = !camOn;
+  var btn = document.getElementById('btn-cam');
+  var icon = btn.querySelector('.material-symbols-outlined');
+  var ci = document.getElementById('cam-icon');
+  var cl = document.getElementById('cam-label');
+  if (camOn) {
+    btn.classList.remove('off');
+    icon.textContent = 'videocam';
+    ci.textContent = 'videocam'; ci.style.color = 'rgba(167,139,250,0.4)';
+    cl.textContent = 'Vista previa de cámara';
+  } else {
+    btn.classList.add('off');
+    icon.textContent = 'videocam_off';
+    ci.textContent = 'videocam_off'; ci.style.color = 'rgba(248,113,113,0.4)';
+    cl.textContent = 'Cámara desactivada';
+  }
+}
+
+function testSpeaker() { mostrarToast('Reproduciendo tono de prueba…'); }
+
+// Admitir paciente → sesión activa
+function admitirPaciente() {
+  clearInterval(timerInterval);
+  mostrarToast('Iniciando sesión con ' + pacienteActual.nombre + '…');
+  setTimeout(function(){
+    window.location.href = 'telemedicina_psicologo.html?paciente=' + encodeURIComponent(pacienteActual.nombre);
+  }, 1200);
+}
+
+function cancelarSesion() {
+  if (confirm('¿Cancelar la sesión con ' + pacienteActual.nombre + '?')) {
+    clearInterval(timerInterval);
+    window.location.href = 'agenda_psicologo.html';
+  }
+}
+
+function mostrarToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  setTimeout(function(){ t.classList.add('hidden'); }, 3000);
+}
+
+function toggleUserMenu() { document.getElementById('user-menu').classList.toggle('hidden'); }
+document.addEventListener('click', function(e){
+  if (!document.getElementById('btn-user').contains(e.target))
+    document.getElementById('user-menu').classList.add('hidden');
+});
+function toggleTema() {
+  var t = localStorage.getItem('tp_tema')==='claro'?'oscuro':'claro';
+  localStorage.setItem('tp_tema', t);
+  location.reload();
+}
+</script>
+
+<script type="module">
+import { supabase, getCitas } from '../js/supabase-client.js';
+import { cerrarSesion } from '../js/auth.js';
+
+window._cerrarSesion = cerrarSesion;
+
+const { data: { session } } = await supabase.auth.getSession();
+if (!session) { window.location.href = '../login.html'; }
+
+try {
+  const userId = session.user.id;
+  const hoy = new Date().toISOString().split('T')[0];
+  const citas = await getCitas({ fecha: hoy, psicologoId: userId });
+
+  if (citas && citas.length) {
+    window.PACIENTES = citas.map(c => {
+      const pac = c.pacientes || {};
+      const nombre = ((pac.nombre||'') + ' ' + (pac.apellido||'')).trim() || 'Paciente';
+      const words  = nombre.split(' ');
+      const init   = ((words[0]||'')[0]||'') + ((words[1]||'')[0]||'');
+      return {
+        id:     c.paciente_id,
+        nombre: nombre,
+        init:   init.toUpperCase(),
+        dx:     pac.motivo_consulta || '—',
+        sesion: c.numero_sesion || 1,
+        hora:   (c.hora_inicio || '').slice(0,5),
+        citaId: c.id,
+      };
+    });
+    autoDetectarPaciente();
+  }
+} catch(e) {
+  console.warn('Error cargando agenda:', e.message);
+}
+</script>
+</body>
+</html>

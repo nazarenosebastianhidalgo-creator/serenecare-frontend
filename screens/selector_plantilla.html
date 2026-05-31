@@ -1,0 +1,319 @@
+﻿<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Therapeutic Perspective | Note Selector</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-highest": "#dce4e6",
+              "inverse-on-surface": "#9a9d9e",
+              "tertiary-fixed-dim": "#c9eed6",
+              "surface-dim": "#d4dbde",
+              "on-secondary-container": "#195968",
+              "surface-container-lowest": "#ffffff",
+              "primary": "#296777",
+              "error-container": "#fa746f",
+              "tertiary-container": "#d7fde4",
+              "secondary-fixed-dim": "#a4ddef",
+              "secondary-dim": "#1b5a69",
+              "surface-variant": "#dce4e6",
+              "surface-container": "#eaeff0",
+              "inverse-primary": "#a8e3f6",
+              "tertiary-fixed": "#d7fde4",
+              "on-error": "#fff7f6",
+              "on-background": "#2c3436",
+              "secondary-fixed": "#b2ecfd",
+              "outline-variant": "#acb3b6",
+              "on-primary-fixed-variant": "#1d5e6d",
+              "on-primary-container": "#0e5463",
+              "background": "#f8fafb",
+              "surface": "#f8fafb",
+              "primary-dim": "#195a6a",
+              "on-primary": "#f0fbff",
+              "primary-fixed": "#a8e3f6",
+              "surface-container-low": "#f0f4f6",
+              "on-secondary": "#effbff",
+              "on-surface": "#2c3436",
+              "secondary-container": "#b2ecfd",
+              "primary-fixed-dim": "#9ad5e7",
+              "tertiary-dim": "#395a48",
+              "on-error-container": "#6e0a12",
+              "on-surface-variant": "#596063",
+              "secondary": "#2b6775",
+              "on-secondary-fixed": "#004653",
+              "error": "#a83836",
+              "on-tertiary": "#e6ffee",
+              "surface-container-high": "#e3e9eb",
+              "on-tertiary-fixed": "#2f503f",
+              "outline": "#747c7e",
+              "tertiary": "#456653",
+              "surface-tint": "#296777",
+              "error-dim": "#67040d",
+              "on-secondary-fixed-variant": "#266372",
+              "primary-container": "#a8e3f6",
+              "inverse-surface": "#0b0f10",
+              "on-primary-fixed": "#00404d",
+              "on-tertiary-fixed-variant": "#4c6d5a",
+              "surface-bright": "#f8fafb",
+              "on-tertiary-container": "#416350"
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              display: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .modal-blur {
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface overflow-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-slate-950/70 backdrop-blur-xl border-b border-white/5 shadow-2xl shadow-black/20">
+<div class="flex justify-between items-center px-8 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-slate-100 font-headline">The Therapeutic Perspective</div>
+<div class="hidden md:flex items-center gap-8 font-headline tracking-tight font-medium">
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Dashboard</a>
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1" href="#">Patient List</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Analytics</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-lg transition-all scale-95 active:scale-90">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-lg transition-all scale-95 active:scale-90">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="Clinician profile avatar" class="w-10 h-10 rounded-full border border-white/10 object-cover" data-alt="professional clinician headshot with a friendly smile wearing medical scrubs in a softly lit office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkO_1aRx7PijTcd68GV0T4BENnZPwILjTgbLrEtj6MYNGpXdAWNviyFRkFhGdBEr33LlMjkmBFqBPSFU3vx5qSSs-SJSwYmaWd48z5W2dllLnb9OiNLRnS0_-1ponUPEbxzHwVqgBBdkPGQElypWDkQyLNe3X2rmHK6CCFBX1RylHC3K3fNagJMKG15zyKxLzBAu27VZfDt9nJ_68mqof-r9cCJdIoUuqKhkg7r0VtO3rw_cjNYiG0O2cqG3LUxD1D-x5GYze9-Lpn"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto bg-slate-900 flex flex-col py-8 px-4 z-40">
+<div class="mt-16 mb-10 px-4">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-cyan-400" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h2 class="text-lg font-black text-slate-100 font-headline">Clinical Suite</h2>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">The Serene Curator</p>
+</div>
+</div>
+<button class="w-full bg-gradient-to-br from-primary to-primary-dim text-on-primary py-3 px-6 rounded-xl font-headline font-semibold text-sm shadow-lg shadow-primary/20 hover:translate-y-[-1px] transition-all active:scale-95">
+                New Session
+            </button>
+</div>
+<nav class="flex-grow space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg font-manrope text-sm font-semibold bg-cyan-500/10 text-cyan-400 border-r-4 border-cyan-400 transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">edit_note</span>
+                Session Notes
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg font-manrope text-sm font-semibold text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">description</span>
+                Templates
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg font-manrope text-sm font-semibold text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">history</span>
+                Patient History
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg font-manrope text-sm font-semibold text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">insights</span>
+                Emotional Trends
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg font-manrope text-sm font-semibold text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined">psychology</span>
+                AI Insights
+            </a>
+</nav>
+<div class="pt-8 mt-auto space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg font-manrope text-sm font-semibold text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg font-manrope text-sm font-semibold text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Sign Out
+            </a>
+</div>
+</aside>
+<!-- Main Content (Patient Profile Background) -->
+<main class="ml-72 pt-24 px-12 min-h-screen bg-surface">
+<div class="max-w-5xl mx-auto opacity-40 select-none pointer-events-none">
+<div class="flex items-start justify-between mb-12">
+<div class="flex items-center gap-8">
+<img alt="Patient profile avatar" class="w-32 h-32 rounded-2xl object-cover" data-alt="close-up portrait of a thoughtful older woman with graying hair and blue eyes in a soft cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoBsWwX14qym_Oi_0aEYS1eoUgyVRkVblb_-noCSW9Q1Y8bZ-uGlJuCMBLCK-oVbHn-7GU3Anv21bSfKozpcO-kKGmxfAkb6aDV-RLnvVpmnzUqqlsujwtcYmy9CYJaGQpoJ-Lxbbfpoj8PcCUCDxbMMMpmuGY4rZcq8UjKh1w-GIcfPXv4GZQOB_EqSLnUafXF1HtDj4GuCpCYopvGBReANzoc0X4BGnHhc5CKQ9AeE5se4_xMNRFh1FdqoOwfKCyEjWzwu9y1sac"/>
+<div>
+<h1 class="text-5xl font-extrabold tracking-tighter font-headline text-on-surface">Eleanor Vance</h1>
+<p class="text-on-surface-variant font-medium mt-2">DNI: 28.491.002 • Last session: Oct 24, 2023</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<div class="col-span-8 space-y-8">
+<div class="p-8 rounded-[1.5rem] bg-surface-container-lowest border border-outline-variant/15">
+<h3 class="text-xl font-bold font-headline mb-4">Patient Overview</h3>
+<div class="h-48 bg-surface-container-low rounded-xl"></div>
+</div>
+<div class="p-8 rounded-[1.5rem] bg-surface-container-lowest border border-outline-variant/15">
+<h3 class="text-xl font-bold font-headline mb-4">Treatment Plan</h3>
+<div class="h-64 bg-surface-container-low rounded-xl"></div>
+</div>
+</div>
+<div class="col-span-4 space-y-8">
+<div class="p-8 rounded-[1.5rem] bg-surface-container-low">
+<h3 class="text-xl font-bold font-headline mb-4">Quick Stats</h3>
+<div class="space-y-4">
+<div class="h-12 bg-surface-container-high rounded-lg"></div>
+<div class="h-12 bg-surface-container-high rounded-lg"></div>
+<div class="h-12 bg-surface-container-high rounded-lg"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal Overlay -->
+<div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-950/80 modal-blur">
+<div class="bg-[#020617] w-full max-w-4xl rounded-[2rem] shadow-[0_32px_64px_rgba(0,0,0,0.5)] border border-white/5 overflow-hidden flex flex-col">
+<!-- Modal Header -->
+<div class="px-10 pt-10 pb-6 flex items-center justify-between">
+<div class="flex items-center gap-5">
+<div class="relative">
+<img alt="Eleanor Vance" class="w-16 h-16 rounded-full object-cover border-2 border-cyan-500/30" data-alt="portrait of an elegant older woman with wise eyes in a studio setting with soft side lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvdkKY7PqEaqVanhJkjD-HTf3tlkRtHdlVnl5FWrI6UEXylMXkMy-8KSL6iJT7kFN3VTQUGZCCrQHfLab3SokihhY0i3etOlQKH-mNNeWGIXQJwF823YGgCecDoEp46LKNzsGGzYFeJ5JSRd4GQq0O3TkgEm4Mb12DtNj7G3yylc2QrFbRMF582S5A0eGkPKD1YShSFbje2JJXuY9ZLkU-pqL46thza7QP50CXjbrjy4ju3uxhhywsoMUxD8WH7gP5I3PnQFMgX2PN"/>
+<div class="absolute -bottom-1 -right-1 bg-cyan-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full">#12</div>
+</div>
+<div>
+<p class="text-cyan-400/80 text-xs font-bold tracking-widest uppercase mb-1">Paciente Actual</p>
+<h2 class="text-2xl font-bold font-headline text-white">Eleanor Vance</h2>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+<span class="text-slate-300 text-xs font-semibold">Usar borrador IA</span>
+<button class="w-10 h-5 bg-cyan-500 rounded-full relative transition-all">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md"></div>
+</button>
+</div>
+<button class="p-2 text-slate-500 hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<!-- Modal Body -->
+<div class="px-10 pb-4">
+<h3 class="text-4xl font-bold font-headline text-white tracking-tight mb-10">¿Qué tipo de nota quieres crear?</h3>
+<div class="grid grid-cols-2 gap-6">
+<!-- Template Card: SOAP -->
+<label class="group cursor-pointer relative">
+<input checked="" class="peer hidden" name="template" type="radio"/>
+<div class="p-8 h-full rounded-[1.5rem] bg-slate-900/40 border border-white/5 transition-all duration-300 group-hover:bg-slate-800/60 peer-checked:bg-cyan-500/10 peer-checked:border-cyan-500/50 peer-checked:ring-2 peer-checked:ring-cyan-500/20">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">clinical_notes</span>
+</div>
+<span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-3 py-1 rounded-full border border-white/5">15 MIN</span>
+</div>
+<h4 class="text-xl font-bold text-white font-headline mb-2">Nota SOAP</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Estructura clínica estándar: Subjetivo, Objetivo, Evaluación y Plan detallado.</p>
+</div>
+</label>
+<!-- Template Card: DAP -->
+<label class="group cursor-pointer relative">
+<input class="peer hidden" name="template" type="radio"/>
+<div class="p-8 h-full rounded-[1.5rem] bg-slate-900/40 border border-white/5 transition-all duration-300 group-hover:bg-slate-800/60 peer-checked:bg-cyan-500/10 peer-checked:border-cyan-500/50 peer-checked:ring-2 peer-checked:ring-cyan-500/20">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">analytics</span>
+</div>
+<span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-3 py-1 rounded-full border border-white/5">10 MIN</span>
+</div>
+<h4 class="text-xl font-bold text-white font-headline mb-2">Nota DAP</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Enfoque en Datos, Evaluación y Plan. Ideal para seguimientos conductuales.</p>
+</div>
+</label>
+<!-- Template Card: Free Note -->
+<label class="group cursor-pointer relative">
+<input class="peer hidden" name="template" type="radio"/>
+<div class="p-8 h-full rounded-[1.5rem] bg-slate-900/40 border border-white/5 transition-all duration-300 group-hover:bg-slate-800/60 peer-checked:bg-cyan-500/10 peer-checked:border-cyan-500/50 peer-checked:ring-2 peer-checked:ring-cyan-500/20">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">edit_square</span>
+</div>
+<span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-3 py-1 rounded-full border border-white/5">LIBRE</span>
+</div>
+<h4 class="text-xl font-bold text-white font-headline mb-2">Nota Libre</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Escritura sin restricciones. Ideal para sesiones de narrativa abierta o crisis.</p>
+</div>
+</label>
+<!-- Template Card: Rapid Progress -->
+<label class="group cursor-pointer relative">
+<input class="peer hidden" name="template" type="radio"/>
+<div class="p-8 h-full rounded-[1.5rem] bg-slate-900/40 border border-white/5 transition-all duration-300 group-hover:bg-slate-800/60 peer-checked:bg-cyan-500/10 peer-checked:border-cyan-500/50 peer-checked:ring-2 peer-checked:ring-cyan-500/20">
+<div class="flex justify-between items-start mb-6">
+<div class="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">bolt</span>
+</div>
+<span class="bg-slate-800 text-slate-400 text-[10px] font-bold px-3 py-1 rounded-full border border-white/5">5 MIN</span>
+</div>
+<h4 class="text-xl font-bold text-white font-headline mb-2">Nota de Progreso Rápida</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Checklist de avances y objetivos logrados. Rápida y estructurada.</p>
+</div>
+</label>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-10 mt-auto flex justify-end gap-4 bg-slate-900/20">
+<button class="px-8 py-4 rounded-xl text-slate-400 font-bold font-headline hover:text-white transition-colors">Cancelar</button>
+<button class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black font-headline px-12 py-4 rounded-xl shadow-xl shadow-cyan-500/20 transform transition-all active:scale-95 flex items-center gap-2">
+                    Continuar a SOAP
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+
+  <div id='error-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <div id='success-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <script type="module">
+    import { guardaClinica } from '../js/clinica.js'
+
+    await guardaClinica()
+    const params     = new URLSearchParams(window.location.search)
+    const pacienteId = params.get('paciente')
+
+    const plantillas = [
+      { id: 'inicial',    nombre: 'Sesión inicial',     campos: ['Motivo de consulta','Historia clínica','Objetivos'] },
+      { id: 'seguimiento',nombre: 'Seguimiento',        campos: ['Estado actual','Avances','Tareas pendientes'] },
+      { id: 'crisis',     nombre: 'Intervención crisis', campos: ['Descripción crisis','Intervención','Plan seguridad'] },
+      { id: 'alta',       nombre: 'Alta terapéutica',   campos: ['Logros alcanzados','Recomendaciones','Seguimiento'] },
+    ]
+
+    document.querySelectorAll('button, [data-plantilla], [class*="card"]').forEach((el, i) => {
+      if (i < plantillas.length) {
+        el.addEventListener('click', () => {
+          const p = plantillas[i]
+          sessionStorage.setItem('tp_plantilla', JSON.stringify(p))
+          location.href = `editor_soap.html?paciente=${pacienteId}&plantilla=${p.id}`
+        })
+      }
+    })
+  </script>
+</body></html>

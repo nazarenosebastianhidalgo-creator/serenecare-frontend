@@ -1,0 +1,502 @@
+﻿<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Calendario Semanal | Therapeutic Perspective</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#f8fafb",
+              "primary": "#296777",
+              "error": "#a83836",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-fixed-variant": "#1d5e6d",
+              "on-tertiary-fixed-variant": "#4c6d5a",
+              "surface": "#f8fafb",
+              "surface-variant": "#dce4e6",
+              "inverse-primary": "#a8e3f6",
+              "on-background": "#2c3436",
+              "inverse-on-surface": "#9a9d9e",
+              "surface-container": "#eaeff0",
+              "secondary-dim": "#1b5a69",
+              "surface-bright": "#f8fafb",
+              "tertiary-container": "#d7fde4",
+              "surface-container-high": "#e3e9eb",
+              "secondary-fixed": "#b2ecfd",
+              "secondary-container": "#b2ecfd",
+              "on-primary-fixed": "#00404d",
+              "on-tertiary-fixed": "#2f503f",
+              "inverse-surface": "#0b0f10",
+              "tertiary": "#456653",
+              "on-tertiary": "#e6ffee",
+              "on-primary": "#f0fbff",
+              "on-surface": "#2c3436",
+              "on-error-container": "#6e0a12",
+              "secondary-fixed-dim": "#a4ddef",
+              "primary-fixed": "#a8e3f6",
+              "tertiary-fixed-dim": "#c9eed6",
+              "primary-container": "#a8e3f6",
+              "outline-variant": "#acb3b6",
+              "on-primary-container": "#0e5463",
+              "on-secondary": "#effbff",
+              "tertiary-fixed": "#d7fde4",
+              "surface-dim": "#d4dbde",
+              "on-tertiary-container": "#416350",
+              "surface-tint": "#296777",
+              "on-surface-variant": "#596063",
+              "outline": "#747c7e",
+              "on-secondary-fixed-variant": "#266372",
+              "primary-fixed-dim": "#9ad5e7",
+              "error-dim": "#67040d",
+              "primary-dim": "#195a6a",
+              "on-secondary-container": "#195968",
+              "on-secondary-fixed": "#004653",
+              "surface-container-low": "#f0f4f6",
+              "surface-container-highest": "#dce4e6",
+              "error-container": "#fa746f",
+              "on-error": "#fff7f6",
+              "tertiary-dim": "#395a48",
+              "secondary": "#2b6775"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface flex min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="hidden md:flex flex-col gap-y-6 py-8 px-4 h-full h-screen rounded-r-[1.5rem] w-64 fixed left-0 top-0 bg-[#f0f4f6] dark:bg-slate-900 z-50 shadow-[20px_0_40px_rgba(44,52,54,0.04)] transition-all duration-300 ease-out">
+<div class="px-4 mb-4">
+<h1 class="font-headline font-extrabold text-[#2c3436] dark:text-slate-100 uppercase tracking-widest text-xs">Therapeutic</h1>
+<p class="font-headline font-extrabold text-[#2c3436] dark:text-slate-100 uppercase tracking-widest text-xs">Perspective</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="text-[#596063] dark:text-slate-400 py-3 px-4 font-['Manrope'] text-sm font-medium hover:bg-[#ffffff80] dark:hover:bg-slate-800/50 transition-all flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span>Dashboard</span>
+</a>
+<!-- Active State: Calendar -->
+<a class="bg-white dark:bg-slate-800 text-[#296777] dark:text-[#4A90A4] shadow-sm rounded-xl py-3 px-4 font-['Manrope'] text-sm font-medium transition-all flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span>Calendar</span>
+</a>
+<a class="text-[#596063] dark:text-slate-400 py-3 px-4 font-['Manrope'] text-sm font-medium hover:bg-[#ffffff80] dark:hover:bg-slate-800/50 transition-all flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span>Messages</span>
+</a>
+<a class="text-[#596063] dark:text-slate-400 py-3 px-4 font-['Manrope'] text-sm font-medium hover:bg-[#ffffff80] dark:hover:bg-slate-800/50 transition-all flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span>Staff</span>
+</a>
+<a class="text-[#596063] dark:text-slate-400 py-3 px-4 font-['Manrope'] text-sm font-medium hover:bg-[#ffffff80] dark:hover:bg-slate-800/50 transition-all flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+<span>Patients</span>
+</a>
+</nav>
+<div class="mt-4 px-4">
+<button class="w-full py-4 rounded-xl bg-gradient-to-br from-primary to-primary-dim text-on-primary font-headline text-sm font-semibold shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Session
+            </button>
+</div>
+<div class="mt-auto pt-8 border-t border-outline-variant/10">
+<a class="text-[#596063] dark:text-slate-400 py-3 px-4 font-['Manrope'] text-sm font-medium hover:bg-[#ffffff80] dark:hover:bg-slate-800/50 transition-all flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Help Center</span>
+</a>
+<a class="text-[#596063] dark:text-slate-400 py-3 px-4 font-['Manrope'] text-sm font-medium hover:bg-[#ffffff80] dark:hover:bg-slate-800/50 transition-all flex items-center gap-3" href="#" onclick="window._cerrarSesion&&window._cerrarSesion()">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 md:ml-64 min-h-screen flex flex-col">
+<!-- TopAppBar (Shared Component) -->
+<header class="flex justify-between items-center px-8 h-16 w-full sticky top-0 z-40 backdrop-blur-md bg-opacity-80 bg-[#f8fafb] dark:bg-slate-950 bg-gradient-to-b from-[#f0f4f6] to-transparent">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined md:hidden" data-icon="menu">menu</span>
+<div class="flex items-center gap-2 text-primary font-headline font-bold text-lg">
+<span>Octubre 2023</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex bg-surface-container rounded-full px-4 py-1.5 items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-xs focus:ring-0 w-48 font-body" placeholder="Buscar pacientes..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors" data-icon="settings">settings</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/30">
+<img class="w-full h-full object-cover" data-alt="Female clinician professional headshot in white medical coat with soft warm indoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnOp3T5uINTFN08T2yYvu01V3r5JsNFVzpo-u-sNjt0G2XXuIm5utNncS-kWApJWNgDLb02KMUVQVIPVjuvnQ1R2jfTd9P6CkonG2LZW2acUVsVeEIYHT5kziF_hIHEAhdlprpbT4i3EFw8g35U_3qbTNKr3LyC89ElTe8qb_KKGmNwBHLFx3TwB5fIkj9ua3Jk94_tTwd9qCnMdT14gwzeIT7GtRd9q1Ka6Zg6MBltSTok5ZeSbi29WD92WTLKECuTORqWqJLc3L2"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-8 flex gap-8 h-[calc(100vh-64px)] overflow-hidden">
+<!-- Left Side: Calendar Grid -->
+<div class="flex-1 flex flex-col gap-6 overflow-hidden">
+<!-- Calendar Header / Controls -->
+<div class="flex justify-between items-end">
+<div class="flex flex-col gap-1">
+<h2 class="text-3xl font-headline font-extrabold tracking-tight text-on-background">Vista Semanal</h2>
+<p class="text-on-surface-variant text-sm">16 de Octubre - 22 de Octubre</p>
+</div>
+<div class="flex items-center bg-surface-container-low p-1 rounded-xl">
+<button class="px-4 py-2 text-xs font-semibold rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors">Día</button>
+<button class="px-4 py-2 text-xs font-semibold rounded-lg bg-surface-container-lowest text-primary shadow-sm">Semana</button>
+<button class="px-4 py-2 text-xs font-semibold rounded-lg text-on-surface-variant hover:bg-surface-container-highest transition-colors">Mes</button>
+</div>
+</div>
+<!-- Calendar Grid Container -->
+<div class="flex-1 bg-surface-container-lowest rounded-3xl overflow-hidden flex flex-col relative">
+<!-- Weekday Headers -->
+<div class="grid grid-cols-[80px_repeat(7,1fr)] border-b border-surface-container">
+<div class="h-12"></div> <!-- Time Spacer -->
+<div class="flex flex-col items-center justify-center h-12 py-2">
+<span class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant opacity-60">Lun</span>
+<span class="text-sm font-bold">16</span>
+</div>
+<div class="flex flex-col items-center justify-center h-12 py-2 bg-primary-container/10">
+<span class="text-[10px] uppercase tracking-widest font-bold text-primary">Mar</span>
+<span class="text-sm font-bold text-primary">17</span>
+</div>
+<div class="flex flex-col items-center justify-center h-12 py-2">
+<span class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant opacity-60">Mié</span>
+<span class="text-sm font-bold">18</span>
+</div>
+<div class="flex flex-col items-center justify-center h-12 py-2">
+<span class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant opacity-60">Jue</span>
+<span class="text-sm font-bold">19</span>
+</div>
+<div class="flex flex-col items-center justify-center h-12 py-2">
+<span class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant opacity-60">Vie</span>
+<span class="text-sm font-bold">20</span>
+</div>
+<div class="flex flex-col items-center justify-center h-12 py-2">
+<span class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant opacity-60">Sáb</span>
+<span class="text-sm font-bold">21</span>
+</div>
+<div class="flex flex-col items-center justify-center h-12 py-2">
+<span class="text-[10px] uppercase tracking-widest font-bold text-on-surface-variant opacity-60">Dom</span>
+<span class="text-sm font-bold">22</span>
+</div>
+</div>
+<!-- Scrollable Grid Body -->
+<div class="flex-1 overflow-y-auto hide-scrollbar relative">
+<!-- Hour Labels & Grid Lines -->
+<div class="grid grid-cols-[80px_1fr] min-h-fit">
+<!-- Hours Column -->
+<div class="flex flex-col">
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">08 AM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">09 AM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">10 AM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">11 AM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">12 PM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">01 PM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">02 PM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">03 PM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">04 PM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">05 PM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">06 PM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">07 PM</div>
+<div class="h-20 flex items-start justify-end pr-4 pt-2 text-[10px] font-bold text-on-surface-variant uppercase">08 PM</div>
+</div>
+<!-- Grid Background -->
+<div class="grid grid-cols-7 relative">
+<!-- Vertical Lines -->
+<div class="absolute inset-0 grid grid-cols-7 pointer-events-none">
+<div class="border-l border-surface-container h-full"></div>
+<div class="border-l border-surface-container h-full bg-primary-container/[0.03]"></div>
+<div class="border-l border-surface-container h-full"></div>
+<div class="border-l border-surface-container h-full"></div>
+<div class="border-l border-surface-container h-full"></div>
+<div class="border-l border-surface-container h-full"></div>
+<div class="border-l border-surface-container h-full"></div>
+</div>
+<!-- Horizontal Lines -->
+<div class="absolute inset-0 pointer-events-none">
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+<div class="h-20 border-b border-surface-container/50"></div>
+</div>
+<!-- Appointments (Relative positioning logic simulated) -->
+<!-- Appointment 1: Mon 9am - 10am -->
+<div class="absolute top-[80px] left-[0%] w-[14.28%] h-[80px] p-1">
+<div class="bg-primary-container text-on-primary-container h-full w-full rounded-xl p-3 flex flex-col justify-between border-l-4 border-primary shadow-sm hover:scale-[1.02] transition-transform cursor-pointer">
+<div>
+<p class="text-[10px] font-bold opacity-70 uppercase leading-none mb-1">9:00 AM</p>
+<p class="font-headline font-bold text-xs leading-tight">Elena Rodríguez</p>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="videocam">videocam</span>
+<span class="text-[9px] font-semibold">Terapia Online</span>
+</div>
+</div>
+</div>
+<!-- Appointment 2: Tue 10am - 11:30am -->
+<div class="absolute top-[160px] left-[14.28%] w-[14.28%] h-[120px] p-1">
+<div class="bg-tertiary-container text-on-tertiary-container h-full w-full rounded-xl p-3 flex flex-col justify-between border-l-4 border-tertiary shadow-sm hover:scale-[1.02] transition-transform cursor-pointer">
+<div>
+<p class="text-[10px] font-bold opacity-70 uppercase leading-none mb-1">10:00 AM</p>
+<p class="font-headline font-bold text-xs leading-tight">Mateo Sánchez</p>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="person">person</span>
+<span class="text-[9px] font-semibold">TDAH Seguimiento</span>
+</div>
+</div>
+</div>
+<!-- Appointment 3: Thu 2pm - 3pm -->
+<div class="absolute top-[480px] left-[42.84%] w-[14.28%] h-[80px] p-1">
+<div class="bg-secondary-container text-on-secondary-container h-full w-full rounded-xl p-3 flex flex-col justify-between border-l-4 border-secondary shadow-sm hover:scale-[1.02] transition-transform cursor-pointer">
+<div>
+<p class="text-[10px] font-bold opacity-70 uppercase leading-none mb-1">2:00 PM</p>
+<p class="font-headline font-bold text-xs leading-tight">Sofía Martínez</p>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="diversity_3">diversity_3</span>
+<span class="text-[9px] font-semibold">Terapia de Pareja</span>
+</div>
+</div>
+</div>
+<!-- Appointment 4: Wed 11am - 12pm -->
+<div class="absolute top-[240px] left-[28.56%] w-[14.28%] h-[80px] p-1">
+<div class="bg-surface-container-highest text-on-surface h-full w-full rounded-xl p-3 flex flex-col justify-between border-l-4 border-outline shadow-sm hover:scale-[1.02] transition-transform cursor-pointer">
+<div>
+<p class="text-[10px] font-bold opacity-70 uppercase leading-none mb-1">11:00 AM</p>
+<p class="font-headline font-bold text-xs leading-tight">Carlos Ruiz</p>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="psychology">psychology</span>
+<span class="text-[9px] font-semibold">Evaluación Inicial</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Appointments & Filters -->
+<aside class="w-80 flex flex-col gap-8">
+<!-- Citas del Día Bento Card -->
+<div class="bg-surface-container-low rounded-[2rem] p-6 flex flex-col gap-6 shadow-[20px_20px_60px_rgba(44,52,54,0.03)] border border-white/50 backdrop-blur-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline font-extrabold text-xl text-on-surface">Citas de hoy</h3>
+<span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-full">4 RESTANTES</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Tiny Appointment Row -->
+<div class="flex items-start gap-4 p-3 rounded-2xl bg-white/60 hover:bg-white transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full flex-shrink-0 overflow-hidden ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
+<img class="w-full h-full object-cover" data-alt="Portrait of a calm middle-aged woman with gentle smile in professional attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2OXMUDbdYnSwsGORzSi7Ge63UoUj3I2jZq19YHw2gI2v8ecjBzmHOmffovAd3m_ewfKgQvz7nQfAwFNE_YCUwwlS4E36_Al_xSLgTLPXCfhgf43MiwryKChY0FKvfoVAHPjqLlyiEEIwvGLrrQJMAy_TsXU60gCnHGwReIyW3YVwVjICFxMSlkQ1KFioSg3kr4zKsiOYAtUfPWd4wrcInu1opVlKvqvlR04OuW4amW_H5eRYTSKGxsjg6QrC4X4YPyS8CYRNBitRa"/>
+</div>
+<div class="flex-1">
+<p class="text-[10px] font-bold text-primary mb-0.5">14:30 - 15:30</p>
+<p class="font-bold text-xs text-on-surface">Elena Rodríguez</p>
+<p class="text-[10px] text-on-surface-variant">Ansiedad generalizada</p>
+</div>
+<span class="material-symbols-outlined text-primary-dim opacity-40 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="flex items-start gap-4 p-3 rounded-2xl bg-white/60 hover:bg-white transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full flex-shrink-0 overflow-hidden ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
+<img class="w-full h-full object-cover" data-alt="Friendly young man portrait with short hair and clean shave looking directly at camera" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPc39ROZQwqoVWQq296hDzyg9i62wxZTF7dRvORaXeIgrxkgUbwQvM1tNxCfjzMmjAJCah3Rsjl9O21zdfzV--YKbEraGClfHjqSgEpcCpDr7Jg2ORDZdbjYF3QWD4lZFc3AMM9FWerO4p_Dj7EPXs1BAGaNpB-DuX2cYDNUXMeNRufjvGvyEHCxfwh2rWw38Vwe-hj3eSJcP2fwfqscG-jBhTD87RQHCFlxozzGoGlTa6DE0YuQHLlsqOfYyZkEmUxmb9t0108Ies"/>
+</div>
+<div class="flex-1">
+<p class="text-[10px] font-bold text-primary mb-0.5">16:00 - 17:00</p>
+<p class="font-bold text-xs text-on-surface">Marcos Vidal</p>
+<p class="text-[10px] text-on-surface-variant">Terapia Cognitiva</p>
+</div>
+<span class="material-symbols-outlined text-primary-dim opacity-40 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="flex items-start gap-4 p-3 rounded-2xl bg-white/60 hover:bg-white transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full flex-shrink-0 overflow-hidden ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a smiling woman with glasses and long dark hair in a soft lit studio" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSrYL_jK8j1FIVY8Fu3mtXg5tKASJUd_wShaEDY4LyGWHVNjt979UDgdgrc8vaT41QdD_ZWfk45_1pa0s6JdtGwJfg7VJ0k_6dDvv3D0A3rXEl87_5AzAjsIyuvriL5jzK6dLMHj5-JgiwIZNWSTj-Tx7dMuYu2wVsx4wJIAtBeh9aeYo9l2ZnxP6QcI19YYBV7v2ARsmUcNpmEp_NmAssPLq0klKC-neoH8nkMo3kUqpR8IZIw7wxDg-_4rVpZKYxQ4nAFXZiApgg"/>
+</div>
+<div class="flex-1">
+<p class="text-[10px] font-bold text-primary mb-0.5">17:30 - 18:30</p>
+<p class="font-bold text-xs text-on-surface">Lucía Ferreyra</p>
+<p class="text-[10px] text-on-surface-variant">Sesión de Pareja</p>
+</div>
+<span class="material-symbols-outlined text-primary-dim opacity-40 group-hover:opacity-100 transition-opacity" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<button class="w-full py-3 text-xs font-bold text-primary bg-primary/5 rounded-xl hover:bg-primary/10 transition-colors">
+                        Ver todas las citas
+                    </button>
+</div>
+<!-- Psychologists Filter -->
+<div class="flex flex-col gap-4">
+<h4 class="font-headline font-bold text-xs uppercase tracking-widest text-on-surface-variant pl-2">Psicólogos de la Clínica</h4>
+<div class="flex flex-col gap-2">
+<label class="flex items-center justify-between p-4 rounded-2xl bg-surface-container-highest cursor-pointer border-2 border-primary shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Professional female therapist with a warm expression and short dark hair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB__ddKzqkXhk9w9mRcWK-O4y88z5YKFW1MxAkdsX4niQ5uJPrF2rg23yCoxVwdpEvFJV1_fGTcny4gMJwzOM4VMn0kgzeMJy2HPDDi9LEFcjlh2c0NPdvmetNoI9t_zxaPfBB2iqXoM5tMhhBfMcSCsKAOMa-sVOUclMZNhNipORsn8fOYtapGvziOPscSf6xEwFKSbBa1TD522f2_J9Y5qUjUYJmSGcdzVmeaeTFfzj0_Hl5SM2ExyO62d0A3EPr5vc0UT9kESbET"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold">Dra. Sara Mendes</span>
+<span class="text-[9px] text-on-surface-variant">Tú (Principal)</span>
+</div>
+</div>
+<div class="w-4 h-4 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-white" data-icon="check">check</span>
+</div>
+</label>
+<label class="flex items-center justify-between p-4 rounded-2xl bg-white/40 hover:bg-white/80 transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden opacity-60">
+<img class="w-full h-full object-cover" data-alt="Middle-aged male doctor with glasses and salt and pepper hair in a clean medical setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXJwri4K4f8q9Qq9-tImL1Fyt74kHYN6wSLx5qOy9AIGb24Df9fr-Ej1WHi38mDxeJomLOIjP_ZHK4Z22cUF8oKmzPbj6thu5ZdWpoL-Jnzdrm71zDhj4Fz_L8Nn1jNE_hYypTB6cRBJQJ-0iZmjiMbrwHI3YMExwGh6SMxiRpjnzDIxmsNIbgV4Bt3LOrhSvGHeIuViSdoKdoHSwhhVKhPZDoMwFXhfNG-qArO3uuiCOp4rbatr1MEn5Dbu8Exvy4PUbHnSXeWw5s"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-on-surface/70">Dr. Julian Ross</span>
+<span class="text-[9px] text-on-surface-variant">Psiquiatra</span>
+</div>
+</div>
+<div class="w-4 h-4 rounded-full border border-outline-variant"></div>
+</label>
+<label class="flex items-center justify-between p-4 rounded-2xl bg-white/40 hover:bg-white/80 transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden opacity-60">
+<img class="w-full h-full object-cover" data-alt="Smiling young female professional with long light brown hair in a bright office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS-N5JK-6AyNd5ApJzAPWcRyiszimSBXw-cMDv2o2WGsiZdSmGQ8aMR48TGz7ZnkCNhC-hMzjE68oaNcs006Zz5m9cqvUBWn-d1yJbEXNYWpC3XEa_How3j6dPFzci1VV9Uv79ntgpFnl6K5xeyuTzmYSJUL16NveyD-rLzhJoeQ5RUJlEQ1kxR5FVbo8oXtV8Wcr6xBlYSpIVHPL8Nr4axA4QKPm-VX2y7_kPDIHvMI7PCm1HG79Vu8HmE_kEfZbO-6nYW0B_2at3"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-on-surface/70">Lic. Carla Ruiz</span>
+<span class="text-[9px] text-on-surface-variant">Psic. Infantil</span>
+</div>
+</div>
+<div class="w-4 h-4 rounded-full border border-outline-variant"></div>
+</label>
+</div>
+</div>
+<!-- Floating-like CTA inside the layout -->
+<div class="mt-auto bg-primary-dim p-6 rounded-[2rem] text-on-primary relative overflow-hidden">
+<!-- Decor background -->
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+<h5 class="font-headline font-bold text-lg leading-tight mb-2">Resumen de la semana</h5>
+<p class="text-xs opacity-80 mb-4">Tienes un 85% de ocupación esta semana. 3 espacios disponibles.</p>
+<button class="w-full py-3 bg-secondary-fixed text-on-secondary-fixed font-bold text-xs rounded-xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="share">share</span>
+                        Compartir Horarios
+                    </button>
+</div>
+</aside>
+</div>
+</main>
+<!-- Floating Action Button for Mobile / Quick Action -->
+<button class="fixed bottom-8 right-8 w-16 h-16 rounded-full bg-primary text-white shadow-2xl flex items-center justify-center group active:scale-90 transition-transform z-50">
+<span class="material-symbols-outlined text-3xl transition-transform group-hover:rotate-90" data-icon="add">add</span>
+<!-- Tooltip or label expansion could go here -->
+</button>
+<!-- Subtle Grain Overlay for Texture -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-overlay bg-repeat" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2o7TFFlewrD2G_N2vTdGhIYf4sBV6atB_1AxbNK6T96uAy9isdhts-piO-zlY0LFNcT411we0FiLeb5951i6h2ZdSP6nrTX1n6gnZr67QPkEC6axlVa-p3xUdn1QmSfAASSrBXNVPlkAcxJbICxTCVSJllCzUf-bmtYEtA1r9Ymr5nP8omC69RLbGMh8Ab7i3W1LiYfYz8m9rPOQcIjpamzA6JDBFxnRy5Q9jEk8AX-v7UxcQEqIC697weG14ShZAFOOBnfBX5iTA')"></div>
+
+  <div id='error-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <div id='success-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <script type="module">
+    import { guardaClinica, obtenerCitas, badgeEstadoCita, formatearHora } from '../js/clinica.js'
+    import { mostrarError, cerrarSesion } from '../js/auth.js'
+    window._cerrarSesion = cerrarSesion
+
+    await guardaClinica()
+
+    const hoy   = new Date()
+    let   año   = hoy.getFullYear()
+    let   mes   = hoy.getMonth()
+
+    async function renderCalendario() {
+      const primerDia    = new Date(año, mes, 1)
+      const ultimoDia    = new Date(año, mes + 1, 0)
+      const fechaInicio  = `${año}-${String(mes+1).padStart(2,'0')}-01`
+      const fechaFin     = `${año}-${String(mes+1).padStart(2,'0')}-${String(ultimoDia.getDate()).padStart(2,'0')}`
+
+      const citas = await obtenerCitas()
+      const citasPorFecha = {}
+      citas.forEach(c => {
+        if (!citasPorFecha[c.fecha]) citasPorFecha[c.fecha] = []
+        citasPorFecha[c.fecha].push(c)
+      })
+
+      // Título del mes
+      const titulo = document.querySelector('[data-mes], h2, [class*="headline"]')
+      if (titulo && titulo.children.length === 0)
+        titulo.textContent = primerDia.toLocaleDateString('es-AR', { month: 'long', year: 'numeric' })
+
+      // Grid de días — buscar contenedor del calendario
+      const grid = document.querySelector('[data-calendario], .grid, [class*="grid-cols-7"]')
+      if (!grid) return
+
+      const dias = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb']
+      const offsetInicio = primerDia.getDay()
+      let html = dias.map(d => `<div class="text-center text-xs font-bold text-on-surface-variant py-2">${d}</div>`).join('')
+
+      // Días vacíos al inicio
+      for (let i = 0; i < offsetInicio; i++) html += `<div></div>`
+
+      // Días del mes
+      for (let d = 1; d <= ultimoDia.getDate(); d++) {
+        const fecha     = `${año}-${String(mes+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+        const citasDia  = citasPorFecha[fecha] || []
+        const esHoy     = fecha === hoy.toISOString().split('T')[0]
+
+        html += `<div class="p-1 min-h-[70px] rounded-xl cursor-pointer hover:bg-surface-container transition-colors ${esHoy ? 'bg-tertiary-container' : ''}" onclick="verDia('${fecha}')">
+          <p class="text-xs font-bold ${esHoy ? 'text-tertiary' : 'text-on-surface'} mb-1">${d}</p>
+          ${citasDia.slice(0,2).map(c => `
+            <div class="text-[10px] bg-primary-container text-on-primary-container rounded px-1 py-0.5 mb-0.5 truncate">
+              ${formatearHora(c.hora_inicio)} ${c.pacientes?.nombre || ''}
+            </div>`).join('')}
+          ${citasDia.length > 2 ? `<div class="text-[10px] text-on-surface-variant">+${citasDia.length - 2} más</div>` : ''}
+        </div>`
+      }
+
+      grid.innerHTML = html
+    }
+
+    window.verDia = fecha => location.href = `gestion_citas.html?fecha=${fecha}`
+
+    // Navegación mes anterior/siguiente
+    document.querySelectorAll('button').forEach(btn => {
+      const txt = btn.textContent.trim()
+      const icon = btn.querySelector('span')?.textContent || ''
+      if (txt.includes('←') || icon.includes('chevron_left')  || txt === '<') btn.addEventListener('click', () => { if (mes === 0) { mes=11; año-- } else mes--; renderCalendario() })
+      if (txt.includes('→') || icon.includes('chevron_right') || txt === '>') btn.addEventListener('click', () => { if (mes === 11) { mes=0; año++ } else mes++; renderCalendario() })
+      if (txt.toLowerCase().includes('hoy') || txt.toLowerCase().includes('today')) btn.addEventListener('click', () => { año=new Date().getFullYear(); mes=new Date().getMonth(); renderCalendario() })
+      if (txt.toLowerCase().includes('nueva cita')) btn.addEventListener('click', () => location.href = 'modal_nueva_cita.html')
+    })
+
+    await renderCalendario()
+  </script>
+</body></html>

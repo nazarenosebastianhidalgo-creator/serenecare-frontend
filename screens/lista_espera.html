@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#dce4e6",
+                        "on-secondary": "#effbff",
+                        "surface-container-highest": "#dce4e6",
+                        "on-secondary-fixed-variant": "#266372",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "tertiary-container": "#d7fde4",
+                        "surface-container": "#eaeff0",
+                        "on-surface-variant": "#596063",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "on-surface": "#2c3436",
+                        "on-tertiary-fixed": "#2f503f",
+                        "tertiary": "#456653",
+                        "on-error": "#fff7f6",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "on-error-container": "#6e0a12",
+                        "on-tertiary": "#e6ffee",
+                        "on-secondary-fixed": "#004653",
+                        "on-background": "#2c3436",
+                        "error-container": "#fa746f",
+                        "tertiary-dim": "#395a48",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "on-tertiary-container": "#416350",
+                        "primary": "#296777",
+                        "secondary": "#2b6775",
+                        "inverse-on-surface": "#9a9d9e",
+                        "error-dim": "#67040d",
+                        "outline-variant": "#acb3b6",
+                        "secondary-dim": "#1b5a69",
+                        "secondary-container": "#b2ecfd",
+                        "surface-tint": "#296777",
+                        "primary-dim": "#195a6a",
+                        "on-primary-fixed": "#00404d",
+                        "outline": "#747c7e",
+                        "tertiary-fixed": "#d7fde4",
+                        "on-primary-container": "#0e5463",
+                        "surface-dim": "#d4dbde",
+                        "surface-bright": "#f8fafb",
+                        "on-secondary-container": "#195968",
+                        "surface-container-low": "#f0f4f6",
+                        "surface-container-high": "#e3e9eb",
+                        "secondary-fixed": "#b2ecfd",
+                        "surface": "#f8fafb",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#f0fbff",
+                        "background": "#020617",
+                        "primary-container": "#a8e3f6",
+                        "inverse-primary": "#a8e3f6",
+                        "inverse-surface": "#0b0f10",
+                        "error": "#a83836",
+                        "primary-fixed": "#a8e3f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .bg-custom-dark { background-color: #020617; }
+        .sidebar-gradient { background: linear-gradient(180deg, #020617 0%, #080f1e 100%); }
+        .btn-primary-gradient { background: linear-gradient(135deg, #296777 0%, #195a6a 100%); }
+    </style>
+</head>
+<body class="bg-custom-dark font-body text-on-surface antialiased">
+<!-- Sidebar -->
+<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 sidebar-gradient p-6 gap-y-2 z-50">
+<div class="mb-10 px-4">
+<h1 class="font-headline text-xl font-bold text-[#4A90A4]">SereneCare</h1>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-widest opacity-60">Clinical Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">space_dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white/5 text-[#4A90A4] rounded-xl shadow-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined">hourglass_empty</span>
+<span class="font-bold text-sm">Waitlist Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-medium text-sm">Patient Registry</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-medium text-sm">Clinical Insights</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-xl transition-all duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/5 pt-4">
+<button class="w-full flex items-center justify-center gap-2 btn-primary-gradient text-white py-3 rounded-xl font-semibold mb-6 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>Add New Entry</span>
+</button>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-xl text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+                    Support
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-white/5 rounded-xl text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                    Log Out
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-72 min-h-screen p-10">
+<!-- Header -->
+<header class="flex justify-between items-end mb-10">
+<div>
+<h2 class="font-headline text-4xl font-bold text-white tracking-tight mb-2">Lista de Espera</h2>
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1.5 bg-primary/10 text-primary-container px-3 py-1 rounded-full text-sm font-semibold">
+<span class="material-symbols-outlined text-sm">group</span>
+                        124 Pacientes activos
+                    </span>
+<span class="text-on-surface-variant text-sm">•</span>
+<span class="text-on-surface-variant text-sm">Actualizado hace 2 minutos</span>
+</div>
+</div>
+<button class="btn-primary-gradient px-6 py-3.5 rounded-xl text-white font-bold flex items-center gap-3 shadow-xl shadow-primary/10 transition-all hover:scale-[1.02] active:scale-95">
+<span class="material-symbols-outlined">notifications_active</span>
+                Notificar disponibilidad
+            </button>
+</header>
+<!-- Metrics Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<div class="glass p-6 rounded-3xl border border-white/5">
+<div class="flex justify-between items-start mb-4">
+<span class="p-3 bg-secondary-container/10 text-secondary-container rounded-2xl">
+<span class="material-symbols-outlined">schedule</span>
+</span>
+<span class="text-tertiary font-bold text-xs">+5% vs mes ant.</span>
+</div>
+<h3 class="text-on-surface-variant text-sm font-medium mb-1">Tiempo espera promedio</h3>
+<p class="text-3xl font-headline font-bold text-white">18 días</p>
+</div>
+<div class="glass p-6 rounded-3xl border border-white/5">
+<div class="flex justify-between items-start mb-4">
+<span class="p-3 bg-tertiary-container/10 text-tertiary-container rounded-2xl">
+<span class="material-symbols-outlined">trending_up</span>
+</span>
+<span class="text-tertiary font-bold text-xs">+12.4% hoy</span>
+</div>
+<h3 class="text-on-surface-variant text-sm font-medium mb-1">Tasa conversión</h3>
+<p class="text-3xl font-headline font-bold text-white">64.2%</p>
+</div>
+<div class="glass p-6 rounded-3xl border border-white/5">
+<div class="flex justify-between items-start mb-4">
+<span class="p-3 bg-error-container/10 text-error-container rounded-2xl">
+<span class="material-symbols-outlined">event_busy</span>
+</span>
+<span class="text-error-container font-bold text-xs">Atención requerida</span>
+</div>
+<h3 class="text-on-surface-variant text-sm font-medium mb-1">Cancelaciones hoy</h3>
+<p class="text-3xl font-headline font-bold text-white">4 huecos</p>
+</div>
+</div>
+<!-- Detail Table Section -->
+<section class="glass rounded-3xl border border-white/5 overflow-hidden mb-10">
+<div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
+<h3 class="font-headline text-lg font-bold text-white">Registro de Pacientes en Espera</h3>
+<div class="flex gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-on-surface-variant text-sm">search</span>
+<input class="bg-white/5 border-none rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:ring-1 focus:ring-primary w-64 transition-all" placeholder="Buscar paciente..." type="text"/>
+</div>
+<button class="bg-white/5 p-2 rounded-xl text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-white/[0.02]">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Pos</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Paciente</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Registro</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Espera</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Psicólogo Pref.</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Modalidad</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Estado</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/[0.01] transition-colors group">
+<td class="px-6 py-5 text-sm font-bold text-primary">#01</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-xs font-bold text-white border border-white/10">
+                                        LV
+                                    </div>
+<div>
+<p class="text-white font-semibold text-sm">Lucía Villalba</p>
+<p class="text-xs text-on-surface-variant">+34 612 345 678</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">12 Oct 2023</td>
+<td class="px-6 py-5">
+<span class="text-error-container font-bold text-sm">42 días</span>
+</td>
+<td class="px-6 py-5 text-sm text-white">Dr. Aranda</td>
+<td class="px-6 py-5">
+<span class="bg-primary/10 text-primary-fixed-dim px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">Presencial</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 text-tertiary-fixed text-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></span>
+                                    Prioridad Alta
+                                </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-white/[0.01] transition-colors group">
+<td class="px-6 py-5 text-sm font-bold text-primary">#02</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center text-xs font-bold text-white border border-white/10">
+                                        MR
+                                    </div>
+<div>
+<p class="text-white font-semibold text-sm">Marc Rius</p>
+<p class="text-xs text-on-surface-variant">+34 699 001 223</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">02 Nov 2023</td>
+<td class="px-6 py-5">
+<span class="text-tertiary-fixed font-bold text-sm">5 días</span>
+</td>
+<td class="px-6 py-5 text-sm text-white">Dra. Sanchis</td>
+<td class="px-6 py-5">
+<span class="bg-white/5 text-on-surface-variant px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider">Online</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 text-on-surface-variant text-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-on-surface-variant"></span>
+                                    Estándar
+                                </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Slots Available & Quick Actions -->
+<section>
+<h3 class="font-headline text-xl font-bold text-white mb-6">Huecos disponibles hoy</h3>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Cancelation Slot Card -->
+<div class="glass p-5 rounded-3xl border-l-4 border-l-error-container border-y border-r border-white/5 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-4xl">event_available</span>
+</div>
+<p class="text-xs font-bold text-error-container uppercase tracking-widest mb-3">Cancelación Reciente</p>
+<div class="mb-4">
+<p class="text-2xl font-headline font-bold text-white">16:30</p>
+<p class="text-sm text-on-surface-variant">Psic. Elena M.</p>
+</div>
+<button class="w-full py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-bold text-white transition-all">
+                        Asignar ahora
+                    </button>
+</div>
+<div class="glass p-5 rounded-3xl border border-white/5 relative overflow-hidden group">
+<p class="text-xs font-bold text-primary uppercase tracking-widest mb-3">Hueco Libre</p>
+<div class="mb-4">
+<p class="text-2xl font-headline font-bold text-white">18:00</p>
+<p class="text-sm text-on-surface-variant">Dr. J. Aranda</p>
+</div>
+<button class="w-full py-2 bg-white/5 hover:bg-white/10 rounded-xl text-xs font-bold text-white transition-all">
+                        Asignar ahora
+                    </button>
+</div>
+<!-- Add slot placeholder -->
+<button class="border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center justify-center p-5 hover:bg-white/[0.02] transition-all group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:scale-110 transition-transform mb-2">add_circle</span>
+<span class="text-sm font-medium text-on-surface-variant">Añadir hueco manual</span>
+</button>
+</div>
+</section>
+</main>
+<!-- Notification Modal Overlay -->
+<div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+<div class="glass w-full max-w-lg rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden">
+<div class="p-8 border-b border-white/5 relative">
+<button class="absolute top-6 right-6 text-on-surface-variant hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h3 class="font-headline text-2xl font-bold text-white mb-1">Notificar Disponibilidad</h3>
+<p class="text-sm text-on-surface-variant">Envía una alerta a los pacientes en lista de espera.</p>
+</div>
+<div class="p-8 space-y-6">
+<!-- Slot Selector -->
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Seleccionar hueco</label>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center gap-3 p-4 rounded-2xl bg-primary/10 border border-primary/30 text-white text-left">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<div>
+<p class="text-sm font-bold">Hoy, 16:30</p>
+<p class="text-[10px] text-primary/80">Elena M. (Terapia Cognitiva)</p>
+</div>
+</button>
+<button class="flex items-center gap-3 p-4 rounded-2xl bg-white/5 border border-white/5 text-on-surface-variant text-left hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">schedule</span>
+<div>
+<p class="text-sm font-bold">Hoy, 18:00</p>
+<p class="text-[10px]">J. Aranda (EMDR)</p>
+</div>
+</button>
+</div>
+</div>
+<!-- Message Preview -->
+<div>
+<label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-3">Vista previa del mensaje</label>
+<div class="bg-white/5 rounded-2xl p-4 border border-white/5">
+<p class="text-sm text-on-surface leading-relaxed italic">
+                            "Hola [Nombre], te informamos que ha quedado disponible un hueco hoy a las 16:30 con Elena M. Por favor, confirma si te interesa para asignártelo."
+                        </p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex gap-4 pt-2">
+<button class="flex-1 flex items-center justify-center gap-2 bg-[#25D366]/20 text-[#25D366] py-4 rounded-2xl font-bold border border-[#25D366]/30 hover:bg-[#25D366]/30 transition-all">
+<span class="material-symbols-outlined">chat</span>
+                        WhatsApp
+                    </button>
+<button class="flex-1 flex items-center justify-center gap-2 bg-primary-container/10 text-primary-container py-4 rounded-2xl font-bold border border-primary-container/30 hover:bg-primary-container/20 transition-all">
+<span class="material-symbols-outlined">mail</span>
+                        Enviar Email
+                    </button>
+</div>
+</div>
+<div class="p-6 bg-white/[0.02] text-center">
+<p class="text-xs text-on-surface-variant">Se enviará a los primeros 5 pacientes de la lista por orden de prioridad.</p>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="ml-72 flex flex-col md:flex-row justify-between items-center px-12 py-8 w-full border-t border-white/5 bg-custom-dark/80 backdrop-blur-md">
+<div class="text-[10px] text-on-surface-variant font-medium tracking-wide">
+            © 2024 SereneCare Therapeutic Perspective. All rights reserved.
+        </div>
+<div class="flex gap-8 mt-4 md:mt-0">
+<a class="text-[10px] text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-[10px] text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-[10px] text-on-surface-variant hover:text-primary transition-colors" href="#">Patient Rights</a>
+<a class="text-[10px] text-on-surface-variant hover:text-primary transition-colors" href="#">Accessibility</a>
+</div>
+</footer>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <script type="module">
+    import { guardaClinica, obtenerListaEspera, actualizarListaEspera, removerDeEspera, formatearFecha } from '../js/clinica.js'
+    import { mostrarError } from '../js/auth.js'
+
+    await guardaClinica()
+
+    async function cargar() {
+      try {
+        const lista = await obtenerListaEspera()
+        const contenedor = document.querySelector('tbody, [data-lista-espera], ul')
+        if (!contenedor) return
+
+        if (!lista.length) { contenedor.innerHTML = '<tr><td colspan="5" class="text-center py-12 text-on-surface-variant">La lista de espera está vacía.</td></tr>'; return }
+
+        const tag = contenedor.tagName === 'TBODY' ? 'tr' : 'div'
+        contenedor.innerHTML = lista.map(e => `
+          <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center font-bold text-secondary text-sm">${e.pacientes?.nombre?.charAt(0)}</div>
+                <div>
+                  <p class="font-semibold text-sm">${e.pacientes?.nombre} ${e.pacientes?.apellido}</p>
+                  <p class="text-xs text-on-surface-variant">${e.pacientes?.email || '—'}</p>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3 text-sm">${e.usuarios?.nombre ? e.usuarios.nombre + ' ' + e.usuarios.apellido : 'Sin preferencia'}</td>
+            <td class="px-4 py-3 text-sm text-on-surface-variant">${e.motivo || '—'}</td>
+            <td class="px-4 py-3 text-sm">${formatearFecha(e.created_at)}</td>
+            <td class="px-4 py-3">
+              <div class="flex gap-2">
+                <button onclick="asignar('${e.id}')" class="px-3 py-1 text-xs bg-tertiary-container text-on-tertiary-container rounded-full font-semibold">Asignar cita</button>
+                <button onclick="remover('${e.id}')" class="px-3 py-1 text-xs bg-error-container text-on-error-container rounded-full font-semibold">Remover</button>
+              </div>
+            </td>
+          </tr>`).join('')
+      } catch(e) { mostrarError(e.message) }
+    }
+
+    window.asignar = async id => {
+      try { await actualizarListaEspera(id, { estado: 'asignado' }); location.href = 'modal_nueva_cita.html' }
+      catch(e) { mostrarError(e.message) }
+    }
+    window.remover = async id => {
+      if (!confirm('¿Remover de la lista de espera?')) return
+      try { await removerDeEspera(id); cargar() }
+      catch(e) { mostrarError(e.message) }
+    }
+
+    await cargar()
+  </script>
+</body></html>

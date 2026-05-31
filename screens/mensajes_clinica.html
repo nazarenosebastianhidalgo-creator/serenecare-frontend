@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Mensajes</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+
+  /* Panel izquierdo conversaciones */
+  .conv-item { padding: 12px 16px; cursor: pointer; transition: background 0.15s; border-radius: 12px; }
+  .conv-item:hover { background: rgba(255,255,255,0.04); }
+  .conv-item.active { background: rgba(20,184,166,0.1); }
+  .unread-badge { min-width: 18px; height: 18px; border-radius: 99px; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; padding: 0 4px; background: #2dd4bf; color: #020617; }
+
+  /* Mensajes */
+  .msg-wrap { display: flex; margin-bottom: 16px; align-items: flex-end; gap: 8px; }
+  .msg-wrap.sent { flex-direction: row-reverse; }
+  .bubble { max-width: 72%; padding: 10px 14px; border-radius: 18px; font-size: 13px; line-height: 1.5; word-break: break-word; }
+  .bubble.recv { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: #e2e8f0; border-bottom-left-radius: 4px; }
+  .bubble.sent { background: rgba(20,184,166,0.18); border: 1px solid rgba(20,184,166,0.3); color: #e2e8f0; border-bottom-right-radius: 4px; }
+  .msg-time { font-size: 10px; color: #475569; white-space: nowrap; margin-bottom: 2px; }
+  .msg-wrap.sent .msg-time { text-align: right; }
+
+  /* Separador fecha */
+  .date-sep { text-align: center; margin: 20px 0 12px; }
+  .date-sep span { font-size: 10px; font-weight: 700; color: #334155; background: #020617; padding: 0 12px; text-transform: uppercase; letter-spacing: .08em; position: relative; }
+  .date-sep::before { content:''; position:absolute; left:0; right:0; top:50%; height:1px; background:rgba(255,255,255,0.06); z-index:0; }
+  .date-sep span { position: relative; z-index: 1; }
+
+  /* Canal tabs */
+  .canal-tab { flex:1; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#64748b; background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.2s; letter-spacing:.04em; text-transform:uppercase; }
+  .canal-tab.tab-active { color:#2dd4bf; border-bottom-color:#2dd4bf; }
+  .canal-tab.tab-wa { color:#25d366; border-bottom-color:#25d366; }
+  .bubble.recv-wa { background:rgba(37,211,102,0.1); border:1px solid rgba(37,211,102,0.2); color:#e2e8f0; border-bottom-left-radius:4px; }
+  .conv-item.active-wa { background:rgba(37,211,102,0.08); }
+
+  /* Input */
+  .chat-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; border-radius: 14px; padding: 10px 16px; font-size: 13px; outline: none; transition: border-color 0.2s; resize: none; }
+  .chat-input:focus { border-color: rgba(20,184,166,0.5); }
+  .chat-input::placeholder { color: #475569; }
+
+  /* Scroll */
+  #chat-messages { overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
+
+  /* Estado online */
+  .dot-online  { background: #4ade80; }
+  .dot-busy    { background: #fbbf24; }
+  .dot-offline { background: #475569; }
+
+  /* Broadcast banner */
+  .broadcast-btn { background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.25); color: #a78bfa; }
+  .broadcast-btn:hover { background: rgba(139,92,246,0.18); }
+
+  @keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .msg-new { animation: msgIn 0.2s ease forwards; }
+
+  /* Typing indicator */
+  @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+  .typing-dot { width:6px;height:6px;border-radius:50%;background:#94a3b8;display:inline-block;animation:blink 1.4s infinite both; }
+  .typing-dot:nth-child(2){animation-delay:.2s}
+  .typing-dot:nth-child(3){animation-delay:.4s}
+</style>
+</head>
+<body class="text-slate-200 antialiased" style="height:100vh;overflow:hidden;">
+
+<!-- =============== SIDEBAR =============== -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] text-teal-500 font-bold uppercase tracking-widest">Admin Portal</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_admin_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="pacientes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Pacientes</span>
+    </a>
+    <a href="agenda_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Agenda</span>
+    </a>
+
+    <a href="mensajes_clinica.html" class="nav-active flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span>
+      <span>Mensajes</span>
+      <span id="nav-unread" class="ml-auto unread-badge hidden">0</span>
+    </a>
+    <a href="facturacion.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">receipt_long</span><span>Facturación</span>
+    </a>
+  </nav>
+  <div id="demo-badge" class="hidden mb-3 px-3 py-2 rounded-xl text-center" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Modo Demo</p>
+  </div>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user-card" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">AC</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Admin</p>
+        <p class="text-[10px] text-slate-500">Admin Clínica</p>
+      </div>
+      <span id="chevron-user" class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- =============== MAIN: layout fijo pantalla completa =============== -->
+<div class="pl-64 flex flex-col" style="height:100vh;">
+
+  <!-- Header -->
+  <header class="flex-shrink-0 h-16 flex items-center justify-between px-8 border-b border-slate-800/30" style="background:rgba(2,6,23,0.95);backdrop-filter:blur(16px);position:relative;z-index:40;">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Mensajes</h2>
+      <p class="text-xs text-slate-500 mt-0.5">Comunicación interna del equipo</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="abrirBroadcast()" class="broadcast-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90">
+        <span class="material-symbols-outlined text-base">campaign</span>
+        Mensaje a todos
+      </button>
+      <button id="btn-apps-main" type="button" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
+      <button id="btn-notif" onclick="toggleNotif()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400">notifications</span>
+        <span id="notif-dot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notificaciones dropdown -->
+  <div id="notif-panel" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+    <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
+      <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
+      <button onclick="marcarLeidas()" class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+    </div>
+    <div id="notif-list" class="max-h-72 overflow-y-auto"></div>
+    <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+      <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones →</a>
+    </div>
+  </div>
+
+  <!-- Cuerpo: panel izquierdo + chat -->
+  <div class="flex flex-1 overflow-hidden">
+
+    <!-- Panel conversaciones -->
+    <div class="w-80 flex-shrink-0 flex flex-col border-r border-slate-800/30" style="background:#0a1628;">
+      <!-- Canal -->
+      <div class="flex flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <button id="tab-equipo" onclick="cambiarCanal('equipo')" class="canal-tab tab-active">Equipo</button>
+        <button id="tab-whatsapp" onclick="cambiarCanal('whatsapp')" class="canal-tab" style="position:relative;">
+          WhatsApp
+          <span id="wa-tab-badge" style="position:absolute;top:6px;right:8px;min-width:16px;height:16px;padding:0 3px;border-radius:99px;background:#25d366;color:#000;font-size:9px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;">3</span>
+        </button>
+      </div>
+      <!-- Buscador -->
+      <div class="p-4 border-b border-slate-800/30">
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-base">search</span>
+          <input type="text" id="search-conv" placeholder="Buscar terapeuta…" oninput="filtrarConvs()"
+            class="w-full pl-9 pr-4 py-2 text-sm rounded-xl text-slate-300 placeholder-slate-600"
+            style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);outline:none;"/>
+        </div>
+      </div>
+      <!-- Lista conversaciones -->
+      <div class="flex-1 overflow-y-auto p-3 space-y-1" id="conv-list"></div>
+    </div>
+
+    <!-- Zona de chat -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+
+      <!-- Estado vacío -->
+      <div id="chat-empty" class="flex-1 flex flex-col items-center justify-center gap-4 text-center p-8">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);">
+          <span class="material-symbols-outlined text-3xl" style="color:#2dd4bf;">chat</span>
+        </div>
+        <div>
+          <p class="text-white font-bold font-headline text-lg">Selecciona una conversación</p>
+          <p class="text-slate-500 text-sm mt-1">O envía un mensaje a todo el equipo</p>
+        </div>
+        <button onclick="abrirBroadcast()" class="broadcast-btn px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90">
+          <span class="material-symbols-outlined text-base align-middle mr-1">campaign</span>
+          Mensaje a todos
+        </button>
+      </div>
+
+      <!-- Chat activo -->
+      <div id="chat-active" class="hidden flex-1 flex flex-col overflow-hidden">
+
+        <!-- Header chat -->
+        <div class="flex-shrink-0 px-6 py-4 border-b border-slate-800/30 flex items-center gap-4" style="background:rgba(2,6,23,0.6);">
+          <div class="relative">
+            <div id="chat-avatar" class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"></div>
+            <span id="chat-dot" class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-slate-900 dot-online"></span>
+          </div>
+          <div class="flex-1">
+            <p id="chat-nombre" class="text-sm font-bold text-white font-headline"></p>
+            <p id="chat-status" class="text-xs text-slate-500"></p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="llamar()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Llamar">
+              <span class="material-symbols-outlined text-slate-400 text-lg">call</span>
+            </button>
+            <button onclick="verPerfil()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Ver perfil">
+              <span class="material-symbols-outlined text-slate-400 text-lg">person</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mensajes -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto px-6 py-4"></div>
+
+        <!-- Typing indicator -->
+        <div id="typing-indicator" class="hidden px-6 pb-2">
+          <div class="msg-wrap">
+            <div id="typing-av" class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"></div>
+            <div class="bubble recv flex items-center gap-1 py-3 px-4">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="flex-shrink-0 px-6 py-4 border-t border-slate-800/30" style="background:rgba(2,6,23,0.6);">
+          <!-- Acciones rápidas -->
+          <div class="flex gap-2 mb-3 flex-wrap" id="quick-actions"></div>
+          <div class="flex items-end gap-3">
+            <textarea id="msg-input" class="chat-input flex-1" rows="1" placeholder="Escribe un mensaje…"
+              style="min-height:42px;max-height:120px;"
+              onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+            <button onclick="enviarMensaje()" class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all hover:opacity-90 active:scale-95" style="background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.35);color:#2dd4bf;">
+              <span class="material-symbols-outlined text-lg">send</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal broadcast -->
+<div id="modal-broadcast" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6" style="background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);">
+  <div class="w-full max-w-md rounded-3xl p-7" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);">
+    <div class="flex items-center justify-between mb-5">
+      <div>
+        <h3 class="font-headline font-bold text-white text-base">Mensaje a todo el equipo</h3>
+        <p class="text-xs text-slate-500 mt-0.5">Se enviará a los 4 terapeutas</p>
+      </div>
+      <button onclick="cerrarBroadcast()" class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors">
+        <span class="material-symbols-outlined text-slate-400 text-lg">close</span>
+      </button>
+    </div>
+    <!-- Destinatarios -->
+    <div class="flex gap-2 flex-wrap mb-4" id="broadcast-dests"></div>
+    <textarea id="broadcast-msg" class="chat-input w-full mb-4" rows="3" placeholder="Escribe tu mensaje para el equipo…"></textarea>
+    <!-- Plantillas rápidas -->
+    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Plantillas</p>
+    <div class="grid grid-cols-2 gap-2 mb-5" id="broadcast-templates"></div>
+    <div class="flex gap-3">
+      <button onclick="cerrarBroadcast()" class="flex-1 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-white/5 transition-all" style="border:1px solid rgba(255,255,255,0.08);">Cancelar</button>
+      <button onclick="enviarBroadcast()" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(139,92,246,0.2);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">
+        <span class="material-symbols-outlined text-base align-middle mr-1">campaign</span>Enviar a todos
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 px-5 py-3 rounded-xl text-sm font-bold text-white opacity-0 transition-opacity pointer-events-none" style="background:rgba(20,184,166,0.9);z-index:200;">OK</div>
+
+<script>
+/* ============================================================
+   DATOS
+   ============================================================ */
+var NOTIFS = [
+  { icon:'event_busy',  color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',   hora:'Hace 12 min', leida:false },
+  { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz', hora:'Hace 1 h',    leida:false },
+  { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',        hora:'Hace 2 h',    leida:false },
+  { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',   hora:'Hace 3 h',    leida:true  },
+  { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5★ de Laura Pérez',            hora:'Ayer',        leida:true  },
+]
+
+var notifOpen = false
+
+function toggleNotif() {
+  notifOpen = !notifOpen
+  document.getElementById('notif-panel').classList.toggle('hidden', !notifOpen)
+}
+
+function renderNotifs() {
+  var unread = NOTIFS.filter(function(n){ return !n.leida }).length
+  document.getElementById('notif-dot').style.display = unread ? 'block' : 'none'
+  document.getElementById('notif-list').innerHTML = NOTIFS.map(function(n, i) {
+    return '<div onclick="leerNotif(' + i + ')" style="padding:12px 20px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;" onmouseover="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseout="this.style.background=\'none\'">' +
+      '<span class="material-symbols-outlined" style="font-size:16px;color:' + n.color + ';flex-shrink:0;margin-top:2px;">' + n.icon + '</span>' +
+      '<div style="flex:1;min-width:0;">' +
+        '<p style="font-size:12px;color:#e2e8f0;margin:0;' + (!n.leida ? 'font-weight:600;' : 'opacity:0.5;') + '">' + n.msg + '</p>' +
+        '<p style="font-size:10px;color:#64748b;margin:4px 0 0;">' + n.hora + '</p>' +
+      '</div>' +
+      (!n.leida ? '<span style="width:6px;height:6px;border-radius:50%;background:#2dd4bf;flex-shrink:0;margin-top:6px;"></span>' : '') +
+    '</div>'
+  }).join('')
+}
+
+function leerNotif(i) { NOTIFS[i].leida = true; renderNotifs() }
+
+function marcarLeidas() {
+  NOTIFS.forEach(function(n){ n.leida = true })
+  renderNotifs()
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#btn-notif') && !e.target.closest('#notif-panel')) {
+    notifOpen = false
+    var p = document.getElementById('notif-panel')
+    if (p) p.classList.add('hidden')
+  }
+})
+
+var TERAPEUTAS = [
+  {
+    id: 'ana', nombre: 'Ana Martínez', ini: 'AM', rol: 'Psicóloga clínica',
+    col: 'rgba(20,184,166,0.2)', tc: '#2dd4bf', estado: 'online', citas: 4,
+    mensajes: [
+      { de:'ellos', texto:'Buenos días, ¿ya está confirmada la cita de las 12:00 con Carmen García?', hora:'09:02', fecha:'Hoy' },
+      { de:'yo',    texto:'Sí, acabo de confirmarla. Te llega el aviso en la agenda.', hora:'09:05', fecha:'Hoy' },
+      { de:'ellos', texto:'Perfecto, gracias. También quería comentarte que necesito reprogramar a Laura Pérez la semana que viene.', hora:'09:07', fecha:'Hoy' },
+      { de:'yo',    texto:'Sin problema, ¿qué día te viene mejor?', hora:'09:08', fecha:'Hoy' },
+      { de:'ellos', texto:'El miércoles a partir de las 15:00 estaría bien.', hora:'09:10', fecha:'Hoy' },
+    ],
+    noLeidos: 1,
+  },
+  {
+    id: 'pedro', nombre: 'Pedro Sánchez', ini: 'PS', rol: 'Psicólogo cognitivo-conductual',
+    col: 'rgba(99,102,241,0.2)', tc: '#818cf8', estado: 'ocupado', citas: 3,
+    mensajes: [
+      { de:'ellos', texto:'Hola, ¿podemos revisar el protocolo de evaluación para nuevos pacientes?', hora:'Ayer 17:30', fecha:'Ayer' },
+      { de:'yo',    texto:'Claro, esta tarde quedamos si quieres. ¿A las 18:00?', hora:'Ayer 17:45', fecha:'Ayer' },
+      { de:'ellos', texto:'Perfecto, nos vemos entonces.', hora:'Ayer 17:46', fecha:'Ayer' },
+      { de:'yo',    texto:'Genial 👍', hora:'Ayer 17:47', fecha:'Ayer' },
+    ],
+    noLeidos: 0,
+  },
+  {
+    id: 'sofia', nombre: 'Sofía Ruiz', ini: 'SR', rol: 'Psicóloga infantojuvenil',
+    col: 'rgba(139,92,246,0.2)', tc: '#a78bfa', estado: 'online', citas: 3,
+    mensajes: [
+      { de:'yo',    texto:'Sofía, el paciente de las 16:00 llegará 15 minutos tarde, aviso.', hora:'Hoy 08:50', fecha:'Hoy' },
+      { de:'ellos', texto:'Ok, sin problema. Gracias por avisar.', hora:'Hoy 08:52', fecha:'Hoy' },
+      { de:'ellos', texto:'Por cierto, ¿ya tenemos sala disponible para el grupo de los jueves?', hora:'Hoy 08:53', fecha:'Hoy' },
+    ],
+    noLeidos: 2,
+  },
+  {
+    id: 'isabel', nombre: 'Isabel López', ini: 'IL', rol: 'Psicóloga adultos',
+    col: 'rgba(245,158,11,0.15)', tc: '#fbbf24', estado: 'offline', citas: 0,
+    mensajes: [
+      { de:'yo',    texto:'Isabel, recuerda que mañana tienes evaluación de nuevo paciente a las 10:00.', hora:'Ayer 16:00', fecha:'Ayer' },
+      { de:'ellos', texto:'Anotado, gracias. ¿Ya tiene el formulario de intake completado?', hora:'Ayer 16:05', fecha:'Ayer' },
+      { de:'yo',    texto:'Sí, te lo reenvío por aquí.', hora:'Ayer 16:06', fecha:'Ayer' },
+      { de:'ellos', texto:'Perfecto, lo reviso esta tarde.', hora:'Ayer 16:08', fecha:'Ayer' },
+    ],
+    noLeidos: 0,
+  },
+]
+
+var TEMPLATES = [
+  'Recuerda confirmar tus citas de mañana',
+  'Reunión de equipo hoy a las 18:00',
+  'Por favor actualiza tus notas SOAP',
+  'Cambio en el horario de la clínica',
+]
+
+var QUICK_ACTIONS = [
+  '¿Puedes confirmar la cita?',
+  'Paciente en camino',
+  'Sala disponible',
+  'Reagendar disponibilidad',
+]
+
+var WHATSAPP_CONVS = [
+  {
+    id: 'wa_maria', nombre: 'María Pérez', ini: 'MP', col: 'rgba(37,211,102,0.15)', tc: '#25d366', estado: 'online',
+    mensajes: [
+      { de:'ellos', texto:'Hola, quería confirmar si mi cita sigue para mañana a las 10:00', hora:'Hoy 10:28', fecha:'Hoy' },
+      { de:'yo',    texto:'¡Hola María! Sí, está confirmada. Te esperamos en la clínica.', hora:'Hoy 10:32', fecha:'Hoy' },
+      { de:'ellos', texto:'¿A qué hora es exactamente?', hora:'Hoy 10:45', fecha:'Hoy' },
+    ],
+    noLeidos: 2,
+  },
+  {
+    id: 'wa_juan', nombre: 'Juan López', ini: 'JL', col: 'rgba(37,211,102,0.15)', tc: '#25d366', estado: 'online',
+    mensajes: [
+      { de:'yo',    texto:'Hola Juan, le recordamos su cita del jueves a las 16:30 con Sofía.', hora:'Hoy 09:00', fecha:'Hoy' },
+      { de:'ellos', texto:'Gracias, confirmo asistencia 👍', hora:'Hoy 09:15', fecha:'Hoy' },
+    ],
+    noLeidos: 1,
+  },
+  {
+    id: 'wa_carmen', nombre: 'Carmen Ruiz', ini: 'CR', col: 'rgba(37,211,102,0.15)', tc: '#25d366', estado: 'offline',
+    mensajes: [
+      { de:'ellos', texto:'Necesito cancelar la sesión del viernes, disculpe las molestias', hora:'Ayer 18:30', fecha:'Ayer' },
+      { de:'yo',    texto:'Sin problema Carmen. ¿Le reagendamos para la semana que viene?', hora:'Ayer 18:35', fecha:'Ayer' },
+    ],
+    noLeidos: 0,
+  },
+  {
+    id: 'wa_pedro', nombre: 'Pedro Martín', ini: 'PM', col: 'rgba(37,211,102,0.15)', tc: '#25d366', estado: 'offline',
+    mensajes: [
+      { de:'ellos', texto:'¿Puedo pagar la sesión por Bizum?', hora:'Lunes 12:00', fecha:'Lunes' },
+      { de:'yo',    texto:'Claro Pedro, el número es 666 123 456 a nombre de Clínica Sol.', hora:'Lunes 12:05', fecha:'Lunes' },
+    ],
+    noLeidos: 0,
+  },
+]
+var canalActivo = 'equipo'
+var convActiva = null
+var adminNombre = 'Admin'
+var typingTimer = null
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mostrarToast(msg) {
+  var t = document.getElementById('toast')
+  t.textContent = msg; t.style.opacity = '1'
+  setTimeout(function(){ t.style.opacity = '0' }, 2500)
+}
+
+function ahora() {
+  var d = new Date()
+  return 'Hoy ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0')
+}
+
+function autoResize(el) {
+  el.style.height = 'auto'
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px'
+}
+
+/* ============================================================
+   RENDER LISTA CONVERSACIONES
+   ============================================================ */
+function renderConvList(filtro) {
+  var isWa = canalActivo === 'whatsapp'
+  var fuente = isWa ? WHATSAPP_CONVS : TERAPEUTAS
+  var lista = fuente.filter(function(t) {
+    return !filtro || t.nombre.toLowerCase().includes(filtro.toLowerCase())
+  })
+  var totalNoLeidos = TERAPEUTAS.reduce(function(s,t){ return s + t.noLeidos }, 0)
+  var nb = document.getElementById('nav-unread')
+  if (totalNoLeidos > 0) { nb.textContent = totalNoLeidos; nb.classList.remove('hidden') }
+  else nb.classList.add('hidden')
+  var waNl = WHATSAPP_CONVS.reduce(function(s,c){ return s + c.noLeidos }, 0)
+  var waBadge = document.getElementById('wa-tab-badge')
+  if (waBadge) { waBadge.style.display = waNl > 0 ? 'inline-flex' : 'none'; if (waNl > 0) waBadge.textContent = waNl }
+
+  document.getElementById('conv-list').innerHTML = lista.map(function(t) {
+    var ult = t.mensajes[t.mensajes.length - 1]
+    var preview = ult ? (ult.de === 'yo' ? 'Tú: ' : '') + ult.texto : ''
+    if (preview.length > 38) preview = preview.slice(0, 38) + '…'
+    var dotCls = t.estado === 'online' ? 'dot-online' : t.estado === 'ocupado' ? 'dot-busy' : 'dot-offline'
+    var isActive = convActiva && convActiva.id === t.id
+    var badge = t.noLeidos > 0
+      ? '<span class="unread-badge flex-shrink-0" style="' + (isWa ? 'background:#25d366;color:#000;' : '') + '">' + t.noLeidos + '</span>'
+      : '<span class="text-[10px] text-slate-600">' + (ult ? ult.hora.replace('Hoy ','') : '') + '</span>'
+    return '<div class="conv-item ' + (isActive ? (isWa ? 'active-wa' : 'active') : '') + '" onclick="abrirConv(\'' + t.id + '\')">' +
+      '<div class="flex items-center gap-3">' +
+        '<div class="relative flex-shrink-0">' +
+          '<div class="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold" style="background:' + t.col + ';color:' + t.tc + ';">' + t.ini + '</div>' +
+          '<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-slate-900 ' + dotCls + '"></span>' +
+        '</div>' +
+        '<div class="flex-1 min-w-0">' +
+          '<div class="flex items-center justify-between">' +
+            '<p class="text-sm font-semibold text-slate-200 truncate">' + t.nombre + '</p>' +
+            badge +
+          '</div>' +
+          '<p class="text-xs text-slate-500 truncate mt-0.5">' + preview + '</p>' +
+        '</div>' +
+      '</div>' +
+    '</div>'
+  }).join('')
+}
+
+function filtrarConvs() {
+  renderConvList(document.getElementById('search-conv').value)
+}
+
+function cambiarCanal(canal) {
+  canalActivo = canal
+  convActiva = null
+  document.getElementById('chat-active').classList.add('hidden')
+  document.getElementById('chat-empty').classList.remove('hidden')
+  var tabEq = document.getElementById('tab-equipo')
+  var tabWa = document.getElementById('tab-whatsapp')
+  var input = document.getElementById('search-conv')
+  if (canal === 'equipo') {
+    tabEq.className = 'canal-tab tab-active'
+    tabWa.className = 'canal-tab'
+    input.placeholder = 'Buscar terapeuta…'
+  } else {
+    tabEq.className = 'canal-tab'
+    tabWa.className = 'canal-tab tab-wa'
+    input.placeholder = 'Buscar paciente…'
+  }
+  renderConvList(input.value)
+}
+
+/* ============================================================
+   ABRIR CONVERSACIÓN
+   ============================================================ */
+function abrirConv(id) {
+  var fuente = canalActivo === 'whatsapp' ? WHATSAPP_CONVS : TERAPEUTAS
+  var t = fuente.find(function(x){ return x.id === id })
+  if (!t) return
+  convActiva = t
+  t.noLeidos = 0
+
+  document.getElementById('chat-empty').classList.add('hidden')
+  document.getElementById('chat-active').classList.remove('hidden')
+
+  // Header
+  var av = document.getElementById('chat-avatar')
+  av.style.background = t.col; av.style.color = t.tc; av.textContent = t.ini
+  var dot = document.getElementById('chat-dot')
+  dot.className = 'absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-slate-900 ' +
+    (t.estado === 'online' ? 'dot-online' : t.estado === 'ocupado' ? 'dot-busy' : 'dot-offline')
+  document.getElementById('chat-nombre').textContent = t.nombre
+  document.getElementById('chat-status').textContent =
+    canalActivo === 'whatsapp' ? '📱 vía WhatsApp' :
+    t.estado === 'online'  ? '🟢 En línea · ' + t.citas + ' citas hoy' :
+    t.estado === 'ocupado' ? '🟡 En sesión'  :
+    '⚫ Desconectado'
+
+  // Typing avatar
+  var tav = document.getElementById('typing-av')
+  tav.style.background = t.col; tav.style.color = t.tc; tav.textContent = t.ini
+
+  renderMensajes()
+  renderQuickActions()
+  renderConvList(document.getElementById('search-conv').value)
+
+  // Focus input
+  setTimeout(function(){ document.getElementById('msg-input').focus() }, 50)
+}
+
+/* ============================================================
+   RENDER MENSAJES
+   ============================================================ */
+function renderMensajes() {
+  if (!convActiva) return
+  var container = document.getElementById('chat-messages')
+  var msgs = convActiva.mensajes
+  var html = ''
+  var lastFecha = ''
+
+  msgs.forEach(function(m) {
+    if (m.fecha !== lastFecha) {
+      html += '<div class="date-sep relative"><span>' + m.fecha + '</span></div>'
+      lastFecha = m.fecha
+    }
+    var isSent = m.de === 'yo'
+    var av = isSent
+      ? '<div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">' + (adminNombre.split(' ').map(function(w){return w[0]}).slice(0,2).join('')) + '</div>'
+      : '<div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:' + convActiva.col + ';color:' + convActiva.tc + ';">' + convActiva.ini + '</div>'
+    html += '<div class="msg-wrap ' + (isSent ? 'sent' : '') + '">' +
+      av +
+      '<div>' +
+        '<div class="bubble ' + (isSent ? 'sent' : (canalActivo === 'whatsapp' ? 'recv-wa' : 'recv')) + '">' + m.texto + '</div>' +
+        '<p class="msg-time mt-1">' + m.hora + (isSent ? ' · Enviado' : '') + '</p>' +
+      '</div>' +
+    '</div>'
+  })
+
+  container.innerHTML = html
+  container.scrollTop = container.scrollHeight
+}
+
+/* ============================================================
+   ENVIAR MENSAJE
+   ============================================================ */
+function enviarMensaje() {
+  if (!convActiva) return
+  var input = document.getElementById('msg-input')
+  var texto = input.value.trim()
+  if (!texto) return
+
+  convActiva.mensajes.push({ de:'yo', texto:texto, hora: ahora(), fecha:'Hoy' })
+  input.value = ''; input.style.height = '42px'
+  renderMensajes()
+
+  // Simular respuesta del terapeuta
+  simularRespuesta()
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarMensaje() }
+}
+
+var RESPUESTAS_AUTO = [
+  'Entendido, gracias por el aviso.',
+  'Ok, lo tengo en cuenta.',
+  'Perfecto, ahora mismo lo reviso.',
+  'Gracias, te confirmo en un momento.',
+  'De acuerdo, sin problema.',
+  'Anotado. ¿Algo más que necesites?',
+  'Sí, lo veo. Ahora mismo me pongo.',
+]
+
+function simularRespuesta() {
+  if (!convActiva) return
+  clearTimeout(typingTimer)
+  var delay = 1200 + Math.random() * 1800
+
+  typingTimer = setTimeout(function() {
+    // Mostrar typing
+    document.getElementById('typing-indicator').classList.remove('hidden')
+    var container = document.getElementById('chat-messages')
+    container.scrollTop = container.scrollHeight
+
+    typingTimer = setTimeout(function() {
+      document.getElementById('typing-indicator').classList.add('hidden')
+      var resp = RESPUESTAS_AUTO[Math.floor(Math.random() * RESPUESTAS_AUTO.length)]
+      convActiva.mensajes.push({ de:'ellos', texto:resp, hora: ahora(), fecha:'Hoy' })
+
+      var container2 = document.getElementById('chat-messages')
+      var ini = adminNombre.split(' ').map(function(w){return w[0]}).slice(0,2).join('')
+      var av = '<div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:' + convActiva.col + ';color:' + convActiva.tc + ';">' + convActiva.ini + '</div>'
+      var html = '<div class="msg-wrap msg-new">' +
+        av +
+        '<div>' +
+          '<div class="bubble ' + (canalActivo === 'whatsapp' ? 'recv-wa' : 'recv') + '">' + resp + '</div>' +
+          '<p class="msg-time mt-1">' + ahora() + '</p>' +
+        '</div>' +
+      '</div>'
+      container2.insertAdjacentHTML('beforeend', html)
+      container2.scrollTop = container2.scrollHeight
+      renderConvList(document.getElementById('search-conv').value)
+    }, 800 + Math.random() * 600)
+  }, delay)
+}
+
+/* ============================================================
+   ACCIONES RÁPIDAS
+   ============================================================ */
+function renderQuickActions() {
+  document.getElementById('quick-actions').innerHTML = QUICK_ACTIONS.map(function(q) {
+    return '<button onclick="usarQuick(\'' + q.replace(/'/g,"\\'") + '\')" class="text-xs px-3 py-1.5 rounded-xl font-semibold text-slate-400 hover:text-slate-200 transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">' + q + '</button>'
+  }).join('')
+}
+
+function usarQuick(texto) {
+  var input = document.getElementById('msg-input')
+  input.value = texto; input.focus()
+  autoResize(input)
+}
+
+/* ============================================================
+   BROADCAST
+   ============================================================ */
+function abrirBroadcast() {
+  document.getElementById('broadcast-msg').value = ''
+  document.getElementById('broadcast-dests').innerHTML = TERAPEUTAS.map(function(t) {
+    return '<span class="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full" style="background:' + t.col + ';color:' + t.tc + ';">' +
+      t.ini + ' ' + t.nombre.split(' ')[0] +
+    '</span>'
+  }).join('')
+  document.getElementById('broadcast-templates').innerHTML = TEMPLATES.map(function(tpl) {
+    return '<button onclick="usarTemplate(\'' + tpl.replace(/'/g,"\\'") + '\')" class="text-left text-xs px-3 py-2 rounded-xl text-slate-400 hover:text-slate-200 transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">' + tpl + '</button>'
+  }).join('')
+  document.getElementById('modal-broadcast').classList.remove('hidden')
+  setTimeout(function(){ document.getElementById('broadcast-msg').focus() }, 100)
+}
+
+function cerrarBroadcast() {
+  document.getElementById('modal-broadcast').classList.add('hidden')
+}
+
+function usarTemplate(texto) {
+  document.getElementById('broadcast-msg').value = texto
+}
+
+function enviarBroadcast() {
+  var texto = document.getElementById('broadcast-msg').value.trim()
+  if (!texto) { document.getElementById('broadcast-msg').focus(); return }
+  TERAPEUTAS.forEach(function(t) {
+    t.mensajes.push({ de:'yo', texto:texto, hora: ahora(), fecha:'Hoy' })
+  })
+  cerrarBroadcast()
+  renderConvList()
+  if (convActiva) renderMensajes()
+  mostrarToast('Mensaje enviado a ' + TERAPEUTAS.length + ' terapeutas')
+}
+
+/* ============================================================
+   BOTONES HEADER CHAT
+   ============================================================ */
+function llamar() {
+  if (!convActiva) return
+  mostrarToast('Llamando a ' + convActiva.nombre + '… (demo)')
+}
+
+function verPerfil() {
+  window.location.href = 'gestion_personal_admin.html'
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', function() {
+  var nombre  = localStorage.getItem('tp_nombre') || 'Admin'
+  var clinica = localStorage.getItem('tp_clinica') || 'SereneCare'
+  var demo    = localStorage.getItem('tp_demo') === 'true'
+  adminNombre = nombre
+
+  document.getElementById('user-nombre').textContent = nombre
+  document.getElementById('nombre-clinica').textContent = clinica
+  var ini = nombre.split(' ').map(function(w){ return w[0] }).slice(0,2).join('')
+  document.getElementById('user-avatar').textContent = ini || 'A'
+  if (demo) document.getElementById('demo-badge').classList.remove('hidden')
+
+  renderConvList()
+  renderNotifs()
+
+  // Auto-abrir canal WhatsApp desde widget flotante
+  if (new URLSearchParams(location.search).get('wa') === '1') {
+    setTimeout(function(){ cambiarCanal('whatsapp') }, 50)
+  }
+
+  // Cerrar broadcast con Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') cerrarBroadcast()
+  })
+  document.getElementById('modal-broadcast').addEventListener('click', function(e) {
+    if (e.target === this) cerrarBroadcast()
+  })
+
+  document.getElementById('btn-logout').addEventListener('click', function(e) {
+    e.preventDefault()
+    ;['tp_rol','tp_nombre','tp_clinica_id','tp_clinica','tp_demo'].forEach(function(k){ localStorage.removeItem(k) })
+    window.location.href = 'demo_clinica.html'
+  })
+
+  var overlay = document.getElementById('apps-overlay')
+  var btnAppsMain = document.getElementById('btn-apps-main')
+  var btnCerrarApps = document.getElementById('btn-cerrar-apps')
+  var appsPanel = document.getElementById('apps-panel')
+
+  if (btnAppsMain && overlay) {
+    btnAppsMain.addEventListener('click', function() {
+      overlay.style.display = 'flex'
+    })
+  }
+  if (btnCerrarApps && overlay) {
+    btnCerrarApps.addEventListener('click', function() {
+      overlay.style.display = 'none'
+    })
+  }
+  if (overlay && appsPanel) {
+    overlay.addEventListener('click', function(e) {
+      if (!appsPanel.contains(e.target)) {
+        overlay.style.display = 'none'
+      }
+    })
+  }
+})
+
+  // Apps overlay
+
+  // Sync apps footer user info
+  (function syncAppsUser() {
+    var nombre = localStorage.getItem('tp_nombre') || 'Admin';
+    var av = document.getElementById('apps-avatar');
+    var nm = document.getElementById('apps-nombre');
+    if (av) av.textContent = nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
+    if (nm) nm.textContent = nombre;
+  })();
+  window.toggleAppsPanel = function() {
+    var o = document.getElementById('apps-overlay');
+    var isHidden = o.style.display === 'none' || o.style.display === '';
+    if (isHidden) {
+      o.style.display = 'flex';
+    } else {
+      o.style.display = 'none';
+    }
+  };
+  window.cerrarApps = function(e) {
+    if (e && e.target !== document.getElementById('apps-overlay')) return;
+    document.getElementById('apps-overlay').style.display = 'none';
+  };
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var o = document.getElementById('apps-overlay');
+      if (o) o.style.display = 'none';
+    }
+  });
+
+  // User card popover
+  var userMenuOpen = false;
+  window.toggleUserMenu = function() {
+    userMenuOpen = !userMenuOpen;
+    document.getElementById('user-menu').classList.toggle('hidden', !userMenuOpen);
+    document.getElementById('chevron-user').textContent = userMenuOpen ? 'expand_more' : 'expand_less';
+  };
+  window.toggleTema = function() {
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    if (esClaro) {
+      localStorage.removeItem('tp_tema');
+      document.documentElement.style.filter = '';
+    } else {
+      localStorage.setItem('tp_tema', 'claro');
+      document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
+    }
+    actualizarLabelTema();
+    userMenuOpen = false;
+    document.getElementById('user-menu').classList.add('hidden');
+    document.getElementById('chevron-user').textContent = 'expand_less';
+  };
+  function actualizarLabelTema() {
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    var icon = document.getElementById('icon-tema');
+    var label = document.getElementById('label-tema');
+    if (icon) icon.textContent = esClaro ? 'light_mode' : 'dark_mode';
+    if (label) label.textContent = esClaro ? 'Modo oscuro' : 'Modo claro';
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu')) {
+      if (userMenuOpen) {
+        userMenuOpen = false;
+        var um = document.getElementById('user-menu');
+        if (um) um.classList.add('hidden');
+        var ch = document.getElementById('chevron-user');
+        if (ch) ch.textContent = 'expand_less';
+      }
+    }
+  });
+  actualizarLabelTema();
+
+</script>
+
+<!-- =============== APPS OVERLAY =============== -->
+<div id="apps-overlay" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:680px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal de administración de clínica</p>
+      </div>
+      <button id="btn-cerrar-apps" type="button" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;transition:all 0.15s;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+
+      <a href="gestion_personal_admin.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(245,158,11,0.1)';this.style.borderColor='rgba(245,158,11,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">badge</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Personal</span>
+      </a>
+
+      <a href="facturacion.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(16,185,129,0.1)';this.style.borderColor='rgba(16,185,129,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.25);">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:22px;font-variation-settings:'FILL' 1;">payments</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Facturación</span>
+      </a>
+
+      <a href="estadisticas_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Estadísticas</span>
+      </a>
+
+      <a href="config_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(248,113,113,0.1)';this.style.borderColor='rgba(248,113,113,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.25);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">settings</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Configuración</span>
+      </a>
+
+      <a href="integraciones_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">cable</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Integraciones</span>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { supabase, getMensajes, enviarMensaje as sbEnviar } from '../js/supabase-client.js'
+import { cerrarSesion } from '../js/auth.js'
+window._cerrarSesion = cerrarSesion
+
+const oldLogout = document.getElementById('btn-logout')
+if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.replaceChild(n, oldLogout) }
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = '../login.html' }
+
+const clinicaId = localStorage.getItem('tp_clinica_id')
+const userId = session.user.id
+
+// Actualizar info de usuario
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', userId).single()
+if (usu) {
+  const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = usu.nombre+' '+usu.apellido
+  const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = (usu.nombre[0]||'')+(usu.apellido[0]||'')
+}
+
+// Cargar psicólogos del equipo para mensajes internos
+const { data: colegas } = await supabase.from('usuarios').select('id, nombre, apellido, rol').eq('clinica_id', clinicaId).neq('id', userId)
+
+if (colegas && colegas.length && typeof window.CONVERSACIONES !== 'undefined') {
+  const COLS = ['rgba(20,184,166,0.2)','rgba(99,102,241,0.2)','rgba(139,92,246,0.2)','rgba(34,197,94,0.15)','rgba(245,158,11,0.15)']
+  const COLS_TC = ['#2dd4bf','#818cf8','#a78bfa','#4ade80','#fbbf24']
+  const extras = colegas.map(function(c, i) {
+    return { id: c.id, nombre: c.nombre+' '+c.apellido, iniciales: (c.nombre[0]||'')+(c.apellido[0]||''), tipo: 'equipo', noLeido: 0, hora: '', preview: '', color: COLS[i%COLS.length], tc: COLS_TC[i%COLS_TC.length], mensajes: [], _sbId: c.id }
+  })
+  window.CONVERSACIONES = (window.CONVERSACIONES||[]).filter(function(c){ return c.tipo !== 'equipo' }).concat(extras)
+  if (typeof window.renderConversaciones === 'function') window.renderConversaciones()
+}
+
+// Sobreescribir enviar para usar Supabase en conversaciones de equipo
+const origEnviar = window.enviarMensaje
+window.enviarMensaje = async function() {
+  const conv = window.CONVERSACIONES && window.CONVERSACIONES[window._convActiva]
+  if (conv && conv.tipo === 'equipo' && conv._sbId) {
+    const input = document.getElementById('msg-input') || document.getElementById('input-mensaje')
+    const texto = input ? input.value.trim() : ''
+    if (!texto) return
+    await sbEnviar(conv._sbId, texto)
+    if (input) input.value = ''
+    const msgs = await getMensajes(conv._sbId)
+    conv.mensajes = msgs || []
+    if (typeof window.renderMensajes === 'function') window.renderMensajes(conv)
+  } else if (typeof origEnviar === 'function') { origEnviar() }
+}
+</script>
+</body>
+</html>

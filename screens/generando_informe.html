@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Serene Curator AI - Procesando</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#a83836",
+                      "primary-fixed": "#a8e3f6",
+                      "inverse-primary": "#a8e3f6",
+                      "primary-container": "#a8e3f6",
+                      "inverse-surface": "#0b0f10",
+                      "secondary-fixed": "#b2ecfd",
+                      "surface-container-high": "#e3e9eb",
+                      "surface": "#f8fafb",
+                      "tertiary-fixed-dim": "#c9eed6",
+                      "on-primary": "#f0fbff",
+                      "background": "#f8fafb",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-dim": "#d4dbde",
+                      "surface-bright": "#f8fafb",
+                      "on-secondary-container": "#195968",
+                      "surface-container-low": "#f0f4f6",
+                      "on-primary-fixed": "#00404d",
+                      "outline": "#747c7e",
+                      "on-primary-container": "#0e5463",
+                      "tertiary-fixed": "#d7fde4",
+                      "surface-tint": "#296777",
+                      "primary-dim": "#195a6a",
+                      "outline-variant": "#acb3b6",
+                      "secondary-dim": "#1b5a69",
+                      "secondary-container": "#b2ecfd",
+                      "on-tertiary-container": "#416350",
+                      "on-tertiary-fixed-variant": "#4c6d5a",
+                      "secondary": "#2b6775",
+                      "primary": "#296777",
+                      "inverse-on-surface": "#9a9d9e",
+                      "error-dim": "#67040d",
+                      "on-background": "#2c3436",
+                      "error-container": "#fa746f",
+                      "tertiary-dim": "#395a48",
+                      "on-secondary-fixed": "#004653",
+                      "on-error-container": "#6e0a12",
+                      "on-tertiary": "#e6ffee",
+                      "on-primary-fixed-variant": "#1d5e6d",
+                      "on-tertiary-fixed": "#2f503f",
+                      "on-surface": "#2c3436",
+                      "on-error": "#fff7f6",
+                      "tertiary": "#456653",
+                      "primary-fixed-dim": "#9ad5e7",
+                      "tertiary-container": "#d7fde4",
+                      "surface-container": "#eaeff0",
+                      "on-surface-variant": "#596063",
+                      "on-secondary-fixed-variant": "#266372",
+                      "secondary-fixed-dim": "#a4ddef",
+                      "surface-variant": "#dce4e6",
+                      "on-secondary": "#effbff",
+                      "surface-container-highest": "#dce4e6"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Manrope"],
+                      "display": ["Manrope"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #020617; /* Specified immersive dark background */
+        }
+        .ai-glow {
+            box-shadow: 0 0 60px 10px rgba(41, 103, 119, 0.3);
+        }
+        .bento-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center overflow-hidden selection:bg-primary-container/30">
+<!-- Background Atmospheric Elements -->
+<div class="fixed inset-0 z-0">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-tertiary/10 blur-[120px]"></div>
+<div class="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-secondary/5 blur-[100px]"></div>
+</div>
+<!-- Main Inmersive Canvas -->
+<main class="relative z-10 w-full max-w-2xl px-6 flex flex-col items-center">
+<!-- Large IA Icon Section -->
+<div class="relative mb-12">
+<div class="w-32 h-32 rounded-full bg-gradient-to-tr from-primary to-primary-container flex items-center justify-center ai-glow transition-transform hover:scale-105">
+<span class="material-symbols-outlined text-white text-6xl" data-icon="psychology" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<!-- Orbiting subtle ring -->
+<div class="absolute inset-[-20px] rounded-full border border-primary/20 border-dashed animate-[spin_20s_linear_infinite]"></div>
+</div>
+<!-- Headline -->
+<div class="text-center mb-10">
+<h1 class="font-headline text-3xl font-extrabold text-white tracking-tight mb-3">
+                Analizando la información clínica...
+            </h1>
+<p class="font-body text-outline-variant text-sm tracking-wide">
+                Estamos procesando los datos para generar un informe preciso y empático.
+            </p>
+</div>
+<!-- Progress List Area (Editorial Approach) -->
+<div class="w-full bento-glass rounded-xl p-8 mb-12 flex flex-col gap-6">
+<!-- Step 1: Complete -->
+<div class="flex items-center gap-4 group">
+<div class="w-8 h-8 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-body text-slate-300 text-sm font-medium">Cargando notas de 12 sesiones...</span>
+</div>
+<!-- Step 2: Complete -->
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-body text-slate-300 text-sm font-medium">Analizando patrones de lenguaje...</span>
+</div>
+<!-- Step 3: Active/Loading -->
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary relative">
+<span class="material-symbols-outlined text-[20px] animate-pulse" data-icon="sync">sync</span>
+</div>
+<span class="font-body text-white text-sm font-semibold">Identificando evolución terapéutica...</span>
+</div>
+<!-- Step 4: Pending -->
+<div class="flex items-center gap-4 opacity-40">
+<div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-[20px]" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+</div>
+<span class="font-body text-slate-400 text-sm font-medium">Generando recomendaciones clínicas...</span>
+</div>
+</div>
+<!-- Linear Progress Bar -->
+<div class="w-full mb-16">
+<div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[72%] rounded-full shadow-[0_0_15px_rgba(41,103,119,0.5)]"></div>
+</div>
+<div class="flex justify-between mt-3">
+<span class="font-label text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Progreso del análisis</span>
+<span class="font-label text-[10px] uppercase tracking-widest text-primary font-bold">72%</span>
+</div>
+</div>
+<!-- Rotating Phrases / Insight Footer -->
+<div class="text-center max-w-md">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/50 border border-white/5 mb-4">
+<span class="material-symbols-outlined text-primary text-[16px]" data-icon="tips_and_updates">tips_and_updates</span>
+<p class="font-body text-slate-400 text-xs italic">
+                    "La IA no sustituye tu juicio clínico, lo amplifica."
+                </p>
+</div>
+<p class="font-body text-slate-500 text-[11px] leading-relaxed">
+                Este proceso puede tardar unos segundos dependiendo del volumen de datos del paciente. Por favor, no cierres esta ventana.
+            </p>
+</div>
+</main>
+<!-- Aesthetic Decorative Corner Text (Editorial Detail) -->
+<div class="fixed bottom-8 right-8 z-20 pointer-events-none">
+<div class="flex flex-col items-end gap-1">
+<span class="font-display text-[10px] text-primary/40 uppercase tracking-[0.4em] font-bold">Inference Engine v2.4</span>
+<span class="font-display text-[10px] text-slate-700 uppercase tracking-[0.2em]">Secure Clinical Environment</span>
+</div>
+</div>
+<!-- Background Images as Texture -->
+<div class="fixed inset-0 -z-10 opacity-[0.03] pointer-events-none mix-blend-overlay">
+<img class="w-full h-full object-cover" data-alt="abstract flowing organic silk shapes in deep blue and teal tones with soft grain texture and cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-qUVI9YvXBl4e7q-4MtkdTuNMaUvBjil_25E17xnGcaEozYziUINHmulbIX72sQaLivVcVwBDax-P3XvOIfY__BO9z_uVCei1oejq8flvhdCSUyEJmSj9_ib7UuB1Upn2vgsNteS-X2NAX94cXW4YIuM9gzVUqD1IaJqpLAKLeVfS8LNjYdXC7u9o9ZGP3d4arjMMjxgL1Yksri0FMbi3bQuRp4JfA8Cp_hh_nxKmbMjahWiPBE0vPnqsoGLhG2odZEH3RhFva-y_"/>
+</div>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { verificarSesion } from '../js/auth.js'
+
+await verificarSesion(['psicologo', 'admin_clinica'])
+const params = new URLSearchParams(location.search)
+const pacienteId = params.get('paciente_id')
+
+// Pasos de la animación
+const pasos = document.querySelectorAll('.bento-glass .flex.items-center.gap-4')
+const barraInner = document.querySelector('.h-1\\.5.w-full.bg-slate-900 .h-full')
+const porcentajeEl = document.querySelector('.font-label.text-\\[10px\\].text-primary.font-bold')
+const tituloEl = document.querySelector('h1.font-headline')
+
+const frases = [
+  'Cargando notas de sesiones...',
+  'Analizando patrones de lenguaje...',
+  'Identificando evolución terapéutica...',
+  'Generando recomendaciones clínicas...',
+]
+const iconoActivo = `<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary relative"><span class="material-symbols-outlined text-[20px] animate-pulse">sync</span></div>`
+const iconoHecho  = `<div class="w-8 h-8 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary"><span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span></div>`
+const iconoPend   = `<div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-500"><span class="material-symbols-outlined text-[20px]">radio_button_unchecked</span></div>`
+
+let paso = 0
+async function avanzarPaso() {
+  if (paso >= pasos.length) return
+
+  pasos.forEach((p, i) => {
+    const iconEl = p.querySelector('div.w-8')
+    const textoEl = p.querySelector('span.font-body')
+    if (i < paso) {
+      if (iconEl) iconEl.outerHTML = iconoHecho.match(/div.*?\/div>/)?.[0] || ''
+      if (textoEl) { textoEl.classList.remove('text-white'); textoEl.classList.add('text-slate-300') }
+    } else if (i === paso) {
+      if (iconEl) p.querySelector('div.w-8').outerHTML = `<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[20px] animate-pulse">sync</span></div>`
+      if (textoEl) { textoEl.classList.add('text-white'); textoEl.classList.remove('text-slate-300') }
+    } else {
+      if (textoEl) { textoEl.classList.add('opacity-40') }
+    }
+  })
+
+  const pct = Math.round(((paso + 1) / pasos.length) * 100)
+  if (barraInner) barraInner.style.width = pct + '%'
+  if (porcentajeEl) porcentajeEl.textContent = pct + '%'
+  paso++
+}
+
+// Animar pasos
+avanzarPaso()
+const timer = setInterval(avanzarPaso, 1500)
+
+// Generar informe real con OpenAI si hay paciente_id
+if (pacienteId) {
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: perfil } = await supabase.from('usuarios').select('clinica_id').eq('id', user.id).single()
+  const cid = perfil?.clinica_id
+
+  const { data: notas } = await supabase.from('notas_soap')
+    .select('subjetivo, objetivo, valoracion, plan, created_at')
+    .eq('paciente_id', pacienteId).eq('clinica_id', cid)
+    .order('created_at', { ascending: false }).limit(5)
+
+  if (notas?.length) {
+    const prompt = `Eres un psicólogo clínico experto. Genera un informe de evolución terapéutica basado en estas notas SOAP:\n${notas.map((n, i) => `Sesión ${i + 1}: S: ${n.subjetivo} O: ${n.objetivo} A: ${n.valoracion} P: ${n.plan}`).join('\n')}\nEl informe debe incluir: evolución del paciente, patrones detectados, recomendaciones y próximos objetivos terapéuticos.`
+
+    setTimeout(async () => {
+      clearInterval(timer)
+      try {
+        const { data: { session: _ses } } = await supabase.auth.getSession()
+        const res = await fetch('https://wnuwuxenzwfqmhxagryk.supabase.co/functions/v1/openai-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o',
+            'Authorization': `Bearer ${_ses?.access_token}`,
+          },
+          body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'user', content: prompt }], max_tokens: 1000 })
+        })
+        const json = await res.json()
+        const contenido = json.choices?.[0]?.message?.content || 'Error al generar informe'
+
+        await supabase.from('informes_ia').insert({
+          clinica_id: cid, paciente_id: pacienteId, psicologo_id: user.id,
+          contenido, tipo: 'evolucion', generado_en: new Date().toISOString()
+        })
+
+        window.location.href = `/screens/resultado_informe_ia.html?paciente_id=${pacienteId}`
+      } catch {
+        window.location.href = `/screens/resultado_informe_ia.html?paciente_id=${pacienteId}`
+      }
+    }, 6000)
+  } else {
+    setTimeout(() => {
+      clearInterval(timer)
+      window.location.href = `/screens/resultado_informe_ia.html?paciente_id=${pacienteId}`
+    }, 6000)
+  }
+} else {
+  setTimeout(() => {
+    clearInterval(timer)
+    window.location.href = '/screens/resultado_informe_ia.html'
+  }, 6000)
+}
+</script>
+</body></html>

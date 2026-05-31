@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  body { font-family: 'Inter', sans-serif; background: #020617; color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.90);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .module-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.25s ease;
+  }
+  .module-card:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(99,102,241,0.35);
+    transform: translateY(-2px);
+  }
+  .module-card:active { transform: scale(0.96); }
+  .bg-grid {
+    background-image: radial-gradient(circle at 1px 1px, rgba(99,102,241,0.08) 1px, transparent 0);
+    background-size: 28px 28px;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .modal-enter { animation: fadeIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+</style>
+</head>
+<body class="min-h-screen overflow-hidden">
+
+<!-- Background layer (blurred dashboard placeholder) -->
+<div class="fixed inset-0 bg-grid z-0">
+  <!-- Sidebar (visible through overlay for positioning context) -->
+  <aside class="w-72 bg-slate-900 border-r border-slate-800/30 flex flex-col px-6 py-8 fixed h-full z-10">
+    <div class="mb-10 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
+        <span class="material-symbols-outlined text-white filled">health_and_safety</span>
+      </div>
+      <div>
+        <h1 class="text-xl font-extrabold text-white font-headline tracking-tight">SereneCare</h1>
+        <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">SaaS Enterprise</p>
+      </div>
+    </div>
+    <nav class="flex-1 space-y-2">
+      <a href="dashboard_maestro_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+        <span class="material-symbols-outlined">dashboard</span><span class="font-medium">Dashboard</span>
+      </a>
+      <a href="gestion_clinicas_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+        <span class="material-symbols-outlined">medical_services</span><span class="font-medium">Clinics</span>
+      </a>
+      <a href="revenue_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+        <span class="material-symbols-outlined">payments</span><span class="font-medium">Revenue</span>
+      </a>
+      <a href="configuracion_ia_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+        <span class="material-symbols-outlined">settings_input_component</span><span class="font-medium">AI Config</span>
+      </a>
+      <a href="soporte_super_admin.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all">
+        <span class="material-symbols-outlined">contact_support</span><span class="font-medium">Support</span>
+      </a>
+    </nav>
+    <div class="mt-auto pt-6 border-t border-slate-800/40">
+      <div class="p-4 bg-slate-800/40 rounded-2xl mb-4">
+        <div class="flex items-center gap-2 text-xs font-bold text-teal-400 uppercase tracking-widest mb-1">
+          <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>System Healthy
+        </div>
+        <p class="text-[10px] text-slate-500">99.98% uptime — Todos los nodos activos</p>
+      </div>
+      <button id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-rose-400 rounded-xl transition-all">
+        <span class="material-symbols-outlined">logout</span><span class="font-medium">Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Dim background content (dashboard-like ghost) -->
+  <div class="ml-72 p-8 opacity-20 pointer-events-none select-none">
+    <div class="grid grid-cols-4 gap-6 mt-8">
+      <div class="bg-slate-800 rounded-3xl p-6 h-32"></div>
+      <div class="bg-slate-800 rounded-3xl p-6 h-32"></div>
+      <div class="bg-slate-800 rounded-3xl p-6 h-32"></div>
+      <div class="bg-slate-800 rounded-3xl p-6 h-32"></div>
+    </div>
+    <div class="grid grid-cols-3 gap-6 mt-6">
+      <div class="col-span-2 bg-slate-800 rounded-3xl h-72"></div>
+      <div class="bg-slate-800 rounded-3xl h-72"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Overlay backdrop -->
+<div class="fixed inset-0 z-40 flex items-center justify-center" style="background: rgba(2,6,23,0.75); backdrop-filter: blur(6px);">
+
+  <!-- Modal panel -->
+  <div class="glass-panel modal-enter w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative"
+       style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+
+    <!-- Close button -->
+    <button id="btn-close" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
+      <span class="material-symbols-outlined text-3xl">close</span>
+    </button>
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4"
+           style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
+        <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+        <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
+      </div>
+      <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+      <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
+      <!-- Live stats pill -->
+      <div class="flex items-center justify-center gap-6 mt-4">
+        <span class="text-xs text-slate-500">
+          <span id="stat-clinicas-count" class="text-slate-300 font-bold">—</span> clínicas activas
+        </span>
+        <span class="text-slate-700">•</span>
+        <span class="text-xs text-slate-500">
+          MRR <span id="stat-mrr-val" class="text-slate-300 font-bold">—</span>
+        </span>
+        <span class="text-slate-700">•</span>
+        <span class="text-xs text-slate-500">
+          <span id="stat-usuarios-count" class="text-slate-300 font-bold">—</span> usuarios totales
+        </span>
+      </div>
+    </div>
+
+    <!-- Module grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+
+      <!-- Gestor de Clínicas -->
+      <button onclick="window.location.href='gestion_clinicas_super_admin.html'"
+              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+             style="background: rgba(99,102,241,0.15);">
+          <span class="material-symbols-outlined text-3xl text-indigo-400">medical_services</span>
+        </div>
+        <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestor de Clínicas</span>
+        <span class="text-slate-500 text-xs mt-1 text-center">Infraestructura global</span>
+        <span id="badge-clinicas" class="mt-2 text-[10px] font-bold text-indigo-400 bg-indigo-400/10 px-2 py-0.5 rounded-full hidden"></span>
+      </button>
+
+      <!-- Métricas de Ingresos -->
+      <button onclick="window.location.href='revenue_super_admin.html'"
+              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+             style="background: rgba(20,184,166,0.15);">
+          <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">payments</span>
+        </div>
+        <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Métricas de Ingresos</span>
+        <span class="text-slate-500 text-xs mt-1 text-center">Facturación y Planes</span>
+        <span id="badge-mrr" class="mt-2 text-[10px] font-bold text-teal-400 bg-teal-400/10 px-2 py-0.5 rounded-full hidden"></span>
+      </button>
+
+      <!-- Configuración IA Global -->
+      <button onclick="window.location.href='configuracion_ia_super_admin.html'"
+              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+             style="background: rgba(168,85,247,0.15);">
+          <span class="material-symbols-outlined text-3xl" style="color: #a855f7;">psychology</span>
+        </div>
+        <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Configuración IA Global</span>
+        <span class="text-slate-500 text-xs mt-1 text-center">Motores de Diagnóstico</span>
+        <span class="mt-2 text-[10px] font-bold px-2 py-0.5 rounded-full" style="color:#a855f7; background:rgba(168,85,247,0.1);">Claude + GPT-4</span>
+      </button>
+
+      <!-- Soporte Técnico -->
+      <button onclick="window.location.href='soporte_super_admin.html'"
+              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+             style="background: rgba(245,158,11,0.12);">
+          <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">contact_support</span>
+        </div>
+        <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Soporte Técnico</span>
+        <span class="text-slate-500 text-xs mt-1 text-center">Tickets de Empresa</span>
+      </button>
+
+      <!-- Logs del Sistema -->
+      <button onclick="window.location.href='estado_sistema_super_admin.html#logs'"
+              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+             style="background: rgba(100,116,139,0.2);">
+          <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+        </div>
+        <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
+        <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
+      </button>
+
+      <!-- Gestión de Planes SaaS -->
+      <button onclick="window.location.href='gestion_planes_super_admin.html'"
+              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+        <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+             style="background: rgba(34,197,94,0.12);">
+          <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">inventory_2</span>
+        </div>
+        <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Planes SaaS</span>
+        <span class="text-slate-500 text-xs mt-1 text-center">Paquetes y Límites</span>
+        <span id="badge-planes" class="mt-2 text-[10px] font-bold text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full hidden"></span>
+      </button>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-8 flex items-center justify-between py-4 border-t" style="border-color: rgba(255,255,255,0.07);">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-indigo-400/50 text-sm">security</span>
+        <span class="text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold">Sesión de Super Administrador • Acceso Restringido</span>
+      </div>
+      <span class="text-[10px] text-slate-700 font-mono">ESC para cerrar</span>
+    </div>
+  </div>
+</div>
+
+<!-- Supabase -->
+<script type="module">
+  import { supabase } from '../js/supabase-client.js'
+
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) { window.location.href = 'acceso_super_admin.html' }
+
+  async function cargarStats() {
+    try {
+      // Clinicas activas
+      const { data: clinicas } = await supabase
+        .from('clinicas')
+        .select('id, status, planes(precio_mensual)')
+
+      if (clinicas) {
+        const activas = clinicas.filter(c => c.status === 'activa').length
+        document.getElementById('stat-clinicas-count').textContent = activas
+        document.getElementById('badge-clinicas').textContent = `${activas} activas`
+        document.getElementById('badge-clinicas').classList.remove('hidden')
+
+        // MRR
+        const mrr = clinicas
+          .filter(c => c.status === 'activa')
+          .reduce((sum, c) => sum + (c.planes?.precio_mensual || 0), 0)
+        const mrrStr = mrr >= 1000 ? `€${(mrr/1000).toFixed(1)}k` : `€${mrr}`
+        document.getElementById('stat-mrr-val').textContent = mrrStr
+        document.getElementById('badge-mrr').textContent = mrrStr + '/mes'
+        document.getElementById('badge-mrr').classList.remove('hidden')
+      }
+
+      // Usuarios totales
+      const { count: usuarios } = await supabase
+        .from('usuarios')
+        .select('id', { count: 'exact', head: true })
+      if (usuarios !== null) {
+        document.getElementById('stat-usuarios-count').textContent = usuarios
+      }
+
+      // Planes
+      const { data: planes } = await supabase.from('planes').select('id')
+      if (planes) {
+        document.getElementById('badge-planes').textContent = `${planes.length} planes`
+        document.getElementById('badge-planes').classList.remove('hidden')
+      }
+
+    } catch (e) {
+      console.error('Error cargando stats:', e)
+    }
+  }
+
+  cargarStats()
+
+  // Logout
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+    await supabase.auth.signOut()
+    localStorage.removeItem('tp_rol')
+    localStorage.removeItem('tp_user_id')
+    localStorage.removeItem('tp_email')
+    window.location.href = 'acceso_super_admin.html'
+  })
+</script>
+
+<!-- UI interactions (no module dependency) -->
+<script>
+  document.getElementById('btn-close').addEventListener('click', function() {
+    window.location.href = 'dashboard_maestro_super_admin.html'
+  })
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      window.location.href = 'dashboard_maestro_super_admin.html'
+    }
+  })
+</script>
+
+</body>
+</html>

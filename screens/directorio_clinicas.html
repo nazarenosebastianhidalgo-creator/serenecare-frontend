@@ -1,0 +1,470 @@
+﻿<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-dim": "#67040d",
+                      "secondary": "#2b6775",
+                      "surface-container": "#eaeff0",
+                      "background": "#f8fafb",
+                      "on-surface-variant": "#596063",
+                      "inverse-surface": "#0b0f10",
+                      "primary": "#296777",
+                      "secondary-container": "#b2ecfd",
+                      "tertiary-container": "#d7fde4",
+                      "secondary-fixed-dim": "#a4ddef",
+                      "error": "#a83836",
+                      "surface-container-low": "#f0f4f6",
+                      "on-primary-fixed": "#00404d",
+                      "primary-dim": "#195a6a",
+                      "tertiary-fixed": "#d7fde4",
+                      "tertiary-dim": "#395a48",
+                      "on-tertiary-fixed-variant": "#4c6d5a",
+                      "surface-variant": "#dce4e6",
+                      "primary-fixed": "#a8e3f6",
+                      "secondary-dim": "#1b5a69",
+                      "surface-tint": "#296777",
+                      "surface": "#f8fafb",
+                      "on-background": "#2c3436",
+                      "on-secondary-fixed": "#004653",
+                      "secondary-fixed": "#b2ecfd",
+                      "on-secondary": "#effbff",
+                      "surface-container-highest": "#dce4e6",
+                      "surface-dim": "#d4dbde",
+                      "on-tertiary": "#e6ffee",
+                      "outline-variant": "#acb3b6",
+                      "on-primary-container": "#0e5463",
+                      "on-primary-fixed-variant": "#1d5e6d",
+                      "on-error": "#fff7f6",
+                      "inverse-primary": "#a8e3f6",
+                      "primary-container": "#a8e3f6",
+                      "outline": "#747c7e",
+                      "on-surface": "#2c3436",
+                      "on-tertiary-fixed": "#2f503f",
+                      "error-container": "#fa746f",
+                      "surface-container-high": "#e3e9eb",
+                      "primary-fixed-dim": "#9ad5e7",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#9a9d9e",
+                      "on-tertiary-container": "#416350",
+                      "on-secondary-fixed-variant": "#266372",
+                      "on-primary": "#f0fbff",
+                      "tertiary-fixed-dim": "#c9eed6",
+                      "surface-bright": "#f8fafb",
+                      "tertiary": "#456653",
+                      "on-secondary-container": "#195968",
+                      "on-error-container": "#6e0a12"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "3xl": "1.5rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Manrope"],
+                      "display": ["Manrope"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .premium-gradient {
+            background: linear-gradient(135deg, #296777 0%, #195a6a 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-fixed">
+<!-- Top Navigation -->
+<header class="bg-white/70 backdrop-blur-xl docked full-width top-0 sticky z-50 tonal-shift-bg-surface-container-low h-20">
+<nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-full">
+<div class="flex items-center gap-2">
+<span class="text-2xl font-bold tracking-tighter text-cyan-900 font-headline">SereneCare</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-cyan-900 font-semibold border-b-2 border-cyan-800 font-headline text-sm tracking-tight transition-colors duration-300" href="#">Find a Specialist</a>
+<a class="text-slate-500 font-medium hover:text-cyan-700 transition-colors duration-300 font-headline text-sm tracking-tight" href="#">How it Works</a>
+<a class="text-slate-500 font-medium hover:text-cyan-700 transition-colors duration-300 font-headline text-sm tracking-tight" href="#">Resources</a>
+<a class="text-slate-500 font-medium hover:text-cyan-700 transition-colors duration-300 font-headline text-sm tracking-tight" href="#">About</a>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-headline text-sm font-semibold premium-gradient hover:scale-95 transition-transform duration-200">
+                Join as Clinician
+            </button>
+</nav>
+</header>
+<main class="max-w-7xl mx-auto px-8">
+<!-- Hero Section -->
+<section class="py-20 flex flex-col md:flex-row gap-12 items-center">
+<div class="flex-1 space-y-8">
+<div class="space-y-4">
+<div class="flex gap-3">
+<span class="px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider">Springfield</span>
+<span class="px-4 py-1.5 rounded-full bg-tertiary-container text-on-tertiary-container text-xs font-bold uppercase tracking-wider">Online Available</span>
+</div>
+<h1 class="text-5xl md:text-7xl font-extrabold font-headline text-on-surface tracking-tighter leading-none">SereneCare Wellness</h1>
+<p class="text-xl text-on-surface-variant max-w-lg leading-relaxed">Dedicated to Anxiety, Depression, and Couples Counseling. Find your path to tranquility with our elite clinical team.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex -space-x-3">
+<img class="w-12 h-12 rounded-full border-4 border-surface object-cover" data-alt="Portrait of a friendly female clinical psychologist in a professional setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfvvYVDKIwYOMDihVH8tYbl8GeeleX6_ykDQeo1c8vHFRC4UlHgb1omt8-LSaul8ytdxSwyagY2BBm_TPZXqjU_g5Ulez-Ky4mDW3cd8o43BBiFRxeItu_u2mRK4-Ey7pD231P-3h5k2Rk91C2djywCsSBHQWfoWZZEH_tpiVsIXnXgILTHXLp7kplfq1NhzkOeg7S5SS8c8SzYcEugT473ZhhlL8rnejLdO_6N-hx-Qb8Bg0WiiWDqaAdJtcUs_VqnHS-B23f7GPN"/>
+<img class="w-12 h-12 rounded-full border-4 border-surface object-cover" data-alt="Portrait of a male therapist smiling warmly in a bright office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgeug6vSJG_cF-enfvNvv9WZLuszt5yHlgphB0PhK6wxN1sbjErImGMfotrwjs3aR-Q2JGoE01Ru3QdYhUOs-HAvLoA_iwBpK99T3tIy2awmSLI3S4G6_FuTUGCAj7TVNXL4F0IlWqpQylhY3Uak14CeQrb8OdgBMcDFl8vgxdnX5fWABor8uzi9pkuPjeWWpMC8MaYVky7Pmz4Pr7SDSX-s47uwz0QDN9TBThHf91RA24jAZMuMH7xVOhKYY52ADiVSh_8XN3KghF"/>
+<img class="w-12 h-12 rounded-full border-4 border-surface object-cover" data-alt="Portrait of a diverse female specialist in clinical psychology" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0oMGxjbh4dZbgko5nsuzbApUIJakGH3mHtrsXuMlrAI5FU8jlJeukLmXrNyfvfYSCVdd49ukCk0kpbIpMejdbCvpVExGibRs5ZN_-QFRTQPNS6F9ZJoq4s6Ptrhkb2kPCB08o2jF8JMl407SC58Xuny4Rb3d7XtqqEKu1qfxnVFPX8ZcnZf4EjnQAUoHfg_opj6FoqdXslmeT5Rw091aDzX_Q410GlPb4G4KvEaGy0MHN0kRoizk3K0cJPZtqaeBGByiv63suY_QE"/>
+</div>
+<div>
+<div class="flex items-center text-primary-dim">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold ml-1">4.9</span>
+<span class="text-on-surface-variant text-sm ml-2 font-medium">(120+ Verified Patient Reviews)</span>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-4">
+<button class="premium-gradient text-on-primary px-8 py-4 rounded-3xl font-bold font-headline shadow-lg hover:scale-[0.98] transition-all">Book Free Call</button>
+<button class="bg-surface-container-low text-primary px-8 py-4 rounded-3xl font-bold font-headline hover:bg-surface-container transition-all">View All Staff</button>
+</div>
+</div>
+<div class="flex-1 relative">
+<div class="aspect-square rounded-[3rem] overflow-hidden rotate-3 shadow-2xl relative">
+<img class="w-full h-full object-cover" data-alt="Serene minimalist therapy room with warm natural light, soft textures, and lush green plants" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhpe0Q-HdhhqjaqfrBLv0PDSeFTRm04mblyKbqCa4aD5R2w1nWqF3TqYK9nPNSwH6o6S6kkpJnRKwPBrS43JlrjeboVraYkXU0llDc839hP2IVOyvdK-3RtVPSwYskI-d0FDwRnApHxQbSG8Ye9E9hegjvAuQyGKQvKfteAKqBDtr37M7tMon2hzgNpfsT1mt7fIEunhOvteBj_ZBfKric1kCfqWv7V2Xe5IOc5Qhzlp_XteJiNVioDbejAegllK7DEeUdxdofPgK3"/>
+</div>
+<div class="absolute -bottom-6 -left-6 glass-card p-6 rounded-3xl shadow-xl max-w-xs animate-float">
+<p class="text-secondary font-bold font-headline italic">"The care I received here transformed my perspective on anxiety management."</p>
+<p class="mt-2 text-xs text-on-surface-variant font-bold">— Verified Patient</p>
+</div>
+</div>
+</section>
+<!-- Sticky Filters -->
+<section class="sticky top-20 z-40 py-6 bg-surface/80 backdrop-blur-md mb-12">
+<div class="flex flex-wrap items-center gap-4">
+<span class="text-label-md font-bold text-on-surface-variant uppercase tracking-widest mr-2">Filters</span>
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/20 hover:border-primary transition-all font-medium">
+                    Specialty <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/20 hover:border-primary transition-all font-medium">
+                    Modality <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/20 hover:border-primary transition-all font-medium">
+                    Availability <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-full bg-surface-container-lowest text-on-surface border border-outline-variant/20 hover:border-primary transition-all font-medium">
+                    Language <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<div class="ml-auto flex items-center gap-2 text-on-surface-variant">
+<span class="text-sm font-semibold">12 Specialists Available</span>
+</div>
+</div>
+</section>
+<!-- Psychologist Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-24">
+<!-- Card 1 -->
+<div class="group bg-surface-container-lowest rounded-[2rem] overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl p-4">
+<div class="relative h-72 rounded-3xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Portrait of Dr. Elena Vance, a professional psychologist with a warm smile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbjpMpkPjzPtukMKZT2GuvcwaGBO0bJ-XbJb-qqQs8a09CGW8NfQUvvegCHaCo--tG6Ced1SQzXeX3KqnN_OFc8r8sNy7fp8sLHIR4PUuOQRyJmDXpZbJIBGAmHT4ruyruBVSzLj4WDedDW3pyRkeQUnSj7pxfB_Iwx5M_mg4KajNv-hBB__iK59R761B4RtArbA7yeT9lZTrGen0l_9tp41mPTx8zonfG-bxWQpa0YF8cdYKafiqHEmlWomfnD1EYJOZHiMElgiOR"/>
+<div class="absolute top-4 right-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-xs font-bold">Available Now</div>
+</div>
+<div class="px-2 space-y-4">
+<div>
+<h3 class="text-2xl font-bold font-headline text-on-surface">Dr. Elena Vance</h3>
+<p class="text-primary font-semibold text-sm">Senior Clinical Psychologist</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-[10px] font-bold uppercase tracking-tight">Anxiety</span>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-[10px] font-bold uppercase tracking-tight">CBT</span>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-[10px] font-bold uppercase tracking-tight">Trauma</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed">Specializing in evidence-based treatments for chronic anxiety and complex trauma recovery for adults.</p>
+<div class="pt-4 space-y-2">
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface-variant font-medium">Next Available</span>
+<span class="text-tertiary font-bold">Tomorrow 10:00 AM</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface-variant font-medium">Session Rate</span>
+<span class="text-on-surface font-bold">From $120/session</span>
+</div>
+</div>
+<div class="flex gap-3 pt-4">
+<button class="flex-1 py-3 px-4 bg-surface-container-low text-primary font-bold font-headline rounded-2xl hover:bg-surface-container transition-colors">View Profile</button>
+<button class="flex-1 py-3 px-4 premium-gradient text-on-primary font-bold font-headline rounded-2xl shadow-md">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-surface-container-lowest rounded-[2rem] overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl p-4">
+<div class="relative h-72 rounded-3xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Portrait of Dr. Marcus Thorne, male therapist specializing in couples counseling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ-OME8S43bZFIp4z1PlacfKcwsfSbidkDjyoOdTe2u0ClmwHR68lbTs_eP8h3LbY6lmA0pNY40zvu6XdDgTzNkZd7WhnAsYuhpS39aKg65IaNCUqkWVtmhegVbhgSulgokvo2GtW1E79j82OSQznTCPKe4eHKzuzbkaq9fh0eo-TzvavcEJJIABkiqVYV3Pp-6rvXGWU24KJbNNB37th7dVQ3cW2q6yKU1KkIUotaIIvI78FnGhagSs3-JpVlgYx7yO2rl9jUD1gb"/>
+</div>
+<div class="px-2 space-y-4">
+<div>
+<h3 class="text-2xl font-bold font-headline text-on-surface">Dr. Marcus Thorne</h3>
+<p class="text-primary font-semibold text-sm">Couples &amp; Family Specialist</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-[10px] font-bold uppercase tracking-tight">Couples</span>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-[10px] font-bold uppercase tracking-tight">LGBTIQ+</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed">Expert mediator focusing on relationship dynamics, communication styles, and family reconciliation.</p>
+<div class="pt-4 space-y-2">
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface-variant font-medium">Next Available</span>
+<span class="text-tertiary font-bold">Mon, Oct 14 2:00 PM</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface-variant font-medium">Session Rate</span>
+<span class="text-on-surface font-bold">From $150/session</span>
+</div>
+</div>
+<div class="flex gap-3 pt-4">
+<button class="flex-1 py-3 px-4 bg-surface-container-low text-primary font-bold font-headline rounded-2xl hover:bg-surface-container transition-colors">View Profile</button>
+<button class="flex-1 py-3 px-4 premium-gradient text-on-primary font-bold font-headline rounded-2xl shadow-md">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-surface-container-lowest rounded-[2rem] overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl p-4">
+<div class="relative h-72 rounded-3xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Portrait of Sarah Jenkins, a youthful and empathetic mental health counselor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUZOD6DQAtIcQVTU9-1LM9awzVtc8IhR_Vv_OWm_MpZiofydShzfaLyRccT7J9zrPzQ9YZipZXS4o9YdPI0bi4jHs6po_0fakI2G1uvCaNDiBYRid1h0EZvfrpDBWWWBiK-cujQIpzKKkd1uuA9_EGxaV1Yb2DvfJuhLLflV_OilY8sYTHFUW3Qnq3aVVIXYFRr3iMWyZjVZD1eo0LdfzTmN92zAyQzqxq0HJkR0E4IgtOCbo5Zve0a82ptwzzanSPDVud7WoKetu3"/>
+</div>
+<div class="px-2 space-y-4">
+<div>
+<h3 class="text-2xl font-bold font-headline text-on-surface">Sarah Jenkins, M.A.</h3>
+<p class="text-primary font-semibold text-sm">Mental Health Counselor</p>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-[10px] font-bold uppercase tracking-tight">Depression</span>
+<span class="px-3 py-1 bg-surface-container text-on-surface-variant rounded-full text-[10px] font-bold uppercase tracking-tight">Adolescents</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 leading-relaxed">Supporting young adults and teenagers through major life transitions and mood disorders.</p>
+<div class="pt-4 space-y-2">
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface-variant font-medium">Next Available</span>
+<span class="text-tertiary font-bold">Tuesday 9:00 AM</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface-variant font-medium">Session Rate</span>
+<span class="text-on-surface font-bold">From $80/session</span>
+</div>
+</div>
+<div class="flex gap-3 pt-4">
+<button class="flex-1 py-3 px-4 bg-surface-container-low text-primary font-bold font-headline rounded-2xl hover:bg-surface-container transition-colors">View Profile</button>
+<button class="flex-1 py-3 px-4 premium-gradient text-on-primary font-bold font-headline rounded-2xl shadow-md">Book Now</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Assisted Booking Section -->
+<section class="bg-primary-container/30 rounded-[3rem] p-12 mb-24 relative overflow-hidden">
+<div class="relative z-10 max-w-2xl mx-auto text-center space-y-10">
+<div class="space-y-4">
+<h2 class="text-4xl font-extrabold font-headline text-on-primary-container">Help me choose</h2>
+<p class="text-on-primary-container font-medium">Not sure where to start? Answer 3 quick questions and we'll match you with the right specialist.</p>
+</div>
+<div class="space-y-8 text-left">
+<div class="space-y-4">
+<label class="text-sm font-bold text-on-primary-container uppercase tracking-widest px-1">1. What brings you here?</label>
+<div class="flex flex-wrap gap-3">
+<button class="px-6 py-3 rounded-2xl bg-surface-container-lowest border-2 border-transparent hover:border-primary font-semibold transition-all">Managing Anxiety</button>
+<button class="px-6 py-3 rounded-2xl bg-primary text-on-primary border-2 border-transparent font-semibold shadow-lg">Mood Support</button>
+<button class="px-6 py-3 rounded-2xl bg-surface-container-lowest border-2 border-transparent hover:border-primary font-semibold transition-all">Relationship Issues</button>
+<button class="px-6 py-3 rounded-2xl bg-surface-container-lowest border-2 border-transparent hover:border-primary font-semibold transition-all">Career Stress</button>
+</div>
+</div>
+<div class="space-y-4 opacity-60">
+<label class="text-sm font-bold text-on-primary-container uppercase tracking-widest px-1">2. Preferred session time?</label>
+<div class="flex flex-wrap gap-3">
+<button class="px-6 py-3 rounded-2xl bg-surface-container-lowest border-2 border-transparent font-semibold cursor-not-allowed">Mornings</button>
+<button class="px-6 py-3 rounded-2xl bg-surface-container-lowest border-2 border-transparent font-semibold cursor-not-allowed">Afternoons</button>
+<button class="px-6 py-3 rounded-2xl bg-surface-container-lowest border-2 border-transparent font-semibold cursor-not-allowed">Evenings</button>
+</div>
+</div>
+</div>
+<button class="px-12 py-4 bg-primary text-on-primary rounded-full font-bold font-headline text-lg premium-gradient hover:scale-105 transition-all">Next Question</button>
+</div>
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary-container/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+<div class="absolute bottom-0 left-0 w-96 h-96 bg-tertiary-container/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+</section>
+<!-- Reviews Section -->
+<section class="mb-24">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
+<div class="space-y-4">
+<h2 class="text-4xl font-extrabold font-headline tracking-tight">Patient Experiences</h2>
+<p class="text-on-surface-variant text-lg">Real feedback from our healing community.</p>
+</div>
+<div class="bg-surface-container-low px-8 py-6 rounded-[2rem] flex items-center gap-6">
+<div class="text-center">
+<div class="text-4xl font-black text-primary leading-none">4.9</div>
+<div class="text-[10px] uppercase font-bold text-on-surface-variant tracking-widest mt-1">Average</div>
+</div>
+<div class="h-10 w-px bg-outline-variant/30"></div>
+<div class="text-on-surface-variant text-sm font-medium">
+                        Based on 124 verified reviews <br/>across Springfield.
+                    </div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Review 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-[2rem] shadow-sm">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-secondary-container rounded-full flex items-center justify-center font-bold text-on-secondary-container">JS</div>
+<div>
+<div class="font-bold font-headline">Jessica S.</div>
+<div class="text-xs text-on-surface-variant">Session with Dr. Vance</div>
+</div>
+<div class="ml-auto text-primary-dim flex">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-on-surface-variant leading-relaxed">"The platform was so easy to use, and I found Dr. Vance within minutes. Her approach to my panic attacks has been life-changing. Highly recommend the online sessions."</p>
+</div>
+<!-- Review 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-[2rem] shadow-sm">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-tertiary-container rounded-full flex items-center justify-center font-bold text-on-tertiary-container">RK</div>
+<div>
+<div class="font-bold font-headline">Robert K.</div>
+<div class="text-xs text-on-surface-variant">Session with Dr. Thorne</div>
+</div>
+<div class="ml-auto text-primary-dim flex">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-on-surface-variant leading-relaxed">"My partner and I were hesitant about therapy, but Dr. Thorne created such a safe and non-judgmental space. We've seen massive improvements in just 4 sessions."</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 full-width py-16 tonal-shift-bg-surface-container-low mt-24">
+<div class="flex flex-col md:flex-row justify-between items-start max-w-7xl mx-auto px-8 gap-16">
+<div class="max-w-xs space-y-6">
+<div class="text-lg font-bold text-cyan-900 font-headline">SereneCare Wellness</div>
+<p class="text-slate-500 font-medium text-sm leading-relaxed">Providing world-class mental health care through human connection and clinical excellence.</p>
+<div class="flex items-center gap-2 px-4 py-2 bg-white rounded-full w-fit shadow-sm border border-outline-variant/10">
+<span class="w-2 h-2 bg-tertiary rounded-full"></span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Powered by SereneCare</span>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-12 flex-1">
+<div class="space-y-4">
+<h4 class="font-bold font-headline text-cyan-900 text-sm">Contact Info</h4>
+<ul class="space-y-2 text-sm text-slate-500 font-medium">
+<li>123 Serenity Blvd, Springfield</li>
+<li>(555) 234-5678</li>
+<li>care@serenecare.wellness</li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-bold font-headline text-cyan-900 text-sm">Locations</h4>
+<div class="rounded-2xl overflow-hidden grayscale contrast-125 opacity-70 hover:opacity-100 transition-opacity h-24">
+<img class="w-full h-full object-cover" data-alt="Stylized map showing clinic location in the city" data-location="Springfield" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4noVs584BTpjEPuv1pkAA_NjHbFjN_ZYDGwgKJ0OLNYtWoLC2DcGVm2MdIRIlP9qTgkftGof-vpsoqsZvqjKNusmbRt_RsvuqOTuihIB_zwKV3MIDk3rVPfY2IGt3L_QP9jD05ZfK2nucRNg4MupzvHqqUH4RD-hKcLKAax0tO6VeAkRT2-VsA1DgpPYpUpDL2vW9JDyF6_jduY6bftyd6GrmYo_c7Yx8KqfT9viJIlJg8SzyV8wkWJNK-Vdmhb8pV4W9uH_RW8uQ"/>
+</div>
+</div>
+<div class="space-y-4 col-span-2 md:col-span-1">
+<h4 class="font-bold font-headline text-cyan-900 text-sm">Legal</h4>
+<ul class="space-y-2 text-xs uppercase tracking-widest text-slate-400 font-inter">
+<li><a class="hover:text-cyan-600 transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-cyan-600 transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-cyan-600 transition-colors" href="#">Cookie Policy</a></li>
+<li><a class="hover:text-cyan-600 transition-colors" href="#">Accessibility</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-8 mt-16 pt-8 border-t border-outline-variant/10 text-center md:text-left">
+<p class="text-slate-400 font-inter text-[10px] uppercase tracking-widest">© 2024 SereneCare Psychology. All rights reserved.</p>
+</div>
+</footer>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+
+const params = new URLSearchParams(location.search)
+const clinicaSlug = params.get('clinica') || null
+
+// Cargar psicólogos disponibles de la clínica
+async function cargarDirectorio() {
+  let query = supabase.from('usuarios')
+    .select('id, nombre, apellido, email, clinica_id, clinicas(nombre, status, config_ia)')
+    .eq('rol', 'psicologo')
+
+  if (clinicaSlug) query = query.eq('clinica_id', clinicaSlug)
+
+  const { data: psicologos } = await query.limit(12)
+  if (!psicologos?.length) return
+
+  // Actualizar contador
+  const countEl = document.querySelector('.ml-auto.flex.items-center.gap-2 span')
+  if (countEl) countEl.textContent = `${psicologos.length} Especialistas disponibles`
+
+  // Actualizar cards existentes (primeras 3)
+  const cards = document.querySelectorAll('.grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 > div')
+  psicologos.slice(0, 3).forEach((p, i) => {
+    if (!cards[i]) return
+    const h3 = cards[i].querySelector('h3')
+    const emailP = cards[i].querySelector('p.text-primary')
+    if (h3) h3.textContent = `Dr/a. ${p.nombre} ${p.apellido}`
+    if (emailP) emailP.textContent = p.clinicas?.nombre || 'Psicología Clínica'
+
+    // Botones
+    const btnVer = cards[i].querySelector('button:first-of-type')
+    const btnReservar = cards[i].querySelector('button:last-of-type')
+    if (btnVer) btnVer.addEventListener('click', () => {
+      window.location.href = `/screens/perfil_publico_paciente.html?psicologo_id=${p.id}`
+    })
+    if (btnReservar) btnReservar.addEventListener('click', () => {
+      sessionStorage.setItem('tp_psicologo_seleccionado', JSON.stringify(p))
+      window.location.href = '/screens/registro_intake.html'
+    })
+  })
+}
+
+cargarDirectorio()
+
+// Botón "Unirme como clínica" / "Register"
+const btnRegister = document.querySelector('button.cta-gradient, button.premium-gradient')
+if (btnRegister) btnRegister.addEventListener('click', () => {
+  window.location.href = '/login.html'
+})
+
+// Filtros de especialidad (toggle visual)
+document.querySelectorAll('button.flex.items-center.gap-2.px-6').forEach(btn => {
+  btn.addEventListener('click', () => btn.classList.toggle('border-primary'))
+})
+
+// Botón de la sección "Book Free Call"
+document.querySelectorAll('button.premium-gradient').forEach(btn => {
+  if (btn.textContent.includes('Book Free Call') || btn.textContent.includes('Confirmar')) {
+    btn.addEventListener('click', () => window.location.href = '/screens/registro_intake.html')
+  }
+})
+</script>
+</body></html>

@@ -1,0 +1,446 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "fontFamily": { "headline": ["Manrope"], "display": ["Manrope"], "body": ["Inter"], "label": ["Inter"] }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .bg-dark-canvas { background-color: #020617; }
+  .sidebar-dark { background-color: #0f172a; }
+  .apps-ov-glass { background: rgba(15,23,42,0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .apps-ov-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease; }
+  .apps-ov-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+  .apps-ov-card:active { transform: scale(0.96); }
+  @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+  tr:hover td { background: rgba(239,68,68,0.02); }
+  .threat-row { transition: background 0.2s; }
+</style>
+</head>
+<body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
+
+<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 sidebar-dark shadow-2xl shadow-slate-950/50 p-6 border-r border-slate-800/20 z-50">
+  <div class="mb-10 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
+      <span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div>
+      <h1 class="text-2xl font-bold tracking-tighter text-slate-50">SereneCare</h1>
+      <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">SaaS Enterprise</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-2">
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="dashboard_maestro_super_admin.html">
+      <span class="material-symbols-outlined">dashboard</span><span class="font-headline tracking-tight">Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="gestion_clinicas_super_admin.html">
+      <span class="material-symbols-outlined">medical_services</span><span class="font-headline tracking-tight">Clínicas</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="revenue_super_admin.html">
+      <span class="material-symbols-outlined">payments</span><span class="font-headline tracking-tight">Revenue</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="configuracion_ia_super_admin.html">
+      <span class="material-symbols-outlined">settings_input_component</span><span class="font-headline tracking-tight">IA Config</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="soporte_super_admin.html">
+      <span class="material-symbols-outlined">contact_support</span><span class="font-headline tracking-tight">Soporte</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="gestion_planes_super_admin.html">
+      <span class="material-symbols-outlined">inventory_2</span><span class="font-headline tracking-tight">Planes SaaS</span>
+    </a>
+    <div class="mt-4 pt-4 border-t border-slate-800/40">
+      <p class="text-[10px] uppercase tracking-widest text-slate-600 font-bold px-4 mb-2">Toolkit</p>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold" style="background:rgba(239,68,68,0.1);color:#f87171;" href="seguridad_accesos_super_admin.html">
+        <span class="material-symbols-outlined">security</span><span class="font-headline tracking-tight">Seguridad</span>
+      </a>
+    </div>
+  </nav>
+  <div class="mt-auto pt-6 border-t border-slate-800/40">
+    <div class="flex items-center gap-3 mb-6 px-2">
+      <div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 overflow-hidden">
+        <img alt="Super Admin" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEkOniiDt2PI6tNxEg91jxORg_SnN49152Jl6fY0T0JQUpJUPEg640XGgrfxvoylvoIyfuB_qrZInikAzWkPLaBJtEGs8a1m5DWI6nSGiYx73x1gDkG_t73ZqxnT_mOdYgJr7hEeYCmEENDwwewakrZq2-XJTTIpjE2B4KTh0YatVFUdgbxtr_nb61J_UtkE46ijL9rAKcI8k2TXNFOM6T6ot4VleySKenIKVZQe28hAAVPd-jK3442dleEBj7QRHC8feyZZ9114e4"/>
+      </div>
+      <div class="flex-1 overflow-hidden">
+        <p class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
+        <p class="text-xs text-slate-500 truncate">System Status: Healthy</p>
+      </div>
+    </div>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all" href="#" id="btn-logout">
+      <span class="material-symbols-outlined">logout</span><span class="font-headline tracking-tight">Logout</span>
+    </a>
+  </div>
+</aside>
+
+<main class="pl-72 min-h-screen">
+  <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-8 z-40 border-b border-slate-800/10">
+    <div class="flex flex-col">
+      <h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Seguridad & Accesos</h2>
+      <p class="text-slate-500 text-xs font-medium tracking-wide">Sesiones activas, intentos fallidos y alertas de seguridad</p>
+    </div>
+    <div class="flex items-center gap-2 relative">
+      <div class="relative">
+        <button id="btn-notifications" class="relative p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">notifications</span>
+        </button>
+        <div id="panel-notifications" class="hidden absolute right-0 top-12 w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+            <span class="font-bold text-slate-100 text-sm">Notificaciones</span>
+            <button id="btn-mark-read" class="text-xs text-indigo-400 hover:text-indigo-300">Marcar todas leídas</button>
+          </div>
+          <div class="divide-y divide-slate-800 max-h-72 overflow-y-auto">
+            <p class="text-slate-500 text-sm text-center py-8">Sin notificaciones nuevas</p>
+          </div>
+          <div class="px-5 py-3 border-t border-slate-800">
+            <a href="alertas_globales_super_admin.html" class="block text-center text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Ver todas las alertas →</a>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="btn-settings" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">settings</span>
+        </button>
+        <div id="panel-settings" class="hidden absolute right-0 top-12 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 p-4">
+          <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Apariencia</p>
+          <div id="toggle-tema-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span id="icon-tema" class="material-symbols-outlined text-indigo-400">dark_mode</span>
+              <div><p class="text-sm font-semibold text-slate-200">Tema oscuro</p><p id="label-tema" class="text-xs text-slate-500">Activo</p></div>
+            </div>
+            <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+              <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="btn-apps" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">apps</span>
+        </button>
+        <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
+          <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+            <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
+              <span class="material-symbols-outlined text-3xl">close</span>
+            </button>
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
+              </div>
+              <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+              <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);"><span class="material-symbols-outlined text-3xl text-slate-400">terminal</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
+              </a>
+              <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);"><span class="material-symbols-outlined text-3xl" style="color:#3b82f6;">manage_accounts</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
+              </a>
+              <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);"><span class="material-symbols-outlined text-3xl" style="color:#14b8a6;">download</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
+              </a>
+              <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);"><span class="material-symbols-outlined text-3xl" style="color:#22c55e;">monitor_heart</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
+              </a>
+              <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);"><span class="material-symbols-outlined text-3xl" style="color:#ef4444;">security</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
+              </a>
+              <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);"><span class="material-symbols-outlined text-3xl" style="color:#f59e0b;">history</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
+              </a>
+            </div>
+            <div class="mt-8 flex items-center justify-between py-4 border-t" style="border-color: rgba(255,255,255,0.07);">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-indigo-400/50 text-sm">security</span>
+                <span class="text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold">Super Administrador • Acceso Restringido</span>
+              </div>
+              <span class="text-[10px] text-slate-700 font-mono">ESC para cerrar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="p-8 max-w-7xl mx-auto space-y-6">
+
+    <!-- Security Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-500">Sesiones Activas</p>
+        <p class="text-3xl font-headline font-bold text-white">34</p>
+        <p class="text-xs text-slate-600 mt-1">En este momento</p>
+      </div>
+      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#f87171;">Fallos de Login</p>
+        <p class="text-3xl font-headline font-bold text-white">7</p>
+        <p class="text-xs text-slate-600 mt-1">Últimas 24h</p>
+      </div>
+      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#fbbf24;">IPs Bloqueadas</p>
+        <p class="text-3xl font-headline font-bold text-white">2</p>
+        <p class="text-xs text-slate-600 mt-1">Rate limit activo</p>
+      </div>
+      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#4ade80;">Tokens Activos</p>
+        <p class="text-3xl font-headline font-bold text-white">34</p>
+        <p class="text-xs text-slate-600 mt-1">JWT válidos</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+      <!-- Active Sessions Table -->
+      <div class="lg:col-span-3 bg-slate-900 rounded-[2rem] border border-slate-800/20 overflow-hidden">
+        <div class="px-8 py-6 border-b border-slate-800/30 flex items-center justify-between">
+          <h3 class="font-headline text-lg font-bold text-white">Sesiones Activas</h3>
+          <button id="btn-kill-all" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:opacity-80" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
+            <span class="material-symbols-outlined text-sm">no_accounts</span> Cerrar todas
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead>
+              <tr class="text-slate-500 border-b border-slate-800/50">
+                <th class="px-8 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold">Usuario</th>
+                <th class="px-4 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold">IP</th>
+                <th class="px-4 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold">Inicio</th>
+                <th class="px-4 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold text-right">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-sessions" class="divide-y divide-slate-800/30"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Failed Logins + Blocked IPs -->
+      <div class="lg:col-span-2 flex flex-col gap-4">
+
+        <div class="bg-slate-900 rounded-[2rem] border border-slate-800/20 overflow-hidden flex-1">
+          <div class="px-6 py-5 border-b border-slate-800/30">
+            <h3 class="font-headline text-base font-bold text-white">Intentos Fallidos</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Últimas 24 horas</p>
+          </div>
+          <div id="failed-logins" class="divide-y divide-slate-800/30 max-h-64 overflow-y-auto"></div>
+        </div>
+
+        <div class="bg-slate-900 rounded-[2rem] border border-slate-800/20 overflow-hidden">
+          <div class="px-6 py-5 border-b border-slate-800/30 flex items-center justify-between">
+            <div>
+              <h3 class="font-headline text-base font-bold text-white">IPs Bloqueadas</h3>
+              <p class="text-xs text-slate-500 mt-0.5">Rate limit automático</p>
+            </div>
+          </div>
+          <div id="blocked-ips" class="divide-y divide-slate-800/30"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-slate-100 px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50 border border-slate-700"></div>
+
+<script>
+var SESSIONS = [
+  { user: 'Nazareno Hidalgo', email: 'nazareno@serenecare.io', ip: '190.2.14.88', inicio: 'hace 4 min', rol: 'super_admin', color: '#818cf8' },
+  { user: 'María García', email: 'maria@clinicasol.com', ip: '181.44.22.17', inicio: 'hace 12 min', rol: 'admin_clinica', color: '#a78bfa' },
+  { user: 'Carlos López', email: 'carlos@menteplus.com', ip: '200.45.88.12', inicio: 'hace 28 min', rol: 'admin_clinica', color: '#a78bfa' },
+  { user: 'Ana Martínez', email: 'ana@clinicasol.com', ip: '186.23.44.91', inicio: 'hace 1h', rol: 'terapeuta', color: '#4ade80' },
+  { user: 'Pedro Sánchez', email: 'pedro@menteplus.com', ip: '190.44.11.203', inicio: 'hace 2h', rol: 'terapeuta', color: '#4ade80' },
+  { user: 'Laura Fernández', email: 'laura@bienestar.com', ip: '201.55.33.78', inicio: 'hace 3h', rol: 'terapeuta', color: '#4ade80' },
+]
+var FAILED = [
+  { email: 'soporte@xyzinc.com', ip: '45.23.111.88', time: 'hace 8 min', attempts: 5 },
+  { email: 'admin@test.com', ip: '185.220.101.47', time: 'hace 22 min', attempts: 3 },
+  { email: 'root@unknown.net', ip: '103.21.59.14', time: 'hace 1h', attempts: 8 },
+  { email: 'carlos@menteplus.com', ip: '200.45.88.12', time: 'hace 2h', attempts: 1 },
+]
+var BLOCKED = [
+  { ip: '45.23.111.88', reason: '5+ intentos fallidos', since: 'hace 8 min', expires: '52 min restantes' },
+  { ip: '185.220.101.47', reason: 'Patrón de escaneo', since: 'hace 25 min', expires: '35 min restantes' },
+]
+
+document.addEventListener('DOMContentLoaded', function() {
+  var panelApps = document.getElementById('panel-apps')
+  document.body.appendChild(panelApps)
+  var panelNotif    = document.getElementById('panel-notifications')
+  var panelSettings = document.getElementById('panel-settings')
+  function closeAll() {
+    panelNotif    && panelNotif.classList.add('hidden')
+    panelApps     && panelApps.classList.add('hidden')
+    panelSettings && panelSettings.classList.add('hidden')
+  }
+  document.getElementById('btn-notifications').addEventListener('click', function(e) {
+    e.stopPropagation(); var was = panelNotif.classList.contains('hidden'); closeAll(); if (was) panelNotif.classList.remove('hidden')
+  })
+  document.getElementById('btn-settings').addEventListener('click', function(e) {
+    e.stopPropagation(); var was = panelSettings.classList.contains('hidden'); closeAll(); if (was) panelSettings.classList.remove('hidden')
+  })
+  document.getElementById('btn-apps').addEventListener('click', function(e) {
+    e.stopPropagation(); var was = panelApps.classList.contains('hidden'); closeAll()
+    if (was) { panelApps.classList.remove('hidden'); var inner = document.getElementById('apps-inner'); if (inner) { inner.classList.remove('apps-ov-enter'); void inner.offsetWidth; inner.classList.add('apps-ov-enter') } }
+  })
+  document.addEventListener('click', closeAll)
+  document.getElementById('apps-inner').addEventListener('click', function(e) { e.stopPropagation() })
+  document.getElementById('btn-close-apps').addEventListener('click', function(e) { e.stopPropagation(); panelApps.classList.add('hidden') })
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') panelApps.classList.add('hidden') })
+
+  var temaOscuro = localStorage.getItem('tp_tema') !== 'claro'
+  function syncTema() {
+    var tBarTema = document.getElementById('toggle-tema'); var tDotTema = document.getElementById('toggle-tema-dot')
+    var iconTema = document.getElementById('icon-tema'); var labelTema = document.getElementById('label-tema')
+    if (tBarTema) tBarTema.style.background = temaOscuro ? '#6366f1' : '#334155'
+    if (tDotTema) { tDotTema.style.left = temaOscuro ? '22px' : '2px'; tDotTema.style.background = temaOscuro ? '#fff' : '#94a3b8' }
+    if (iconTema) iconTema.textContent = temaOscuro ? 'dark_mode' : 'light_mode'
+    if (labelTema) labelTema.textContent = temaOscuro ? 'Activo' : 'Desactivado'
+    document.documentElement.style.filter = temaOscuro ? '' : 'invert(1) hue-rotate(180deg)'
+  }
+  syncTema()
+  var tRowTema = document.getElementById('toggle-tema-row')
+  tRowTema && tRowTema.addEventListener('click', function(e) {
+    e.stopPropagation(); temaOscuro = !temaOscuro; localStorage.setItem('tp_tema', temaOscuro ? 'oscuro' : 'claro'); syncTema()
+  })
+
+  function toast(msg) {
+    var t = document.getElementById('toast')
+    t.textContent = msg; t.classList.remove('hidden')
+    setTimeout(function() { t.classList.add('hidden') }, 3000)
+  }
+
+  // Render sessions
+  var tbody = document.getElementById('tbody-sessions')
+  var sessions = SESSIONS.slice()
+  function renderSessions() {
+    tbody.innerHTML = sessions.map(function(s, i) {
+      var initials = s.user.split(' ').map(function(n){return n[0]}).slice(0,2).join('')
+      return '<tr class="threat-row">' +
+        '<td class="px-8 py-3.5">' +
+          '<div class="flex items-center gap-3">' +
+            '<div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style="background:rgba(99,102,241,0.25);">' + initials + '</div>' +
+            '<div><p class="text-sm font-semibold text-slate-200">' + s.user + '</p><p class="text-xs text-slate-500">' + s.email + '</p></div>' +
+          '</div>' +
+        '</td>' +
+        '<td class="px-4 py-3.5 text-xs font-mono text-slate-400">' + s.ip + '</td>' +
+        '<td class="px-4 py-3.5 text-xs text-slate-500">' + s.inicio + '</td>' +
+        '<td class="px-4 py-3.5 text-right">' +
+          '<button data-idx="' + i + '" class="btn-kill text-xs px-3 py-1 rounded-lg hover:opacity-90 transition-all" style="background:rgba(239,68,68,0.1);color:#f87171;">Terminar</button>' +
+        '</td>' +
+      '</tr>'
+    }).join('')
+    tbody.querySelectorAll('.btn-kill').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var idx = parseInt(btn.getAttribute('data-idx'))
+        var u = sessions[idx].user
+        sessions.splice(idx, 1)
+        renderSessions()
+        toast('Sesión de ' + u + ' terminada')
+      })
+    })
+  }
+  window._reloadSessions = function(newSessions) { sessions = newSessions; renderSessions() }
+
+  renderSessions()
+
+  document.getElementById('btn-kill-all').addEventListener('click', function() {
+    if (!confirm('¿Terminar TODAS las sesiones activas?')) return
+    sessions = []
+    renderSessions()
+    toast('Todas las sesiones han sido cerradas')
+  })
+
+  // Failed logins
+  var failedDiv = document.getElementById('failed-logins')
+  failedDiv.innerHTML = FAILED.map(function(f) {
+    return '<div class="px-6 py-3 flex items-center justify-between gap-2">' +
+      '<div><p class="text-xs font-semibold text-slate-300">' + f.email + '</p><p class="text-[10px] text-slate-500 font-mono">' + f.ip + ' • ' + f.time + '</p></div>' +
+      '<span class="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0" style="background:rgba(239,68,68,0.1);color:#f87171;">' + f.attempts + ' intentos</span>' +
+    '</div>'
+  }).join('')
+
+  // Blocked IPs
+  var blockedDiv = document.getElementById('blocked-ips')
+  blockedDiv.innerHTML = BLOCKED.map(function(b) {
+    return '<div class="px-6 py-4 flex items-start gap-3">' +
+      '<span class="material-symbols-outlined text-sm flex-shrink-0 mt-0.5" style="color:#f87171;">block</span>' +
+      '<div class="flex-1">' +
+        '<p class="text-xs font-mono font-bold text-slate-200">' + b.ip + '</p>' +
+        '<p class="text-[10px] text-slate-500 mt-0.5">' + b.reason + '</p>' +
+        '<p class="text-[10px] font-mono" style="color:#fbbf24;">' + b.expires + '</p>' +
+      '</div>' +
+    '</div>'
+  }).join('')
+
+  // Logout
+  var btnLogout = document.getElementById('btn-logout')
+  btnLogout && btnLogout.addEventListener('click', function(e) {
+    e.preventDefault()
+    localStorage.removeItem('tp_rol')
+    localStorage.removeItem('tp_user_id')
+    localStorage.removeItem('tp_email')
+    window.location.href = 'acceso_super_admin.html'
+  })
+})
+</script>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = 'acceso_super_admin.html' }
+
+// Mostrar usuarios activos como sesiones registradas
+const ROL_COLORS_SA = {
+  super_admin:   '#818cf8',
+  admin_clinica: '#a78bfa',
+  psicologo:     '#4ade80',
+  terapeuta:     '#4ade80',
+  paciente:      '#2dd4bf',
+}
+
+const { data: usuarios } = await supabase
+  .from('usuarios')
+  .select('id, nombre, apellido, email, rol, activo')
+  .eq('activo', true)
+  .order('nombre')
+  .limit(50)
+
+if (usuarios && usuarios.length && typeof window._reloadSessions === 'function') {
+  const mapped = usuarios.map(function(u) {
+    return {
+      user: u.nombre + ' ' + u.apellido,
+      email: u.email,
+      ip: '—',
+      inicio: 'registrado',
+      rol: u.rol,
+      color: ROL_COLORS_SA[u.rol] || '#94a3b8',
+    }
+  })
+  window._reloadSessions(mapped)
+}
+</script>
+</body></html>

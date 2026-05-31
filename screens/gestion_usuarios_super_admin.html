@@ -1,0 +1,556 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-secondary-fixed": "#004653","on-primary-container": "#0e5463","inverse-primary": "#a8e3f6",
+          "error-container": "#fa746f","secondary": "#2b6775","on-primary-fixed-variant": "#1d5e6d",
+          "tertiary-container": "#d7fde4","surface-container-high": "#e3e9eb","surface-container": "#eaeff0",
+          "background": "#f8fafb","secondary-dim": "#1b5a69","surface-container-low": "#f0f4f6",
+          "on-secondary-container": "#195968","on-error-container": "#6e0a12","primary": "#296777",
+          "error": "#a83836","outline-variant": "#acb3b6","on-tertiary-fixed-variant": "#4c6d5a",
+          "surface-container-lowest": "#ffffff","surface-container-highest": "#dce4e6",
+          "tertiary-fixed-dim": "#c9eed6","secondary-fixed-dim": "#a4ddef","outline": "#747c7e",
+          "on-background": "#2c3436","primary-fixed": "#a8e3f6","primary-dim": "#195a6a",
+          "surface-tint": "#296777","on-secondary": "#effbff","on-surface-variant": "#596063",
+          "error-dim": "#67040d","secondary-container": "#b2ecfd","primary-container": "#a8e3f6",
+          "on-tertiary-fixed": "#2f503f","tertiary-dim": "#395a48","surface-variant": "#dce4e6",
+          "on-primary-fixed": "#00404d","on-tertiary": "#e6ffee","inverse-on-surface": "#9a9d9e",
+          "on-surface": "#2c3436","on-tertiary-container": "#416350","secondary-fixed": "#b2ecfd",
+          "tertiary-fixed": "#d7fde4","on-primary": "#f0fbff","surface": "#f8fafb",
+          "inverse-surface": "#0b0f10","primary-fixed-dim": "#9ad5e7","surface-dim": "#d4dbde",
+          "on-secondary-fixed-variant": "#266372","on-error": "#fff7f6","tertiary": "#456653",
+          "surface-bright": "#f8fafb"
+        },
+        "fontFamily": { "headline": ["Manrope"], "display": ["Manrope"], "body": ["Inter"], "label": ["Inter"] }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .bg-dark-canvas { background-color: #020617; }
+  .sidebar-dark { background-color: #0f172a; }
+  .custom-glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); }
+  .apps-ov-glass { background: rgba(15,23,42,0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .apps-ov-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease; }
+  .apps-ov-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+  .apps-ov-card:active { transform: scale(0.96); }
+  @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .role-badge { display:inline-flex; align-items:center; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:700; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+</style>
+</head>
+<body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
+
+<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 sidebar-dark shadow-2xl shadow-slate-950/50 p-6 border-r border-slate-800/20 z-50">
+  <div class="mb-10 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
+      <span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div>
+      <h1 class="text-2xl font-bold tracking-tighter text-slate-50">SereneCare</h1>
+      <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">SaaS Enterprise</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-2">
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="dashboard_maestro_super_admin.html">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span class="font-headline tracking-tight">Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="gestion_clinicas_super_admin.html">
+      <span class="material-symbols-outlined">medical_services</span>
+      <span class="font-headline tracking-tight">Clínicas</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="revenue_super_admin.html">
+      <span class="material-symbols-outlined">payments</span>
+      <span class="font-headline tracking-tight">Revenue</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="configuracion_ia_super_admin.html">
+      <span class="material-symbols-outlined">settings_input_component</span>
+      <span class="font-headline tracking-tight">IA Config</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="soporte_super_admin.html">
+      <span class="material-symbols-outlined">contact_support</span>
+      <span class="font-headline tracking-tight">Soporte</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="gestion_planes_super_admin.html">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <span class="font-headline tracking-tight">Planes SaaS</span>
+    </a>
+    <div class="mt-4 pt-4 border-t border-slate-800/40">
+      <p class="text-[10px] uppercase tracking-widest text-slate-600 font-bold px-4 mb-2">Toolkit</p>
+      <a class="flex items-center gap-3 px-4 py-3 bg-blue-500/10 text-blue-400 rounded-xl font-semibold transition-all" href="gestion_usuarios_super_admin.html">
+        <span class="material-symbols-outlined">manage_accounts</span>
+        <span class="font-headline tracking-tight">Usuarios</span>
+      </a>
+    </div>
+  </nav>
+  <div class="mt-auto pt-6 border-t border-slate-800/40">
+    <div class="flex items-center gap-3 mb-6 px-2">
+      <div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 overflow-hidden">
+        <img alt="Super Admin Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEkOniiDt2PI6tNxEg91jxORg_SnN49152Jl6fY0T0JQUpJUPEg640XGgrfxvoylvoIyfuB_qrZInikAzWkPLaBJtEGs8a1m5DWI6nSGiYx73x1gDkG_t73ZqxnT_mOdYgJr7hEeYCmEENDwwewakrZq2-XJTTIpjE2B4KTh0YatVFUdgbxtr_nb61J_UtkE46ijL9rAKcI8k2TXNFOM6T6ot4VleySKenIKVZQe28hAAVPd-jK3442dleEBj7QRHC8feyZZ9114e4"/>
+      </div>
+      <div class="flex-1 overflow-hidden">
+        <p class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
+        <p class="text-xs text-slate-500 truncate">System Status: Healthy</p>
+      </div>
+    </div>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-error-container hover:bg-error-dim/20 rounded-xl transition-all" href="#" id="btn-logout">
+      <span class="material-symbols-outlined">logout</span>
+      <span class="font-headline tracking-tight">Logout</span>
+    </a>
+  </div>
+</aside>
+
+<main class="pl-72 min-h-screen">
+  <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-8 z-40 border-b border-slate-800/10">
+    <div class="flex flex-col">
+      <h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Gestión de Usuarios</h2>
+      <p class="text-slate-500 text-xs font-medium tracking-wide">Cuentas, roles y permisos del ecosistema SereneCare</p>
+    </div>
+    <div class="flex items-center gap-2 relative">
+      <div class="relative">
+        <button id="btn-notifications" class="relative p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">notifications</span>
+          <span id="notif-dot" class="hidden absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full border-2 border-slate-950"></span>
+        </button>
+        <div id="panel-notifications" class="hidden absolute right-0 top-12 w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+            <span class="font-bold text-slate-100 text-sm">Notificaciones</span>
+            <button id="btn-mark-read" class="text-xs text-indigo-400 hover:text-indigo-300">Marcar todas leídas</button>
+          </div>
+          <div id="lista-notificaciones" class="divide-y divide-slate-800 max-h-72 overflow-y-auto">
+            <p class="text-slate-500 text-sm text-center py-8">Sin notificaciones nuevas</p>
+          </div>
+          <div class="px-5 py-3 border-t border-slate-800">
+            <a href="alertas_globales_super_admin.html" class="block text-center text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Ver todas las alertas →</a>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="btn-settings" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">settings</span>
+        </button>
+        <div id="panel-settings" class="hidden absolute right-0 top-12 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 p-4">
+          <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Apariencia</p>
+          <div id="toggle-tema-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span id="icon-tema" class="material-symbols-outlined text-indigo-400">dark_mode</span>
+              <div>
+                <p class="text-sm font-semibold text-slate-200">Tema oscuro</p>
+                <p id="label-tema" class="text-xs text-slate-500">Activo</p>
+              </div>
+            </div>
+            <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+              <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+            </div>
+          </div>
+          <div class="border-t border-slate-800 my-3"></div>
+          <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Seguridad</p>
+          <button id="btn-cerrar-sesiones" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/10 transition-colors text-left">
+            <span class="material-symbols-outlined text-rose-400">no_accounts</span>
+            <div>
+              <p class="text-sm font-semibold text-slate-200">Cerrar todas las sesiones</p>
+              <p class="text-xs text-slate-500">Expira todos los tokens activos</p>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="btn-apps" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">apps</span>
+        </button>
+        <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
+          <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+            <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
+              <span class="material-symbols-outlined text-3xl">close</span>
+            </button>
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
+              </div>
+              <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+              <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
+                  <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
+              </a>
+              <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
+              </a>
+              <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
+              </a>
+              <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
+              </a>
+              <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
+              </a>
+              <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
+                  <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+                </div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
+              </a>
+            </div>
+            <div class="mt-8 flex items-center justify-between py-4 border-t" style="border-color: rgba(255,255,255,0.07);">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-indigo-400/50 text-sm">security</span>
+                <span class="text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold">Super Administrador • Acceso Restringido</span>
+              </div>
+              <span class="text-[10px] text-slate-700 font-mono">ESC para cerrar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="p-8 max-w-7xl mx-auto space-y-6">
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
+        <p class="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">Total Usuarios</p>
+        <p class="text-3xl font-headline font-bold text-white" id="stat-total">—</p>
+      </div>
+      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#3b82f6">Super Admins</p>
+        <p class="text-3xl font-headline font-bold text-white" id="stat-superadmin">—</p>
+      </div>
+      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#8b5cf6">Administradores</p>
+        <p class="text-3xl font-headline font-bold text-white" id="stat-admin">—</p>
+      </div>
+      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#22c55e">Terapeutas</p>
+        <p class="text-3xl font-headline font-bold text-white" id="stat-terapeuta">—</p>
+      </div>
+    </div>
+
+    <!-- Search + Filter Bar -->
+    <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30 flex flex-col sm:flex-row gap-3 items-center">
+      <div class="relative flex-1 w-full">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+        <input id="search-input" type="text" placeholder="Buscar por nombre, email o clínica..." class="w-full bg-slate-800/60 border border-slate-700/50 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500/50 transition-colors"/>
+      </div>
+      <select id="filter-rol" class="bg-slate-800/60 border border-slate-700/50 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:outline-none focus:border-indigo-500/50 transition-colors cursor-pointer">
+        <option value="">Todos los roles</option>
+        <option value="super_admin">Super Admin</option>
+        <option value="admin_clinica">Admin Clínica</option>
+        <option value="terapeuta">Terapeuta</option>
+        <option value="paciente">Paciente</option>
+      </select>
+      <select id="filter-estado" class="bg-slate-800/60 border border-slate-700/50 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:outline-none focus:border-indigo-500/50 transition-colors cursor-pointer">
+        <option value="">Todos los estados</option>
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+        <option value="suspendido">Suspendido</option>
+      </select>
+    </div>
+
+    <!-- Users Table -->
+    <div class="bg-slate-900 rounded-[2rem] border border-slate-800/20 overflow-hidden">
+      <div class="px-8 py-6 border-b border-slate-800/30 flex items-center justify-between">
+        <h3 class="font-headline text-lg font-bold text-white">Directorio de Usuarios</h3>
+        <span id="count-label" class="text-xs text-slate-500 font-semibold">Cargando...</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="text-slate-500 border-b border-slate-800/50">
+              <th class="px-8 pb-4 pt-4 font-semibold text-xs uppercase tracking-widest">Usuario</th>
+              <th class="px-4 pb-4 pt-4 font-semibold text-xs uppercase tracking-widest">Rol</th>
+              <th class="px-4 pb-4 pt-4 font-semibold text-xs uppercase tracking-widest">Clínica</th>
+              <th class="px-4 pb-4 pt-4 font-semibold text-xs uppercase tracking-widest">Registro</th>
+              <th class="px-4 pb-4 pt-4 font-semibold text-xs uppercase tracking-widest text-right">Estado</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-usuarios" class="divide-y divide-slate-800/30">
+            <tr><td colspan="5" class="py-12 text-center text-slate-500 text-sm">Cargando usuarios...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="px-8 py-4 border-t border-slate-800/30 flex items-center justify-between">
+        <button id="btn-prev" class="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-800">
+          <span class="material-symbols-outlined text-base">chevron_left</span> Anterior
+        </button>
+        <span id="page-label" class="text-xs text-slate-600 font-mono">Página 1</span>
+        <button id="btn-next" class="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors px-3 py-1.5 rounded-lg hover:bg-slate-800">
+          Siguiente <span class="material-symbols-outlined text-base">chevron_right</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  var panelApps = document.getElementById('panel-apps')
+  document.body.appendChild(panelApps)
+
+  var panelNotif    = document.getElementById('panel-notifications')
+  var panelSettings = document.getElementById('panel-settings')
+  var btnNotif      = document.getElementById('btn-notifications')
+  var btnSettings   = document.getElementById('btn-settings')
+  var btnApps       = document.getElementById('btn-apps')
+
+  function closeAll() {
+    panelNotif    && panelNotif.classList.add('hidden')
+    panelApps     && panelApps.classList.add('hidden')
+    panelSettings && panelSettings.classList.add('hidden')
+  }
+
+  btnNotif && btnNotif.addEventListener('click', function(e) {
+    e.stopPropagation()
+    var was = panelNotif.classList.contains('hidden')
+    closeAll()
+    if (was) panelNotif.classList.remove('hidden')
+  })
+
+  btnSettings && btnSettings.addEventListener('click', function(e) {
+    e.stopPropagation()
+    var was = panelSettings.classList.contains('hidden')
+    closeAll()
+    if (was) panelSettings.classList.remove('hidden')
+  })
+
+  btnApps && btnApps.addEventListener('click', function(e) {
+    e.stopPropagation()
+    var was = panelApps.classList.contains('hidden')
+    closeAll()
+    if (was) {
+      panelApps.classList.remove('hidden')
+      var inner = document.getElementById('apps-inner')
+      if (inner) { inner.classList.remove('apps-ov-enter'); void inner.offsetWidth; inner.classList.add('apps-ov-enter') }
+    }
+  })
+
+  document.addEventListener('click', closeAll)
+  var appsInner = document.getElementById('apps-inner')
+  appsInner && appsInner.addEventListener('click', function(e) { e.stopPropagation() })
+  var btnCloseApps = document.getElementById('btn-close-apps')
+  btnCloseApps && btnCloseApps.addEventListener('click', function(e) {
+    e.stopPropagation()
+    panelApps && panelApps.classList.add('hidden')
+  })
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && panelApps && !panelApps.classList.contains('hidden')) panelApps.classList.add('hidden')
+  })
+
+  var btnMarkRead = document.getElementById('btn-mark-read')
+  btnMarkRead && btnMarkRead.addEventListener('click', function(e) {
+    e.stopPropagation()
+    var dot = document.getElementById('notif-dot')
+    if (dot) dot.classList.add('hidden')
+    var lista = document.getElementById('lista-notificaciones')
+    if (lista) lista.innerHTML = '<p style="color:#64748b;font-size:13px;text-align:center;padding:32px">Sin notificaciones nuevas</p>'
+  })
+
+  // ── Tema toggle ────────────────────────────────────────────────────────────
+  var temaOscuro = localStorage.getItem('tp_tema') !== 'claro'
+  var tRowTema = document.getElementById('toggle-tema-row')
+  var tBarTema = document.getElementById('toggle-tema')
+  var tDotTema = document.getElementById('toggle-tema-dot')
+  var iconTema = document.getElementById('icon-tema')
+  var labelTema = document.getElementById('label-tema')
+  function syncTema() {
+    if (tBarTema) tBarTema.style.background = temaOscuro ? '#6366f1' : '#334155'
+    if (tDotTema) { tDotTema.style.left = temaOscuro ? '22px' : '2px'; tDotTema.style.background = temaOscuro ? '#fff' : '#94a3b8' }
+    if (iconTema) iconTema.textContent = temaOscuro ? 'dark_mode' : 'light_mode'
+    if (labelTema) labelTema.textContent = temaOscuro ? 'Activo' : 'Desactivado'
+    document.documentElement.style.filter = temaOscuro ? '' : 'invert(1) hue-rotate(180deg)'
+  }
+  syncTema()
+  tRowTema && tRowTema.addEventListener('click', function(e) {
+    e.stopPropagation(); temaOscuro = !temaOscuro; localStorage.setItem('tp_tema', temaOscuro ? 'oscuro' : 'claro'); syncTema()
+  })
+
+  // ── Simulated Users Data ────────────────────────────────────────────────────
+  var USERS = [
+    { nombre: 'Nazareno Hidalgo', email: 'nazareno@serenecare.io', rol: 'super_admin', clinica: 'Global', fecha: '2024-01-10', estado: 'activo' },
+    { nombre: 'María García', email: 'maria.garcia@clinicasol.com', rol: 'admin_clinica', clinica: 'Clínica Sol', fecha: '2024-02-15', estado: 'activo' },
+    { nombre: 'Carlos López', email: 'carlos.lopez@menteplus.com', rol: 'admin_clinica', clinica: 'MentePlus', fecha: '2024-03-01', estado: 'activo' },
+    { nombre: 'Ana Martínez', email: 'ana.martinez@clinicasol.com', rol: 'terapeuta', clinica: 'Clínica Sol', fecha: '2024-03-20', estado: 'activo' },
+    { nombre: 'Pedro Sánchez', email: 'pedro.sanchez@menteplus.com', rol: 'terapeuta', clinica: 'MentePlus', fecha: '2024-04-05', estado: 'activo' },
+    { nombre: 'Laura Fernández', email: 'laura.f@bienestarintegral.com', rol: 'terapeuta', clinica: 'Bienestar Integral', fecha: '2024-04-12', estado: 'activo' },
+    { nombre: 'Roberto Díaz', email: 'roberto.diaz@psicocare.com', rol: 'admin_clinica', clinica: 'PsicoCare', fecha: '2024-04-18', estado: 'inactivo' },
+    { nombre: 'Sofía Ruiz', email: 'sofia.ruiz@clinicasol.com', rol: 'terapeuta', clinica: 'Clínica Sol', fecha: '2024-05-02', estado: 'activo' },
+    { nombre: 'Javier Moreno', email: 'javier.moreno@psicocare.com', rol: 'terapeuta', clinica: 'PsicoCare', fecha: '2024-05-10', estado: 'suspendido' },
+    { nombre: 'Elena Torres', email: 'elena.torres@menteplus.com', rol: 'terapeuta', clinica: 'MentePlus', fecha: '2024-05-18', estado: 'activo' },
+    { nombre: 'Miguel Ramos', email: 'miguel.ramos@bienestarintegral.com', rol: 'admin_clinica', clinica: 'Bienestar Integral', fecha: '2024-06-01', estado: 'activo' },
+    { nombre: 'Isabel Vargas', email: 'isabel.vargas@clinicasol.com', rol: 'terapeuta', clinica: 'Clínica Sol', fecha: '2024-06-15', estado: 'activo' },
+    { nombre: 'Daniel Castro', email: 'daniel.castro@neurovida.com', rol: 'admin_clinica', clinica: 'NeuroVida', fecha: '2024-07-01', estado: 'activo' },
+    { nombre: 'Carmen Ortiz', email: 'carmen.ortiz@neurovida.com', rol: 'terapeuta', clinica: 'NeuroVida', fecha: '2024-07-10', estado: 'activo' },
+    { nombre: 'Andrés Molina', email: 'andres.molina@psicocare.com', rol: 'terapeuta', clinica: 'PsicoCare', fecha: '2024-07-20', estado: 'inactivo' },
+    { nombre: 'Lucía Herrera', email: 'lucia.herrera@menteplus.com', rol: 'terapeuta', clinica: 'MentePlus', fecha: '2024-08-05', estado: 'activo' },
+    { nombre: 'Francisco Gil', email: 'francisco.gil@bienestarintegral.com', rol: 'terapeuta', clinica: 'Bienestar Integral', fecha: '2024-08-15', estado: 'activo' },
+    { nombre: 'Valentina Reyes', email: 'v.reyes@neurovida.com', rol: 'terapeuta', clinica: 'NeuroVida', fecha: '2024-09-01', estado: 'activo' },
+  ]
+
+  var ROL_COLORS = {
+    super_admin:  { bg: 'rgba(99,102,241,0.15)', color: '#818cf8', label: 'Super Admin' },
+    admin_clinica:{ bg: 'rgba(139,92,246,0.15)', color: '#a78bfa', label: 'Admin Clínica' },
+    terapeuta:    { bg: 'rgba(34,197,94,0.12)',  color: '#4ade80', label: 'Terapeuta' },
+    paciente:     { bg: 'rgba(20,184,166,0.12)', color: '#2dd4bf', label: 'Paciente' },
+  }
+  var ESTADO_COLORS = {
+    activo:     { bg: 'rgba(34,197,94,0.12)',  color: '#4ade80'  },
+    inactivo:   { bg: 'rgba(100,116,139,0.15)',color: '#94a3b8'  },
+    suspendido: { bg: 'rgba(239,68,68,0.12)',  color: '#f87171'  },
+  }
+
+  document.getElementById('stat-total').textContent = USERS.length
+  document.getElementById('stat-superadmin').textContent = USERS.filter(u => u.rol === 'super_admin').length
+  document.getElementById('stat-admin').textContent = USERS.filter(u => u.rol === 'admin_clinica').length
+  document.getElementById('stat-terapeuta').textContent = USERS.filter(u => u.rol === 'terapeuta').length
+
+  var PAGE_SIZE = 10
+  var currentPage = 1
+  var filtered = USERS.slice()
+
+  function renderTable() {
+    var tbody = document.getElementById('tbody-usuarios')
+    var start = (currentPage - 1) * PAGE_SIZE
+    var page = filtered.slice(start, start + PAGE_SIZE)
+    if (!page.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="py-12 text-center text-slate-500 text-sm">No se encontraron usuarios</td></tr>'
+      document.getElementById('count-label').textContent = '0 usuarios'
+      return
+    }
+    document.getElementById('count-label').textContent = filtered.length + ' usuario' + (filtered.length !== 1 ? 's' : '')
+    document.getElementById('page-label').textContent = 'Página ' + currentPage + ' de ' + Math.ceil(filtered.length / PAGE_SIZE)
+    document.getElementById('btn-prev').disabled = currentPage === 1
+    document.getElementById('btn-next').disabled = currentPage >= Math.ceil(filtered.length / PAGE_SIZE)
+
+    tbody.innerHTML = page.map(function(u) {
+      var rc = ROL_COLORS[u.rol] || { bg:'rgba(100,116,139,0.15)', color:'#94a3b8', label: u.rol }
+      var ec = ESTADO_COLORS[u.estado] || ESTADO_COLORS.inactivo
+      var initials = u.nombre.split(' ').map(function(n){ return n[0] }).slice(0,2).join('')
+      return '<tr>' +
+        '<td class="px-8 py-4">' +
+          '<div class="flex items-center gap-3">' +
+            '<div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style="background: rgba(99,102,241,0.25);">' + initials + '</div>' +
+            '<div>' +
+              '<p class="text-sm font-semibold text-slate-200">' + u.nombre + '</p>' +
+              '<p class="text-xs text-slate-500">' + u.email + '</p>' +
+            '</div>' +
+          '</div>' +
+        '</td>' +
+        '<td class="px-4 py-4">' +
+          '<span class="role-badge" style="background:' + rc.bg + ';color:' + rc.color + '">' + rc.label + '</span>' +
+        '</td>' +
+        '<td class="px-4 py-4 text-sm text-slate-400">' + u.clinica + '</td>' +
+        '<td class="px-4 py-4 text-xs text-slate-500 font-mono">' + u.fecha + '</td>' +
+        '<td class="px-4 py-4 text-right">' +
+          '<span class="role-badge" style="background:' + ec.bg + ';color:' + ec.color + '">' + u.estado + '</span>' +
+        '</td>' +
+      '</tr>'
+    }).join('')
+  }
+
+  function applyFilters() {
+    var q = (document.getElementById('search-input').value || '').toLowerCase()
+    var rol = document.getElementById('filter-rol').value
+    var estado = document.getElementById('filter-estado').value
+    filtered = USERS.filter(function(u) {
+      var matchQ = !q || u.nombre.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.clinica.toLowerCase().includes(q)
+      var matchRol = !rol || u.rol === rol
+      var matchEst = !estado || u.estado === estado
+      return matchQ && matchRol && matchEst
+    })
+    currentPage = 1
+    renderTable()
+  }
+
+  document.getElementById('search-input').addEventListener('input', applyFilters)
+  document.getElementById('filter-rol').addEventListener('change', applyFilters)
+  document.getElementById('filter-estado').addEventListener('change', applyFilters)
+  document.getElementById('btn-prev').addEventListener('click', function() { if (currentPage > 1) { currentPage--; renderTable() } })
+  document.getElementById('btn-next').addEventListener('click', function() { if (currentPage < Math.ceil(filtered.length / PAGE_SIZE)) { currentPage++; renderTable() } })
+
+  window._reloadUsuarios = function(newUsers) { USERS = newUsers; applyFilters() }
+
+  renderTable()
+
+  var btnLogout = document.getElementById('btn-logout')
+  if (btnLogout) btnLogout.addEventListener('click', function(e) {
+    e.preventDefault()
+    localStorage.removeItem('tp_rol')
+    localStorage.removeItem('tp_user_id')
+    localStorage.removeItem('tp_email')
+    window.location.href = 'acceso_super_admin.html'
+  })
+
+})
+</script>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = 'acceso_super_admin.html' }
+
+const [{ data: usuarios }, { data: clinicas }] = await Promise.all([
+  supabase.from('usuarios').select('id, nombre, apellido, email, rol, clinica_id, activo, created_at').order('created_at'),
+  supabase.from('clinicas').select('id, nombre'),
+])
+
+if (usuarios && usuarios.length) {
+  const clinicaMap = {}
+  ;(clinicas || []).forEach(function(c) { clinicaMap[c.id] = c.nombre })
+
+  const realUsers = usuarios.map(function(u) {
+    return {
+      nombre: u.nombre + ' ' + u.apellido,
+      email: u.email,
+      rol: u.rol,
+      clinica: u.clinica_id ? (clinicaMap[u.clinica_id] || 'Sin clínica') : (u.rol === 'super_admin' ? 'Global' : 'Sin clínica'),
+      fecha: (u.created_at || '').split('T')[0],
+      estado: u.activo ? 'activo' : 'inactivo',
+    }
+  })
+
+  document.getElementById('stat-total').textContent = realUsers.length
+  document.getElementById('stat-superadmin').textContent = realUsers.filter(function(u) { return u.rol === 'super_admin' }).length
+  document.getElementById('stat-admin').textContent = realUsers.filter(function(u) { return u.rol === 'admin_clinica' }).length
+  document.getElementById('stat-terapeuta').textContent = realUsers.filter(function(u) { return u.rol === 'psicologo' || u.rol === 'terapeuta' }).length
+
+  if (typeof window._reloadUsuarios === 'function') { window._reloadUsuarios(realUsers) }
+}
+</script>
+</body></html>

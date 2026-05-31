@@ -1,0 +1,19 @@
+{
+  "name": "therapeutic-perspective",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite --open",
+    "build": "node scripts/bump-version.js && vite build",
+    "preview": "vite preview",
+    "deploy": "node scripts/bump-version.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "vite": "^8.0.10"
+  }
+}

@@ -1,0 +1,384 @@
+﻿<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "fontFamily": { "headline": ["Manrope"], "display": ["Manrope"], "body": ["Inter"], "label": ["Inter"] }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .bg-dark-canvas { background-color: #020617; }
+  .sidebar-dark { background-color: #0f172a; }
+  .apps-ov-glass { background: rgba(15,23,42,0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .apps-ov-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease; }
+  .apps-ov-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+  .apps-ov-card:active { transform: scale(0.96); }
+  @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .timeline-line { position: absolute; left: 19px; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.05); }
+  .audit-entry { position: relative; padding-left: 52px; }
+  .audit-entry:hover { background: rgba(255,255,255,0.02); border-radius: 16px; }
+  .audit-dot { position: absolute; left: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1; }
+</style>
+</head>
+<body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
+
+<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 sidebar-dark shadow-2xl shadow-slate-950/50 p-6 border-r border-slate-800/20 z-50">
+  <div class="mb-10 flex items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
+      <span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div>
+      <h1 class="text-2xl font-bold tracking-tighter text-slate-50">SereneCare</h1>
+      <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">SaaS Enterprise</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-2">
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="dashboard_maestro_super_admin.html">
+      <span class="material-symbols-outlined">dashboard</span><span class="font-headline tracking-tight">Dashboard</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="gestion_clinicas_super_admin.html">
+      <span class="material-symbols-outlined">medical_services</span><span class="font-headline tracking-tight">Clínicas</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="revenue_super_admin.html">
+      <span class="material-symbols-outlined">payments</span><span class="font-headline tracking-tight">Revenue</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="configuracion_ia_super_admin.html">
+      <span class="material-symbols-outlined">settings_input_component</span><span class="font-headline tracking-tight">IA Config</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="soporte_super_admin.html">
+      <span class="material-symbols-outlined">contact_support</span><span class="font-headline tracking-tight">Soporte</span>
+    </a>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all" href="gestion_planes_super_admin.html">
+      <span class="material-symbols-outlined">inventory_2</span><span class="font-headline tracking-tight">Planes SaaS</span>
+    </a>
+    <div class="mt-4 pt-4 border-t border-slate-800/40">
+      <p class="text-[10px] uppercase tracking-widest text-slate-600 font-bold px-4 mb-2">Toolkit</p>
+      <a class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold" style="background:rgba(245,158,11,0.1);color:#fbbf24;" href="auditoria_super_admin.html">
+        <span class="material-symbols-outlined">history</span><span class="font-headline tracking-tight">Auditoría</span>
+      </a>
+    </div>
+  </nav>
+  <div class="mt-auto pt-6 border-t border-slate-800/40">
+    <div class="flex items-center gap-3 mb-6 px-2">
+      <div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 overflow-hidden">
+        <img alt="Super Admin" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEkOniiDt2PI6tNxEg91jxORg_SnN49152Jl6fY0T0JQUpJUPEg640XGgrfxvoylvoIyfuB_qrZInikAzWkPLaBJtEGs8a1m5DWI6nSGiYx73x1gDkG_t73ZqxnT_mOdYgJr7hEeYCmEENDwwewakrZq2-XJTTIpjE2B4KTh0YatVFUdgbxtr_nb61J_UtkE46ijL9rAKcI8k2TXNFOM6T6ot4VleySKenIKVZQe28hAAVPd-jK3442dleEBj7QRHC8feyZZ9114e4"/>
+      </div>
+      <div class="flex-1 overflow-hidden">
+        <p class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
+        <p class="text-xs text-slate-500 truncate">System Status: Healthy</p>
+      </div>
+    </div>
+    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all" href="#" id="btn-logout">
+      <span class="material-symbols-outlined">logout</span><span class="font-headline tracking-tight">Logout</span>
+    </a>
+  </div>
+</aside>
+
+<main class="pl-72 min-h-screen">
+  <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-8 z-40 border-b border-slate-800/10">
+    <div class="flex flex-col">
+      <h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Auditoría</h2>
+      <p class="text-slate-500 text-xs font-medium tracking-wide">Registro inmutable de todas las acciones administrativas</p>
+    </div>
+    <div class="flex items-center gap-2 relative">
+      <div class="relative">
+        <button id="btn-notifications" class="relative p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">notifications</span>
+        </button>
+        <div id="panel-notifications" class="hidden absolute right-0 top-12 w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+            <span class="font-bold text-slate-100 text-sm">Notificaciones</span>
+            <button id="btn-mark-read" class="text-xs text-indigo-400 hover:text-indigo-300">Marcar todas leídas</button>
+          </div>
+          <div class="divide-y divide-slate-800 max-h-72 overflow-y-auto">
+            <p class="text-slate-500 text-sm text-center py-8">Sin notificaciones nuevas</p>
+          </div>
+          <div class="px-5 py-3 border-t border-slate-800">
+            <a href="alertas_globales_super_admin.html" class="block text-center text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Ver todas las alertas →</a>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="btn-settings" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">settings</span>
+        </button>
+        <div id="panel-settings" class="hidden absolute right-0 top-12 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 p-4">
+          <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Apariencia</p>
+          <div id="toggle-tema-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+            <div class="flex items-center gap-3">
+              <span id="icon-tema" class="material-symbols-outlined text-indigo-400">dark_mode</span>
+              <div><p class="text-sm font-semibold text-slate-200">Tema oscuro</p><p id="label-tema" class="text-xs text-slate-500">Activo</p></div>
+            </div>
+            <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+              <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <button id="btn-apps" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400">apps</span>
+        </button>
+        <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
+          <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+            <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
+              <span class="material-symbols-outlined text-3xl">close</span>
+            </button>
+            <div class="text-center mb-10">
+              <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
+                <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+                <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
+              </div>
+              <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+              <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);"><span class="material-symbols-outlined text-3xl text-slate-400">terminal</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
+              </a>
+              <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);"><span class="material-symbols-outlined text-3xl" style="color:#3b82f6;">manage_accounts</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
+              </a>
+              <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);"><span class="material-symbols-outlined text-3xl" style="color:#14b8a6;">download</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
+              </a>
+              <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);"><span class="material-symbols-outlined text-3xl" style="color:#22c55e;">monitor_heart</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
+              </a>
+              <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);"><span class="material-symbols-outlined text-3xl" style="color:#ef4444;">security</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
+              </a>
+              <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+                <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);"><span class="material-symbols-outlined text-3xl" style="color:#f59e0b;">history</span></div>
+                <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
+                <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
+              </a>
+            </div>
+            <div class="mt-8 flex items-center justify-between py-4 border-t" style="border-color: rgba(255,255,255,0.07);">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-indigo-400/50 text-sm">security</span>
+                <span class="text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold">Super Administrador • Acceso Restringido</span>
+              </div>
+              <span class="text-[10px] text-slate-700 font-mono">ESC para cerrar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="p-8 max-w-5xl mx-auto space-y-6">
+
+    <!-- Filter Bar -->
+    <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800/30 flex flex-col sm:flex-row gap-3 items-center">
+      <div class="relative flex-1 w-full">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+        <input id="search-audit" type="text" placeholder="Buscar por usuario, acción o recurso..." class="w-full bg-slate-800/60 border border-slate-700/50 rounded-xl pl-9 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-colors"/>
+      </div>
+      <select id="filter-tipo" class="bg-slate-800/60 border border-slate-700/50 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:outline-none cursor-pointer">
+        <option value="">Todos los tipos</option>
+        <option value="create">Creación</option>
+        <option value="update">Modificación</option>
+        <option value="delete">Eliminación</option>
+        <option value="login">Acceso</option>
+        <option value="config">Configuración</option>
+      </select>
+      <select id="filter-actor" class="bg-slate-800/60 border border-slate-700/50 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:outline-none cursor-pointer">
+        <option value="">Todos los usuarios</option>
+        <option value="super_admin">Super Admin</option>
+        <option value="admin_clinica">Admin Clínica</option>
+      </select>
+    </div>
+
+    <!-- Timeline -->
+    <div class="bg-slate-900 rounded-[2rem] border border-slate-800/20 overflow-hidden">
+      <div class="px-8 py-6 border-b border-slate-800/30 flex items-center justify-between">
+        <h3 class="font-headline text-lg font-bold text-white">Registro de Auditoría</h3>
+        <span id="audit-count" class="text-xs text-slate-500 font-semibold"></span>
+      </div>
+      <div id="timeline-container" class="px-6 py-6 relative">
+        <div class="timeline-line"></div>
+        <div id="audit-list" class="space-y-1"></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+var AUDIT_LOG = [
+  { time: '07/05/2026 14:32', tipo: 'config', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Cambió modelo IA global', resource: 'claude-opus-4-7', detail: 'Antes: claude-sonnet-4-6', icon: 'settings_input_component', color: '#818cf8', bg: 'rgba(99,102,241,0.15)' },
+  { time: '07/05/2026 14:18', tipo: 'update', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Activó clínica suspendida', resource: 'PsicoCare SL', detail: 'Estado: suspendida → activa', icon: 'check_circle', color: '#4ade80', bg: 'rgba(34,197,94,0.12)' },
+  { time: '07/05/2026 13:55', tipo: 'login', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Inicio de sesión exitoso', resource: 'Panel Super Admin', detail: 'IP: 190.2.14.88 · Chrome 124', icon: 'login', color: '#60a5fa', bg: 'rgba(59,130,246,0.12)' },
+  { time: '07/05/2026 11:44', tipo: 'create', actor: 'admin_clinica', user: 'María García', action: 'Creó nueva clínica', resource: 'NeuroVida Centro', detail: 'Plan: Professional · Trial: 14 días', icon: 'add_circle', color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
+  { time: '07/05/2026 10:20', tipo: 'update', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Modificó plan SaaS', resource: 'Plan Professional', detail: 'Precio: $89 → $99/mes', icon: 'edit', color: '#fbbf24', bg: 'rgba(245,158,11,0.12)' },
+  { time: '06/05/2026 18:33', tipo: 'delete', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Eliminó terapeuta inactivo', resource: 'Javier Moreno', detail: 'Cuenta inactiva 90+ días', icon: 'delete', color: '#f87171', bg: 'rgba(239,68,68,0.12)' },
+  { time: '06/05/2026 16:10', tipo: 'config', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Actualizó prompt del sistema', resource: 'IA Config Global', detail: 'Modificó instrucción de contexto clínico', icon: 'psychology', color: '#818cf8', bg: 'rgba(99,102,241,0.15)' },
+  { time: '06/05/2026 14:45', tipo: 'create', actor: 'admin_clinica', user: 'Carlos López', action: 'Invitó nuevo terapeuta', resource: 'elena.torres@menteplus.com', detail: 'Rol: Terapeuta · Clínica: MentePlus', icon: 'person_add', color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
+  { time: '06/05/2026 12:01', tipo: 'login', actor: 'admin_clinica', user: 'Roberto Díaz', action: 'Intento de acceso fallido', resource: 'Panel Admin Clínica', detail: 'IP: 200.45.88.12 · Cuenta inactiva', icon: 'lock', color: '#f87171', bg: 'rgba(239,68,68,0.12)' },
+  { time: '06/05/2026 09:30', tipo: 'update', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Renovó suscripción manualmente', resource: 'Clínica Sol', detail: 'Extendió vigencia 30 días adicionales', icon: 'autorenew', color: '#4ade80', bg: 'rgba(34,197,94,0.12)' },
+  { time: '05/05/2026 20:15', tipo: 'config', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Activó modo mantenimiento', resource: 'Sistema Global', detail: 'Duración: 12 minutos · Motivo: migración BD', icon: 'construction', color: '#fbbf24', bg: 'rgba(245,158,11,0.12)' },
+  { time: '05/05/2026 19:58', tipo: 'config', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Desactivó modo mantenimiento', resource: 'Sistema Global', detail: 'Migración completada exitosamente', icon: 'check_circle', color: '#4ade80', bg: 'rgba(34,197,94,0.12)' },
+  { time: '05/05/2026 15:22', tipo: 'delete', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Suspendió clínica por impago', resource: 'Consultas Modernas SL', detail: 'Factura vencida 30 días · Automático', icon: 'pause_circle', color: '#f87171', bg: 'rgba(239,68,68,0.12)' },
+  { time: '04/05/2026 11:05', tipo: 'create', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Creó plan SaaS nuevo', resource: 'Plan Enterprise+', detail: '$299/mes · Usuarios ilimitados', icon: 'add_box', color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
+]
+
+var filtered = AUDIT_LOG.slice()
+
+function renderAudit() {
+  var list = document.getElementById('audit-list')
+  document.getElementById('audit-count').textContent = filtered.length + ' registros'
+  if (!filtered.length) {
+    list.innerHTML = '<p class="text-center text-slate-500 text-sm py-8">No se encontraron registros</p>'
+    return
+  }
+  list.innerHTML = filtered.map(function(e) {
+    return '<div class="audit-entry py-3 px-3 mb-1 transition-colors">' +
+      '<div class="audit-dot" style="top:14px;">' +
+        '<div class="w-5 h-5 rounded-full flex items-center justify-center" style="background:' + e.bg + ';">' +
+          '<span class="material-symbols-outlined" style="font-size:12px;color:' + e.color + ';">' + e.icon + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="flex items-start justify-between gap-4">' +
+        '<div class="flex-1">' +
+          '<p class="text-sm font-semibold text-slate-200">' + e.action + '</p>' +
+          '<p class="text-xs text-slate-400 mt-0.5">' +
+            '<span class="font-semibold" style="color:' + e.color + ';">' + e.user + '</span>' +
+            ' &nbsp;→&nbsp; ' +
+            '<span class="font-mono">' + e.resource + '</span>' +
+          '</p>' +
+          (e.detail ? '<p class="text-[11px] text-slate-600 mt-1">' + e.detail + '</p>' : '') +
+        '</div>' +
+        '<span class="text-[10px] font-mono text-slate-600 whitespace-nowrap pt-0.5">' + e.time + '</span>' +
+      '</div>' +
+    '</div>'
+  }).join('<div class="ml-3 border-b border-slate-800/30"></div>')
+}
+
+function applyFilters() {
+  var q = (document.getElementById('search-audit').value || '').toLowerCase()
+  var tipo = document.getElementById('filter-tipo').value
+  var actor = document.getElementById('filter-actor').value
+  filtered = AUDIT_LOG.filter(function(e) {
+    var matchQ = !q || e.user.toLowerCase().includes(q) || e.action.toLowerCase().includes(q) || e.resource.toLowerCase().includes(q)
+    var matchT = !tipo || e.tipo === tipo
+    var matchA = !actor || e.actor === actor
+    return matchQ && matchT && matchA
+  })
+  renderAudit()
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var panelApps = document.getElementById('panel-apps')
+  document.body.appendChild(panelApps)
+  var panelNotif    = document.getElementById('panel-notifications')
+  var panelSettings = document.getElementById('panel-settings')
+  function closeAll() {
+    panelNotif    && panelNotif.classList.add('hidden')
+    panelApps     && panelApps.classList.add('hidden')
+    panelSettings && panelSettings.classList.add('hidden')
+  }
+  document.getElementById('btn-notifications').addEventListener('click', function(e) {
+    e.stopPropagation(); var was = panelNotif.classList.contains('hidden'); closeAll(); if (was) panelNotif.classList.remove('hidden')
+  })
+  document.getElementById('btn-settings').addEventListener('click', function(e) {
+    e.stopPropagation(); var was = panelSettings.classList.contains('hidden'); closeAll(); if (was) panelSettings.classList.remove('hidden')
+  })
+  document.getElementById('btn-apps').addEventListener('click', function(e) {
+    e.stopPropagation(); var was = panelApps.classList.contains('hidden'); closeAll()
+    if (was) { panelApps.classList.remove('hidden'); var inner = document.getElementById('apps-inner'); if (inner) { inner.classList.remove('apps-ov-enter'); void inner.offsetWidth; inner.classList.add('apps-ov-enter') } }
+  })
+  document.addEventListener('click', closeAll)
+  document.getElementById('apps-inner').addEventListener('click', function(e) { e.stopPropagation() })
+  document.getElementById('btn-close-apps').addEventListener('click', function(e) { e.stopPropagation(); panelApps.classList.add('hidden') })
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') panelApps.classList.add('hidden') })
+
+  var temaOscuro = localStorage.getItem('tp_tema') !== 'claro'
+  function syncTema() {
+    var tBarTema = document.getElementById('toggle-tema'); var tDotTema = document.getElementById('toggle-tema-dot')
+    var iconTema = document.getElementById('icon-tema'); var labelTema = document.getElementById('label-tema')
+    if (tBarTema) tBarTema.style.background = temaOscuro ? '#6366f1' : '#334155'
+    if (tDotTema) { tDotTema.style.left = temaOscuro ? '22px' : '2px'; tDotTema.style.background = temaOscuro ? '#fff' : '#94a3b8' }
+    if (iconTema) iconTema.textContent = temaOscuro ? 'dark_mode' : 'light_mode'
+    if (labelTema) labelTema.textContent = temaOscuro ? 'Activo' : 'Desactivado'
+    document.documentElement.style.filter = temaOscuro ? '' : 'invert(1) hue-rotate(180deg)'
+  }
+  syncTema()
+  document.getElementById('toggle-tema-row') && document.getElementById('toggle-tema-row').addEventListener('click', function(e) {
+    e.stopPropagation(); temaOscuro = !temaOscuro; localStorage.setItem('tp_tema', temaOscuro ? 'oscuro' : 'claro'); syncTema()
+  })
+
+  document.getElementById('search-audit').addEventListener('input', applyFilters)
+  document.getElementById('filter-tipo').addEventListener('change', applyFilters)
+  document.getElementById('filter-actor').addEventListener('change', applyFilters)
+
+  window._reloadAudit = function(logs) { AUDIT_LOG = logs; filtered = logs.slice(); renderAudit() }
+
+  renderAudit()
+})
+</script>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = 'acceso_super_admin.html' }
+
+try {
+  const { data: logs, error } = await supabase
+    .from('audit_logs')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(200)
+
+  if (!error && logs && logs.length) {
+    const TIPO_MAP = { login: 'login', logout: 'login', create: 'create', update: 'update', delete: 'delete', config: 'config' }
+    const COLOR_MAP = {
+      login:  { icon: 'login',    color: '#60a5fa', bg: 'rgba(59,130,246,0.12)'  },
+      create: { icon: 'add_circle', color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
+      update: { icon: 'edit',     color: '#fbbf24', bg: 'rgba(245,158,11,0.12)'  },
+      delete: { icon: 'delete',   color: '#f87171', bg: 'rgba(239,68,68,0.12)'   },
+      config: { icon: 'settings_input_component', color: '#818cf8', bg: 'rgba(99,102,241,0.15)' },
+    }
+    const mapped = logs.map(function(l) {
+      const tipo = TIPO_MAP[l.action_type] || 'config'
+      const style = COLOR_MAP[tipo] || COLOR_MAP.config
+      return {
+        time: (l.created_at || '').replace('T', ' ').slice(0, 16),
+        tipo: tipo,
+        actor: l.actor_role || 'super_admin',
+        user: l.actor_name || l.actor_email || 'Sistema',
+        action: l.description || l.action_type,
+        resource: l.resource || '—',
+        detail: l.detail || '',
+        icon: style.icon,
+        color: style.color,
+        bg: style.bg,
+      }
+    })
+    if (typeof window._reloadAudit === 'function') { window._reloadAudit(mapped) }
+  }
+} catch(e) { /* mantiene datos de demostración */ }
+</script>
+</body></html>

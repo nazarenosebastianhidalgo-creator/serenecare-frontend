@@ -1,0 +1,771 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary-fixed": "#004653",
+                "on-primary-container": "#0e5463",
+                "inverse-primary": "#a8e3f6",
+                "error-container": "#fa746f",
+                "secondary": "#2b6775",
+                "on-primary-fixed-variant": "#1d5e6d",
+                "tertiary-container": "#d7fde4",
+                "surface-container-high": "#e3e9eb",
+                "surface-container": "#eaeff0",
+                "background": "#f8fafb",
+                "secondary-dim": "#1b5a69",
+                "surface-container-low": "#f0f4f6",
+                "on-secondary-container": "#195968",
+                "on-error-container": "#6e0a12",
+                "primary": "#296777",
+                "error": "#a83836",
+                "outline-variant": "#acb3b6",
+                "on-tertiary-fixed-variant": "#4c6d5a",
+                "surface-container-lowest": "#ffffff",
+                "surface-container-highest": "#dce4e6",
+                "tertiary-fixed-dim": "#c9eed6",
+                "secondary-fixed-dim": "#a4ddef",
+                "outline": "#747c7e",
+                "on-background": "#2c3436",
+                "primary-fixed": "#a8e3f6",
+                "primary-dim": "#195a6a",
+                "surface-tint": "#296777",
+                "on-secondary": "#effbff",
+                "on-surface-variant": "#596063",
+                "error-dim": "#67040d",
+                "secondary-container": "#b2ecfd",
+                "primary-container": "#a8e3f6",
+                "on-tertiary-fixed": "#2f503f",
+                "tertiary-dim": "#395a48",
+                "surface-variant": "#dce4e6",
+                "on-primary-fixed": "#00404d",
+                "on-tertiary": "#e6ffee",
+                "inverse-on-surface": "#9a9d9e",
+                "on-surface": "#2c3436",
+                "on-tertiary-container": "#416350",
+                "secondary-fixed": "#b2ecfd",
+                "tertiary-fixed": "#d7fde4",
+                "on-primary": "#f0fbff",
+                "surface": "#f8fafb",
+                "inverse-surface": "#0b0f10",
+                "primary-fixed-dim": "#9ad5e7",
+                "surface-dim": "#d4dbde",
+                "on-secondary-fixed-variant": "#266372",
+                "on-error": "#fff7f6",
+                "tertiary": "#456653",
+                "surface-bright": "#f8fafb"
+            },
+            "fontFamily": {
+                "headline": ["Manrope"],
+                "display": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-dark-canvas { background-color: #020617; }
+        .sidebar-dark { background-color: #0f172a; }
+        .custom-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+        }
+        .apps-ov-glass { background: rgba(15,23,42,0.90); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .apps-ov-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.25s ease; }
+        .apps-ov-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(99,102,241,0.35); transform: translateY(-2px); }
+        .apps-ov-card:active { transform: scale(0.96); }
+        @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+        .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
+    </style>
+</head>
+<body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
+<!-- Sidebar Navigation Shell -->
+<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 sidebar-dark shadow-2xl shadow-slate-950/50 p-6 border-r border-slate-800/20 z-50">
+<div class="mb-10 flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+<div>
+<h1 class="text-2xl font-bold tracking-tighter text-slate-50">SereneCare</h1>
+<p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">SaaS Enterprise</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<!-- Active: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 bg-indigo-500/10 text-indigo-400 rounded-xl font-semibold active:scale-95 transition-all" href="dashboard_maestro_super_admin.html">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-headline tracking-tight">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="gestion_clinicas_super_admin.html">
+<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
+<span class="font-headline tracking-tight">Clínicas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="revenue_super_admin.html">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-headline tracking-tight">Revenue</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="configuracion_ia_super_admin.html">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-headline tracking-tight">IA Config</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="soporte_super_admin.html">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-headline tracking-tight">Soporte</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-all active:scale-95" href="gestion_planes_super_admin.html">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-headline tracking-tight">Planes SaaS</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-800/40">
+<div class="flex items-center gap-3 mb-6 px-2">
+<div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 overflow-hidden">
+<img alt="Super Admin Profile" class="w-full h-full object-cover" data-alt="professional portrait of a high-end tech executive with clean lighting and neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEkOniiDt2PI6tNxEg91jxORg_SnN49152Jl6fY0T0JQUpJUPEg640XGgrfxvoylvoIyfuB_qrZInikAzWkPLaBJtEGs8a1m5DWI6nSGiYx73x1gDkG_t73ZqxnT_mOdYgJr7hEeYCmEENDwwewakrZq2-XJTTIpjE2B4KTh0YatVFUdgbxtr_nb61J_UtkE46ijL9rAKcI8k2TXNFOM6T6ot4VleySKenIKVZQe28hAAVPd-jK3442dleEBj7QRHC8feyZZ9114e4"/>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
+<p class="text-xs text-slate-500 truncate">System Status: Healthy</p>
+</div>
+</div>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-error-container hover:bg-error-dim/20 rounded-xl transition-all" href="#" id="btn-logout">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-headline tracking-tight">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="pl-72 min-h-screen">
+<!-- Top Navigation -->
+<header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-8 z-40 border-b border-slate-800/10">
+<div class="flex flex-col">
+<h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Panel de Control</h2>
+<p id="fecha-actual" class="text-slate-500 text-xs font-medium tracking-wide"></p>
+</div>
+<div class="flex items-center gap-2 relative">
+
+  <!-- Notificaciones -->
+  <div class="relative">
+    <button id="btn-notifications" class="relative p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">notifications</span>
+      <span id="notif-dot" class="hidden absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full border-2 border-slate-950"></span>
+    </button>
+    <div id="panel-notifications" class="hidden absolute right-0 top-12 w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+        <span class="font-bold text-slate-100 text-sm">Notificaciones</span>
+        <button id="btn-mark-read" class="text-xs text-indigo-400 hover:text-indigo-300">Marcar todas leídas</button>
+      </div>
+      <div id="lista-notificaciones" class="divide-y divide-slate-800 max-h-72 overflow-y-auto">
+        <p class="text-slate-500 text-sm text-center py-8">Sin notificaciones nuevas</p>
+      </div>
+      <div class="px-5 py-3 border-t border-slate-800">
+        <a href="alertas_globales_super_admin.html" class="block text-center text-xs text-indigo-400 hover:text-indigo-300 font-semibold py-1">Ver todas las alertas →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ajustes -->
+  <div class="relative">
+    <button id="btn-settings" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">settings</span>
+    </button>
+    <div id="panel-settings" class="hidden absolute right-0 top-12 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 p-4">
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Apariencia</p>
+      <div id="toggle-tema-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span id="icon-tema" class="material-symbols-outlined text-indigo-400">dark_mode</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Tema oscuro</p>
+            <p id="label-tema" class="text-xs text-slate-500">Activo</p>
+          </div>
+        </div>
+        <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 my-3"></div>
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Notificaciones</p>
+      <div id="toggle-email-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-blue-400">mail</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Alertas por email</p>
+            <p class="text-xs text-slate-500">Incidencias críticas</p>
+          </div>
+        </div>
+        <div id="toggle-email" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-email-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+      <div class="border-t border-slate-800 my-3"></div>
+      <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Seguridad</p>
+      <button id="btn-cerrar-sesiones" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/10 transition-colors text-left">
+        <span class="material-symbols-outlined text-rose-400">no_accounts</span>
+        <div>
+          <p class="text-sm font-semibold text-slate-200">Cerrar todas las sesiones</p>
+          <p class="text-xs text-slate-500">Expira todos los tokens activos</p>
+        </div>
+      </button>
+      <div id="toggle-mantenimiento-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-amber-400">construction</span>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Modo mantenimiento</p>
+            <p class="text-xs text-slate-500">Bloquea acceso a clínicas</p>
+          </div>
+        </div>
+        <div id="toggle-mantenimiento" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
+          <div id="toggle-mantenimiento-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apps / Quick links -->
+  <div class="relative">
+    <button id="btn-apps" class="p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">apps</span>
+    </button>
+    <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
+      <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+        <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
+          <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
+            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
+            <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
+          </div>
+          <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+          <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
+              <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
+          </a>
+          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
+              <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
+          </a>
+          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
+              <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
+          </a>
+          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
+          </a>
+          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
+          </a>
+          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
+          </a>
+          <a href="sugerencias_mejora.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(251,191,36,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color: #fbbf24;font-variation-settings:'FILL' 1;">lightbulb</span>
+            </div>
+            <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Sugerencias</span>
+            <span class="text-slate-500 text-xs mt-1 text-center">Feedback de clínicas</span>
+          </a>
+        </div>
+        <div class="mt-8 flex items-center justify-between py-4 border-t" style="border-color: rgba(255,255,255,0.07);">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-indigo-400/50 text-sm">security</span>
+            <span class="text-slate-600 text-[10px] uppercase tracking-[0.2em] font-bold">Super Administrador • Acceso Restringido</span>
+          </div>
+          <span class="text-[10px] text-slate-700 font-mono">ESC para cerrar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto space-y-8">
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[140px]">
+<!-- Large Card: MRR Total -->
+<div class="md:col-span-7 md:row-span-2 bg-slate-900 rounded-3xl p-8 flex flex-col justify-between border border-slate-800/30 overflow-hidden relative group">
+<div class="relative z-10">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-indigo-400 font-semibold tracking-wide text-xs uppercase mb-1">Total MRR</p>
+<h3 class="font-headline text-5xl font-extrabold text-white"><span id="stat-mrr">—</span><span class="text-slate-500 text-2xl font-medium">/mes</span></h3>
+</div>
+<div class="flex flex-col items-end">
+<span class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span> +12.5%
+                                </span>
+</div>
+</div>
+</div>
+<div id="chart-mrr-mini" class="mt-6 h-32 w-full relative z-10 flex items-end gap-1"></div>
+<!-- Decorative Background Glow -->
+<div class="absolute -right-20 -bottom-20 w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full"></div>
+</div>
+<!-- Card: Clínicas Activas -->
+<div class="md:col-span-5 md:row-span-1 bg-slate-900 rounded-3xl p-6 border border-slate-800/30 flex items-center justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium mb-1">Clínicas activas</p>
+<h4 id="stat-clinicas-activas" class="text-3xl font-headline font-bold text-white tracking-tight">—</h4>
+</div>
+<div class="bg-tertiary/10 p-4 rounded-2xl flex flex-col items-center">
+<span class="text-tertiary font-bold text-lg leading-none">+3</span>
+<span class="text-[10px] text-tertiary-dim uppercase font-bold">Este mes</span>
+</div>
+</div>
+<!-- Card: Clínicas en Trial -->
+<div class="md:col-span-5 md:row-span-1 bg-slate-900 rounded-3xl p-6 border border-slate-800/30 flex items-center justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium mb-1">En periodo Trial</p>
+<h4 id="stat-trial" class="text-3xl font-headline font-bold text-white tracking-tight">—</h4>
+</div>
+<div class="text-right">
+<p class="text-xs text-slate-400 font-medium">Promedio restante</p>
+<p class="text-indigo-400 font-bold">12 días</p>
+</div>
+</div>
+<!-- Card: Suspendidas -->
+<div class="md:col-span-4 md:row-span-1 rounded-3xl p-6 border cursor-pointer hover:opacity-90 transition-opacity" style="background:rgba(103,4,13,.15);border-color:rgba(103,4,13,.3)" onclick="window.location.href='gestion_clinicas_super_admin.html'">
+<p class="text-xs font-bold uppercase tracking-wider mb-1" style="color:#fa746f">Suspendidas</p>
+<div class="flex items-baseline gap-2">
+<h4 id="stat-suspendidas" class="text-4xl font-headline font-bold" style="color:#fa746f">—</h4>
+<span class="text-sm" style="color:rgba(250,116,111,.6)">clínicas</span>
+</div>
+</div>
+<!-- Card: Total Clínicas -->
+<div class="md:col-span-4 md:row-span-1 bg-slate-900 rounded-3xl p-6 border border-slate-800/30 group cursor-pointer hover:bg-slate-800/50 transition-colors" onclick="window.location.href='gestion_clinicas_super_admin.html'">
+<p class="text-slate-500 text-sm font-medium mb-1">Total clínicas</p>
+<div class="flex items-center justify-between">
+<h4 id="stat-total-clinicas" class="text-4xl font-headline font-bold text-white">—</h4>
+<div class="w-10 h-10 rounded-full border border-slate-800 flex items-center justify-center group-hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-indigo-400">arrow_outward</span>
+</div>
+</div>
+<div class="mt-2 flex gap-1">
+<span id="bar-activas" class="h-1.5 bg-indigo-500 rounded-full transition-all" style="width:33%"></span>
+<span class="w-full h-1.5 bg-slate-800 rounded-full"></span>
+</div>
+</div>
+<!-- Card: AI Config -->
+<div class="md:col-span-4 md:row-span-1 bg-indigo-600 rounded-3xl p-6 flex flex-col justify-center relative overflow-hidden cursor-pointer hover:bg-indigo-500 transition-colors" onclick="window.location.href='configuracion_ia_super_admin.html'">
+<p class="text-indigo-100 text-sm font-medium mb-1 z-10">Configuración IA</p>
+<h4 class="text-2xl font-headline font-bold text-white z-10">Ver ajustes →</h4>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-white/10 text-8xl rotate-12">settings_input_component</span>
+</div>
+</section>
+<!-- Secondary Content Area -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Recent Clinics Table -->
+<section class="lg:col-span-8 bg-slate-900 rounded-[2rem] p-8 border border-slate-800/20">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline text-xl font-bold text-white">Clínicas Recientes</h3>
+<button class="text-indigo-400 text-sm font-semibold flex items-center gap-2 hover:underline">Ver todas <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-slate-500 border-b border-slate-800/50">
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest">Nombre Clínica</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest">Plan</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest">Registro</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest">MRR</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest text-right">Estado</th>
+</tr>
+</thead>
+<tbody id="tbody-clinicas-recientes" class="divide-y divide-slate-800/30">
+<tr><td colspan="5" class="py-10 text-center text-slate-500 text-sm">Cargando...</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Monthly Revenue Chart -->
+<section class="lg:col-span-4 bg-slate-900 rounded-[2rem] p-8 border border-slate-800/20">
+<h3 class="font-headline text-xl font-bold text-white mb-8">Ingresos Mensuales</h3>
+<div id="chart-ingresos" class="h-64 flex items-end justify-between gap-1.5 relative"></div>
+<div id="chart-labels" class="mt-4 flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1"></div>
+<div class="mt-8 p-4 bg-slate-800/20 rounded-2xl border border-slate-800/30">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs text-slate-400">Promedio Anual</span>
+<span id="stat-promedio-anual" class="text-xs text-white font-bold">—</span>
+</div>
+<div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div id="bar-promedio" class="h-full bg-indigo-400" style="width:0%"></div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+
+  <!-- Script independiente para botones del header — NO depende de Supabase -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+      // ── Campanita ────────────────────────────────────────────────────
+      var btnNotif  = document.getElementById('btn-notifications')
+      var panelNotif = document.getElementById('panel-notifications')
+      var btnSettings = document.getElementById('btn-settings')
+
+      var panelApps = document.getElementById('panel-apps')
+      document.body.appendChild(panelApps)
+
+      function closeAll() {
+        panelNotif   && panelNotif.classList.add('hidden')
+        panelApps    && panelApps.classList.add('hidden')
+        panelSettings && panelSettings.classList.add('hidden')
+      }
+
+      btnNotif && btnNotif.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelNotif.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) panelNotif.classList.remove('hidden')
+      })
+
+      var btnApps = document.getElementById('btn-apps')
+      btnApps && btnApps.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelApps.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) {
+          panelApps.classList.remove('hidden')
+          var inner = document.getElementById('apps-inner')
+          if (inner) { inner.classList.remove('apps-ov-enter'); void inner.offsetWidth; inner.classList.add('apps-ov-enter') }
+        }
+      })
+
+      var panelSettings = document.getElementById('panel-settings')
+
+      btnSettings && btnSettings.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var wasHidden = panelSettings.classList.contains('hidden')
+        closeAll()
+        if (wasHidden) panelSettings.classList.remove('hidden')
+      })
+
+      document.addEventListener('click', closeAll)
+      var appsInner = document.getElementById('apps-inner')
+      appsInner && appsInner.addEventListener('click', function(e) { e.stopPropagation() })
+      var btnCloseApps = document.getElementById('btn-close-apps')
+      btnCloseApps && btnCloseApps.addEventListener('click', function(e) {
+        e.stopPropagation()
+        panelApps && panelApps.classList.add('hidden')
+      })
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && panelApps && !panelApps.classList.contains('hidden')) {
+          panelApps.classList.add('hidden')
+        }
+      })
+
+      // Marcar leídas
+      var btnRead = document.getElementById('btn-mark-read')
+      btnRead && btnRead.addEventListener('click', function(e) {
+        e.stopPropagation()
+        var dot = document.getElementById('notif-dot')
+        if (dot) dot.classList.add('hidden')
+        var lista = document.getElementById('lista-notificaciones')
+        if (lista) lista.innerHTML = '<p style="color:#64748b;font-size:13px;text-align:center;padding:32px">Sin notificaciones nuevas</p>'
+      })
+
+      // Logout apps panel
+      var appsLogout = document.getElementById('apps-logout')
+      appsLogout && appsLogout.addEventListener('click', async function(e) {
+        e.preventDefault()
+        localStorage.removeItem('tp_rol')
+        localStorage.removeItem('tp_user_id')
+        localStorage.removeItem('tp_email')
+        window.location.href = 'acceso_super_admin.html'
+      })
+
+      _initSeguridad(panelSettings)
+
+    })
+
+    function _toastSeg(msg, warn) {
+      var t = document.createElement('div')
+      t.textContent = msg
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' + (warn ? '#92400e' : '#1e293b') + ';color:#f1f5f9;padding:12px 24px;border-radius:12px;font-size:14px;z-index:9999;box-shadow:0 4px 24px rgba(0,0,0,.4)'
+      document.body.appendChild(t)
+      setTimeout(function() { t.remove() }, 3500)
+    }
+    function _initSeguridad(panelSett) {
+      var btnCerrar = document.getElementById('btn-cerrar-sesiones')
+      btnCerrar && btnCerrar.addEventListener('click', function(e) {
+        e.stopPropagation()
+        if (confirm('¿Cerrar TODAS las sesiones activas? Los usuarios conectados serán desconectados.')) {
+          panelSett && panelSett.classList.add('hidden')
+          _toastSeg('Todas las sesiones han sido cerradas.', false)
+        }
+      })
+      var modoMant = localStorage.getItem('tp_modo_mantenimiento') === 'true'
+      var tRow = document.getElementById('toggle-mantenimiento-row')
+      var tBar = document.getElementById('toggle-mantenimiento')
+      var tDot = document.getElementById('toggle-mantenimiento-dot')
+      function syncToggle() {
+        if (tBar) tBar.style.background = modoMant ? '#f59e0b' : '#334155'
+        if (tDot) tDot.style.left       = modoMant ? '22px'   : '2px'
+        if (tDot) tDot.style.background = modoMant ? '#fff'   : '#94a3b8'
+      }
+      syncToggle()
+      tRow && tRow.addEventListener('click', function(e) {
+        e.stopPropagation()
+        modoMant = !modoMant
+        localStorage.setItem('tp_modo_mantenimiento', modoMant)
+        syncToggle()
+        _toastSeg(modoMant ? 'Modo mantenimiento ACTIVADO — Clínicas bloqueadas' : 'Modo mantenimiento desactivado', modoMant)
+      })
+      var temaOscuro = localStorage.getItem('tp_tema') !== 'claro'
+      var tRowTema = document.getElementById('toggle-tema-row')
+      var tBarTema = document.getElementById('toggle-tema')
+      var tDotTema = document.getElementById('toggle-tema-dot')
+      var iconTema = document.getElementById('icon-tema')
+      var labelTema = document.getElementById('label-tema')
+      function syncTema() {
+        if (tBarTema) tBarTema.style.background = temaOscuro ? '#6366f1' : '#334155'
+        if (tDotTema) { tDotTema.style.left = temaOscuro ? '22px' : '2px'; tDotTema.style.background = temaOscuro ? '#fff' : '#94a3b8' }
+        if (iconTema) iconTema.textContent = temaOscuro ? 'dark_mode' : 'light_mode'
+        if (labelTema) labelTema.textContent = temaOscuro ? 'Activo' : 'Desactivado'
+        document.documentElement.style.filter = temaOscuro ? '' : 'invert(1) hue-rotate(180deg)'
+      }
+      syncTema()
+      tRowTema && tRowTema.addEventListener('click', function(e) {
+        e.stopPropagation()
+        temaOscuro = !temaOscuro
+        localStorage.setItem('tp_tema', temaOscuro ? 'oscuro' : 'claro')
+        syncTema()
+      })
+      var emailNotif = localStorage.getItem('tp_email_notif') !== 'false'
+      var tRowEmail = document.getElementById('toggle-email-row')
+      var tBarEmail = document.getElementById('toggle-email')
+      var tDotEmail = document.getElementById('toggle-email-dot')
+      function syncEmail() {
+        if (tBarEmail) tBarEmail.style.background = emailNotif ? '#3b82f6' : '#334155'
+        if (tDotEmail) { tDotEmail.style.left = emailNotif ? '22px' : '2px'; tDotEmail.style.background = emailNotif ? '#fff' : '#94a3b8' }
+      }
+      syncEmail()
+      tRowEmail && tRowEmail.addEventListener('click', function(e) {
+        e.stopPropagation()
+        emailNotif = !emailNotif
+        localStorage.setItem('tp_email_notif', emailNotif)
+        syncEmail()
+        _toastSeg(emailNotif ? 'Alertas por email activadas' : 'Alertas por email desactivadas', false)
+      })
+    }
+  </script>
+
+  <script type="module">
+    import { guardaSuperAdmin } from '../js/admin.js'
+    import { supabase } from '../js/supabase-client.js'
+
+    await guardaSuperAdmin()
+
+    // ── Helpers ───────────────────────────────────────────────────────
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val }
+    const fmt = n => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
+
+    // ── Fecha actual ──────────────────────────────────────────────────
+    const hoy = new Date()
+    document.getElementById('fecha-actual').textContent =
+      hoy.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
+
+    // ── Tooltip flotante ──────────────────────────────────────────────
+    const tip = document.createElement('div')
+    tip.style.cssText = 'position:fixed;z-index:9999;background:#334155;color:#fff;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;pointer-events:none;opacity:0;transition:opacity .15s;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.4)'
+    document.body.appendChild(tip)
+    window._tt = (e, t) => { tip.textContent = t; tip.style.opacity='1'; tip.style.left=(e.clientX+14)+'px'; tip.style.top=(e.clientY-38)+'px' }
+    window._th = () => { tip.style.opacity = '0' }
+
+    // ── Función para dibujar gráfico de barras ────────────────────────
+    function dibujarBarras(containerId, datos, altoPx) {
+      const container = document.getElementById(containerId)
+      if (!container) return
+      container.style.display = 'flex'
+      container.style.alignItems = 'flex-end'
+      container.style.gap = '3px'
+      container.style.height = altoPx + 'px'
+      const maxVal = Math.max(...datos.map(d => d.val), 1)
+      container.innerHTML = datos.map((d, i) => {
+        const px   = Math.max(Math.round((d.val / maxVal) * altoPx), 6)
+        const esUlt = i === datos.length - 1
+        const alpha  = 0.25 + (i / datos.length) * 0.75
+        const bg     = esUlt ? '#6366f1' : d.val > 0 ? `rgba(99,102,241,${alpha.toFixed(2)})` : 'rgba(99,102,241,0.2)'
+        return `<div style="flex:1;height:${px}px;background:${bg};border-radius:4px 4px 0 0;cursor:pointer;transition:filter .15s;min-width:6px"
+                     onmousemove="window._tt(event,'${d.label}: ${fmt(d.val)}')"
+                     onmouseleave="window._th()"></div>`
+      }).join('')
+    }
+
+    // ── Cargar datos de clínicas ──────────────────────────────────────
+    const { data: clinicas, error } = await supabase
+      .from('clinicas')
+      .select('id, nombre, status, created_at, planes(nombre, precio_mensual)')
+      .order('created_at', { ascending: false })
+
+    if (error || !clinicas) {
+      console.error('Error cargando clínicas:', error)
+      return
+    }
+
+    const activas     = clinicas.filter(c => c.status === 'activa')
+    const trial       = clinicas.filter(c => c.status === 'trial')
+    const suspendidas = clinicas.filter(c => c.status === 'suspendida')
+    const mrr         = activas.reduce((s, c) => s + Number(c.planes?.precio_mensual || 0), 0)
+
+    set('stat-mrr',              fmt(mrr))
+    set('stat-clinicas-activas', activas.length)
+    set('stat-trial',            trial.length)
+    set('stat-suspendidas',      suspendidas.length)
+    set('stat-total-clinicas',   clinicas.length)
+
+    // Barra de proporción activas
+    const barActivas = document.getElementById('bar-activas')
+    if (barActivas && clinicas.length > 0)
+      barActivas.style.width = Math.round((activas.length / clinicas.length) * 100) + '%'
+
+    // ── Tabla clínicas recientes ──────────────────────────────────────
+    const badgeStyle = { activa:'background:rgba(16,185,129,.15);color:#34d399', trial:'background:rgba(99,102,241,.15);color:#818cf8', suspendida:'background:rgba(244,63,94,.15);color:#fb7185' }
+    const badgeLabel = { activa:'Activa', trial:'Trial', suspendida:'Suspendida' }
+    const avatarBg   = ['#0d9488','#6366f1','#d97706','#e11d48','#7c3aed']
+
+    const tbody    = document.getElementById('tbody-clinicas-recientes')
+    const recientes = clinicas.slice(0, 5)
+    tbody.innerHTML = recientes.length === 0
+      ? `<tr><td colspan="5" style="padding:40px;text-align:center;color:#64748b;font-size:14px">No hay clínicas registradas aún.</td></tr>`
+      : recientes.map((c, i) => {
+          const letra  = c.nombre.charAt(0).toUpperCase()
+          const bg     = avatarBg[i % avatarBg.length]
+          const fecha  = new Date(c.created_at).toLocaleDateString('es-ES', { day:'2-digit', month:'2-digit', year:'numeric' })
+          const precio = c.status === 'activa' && c.planes?.precio_mensual ? fmt(c.planes.precio_mensual) : '—'
+          const bs     = badgeStyle[c.status] || ''
+          const bl     = badgeLabel[c.status] || c.status
+          return `<tr style="border-bottom:1px solid rgba(51,65,85,.3);cursor:pointer"
+                      onmouseover="this.style.background='rgba(51,65,85,.2)'"
+                      onmouseout="this.style.background=''"
+                      onclick="location.href='detalle_clinica_super_admin.html?id=${c.id}'">
+            <td style="padding:18px 0">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:32px;height:32px;border-radius:8px;background:${bg}33;display:flex;align-items:center;justify-content:center;color:${bg};font-weight:700;font-size:13px;flex-shrink:0">${letra}</div>
+                <span style="color:#e2e8f0;font-weight:600;font-size:14px">${c.nombre}</span>
+              </div>
+            </td>
+            <td style="padding:18px 0;color:#94a3b8;font-size:14px">${c.planes?.nombre || '—'}</td>
+            <td style="padding:18px 0;color:#94a3b8;font-size:14px">${fecha}</td>
+            <td style="padding:18px 0;color:#e2e8f0;font-weight:500;font-size:14px">${precio}</td>
+            <td style="padding:18px 0;text-align:right"><span style="${bs};padding:3px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase">${bl}</span></td>
+          </tr>`
+        }).join('')
+
+    // ── Calcular MRR por mes (últimos 12 meses) ───────────────────────
+    const nombresMeses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+    const meses = []
+    for (let i = 11; i >= 0; i--) {
+      const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1)
+      meses.push({ label: nombresMeses[d.getMonth()], hasta: new Date(d.getFullYear(), d.getMonth() + 1, 0), val: 0 })
+    }
+    clinicas.forEach(c => {
+      if (!c.planes?.precio_mensual || c.status !== 'activa') return
+      const creado = new Date(c.created_at)
+      meses.forEach(m => { if (creado <= m.hasta) m.val += Number(c.planes.precio_mensual) })
+    })
+
+    // Chart lateral 12 meses (256px de alto)
+    dibujarBarras('chart-ingresos', meses, 256)
+
+    // Labels
+    const chartLabels = document.getElementById('chart-labels')
+    if (chartLabels) chartLabels.innerHTML = `<span>${meses[0].label}</span><span>${meses[5].label}</span><span>${meses[11].label}</span>`
+
+    // Promedio anual
+    const promedio = meses.reduce((s, m) => s + m.val, 0) / meses.length
+    set('stat-promedio-anual', fmt(promedio))
+    const maxMrr = Math.max(...meses.map(m => m.val), 1)
+    const barProm = document.getElementById('bar-promedio')
+    if (barProm) barProm.style.width = Math.round((promedio / maxMrr) * 100) + '%'
+
+    // Chart mini 6 meses (128px de alto)
+    dibujarBarras('chart-mrr-mini', meses.slice(-6), 128)
+
+    // ── Notificaciones: poblar lista con clínicas recientes ──────────
+    // (los listeners de click los maneja el bloque no-módulo superior)
+    const notifDot  = document.getElementById('notif-dot')
+    const listaNotif = document.getElementById('lista-notificaciones')
+    const nuevas = clinicas.filter(c => {
+      const d = new Date(c.created_at)
+      return (hoy - d) < 7 * 24 * 60 * 60 * 1000
+    })
+    if (nuevas.length > 0) {
+      notifDot && notifDot.classList.remove('hidden')
+      if (listaNotif) listaNotif.innerHTML = nuevas.map(c => `
+        <div style="padding:14px 20px;cursor:pointer" onmouseover="this.style.background='rgba(51,65,85,.3)'" onmouseout="this.style.background=''" onclick="location.href='detalle_clinica_super_admin.html?id=${c.id}'">
+          <p style="color:#e2e8f0;font-size:13px;font-weight:600">Nueva clínica: ${c.nombre}</p>
+          <p style="color:#64748b;font-size:11px;margin-top:2px">${new Date(c.created_at).toLocaleDateString('es-ES')}</p>
+        </div>`).join('')
+    }
+
+    // Apps logout
+    document.getElementById('apps-logout')?.addEventListener('click', async (e) => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      localStorage.removeItem('tp_rol')
+      localStorage.removeItem('tp_user_id')
+      localStorage.removeItem('tp_email')
+      window.location.href = 'acceso_super_admin.html'
+    })
+
+    // ── Botón "Ver todas" ─────────────────────────────────────────────
+    document.querySelectorAll('button').forEach(btn => {
+      if (btn.textContent.trim().toLowerCase().includes('ver todas'))
+        btn.addEventListener('click', () => window.location.href = 'gestion_clinicas_super_admin.html')
+    })
+
+    // ── Logout sidebar ────────────────────────────────────────────────
+    document.getElementById('btn-logout')?.addEventListener('click', async (e) => {
+      e.preventDefault()
+      await supabase.auth.signOut()
+      localStorage.removeItem('tp_rol')
+      localStorage.removeItem('tp_user_id')
+      localStorage.removeItem('tp_email')
+      window.location.href = 'acceso_super_admin.html'
+    })
+  </script>
+  <script src="../js/version-check.js"></script>
+</body></html>

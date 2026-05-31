@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crear cuenta | SereneCare</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+
+  .field-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #e2e8f0; font-size: 14px; padding: 12px 16px; width: 100%; outline: none; transition: border-color 0.2s; color-scheme: dark; font-family: 'Inter', sans-serif; }
+  .field-input:focus { border-color: rgba(99,102,241,0.5); }
+  .field-input::placeholder { color: #475569; }
+  select.field-input option { background: #0d1b2e; }
+  .field-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+
+  /* Plan cards */
+  .plan-card { border-radius: 18px; border: 2px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); padding: 22px 20px; cursor: pointer; transition: all 0.2s; position: relative; }
+  .plan-card:hover { border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.04); }
+  .plan-card.selected { border-color: rgba(99,102,241,0.6); background: rgba(99,102,241,0.08); }
+  .plan-card.popular { border-color: rgba(99,102,241,0.3); }
+
+  /* Feature list */
+  .feat { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
+  .feat .material-symbols-outlined { font-size: 14px; color: #6366f1; flex-shrink: 0; }
+
+  .error-msg { color: #f87171; font-size: 12px; font-weight: 600; margin-top: 4px; display: none; }
+
+  body::before { content: ''; position: fixed; top: -150px; left: -150px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%); pointer-events: none; }
+  body::after { content: ''; position: fixed; bottom: -150px; right: -150px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%); pointer-events: none; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<div class="min-h-screen flex flex-col lg:flex-row">
+
+  <!-- ═══════ COLUMNA IZQUIERDA — Planes ═══════ -->
+  <div class="lg:w-[52%] p-8 lg:p-14 flex flex-col justify-between lg:min-h-screen lg:sticky lg:top-0">
+
+    <!-- Logo -->
+    <div>
+      <a href="#" class="flex items-center gap-2 mb-12" style="text-decoration:none;">
+        <span class="material-symbols-outlined text-3xl" style="color:#818cf8;font-variation-settings:'FILL' 1;">psychology</span>
+        <span class="font-headline text-xl font-extrabold text-white tracking-tight">SereneCare</span>
+      </a>
+
+      <div class="mb-8">
+        <h1 class="font-headline text-4xl font-extrabold text-white leading-tight mb-3">Elegí el plan<br/>para tu clínica</h1>
+        <p class="text-slate-400 text-sm">14 días gratis en todos los planes. Sin tarjeta de crédito.</p>
+      </div>
+
+      <!-- Plan cards -->
+      <div class="space-y-3" id="planes">
+
+        <!-- Starter -->
+        <div class="plan-card" id="plan-starter" onclick="seleccionarPlan('starter')">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <div class="w-3 h-3 rounded-full border-2 border-slate-600 flex-shrink-0" id="radio-starter"></div>
+                <p class="font-headline font-bold text-white text-base">Starter</p>
+              </div>
+              <p class="text-slate-500 text-xs ml-5">Para psicólogos independientes</p>
+            </div>
+            <div class="text-right">
+              <p class="font-headline font-extrabold text-white text-xl">$29</p>
+              <p class="text-slate-600 text-xs">/mes</p>
+            </div>
+          </div>
+          <div class="ml-5">
+            <div class="feat"><span class="material-symbols-outlined">check</span>1 psicólogo</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>Hasta 30 pacientes</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>Agenda + videollamadas</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>Portal del paciente</div>
+          </div>
+        </div>
+
+        <!-- Clínica -->
+        <div class="plan-card popular selected" id="plan-clinica" onclick="seleccionarPlan('clinica')">
+          <div class="absolute -top-3 left-5">
+            <span class="px-3 py-1 rounded-full text-xs font-bold font-headline" style="background:rgba(99,102,241,0.2);color:#818cf8;border:1px solid rgba(99,102,241,0.4);">Más popular</span>
+          </div>
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <div class="w-3 h-3 rounded-full flex-shrink-0" id="radio-clinica" style="background:#6366f1;border:2px solid #818cf8;"></div>
+                <p class="font-headline font-bold text-white text-base">Clínica</p>
+              </div>
+              <p class="text-slate-500 text-xs ml-5">Para consultorios y clínicas</p>
+            </div>
+            <div class="text-right">
+              <p class="font-headline font-extrabold text-white text-xl">$99</p>
+              <p class="text-slate-600 text-xs">/mes</p>
+            </div>
+          </div>
+          <div class="ml-5">
+            <div class="feat"><span class="material-symbols-outlined">check</span>Hasta 10 psicólogos</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>Pacientes ilimitados</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>IA clínica + informes</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>Facturación + consentimientos</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>Soporte prioritario</div>
+          </div>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="plan-card" id="plan-enterprise" onclick="seleccionarPlan('enterprise')">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <div class="w-3 h-3 rounded-full border-2 border-slate-600 flex-shrink-0" id="radio-enterprise"></div>
+                <p class="font-headline font-bold text-white text-base">Enterprise</p>
+              </div>
+              <p class="text-slate-500 text-xs ml-5">Para instituciones grandes</p>
+            </div>
+            <div class="text-right">
+              <p class="font-headline font-extrabold text-white text-xl">$299</p>
+              <p class="text-slate-600 text-xs">/mes</p>
+            </div>
+          </div>
+          <div class="ml-5">
+            <div class="feat"><span class="material-symbols-outlined">check</span>Psicólogos ilimitados</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>White label (tu marca)</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>API + integraciones custom</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>Manager de cuenta dedicado</div>
+            <div class="feat"><span class="material-symbols-outlined">check</span>SLA garantizado</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer links -->
+    <div class="mt-10 pt-6 border-t border-slate-800/40 flex flex-wrap gap-4 text-xs text-slate-600">
+      <a href="#" class="hover:text-slate-400">Privacidad</a>
+      <a href="#" class="hover:text-slate-400">Términos</a>
+      <a href="#" class="hover:text-slate-400">Soporte</a>
+      <span>· Precios en USD</span>
+    </div>
+  </div>
+
+  <!-- ═══════ COLUMNA DERECHA — Formulario ═══════ -->
+  <div class="lg:w-[48%] bg-[#050e1f] border-l border-slate-800/30 p-8 lg:p-14 flex items-center">
+    <div class="w-full max-w-md mx-auto">
+
+      <div class="mb-8">
+        <h2 class="font-headline text-2xl font-extrabold text-white mb-1">Crear tu cuenta</h2>
+        <p class="text-slate-500 text-sm">Plan seleccionado: <span class="font-bold" id="label-plan" style="color:#818cf8;">Clínica — $99/mes</span></p>
+      </div>
+
+      <form class="space-y-4" onsubmit="registrar(event)">
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="field-label">Nombre</label>
+            <input type="text" id="f-nombre" class="field-input" placeholder="Tu nombre"/>
+          </div>
+          <div>
+            <label class="field-label">Apellido</label>
+            <input type="text" id="f-apellido" class="field-input" placeholder="Tu apellido"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="field-label">Nombre de la clínica *</label>
+          <input type="text" id="f-clinica" class="field-input" placeholder="Ej. Centro de Psicología Integral"/>
+        </div>
+
+        <div>
+          <label class="field-label">Email profesional *</label>
+          <input type="email" id="f-email" class="field-input" placeholder="admin@tuclinica.com"/>
+        </div>
+
+        <div>
+          <label class="field-label">País</label>
+          <select id="f-pais" class="field-input">
+            <option>Argentina</option>
+            <option>España</option>
+            <option>México</option>
+            <option>Colombia</option>
+            <option>Chile</option>
+            <option>Otro</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="field-label">Contraseña *</label>
+          <div class="relative">
+            <input type="password" id="f-pw" class="field-input pr-12" placeholder="Mínimo 8 caracteres"/>
+            <button type="button" onclick="toggleVer()" class="absolute right-3 top-3 text-slate-500 hover:text-slate-300" style="background:none;border:none;cursor:pointer;">
+              <span class="material-symbols-outlined text-lg" id="eye-reg">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="error-msg" id="err-reg">Completá nombre de clínica, email y contraseña (mín. 8 caracteres).</p>
+
+        <!-- CTA -->
+        <button type="submit" id="btn-registro" class="w-full py-4 rounded-xl font-bold text-base font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95 mt-2" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">
+          <span class="material-symbols-outlined text-base">rocket_launch</span>
+          Comenzar prueba gratis
+        </button>
+
+        <p class="text-center text-xs text-slate-600 mt-2">
+          Al registrarte aceptás los <a href="#" style="color:#818cf8;">Términos de uso</a> y la <a href="#" style="color:#818cf8;">Política de privacidad</a>.
+        </p>
+
+      </form>
+
+      <!-- Divider -->
+      <div class="flex items-center gap-3 my-6">
+        <div class="flex-1 h-px bg-slate-800"></div>
+        <span class="text-xs text-slate-600">¿Ya tenés cuenta?</span>
+        <div class="flex-1 h-px bg-slate-800"></div>
+      </div>
+
+      <a href="../login.html" class="w-full py-3 rounded-xl font-bold text-sm text-slate-400 flex items-center justify-center gap-2 hover:text-white transition-colors" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);text-decoration:none;">
+        <span class="material-symbols-outlined text-base">login</span>
+        Iniciar sesión
+      </a>
+
+      <!-- Trust badges -->
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-5 text-xs text-slate-600">
+        <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm" style="color:#34d399;">lock</span>
+          Encriptación AES-256
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm" style="color:#34d399;">verified_user</span>
+          RGPD / Ley 25.326
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm" style="color:#34d399;">support_agent</span>
+          Soporte en español
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+var planSeleccionado = 'clinica';
+var planes = {
+  starter:    { label: 'Starter — $29/mes',    precio: '$29' },
+  clinica:    { label: 'Clínica — $99/mes',    precio: '$99' },
+  enterprise: { label: 'Enterprise — $299/mes', precio: '$299' }
+};
+
+function seleccionarPlan(plan) {
+  planSeleccionado = plan;
+
+  ['starter','clinica','enterprise'].forEach(function(p) {
+    var card  = document.getElementById('plan-' + p);
+    var radio = document.getElementById('radio-' + p);
+    if (p === plan) {
+      card.classList.add('selected');
+      radio.style.background = '#6366f1';
+      radio.style.border = '2px solid #818cf8';
+    } else {
+      card.classList.remove('selected');
+      radio.style.background = '';
+      radio.style.borderColor = '#475569';
+    }
+  });
+
+  document.getElementById('label-plan').textContent = planes[plan].label;
+}
+
+function toggleVer() {
+  var inp = document.getElementById('f-pw');
+  var ico = document.getElementById('eye-reg');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  ico.textContent = inp.type === 'password' ? 'visibility' : 'visibility_off';
+}
+
+function registrar(e) {
+  e.preventDefault();
+  var clinica = document.getElementById('f-clinica').value.trim();
+  var email   = document.getElementById('f-email').value.trim();
+  var pw      = document.getElementById('f-pw').value;
+  var err     = document.getElementById('err-reg');
+
+  if (!clinica || !email || pw.length < 8) {
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+
+  var btn = document.getElementById('btn-registro');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-symbols-outlined text-base animate-spin">progress_activity</span> Creando cuenta...';
+
+  // Guardar en localStorage para onboarding
+  localStorage.setItem('admin_clinica_nombre', document.getElementById('f-nombre').value.trim());
+  localStorage.setItem('admin_clinica_email', email);
+  localStorage.setItem('admin_plan', planSeleccionado);
+
+  setTimeout(function() {
+    window.location.href = 'onboarding_admin.html';
+  }, 1200);
+}
+
+// Numpad fix
+document.addEventListener('keydown', function(e) {
+  var map = {'Numpad0':'0','Numpad1':'1','Numpad2':'2','Numpad3':'3','Numpad4':'4','Numpad5':'5','Numpad6':'6','Numpad7':'7','Numpad8':'8','Numpad9':'9','NumpadDecimal':'.'};
+  var d = map[e.code];
+  if (d && e.key !== d) {
+    var el = document.activeElement;
+    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
+      e.preventDefault();
+      var s = el.selectionStart, end = el.selectionEnd;
+      el.value = el.value.slice(0, s) + d + el.value.slice(end);
+      el.selectionStart = el.selectionEnd = s + 1;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  }
+});
+</script>
+</body>
+</html>

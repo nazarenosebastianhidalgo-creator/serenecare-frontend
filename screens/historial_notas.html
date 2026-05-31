@@ -1,0 +1,473 @@
+﻿<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patient Note History - The Therapeutic Perspective</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Inter:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#dce4e6",
+                        "inverse-on-surface": "#9a9d9e",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "surface-dim": "#d4dbde",
+                        "on-secondary-container": "#195968",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#296777",
+                        "error-container": "#fa746f",
+                        "tertiary-container": "#d7fde4",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "secondary-dim": "#1b5a69",
+                        "surface-variant": "#dce4e6",
+                        "surface-container": "#eaeff0",
+                        "inverse-primary": "#a8e3f6",
+                        "tertiary-fixed": "#d7fde4",
+                        "on-error": "#fff7f6",
+                        "on-background": "#2c3436",
+                        "secondary-fixed": "#b2ecfd",
+                        "outline-variant": "#acb3b6",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "on-primary-container": "#0e5463",
+                        "background": "#f8fafb",
+                        "surface": "#f8fafb",
+                        "primary-dim": "#195a6a",
+                        "on-primary": "#f0fbff",
+                        "primary-fixed": "#a8e3f6",
+                        "surface-container-low": "#f0f4f6",
+                        "on-secondary": "#effbff",
+                        "on-surface": "#2c3436",
+                        "secondary-container": "#b2ecfd",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "tertiary-dim": "#395a48",
+                        "on-error-container": "#6e0a12",
+                        "on-surface-variant": "#596063",
+                        "secondary": "#2b6775",
+                        "on-secondary-fixed": "#004653",
+                        "error": "#a83836",
+                        "on-tertiary": "#e6ffee",
+                        "surface-container-high": "#e3e9eb",
+                        "on-tertiary-fixed": "#2f503f",
+                        "outline": "#747c7e",
+                        "tertiary": "#456653",
+                        "surface-tint": "#296777",
+                        "error-dim": "#67040d",
+                        "on-secondary-fixed-variant": "#266372",
+                        "primary-container": "#a8e3f6",
+                        "inverse-surface": "#0b0f10",
+                        "on-primary-fixed": "#00404d",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "surface-bright": "#f8fafb",
+                        "on-tertiary-container": "#416350"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "xxl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope", "sans-serif"],
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafb; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); }
+        .chart-path { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: dash 3s linear forwards; }
+        @keyframes dash { to { stroke-dashoffset: 0; } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500/30">
+<!-- TopNavBar Implementation from JSON -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/70 backdrop-blur-xl border-b border-white/5 shadow-2xl shadow-black/20 font-manrope tracking-tight font-medium">
+<div class="flex justify-between items-center px-8 py-4 w-full max-w-screen-2xl mx-auto">
+<div class="text-xl font-bold tracking-tighter text-slate-100">The Therapeutic Perspective</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Dashboard</a>
+<a class="text-cyan-400 border-b-2 border-cyan-400 pb-1" href="#">Patient List</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Analytics</a>
+</nav>
+<div class="flex items-center space-x-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">search</span>
+<input class="bg-white/5 border-none rounded-full pl-10 pr-4 py-1.5 text-sm text-slate-200 focus:ring-1 focus:ring-cyan-500/50 w-64" placeholder="Global search..." type="text"/>
+</div>
+<button class="text-slate-400 hover:bg-white/5 p-2 rounded-lg transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-400 hover:bg-white/5 p-2 rounded-lg transition-all active:scale-90">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10 ml-2">
+<img alt="Clinician profile avatar" class="w-full h-full object-cover" data-alt="professional clinician headshot with a friendly expression in a modern clinic setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs1bSg59h6xlScslVak0DM1BfSCX1yAVLQ1RK9MhyrjFtMmT_BNYN17DX_FDgY0J_F4JC9FL0aIOt-3fZhsLBgZ3ontCrBeC4rZUuvQ91SoSU2YyC7u69hJDwp2lEohjIxIT1JldjYCYgsDgYY2S41fF2lWGyU3xOvJCl0pJeRW1LwAnqxdbow7nsBaeMSvNbirxtRpkxNUNcfJqL6V_a47-AhWqYfdyTyaDJZEXxijc_Rz68kfWpxzMMKmHq2XVqalAcQtuc8Kb8I"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar Implementation from JSON -->
+<aside class="h-screen w-72 fixed left-0 top-0 overflow-y-auto bg-slate-900 flex flex-col py-8 px-4 z-40">
+<div class="mt-20 mb-8 px-2">
+<div class="flex items-center gap-3 mb-6">
+<div class="w-10 h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-cyan-400" data-icon="psychology">psychology</span>
+</div>
+<div>
+<h2 class="text-lg font-black text-slate-100 font-manrope">Clinical Suite</h2>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">The Serene Curator</p>
+</div>
+</div>
+<button class="w-full py-3 bg-gradient-to-br from-cyan-500 to-cyan-700 text-white rounded-xl font-semibold text-sm shadow-lg shadow-cyan-900/20 hover:translate-x-1 transition-all flex items-center justify-center gap-2 mb-8">
+<span class="material-symbols-outlined text-lg">add</span>
+                New Session
+            </button>
+</div>
+<nav class="flex-1 space-y-1 font-manrope text-sm font-semibold">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 rounded-xl transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+                Session Notes
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 rounded-xl transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                Templates
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-cyan-500/10 text-cyan-400 border-r-4 border-cyan-400 transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                Patient History
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 rounded-xl transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+                Emotional Trends
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 rounded-xl transition-all duration-300 ease-in-out hover:translate-x-1" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+                AI Insights
+            </a>
+</nav>
+<footer class="mt-auto pt-8 border-t border-slate-800/50 space-y-1 font-manrope text-sm font-semibold">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/80 hover:text-slate-200 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-red-400/80 hover:bg-red-500/5 rounded-xl transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Sign Out
+            </a>
+</footer>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pl-72 pt-24 min-h-screen bg-slate-950 text-slate-200 pb-12">
+<div class="max-w-6xl mx-auto px-10">
+<!-- Breadcrumbs & Profile Header -->
+<div class="flex items-center justify-between mb-8">
+<div>
+<div class="flex items-center gap-2 text-slate-500 text-xs mb-2">
+<span>Patients</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span>Clinical Records</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-cyan-400">History</span>
+</div>
+<h1 class="text-4xl font-manrope font-bold tracking-tight text-white flex items-center gap-4">
+                        Elena Vance
+                        <span class="text-sm font-normal text-slate-500 font-body px-3 py-1 bg-white/5 rounded-full">ID: #4492-B</span>
+</h1>
+</div>
+<div class="flex gap-3">
+<button class="bg-white/5 hover:bg-white/10 px-5 py-2.5 rounded-xxl text-sm font-semibold transition-all border border-white/5 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">share</span>
+                        Share Profile
+                    </button>
+<button class="bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 px-5 py-2.5 rounded-xxl text-sm font-semibold transition-all border border-cyan-500/20 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">download</span>
+                        Export Full Records
+                    </button>
+</div>
+</div>
+<!-- Bento Grid: Analytics & Filters -->
+<div class="grid grid-cols-12 gap-6 mb-10">
+<!-- Evolution Line Chart Card -->
+<div class="col-span-8 bg-slate-900 rounded-xxl p-8 border border-white/5 flex flex-col">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="font-manrope text-lg font-bold text-slate-100">Emotional Evolution</h3>
+<p class="text-sm text-slate-500">Fluctuations in patient resilience and mood (Last 6 Months)</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-xs">
+<span class="w-3 h-3 rounded-full bg-cyan-400"></span>
+<span class="text-slate-400">Resilience</span>
+</div>
+<div class="flex items-center gap-2 text-xs">
+<span class="w-3 h-3 rounded-full bg-slate-700"></span>
+<span class="text-slate-400">Avg. Baseline</span>
+</div>
+</div>
+</div>
+<div class="flex-1 min-h-[180px] relative mt-4">
+<!-- Simplified SVG Chart -->
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none">
+<path class="chart-path" d="M0,150 Q100,80 200,120 T400,40 T600,90 T800,20 T1000,60" fill="none" stroke="rgba(34, 211, 238, 0.2)" stroke-width="2"></path>
+<path class="chart-path" d="M0,150 Q100,80 200,120 T400,40 T600,90 T800,20 T1000,60" fill="none" stroke="url(#gradient-cyan)" stroke-linecap="round" stroke-width="4"></path>
+<defs>
+<lineargradient id="gradient-cyan" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#22d3ee;stop-opacity:1"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Chart Labels -->
+<div class="absolute bottom-[-20px] w-full flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-wider">
+<span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+</div>
+</div>
+</div>
+<!-- Filters Card -->
+<div class="col-span-4 bg-slate-900 rounded-xxl p-8 border border-white/5">
+<h3 class="font-manrope text-lg font-bold text-slate-100 mb-6">Filter Records</h3>
+<div class="space-y-6">
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Psychologist</label>
+<div class="relative">
+<select class="w-full bg-white/5 border border-white/5 rounded-xl py-2.5 px-4 text-sm text-slate-300 focus:ring-1 focus:ring-cyan-500 appearance-none">
+<option>Dr. Julian Sterling</option>
+<option>Dr. Sarah Chen</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Note Type</label>
+<div class="flex flex-wrap gap-2">
+<button class="bg-cyan-500/20 text-cyan-400 px-3 py-1.5 rounded-full text-xs font-medium border border-cyan-500/20">All</button>
+<button class="bg-white/5 text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-full text-xs font-medium transition-colors">Session</button>
+<button class="bg-white/5 text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-full text-xs font-medium transition-colors">Assessment</button>
+<button class="bg-white/5 text-slate-400 hover:text-slate-200 px-3 py-1.5 rounded-full text-xs font-medium transition-colors">Follow-up</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-widest">Time Range</label>
+<div class="flex items-center gap-3 bg-white/5 border border-white/5 rounded-xl py-2.5 px-4">
+<span class="material-symbols-outlined text-slate-500 text-lg">calendar_month</span>
+<span class="text-sm text-slate-300">Jan 2024 - Jun 2024</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Vertical Timeline Section -->
+<div class="relative pl-8 border-l border-white/5 space-y-12 mb-20">
+<!-- Timeline Card 1 (Expanded) -->
+<div class="relative">
+<div class="absolute -left-10 top-0 w-4 h-4 rounded-full bg-cyan-400 border-4 border-slate-950 shadow-[0_0_15px_rgba(34,211,238,0.5)]"></div>
+<div class="bg-slate-900 border border-white/10 rounded-xxl overflow-hidden shadow-2xl transition-all duration-500">
+<!-- Header -->
+<div class="p-6 flex items-start justify-between bg-slate-800/40">
+<div class="flex items-center gap-5">
+<div class="text-center">
+<span class="block text-2xl font-bold font-manrope text-white">12</span>
+<span class="block text-[10px] uppercase font-bold text-slate-500">Jun</span>
+</div>
+<div class="h-10 w-px bg-white/5"></div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h4 class="font-manrope font-bold text-lg text-white">Weekly Therapy Session</h4>
+<span class="bg-cyan-500/10 text-cyan-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-md border border-cyan-500/10 tracking-wider">Clinical Note</span>
+<span class="text-xl">🌿</span>
+</div>
+<p class="text-xs text-slate-500 font-medium">Recorded at 10:30 AM — Dr. Julian Sterling</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"><span class="material-symbols-outlined">edit</span></button>
+<button class="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"><span class="material-symbols-outlined">print</span></button>
+<button class="p-2 text-cyan-400 bg-cyan-500/10 rounded-lg transition-all"><span class="material-symbols-outlined">expand_less</span></button>
+</div>
+</div>
+<!-- Expanded SOAP Content -->
+<div class="p-8 grid grid-cols-2 gap-8 font-body">
+<div class="space-y-6">
+<div>
+<h5 class="text-[10px] uppercase font-bold text-cyan-500 tracking-[0.2em] mb-3">Subjective</h5>
+<p class="text-sm text-slate-300 leading-relaxed">Patient reports feeling "significantly lighter" since starting the mindful journaling practice. Expressed concerns about upcoming work deadlines but noted improved coping mechanisms compared to last month.</p>
+</div>
+<div>
+<h5 class="text-[10px] uppercase font-bold text-cyan-500 tracking-[0.2em] mb-3">Objective</h5>
+<p class="text-sm text-slate-300 leading-relaxed">Patient appeared alert and well-groomed. Affect was congruent with reported mood. Maintained consistent eye contact. Resilience scale score: 8/10.</p>
+</div>
+</div>
+<div class="space-y-6">
+<div>
+<h5 class="text-[10px] uppercase font-bold text-cyan-500 tracking-[0.2em] mb-3">Assessment</h5>
+<p class="text-sm text-slate-300 leading-relaxed">Positive response to cognitive restructuring. Moderate anxiety persist around professional settings, but general emotional regulation is showing upward trend.</p>
+</div>
+<div>
+<h5 class="text-[10px] uppercase font-bold text-cyan-500 tracking-[0.2em] mb-3">Plan</h5>
+<p class="text-sm text-slate-300 leading-relaxed">Continue exposure therapy regarding workplace confrontation. Increase journaling to daily. Next session scheduled for June 19th.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Card 2 (Collapsed) -->
+<div class="relative group">
+<div class="absolute -left-10 top-0 w-4 h-4 rounded-full bg-slate-800 border-4 border-slate-950 group-hover:bg-cyan-600 transition-colors"></div>
+<div class="bg-slate-900 border border-white/5 rounded-xxl overflow-hidden hover:border-white/20 transition-all cursor-pointer">
+<div class="p-6 flex items-center justify-between">
+<div class="flex items-center gap-5">
+<div class="text-center">
+<span class="block text-2xl font-bold font-manrope text-slate-400">05</span>
+<span class="block text-[10px] uppercase font-bold text-slate-600">Jun</span>
+</div>
+<div class="h-10 w-px bg-white/5"></div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h4 class="font-manrope font-bold text-lg text-slate-300">Bi-Monthly Cognitive Assessment</h4>
+<span class="bg-slate-800 text-slate-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-md tracking-wider">Assessment</span>
+<span class="text-xl">📈</span>
+</div>
+<p class="text-sm text-slate-500 italic max-w-lg truncate">Patient scored in the 85th percentile for cognitive flexibility. Mood stability remains consistent despite external stressors...</p>
+</div>
+</div>
+<div class="flex gap-4 items-center">
+<div class="text-right">
+<p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-1">Status</p>
+<p class="text-xs text-green-400 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> Finalized</p>
+</div>
+<span class="material-symbols-outlined text-slate-600">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Timeline Card 3 (Collapsed) -->
+<div class="relative group">
+<div class="absolute -left-10 top-0 w-4 h-4 rounded-full bg-slate-800 border-4 border-slate-950 group-hover:bg-cyan-600 transition-colors"></div>
+<div class="bg-slate-900 border border-white/5 rounded-xxl overflow-hidden hover:border-white/20 transition-all cursor-pointer">
+<div class="p-6 flex items-center justify-between">
+<div class="flex items-center gap-5">
+<div class="text-center">
+<span class="block text-2xl font-bold font-manrope text-slate-400">29</span>
+<span class="block text-[10px] uppercase font-bold text-slate-600">May</span>
+</div>
+<div class="h-10 w-px bg-white/5"></div>
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h4 class="font-manrope font-bold text-lg text-slate-300">Routine Check-in session</h4>
+<span class="bg-slate-800 text-slate-400 text-[10px] uppercase font-bold px-2 py-0.5 rounded-md tracking-wider">Session</span>
+<span class="text-xl">🌊</span>
+</div>
+<p class="text-sm text-slate-500 italic max-w-lg truncate">Focus on social anxiety triggers in community events. Patient reported one incidence of panic...</p>
+</div>
+</div>
+<div class="flex gap-4 items-center">
+<div class="text-right">
+<p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-1">Status</p>
+<p class="text-xs text-green-400 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> Finalized</p>
+</div>
+<span class="material-symbols-outlined text-slate-600">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative Illustration / Footer Content -->
+<div class="grid grid-cols-2 gap-10 items-center border-t border-white/5 pt-16">
+<div class="relative">
+<div class="absolute -inset-4 bg-cyan-500/10 blur-3xl rounded-full"></div>
+<img alt="Serene clinic environment" class="relative rounded-xxl object-cover h-64 w-full shadow-2xl" data-alt="ultra-modern minimalist clinical therapy room with soft warm lighting floor to ceiling windows and organic wooden furniture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA0TTUhK_j-7aMAHGd-vStopYPQoUW8Y1SL6J-8OAS2rubHkNBrb69-9c5YcwND2xDTEAu46ifhIKqdnarYAFwH_UuG-3rzfb1YMY5Pequ6T_RUIJdV1ZChT1Z1pJbuJbviNBE4YJ4xF6X6UKy_yRQ-cqB1apEYgBNIa0jsEVv_9P8VwwE8CaivHZKq58vVngERwkLrgCvsRm-caI9w2K-MU5QaDSa13mCEMH9d4fshImmeHUKBExCo7VIM3amGLazTpXExzzRahtf"/>
+<div class="absolute bottom-6 right-6 glass-panel p-4 rounded-xl border border-white/10">
+<p class="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-1">Clinical Insight</p>
+<p class="text-sm text-slate-100 font-manrope font-medium">"Resilience is built in the quiet moments between the storms."</p>
+</div>
+</div>
+<div class="space-y-6">
+<h2 class="text-3xl font-manrope font-bold text-white">Record Retention Policy</h2>
+<p class="text-slate-400 font-body leading-relaxed">This patient's records are encrypted and stored in compliance with local privacy regulations. Access is restricted to the primary clinician and authorized medical administrators. Automated backups are performed every 24 hours.</p>
+<div class="flex gap-4">
+<div class="flex items-center gap-2 px-4 py-2 bg-slate-900 border border-white/5 rounded-xl">
+<span class="material-symbols-outlined text-cyan-400">verified_user</span>
+<span class="text-xs font-bold text-slate-300 uppercase tracking-wider">HIPAA Compliant</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-slate-900 border border-white/5 rounded-xl">
+<span class="material-symbols-outlined text-cyan-400">lock</span>
+<span class="text-xs font-bold text-slate-300 uppercase tracking-wider">AES-256 Encrypted</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button - Supressed on this Detail Screen as per instructions -->
+
+  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <script type="module">
+    import { guardaClinica, obtenerNotas, compartirNota, formatearFecha } from '../js/clinica.js'
+    import { mostrarError } from '../js/auth.js'
+
+    await guardaClinica()
+    const params     = new URLSearchParams(window.location.search)
+    const pacienteId = params.get('paciente')
+
+    if (!pacienteId) { location.href = 'ficha_paciente.html'; }
+
+    try {
+      const notas = await obtenerNotas(pacienteId)
+      const contenedor = document.querySelector('main > div > ul, [data-notas], tbody') || document.querySelector('main')
+
+      if (contenedor) {
+        if (!notas.length) { contenedor.innerHTML = '<p class="text-center py-12 text-on-surface-variant">No hay notas clínicas aún.</p>'; }
+        else {
+          contenedor.innerHTML = notas.map(n => `
+            <div class="bg-surface-container-lowest rounded-2xl p-6 mb-4 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex justify-between items-start mb-3">
+                <div>
+                  <p class="font-semibold text-on-surface">${formatearFecha(n.created_at)}</p>
+                  <p class="text-xs text-on-surface-variant">${n.usuarios?.nombre} ${n.usuarios?.apellido || ''} ${n.asistida_por_ia ? '· 🤖 Asistida por IA' : ''}</p>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="editar('${n.id}')" class="px-3 py-1 text-xs bg-secondary-container text-on-secondary-container rounded-full font-semibold">Editar</button>
+                  <button onclick="compartir('${n.id}', ${!n.compartida_con_paciente})" class="px-3 py-1 text-xs ${n.compartida_con_paciente ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-surface-container text-on-surface'} rounded-full font-semibold">
+                    ${n.compartida_con_paciente ? '✓ Compartida' : 'Compartir'}
+                  </button>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3 text-sm">
+                <div><span class="font-semibold text-on-surface-variant">S:</span> <span>${n.subjetivo || '—'}</span></div>
+                <div><span class="font-semibold text-on-surface-variant">O:</span> <span>${n.objetivo || '—'}</span></div>
+                <div><span class="font-semibold text-on-surface-variant">E:</span> <span>${n.evaluacion || '—'}</span></div>
+                <div><span class="font-semibold text-on-surface-variant">P:</span> <span>${n.plan || '—'}</span></div>
+              </div>
+            </div>`).join('')
+        }
+      }
+    } catch(e) { mostrarError(e.message) }
+
+    window.editar     = (id)    => location.href = `editor_soap.html?paciente=${pacienteId}&nota=${id}`
+    window.compartir  = async (id, estado) => {
+      try { await compartirNota(id, estado); location.reload() }
+      catch(e) { mostrarError(e.message) }
+    }
+
+    document.querySelectorAll('button').forEach(b => {
+      if (b.textContent.toLowerCase().includes('nueva nota') || b.textContent.toLowerCase().includes('nueva sesión'))
+        b.addEventListener('click', () => location.href = `editor_soap.html?paciente=${pacienteId}`)
+      if (b.textContent.toLowerCase().includes('volver'))
+        b.addEventListener('click', () => location.href = `ficha_paciente.html?id=${pacienteId}`)
+    })
+  </script>
+</body></html>

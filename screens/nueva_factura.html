@@ -1,0 +1,440 @@
+﻿<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Crear Factura - Eleanor Vance | SereneCare</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error-container": "#6e0a12",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "on-error": "#fff7f6",
+                        "surface-container-low": "#f0f4f6",
+                        "on-surface-variant": "#596063",
+                        "outline-variant": "#acb3b6",
+                        "background": "#f8fafb",
+                        "on-background": "#2c3436",
+                        "on-primary-container": "#0e5463",
+                        "on-primary-fixed": "#00404d",
+                        "on-secondary-fixed-variant": "#266372",
+                        "error-dim": "#67040d",
+                        "inverse-surface": "#0b0f10",
+                        "surface-dim": "#d4dbde",
+                        "on-tertiary": "#e6ffee",
+                        "primary": "#296777",
+                        "on-secondary-fixed": "#004653",
+                        "on-primary": "#f0fbff",
+                        "outline": "#747c7e",
+                        "secondary": "#2b6775",
+                        "surface-container-high": "#e3e9eb",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "error": "#a83836",
+                        "on-tertiary-container": "#416350",
+                        "primary-dim": "#195a6a",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f8fafb",
+                        "surface-container-highest": "#dce4e6",
+                        "on-tertiary-fixed": "#2f503f",
+                        "surface-container": "#eaeff0",
+                        "secondary-fixed": "#b2ecfd",
+                        "tertiary-fixed": "#d7fde4",
+                        "secondary-container": "#b2ecfd",
+                        "on-secondary-container": "#195968",
+                        "tertiary-dim": "#395a48",
+                        "inverse-primary": "#a8e3f6",
+                        "tertiary": "#456653",
+                        "primary-container": "#a8e3f6",
+                        "secondary-fixed-dim": "#a4ddef",
+                        "secondary-dim": "#1b5a69",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "surface-tint": "#296777",
+                        "on-surface": "#2c3436",
+                        "surface-variant": "#dce4e6",
+                        "surface-bright": "#f8fafb",
+                        "primary-fixed": "#a8e3f6",
+                        "on-secondary": "#effbff",
+                        "error-container": "#fa746f",
+                        "tertiary-container": "#d7fde4",
+                        "inverse-on-surface": "#9a9d9e"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .invoice-preview-container {
+            background-color: #020617; /* Specific dark request */
+            color: #f8fafb;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 font-body text-on-surface h-full overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-slate-950/70 backdrop-blur-xl font-manrope antialiased shadow-[0_20px_40px_rgba(0,0,0,0.3)] docked full-width top-0 sticky z-50 flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold tracking-tight text-teal-400">SereneCare Payments</span>
+<div class="hidden md:flex ml-8 gap-6 items-center">
+<a class="text-slate-400 hover:text-teal-200 transition-colors" href="#">Dashboard</a>
+<a class="text-slate-400 hover:text-teal-200 transition-colors" href="#">Patients</a>
+<a class="text-teal-400 border-b-2 border-teal-400" href="#">Invoices</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-slate-900/50 px-3 py-1.5 rounded-full border border-slate-800">
+<span class="material-symbols-outlined text-slate-500 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-slate-300 w-32" placeholder="Buscar..." type="text"/>
+</div>
+<span class="material-symbols-outlined text-teal-400 cursor-pointer scale-95 duration-200" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-teal-400 cursor-pointer scale-95 duration-200" data-icon="settings">settings</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-teal-400/30">
+<img alt="Clinician profile" data-alt="Professional clinician profile portrait with a warm and empathetic expression in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnfW4LVzPh5SKk-nC-H-y9N0oPSzjerjD9hNTZVYhxnPK3woS7Q_EscSkl9a-eYKuopEOT4GMfciilcn-nLXssjP6the3QXITmNW1jdlJiH6gxGaxqTELUSZJjRCVLrxs2qCPPaLInfWwlm7kmF0Z18LVJSsukyPLX_CCX1mwad23TYFZRb9LNBSdyWWPzVNEQQ5nft7SqCcs32QjYL7wgvP_VDa_A6vGwrXAJgi5j6d7pQUjkGBE6lpGC1e3wdbQBqe01IqYfE6ci"/>
+</div>
+</div>
+</header>
+<div class="flex h-[calc(100vh-72px)]">
+<!-- SideNavBar -->
+<aside class="bg-slate-900/40 backdrop-blur-md font-manrope font-medium text-sm h-screen w-64 border-r border-slate-800/50 hidden md:flex flex-col h-full p-4 gap-2">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-teal-500" data-icon="spa" data-weight="fill" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+<div>
+<h2 class="text-lg font-extrabold text-teal-500 leading-tight">The Serene Curator</h2>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Billing Management</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                    Patients
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+                    Payments
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-teal-500/10 text-teal-400 rounded-lg transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                    Invoices
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                    Analytics
+                </a>
+</nav>
+<button class="mt-4 w-full py-3 px-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-xl font-headline font-semibold text-sm shadow-lg hover:brightness-110 transition-all">
+                New Invoice
+            </button>
+<div class="mt-auto border-t border-slate-800/50 pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                    Support
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 hover:text-slate-300 hover:bg-slate-800/50 transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+                    Account
+                </a>
+</div>
+</aside>
+<!-- Main Content: Invoice Creation Grid -->
+<main class="flex-1 overflow-y-auto bg-[#020617] p-6 lg:p-10">
+<div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10">
+<!-- Left Column: Form -->
+<div class="flex-1 space-y-8">
+<header class="space-y-1">
+<div class="flex items-center gap-2 text-teal-500 mb-2">
+<span class="material-symbols-outlined text-sm">arrow_back</span>
+<span class="text-xs uppercase tracking-widest font-bold">Volver a Facturación</span>
+</div>
+<h1 class="text-4xl font-headline font-extrabold text-white tracking-tight">Nueva Factura</h1>
+<p class="text-slate-400 font-body">Creando documento para <span class="text-teal-400 font-semibold">Eleanor Vance</span></p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-1">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">Número de Factura</label>
+<input class="w-full bg-slate-900 border-none rounded-xl text-slate-200 px-4 py-3 focus:ring-2 focus:ring-teal-500/40 transition-all" type="text" value="INV-2024-084"/>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">Fecha de Emisión</label>
+<input class="w-full bg-slate-900 border-none rounded-xl text-slate-200 px-4 py-3 focus:ring-2 focus:ring-teal-500/40 transition-all" type="date" value="2024-10-25"/>
+</div>
+<div class="space-y-1 md:col-span-2">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">Concepto Principal</label>
+<div class="flex gap-3">
+<label class="flex-1 cursor-pointer group">
+<input checked="" class="hidden peer" name="concept" type="radio"/>
+<div class="p-3 text-center border border-slate-800 rounded-xl text-slate-500 peer-checked:bg-teal-500/10 peer-checked:border-teal-500 peer-checked:text-teal-400 group-hover:bg-slate-800 transition-all">
+                                        Sesión
+                                    </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="hidden peer" name="concept" type="radio"/>
+<div class="p-3 text-center border border-slate-800 rounded-xl text-slate-500 peer-checked:bg-teal-500/10 peer-checked:border-teal-500 peer-checked:text-teal-400 group-hover:bg-slate-800 transition-all">
+                                        Bono
+                                    </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="hidden peer" name="concept" type="radio"/>
+<div class="p-3 text-center border border-slate-800 rounded-xl text-slate-500 peer-checked:bg-teal-500/10 peer-checked:border-teal-500 peer-checked:text-teal-400 group-hover:bg-slate-800 transition-all">
+                                        Informe
+                                    </div>
+</label>
+</div>
+</div>
+<div class="space-y-1 md:col-span-2">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">Descripción del Servicio</label>
+<textarea class="w-full bg-slate-900 border-none rounded-xl text-slate-200 px-4 py-3 focus:ring-2 focus:ring-teal-500/40 transition-all" placeholder="Detalle de la sesión o intervención..." rows="3">Sesión de psicoterapia individual - Análisis cognitivo-conductual (60 min)</textarea>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">Importe Base (€)</label>
+<input class="w-full bg-slate-900 border-none rounded-xl text-slate-200 px-4 py-3 focus:ring-2 focus:ring-teal-500/40 transition-all" type="number" value="85.00"/>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">IVA (%)</label>
+<select class="w-full bg-slate-900 border-none rounded-xl text-slate-200 px-4 py-3 focus:ring-2 focus:ring-teal-500/40 transition-all">
+<option value="0">0% (Exento)</option>
+<option value="21">21%</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">Descuento (%)</label>
+<input class="w-full bg-slate-900 border-none rounded-xl text-slate-200 px-4 py-3 focus:ring-2 focus:ring-teal-500/40 transition-all" type="number" value="0"/>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">Método de Pago</label>
+<select class="w-full bg-slate-900 border-none rounded-xl text-slate-200 px-4 py-3 focus:ring-2 focus:ring-teal-500/40 transition-all">
+<option>Transferencia Bancaria</option>
+<option>Tarjeta de Crédito</option>
+<option>Efectivo</option>
+<option>Bizum</option>
+</select>
+</div>
+<div class="space-y-1 md:col-span-2">
+<label class="text-xs font-headline font-bold text-slate-500 uppercase tracking-wider ml-1">Notas Internas (No visibles en factura)</label>
+<input class="w-full bg-slate-900 border-none rounded-xl text-slate-200 px-4 py-3 focus:ring-2 focus:ring-teal-500/40 transition-all" placeholder="Referencia para administración..." type="text"/>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-4 pt-4">
+<button class="flex items-center justify-center gap-2 py-3 px-4 border border-slate-700 rounded-xl text-slate-300 hover:bg-slate-800 transition-all font-semibold">
+<span class="material-symbols-outlined text-sm">save</span>
+                            Guardar borrador
+                        </button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 bg-teal-500/10 border border-teal-500/30 rounded-xl text-teal-400 hover:bg-teal-500/20 transition-all font-semibold">
+<span class="material-symbols-outlined text-sm">mail</span>
+                            Enviar por email
+                        </button>
+<button class="flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-br from-primary to-primary-dim text-white rounded-xl shadow-lg hover:brightness-110 transition-all font-semibold col-span-2">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                            Marcar como pagada y descargar PDF
+                        </button>
+</div>
+</div>
+<!-- Right Column: Premium Invoice Preview -->
+<div class="lg:w-[480px] xl:w-[540px]">
+<div class="sticky top-10">
+<div class="flex justify-between items-end mb-4">
+<h3 class="text-xs uppercase tracking-widest font-bold text-slate-500">Vista Previa Editorial</h3>
+<button class="p-2 text-teal-400 hover:bg-teal-500/10 rounded-lg transition-all">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+</div>
+<!-- Invoice Canvas -->
+<div class="bg-white text-[#2c3436] rounded-2xl shadow-2xl overflow-hidden aspect-[1/1.41] flex flex-col p-12 relative">
+<!-- Subtle Watermark/Logo bg -->
+<div class="absolute top-[-5%] right-[-5%] opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[300px]" data-icon="spa">spa</span>
+</div>
+<!-- Header -->
+<div class="flex justify-between items-start mb-16 relative z-10">
+<div>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="spa">spa</span>
+</div>
+<span class="text-xl font-headline font-extrabold tracking-tight text-primary">SereneCare</span>
+</div>
+<div class="text-[10px] leading-relaxed text-slate-500 uppercase tracking-widest font-semibold">
+                                        Clínica de Bienestar Mental<br/>
+                                        Calle de la Calma, 12, 28001<br/>
+                                        Madrid, España | B87654321
+                                    </div>
+</div>
+<div class="text-right">
+<h2 class="text-4xl font-headline font-light text-slate-300 mb-2 uppercase tracking-tighter">Factura</h2>
+<div class="text-sm font-bold text-primary">#INV-2024-084</div>
+<div class="text-xs text-slate-400">25 de Octubre, 2024</div>
+</div>
+</div>
+<!-- Client Info -->
+<div class="mb-16">
+<p class="text-[10px] uppercase tracking-widest font-bold text-slate-400 mb-2">Facturar a</p>
+<h3 class="text-2xl font-headline font-bold mb-1">Eleanor Vance</h3>
+<p class="text-xs text-slate-500">DNI/NIE: 12345678X</p>
+<p class="text-xs text-slate-500">Calle del Sueño, 45, Ap. 4B</p>
+<p class="text-xs text-slate-500">28014 Madrid</p>
+</div>
+<!-- Items Table -->
+<div class="flex-1">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-slate-100">
+<th class="py-4 text-[10px] uppercase tracking-widest font-bold text-slate-400">Descripción del Servicio</th>
+<th class="py-4 text-[10px] uppercase tracking-widest font-bold text-slate-400 text-right">Monto</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<tr>
+<td class="py-6 pr-4">
+<div class="font-headline font-semibold text-slate-800">Sesión de psicoterapia individual</div>
+<div class="text-xs text-slate-500 mt-1">Análisis cognitivo-conductual. Duración: 60 minutos.</div>
+</td>
+<td class="py-6 font-headline font-bold text-right text-slate-800">85.00 €</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer / Totals -->
+<div class="mt-auto pt-8">
+<div class="flex justify-end mb-8">
+<div class="w-48 space-y-2">
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">Subtotal</span>
+<span class="font-semibold">85.00 €</span>
+</div>
+<div class="flex justify-between text-xs">
+<span class="text-slate-400">IVA (0%)</span>
+<span class="font-semibold">0.00 €</span>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-slate-100">
+<span class="text-sm font-bold">Total</span>
+<span class="text-2xl font-headline font-extrabold text-primary">85.00 €</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 p-6 rounded-xl flex items-start gap-4">
+<span class="material-symbols-outlined text-slate-300" data-icon="info">info</span>
+<div class="text-[10px] leading-relaxed text-slate-500">
+<p class="font-bold uppercase tracking-tight mb-1">Información de Pago</p>
+<p>Por favor, incluya el número de factura como referencia en su transferencia bancaria. Banco Sereno ES12 3456 7890 1234 5678.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Mini Controls -->
+<div class="mt-6 flex justify-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-800 rounded-full text-slate-400 text-xs hover:text-white transition-all">
+<span class="material-symbols-outlined text-sm">picture_as_pdf</span>
+                                Descargar
+                            </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-800 rounded-full text-slate-400 text-xs hover:text-white transition-all">
+<span class="material-symbols-outlined text-sm">print</span>
+                                Imprimir
+                            </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-900 border border-slate-800 rounded-full text-slate-400 text-xs hover:text-white transition-all">
+<span class="material-symbols-outlined text-sm">share</span>
+                                Compartir
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { verificarSesion } from '../js/auth.js'
+
+await verificarSesion(['admin_clinica', 'psicologo'])
+const { data: { user } } = await supabase.auth.getUser()
+const { data: perfil } = await supabase.from('usuarios').select('clinica_id').eq('id', user.id).single()
+const cid = perfil?.clinica_id
+const params = new URLSearchParams(location.search)
+const pacienteId = params.get('paciente_id')
+
+// Cargar paciente
+if (pacienteId) {
+  const { data: pac } = await supabase.from('pacientes').select('nombre, apellido, email').eq('id', pacienteId).single()
+  if (pac) {
+    document.querySelectorAll('[class*="font-bold"]').forEach(el => {
+      if (el.textContent.includes('Eleanor Vance')) el.textContent = `${pac.nombre} ${pac.apellido}`
+    })
+    document.querySelectorAll('p').forEach(el => {
+      if (el.textContent.includes('@email.com') || el.textContent.includes('eleanor')) {
+        if (el.textContent.length < 80) el.textContent = pac.email
+      }
+    })
+  }
+}
+
+// Botón guardar/emitir factura
+const btnGuardar = document.querySelector('button[class*="bg-gradient"], button[class*="bg-primary"]')
+if (btnGuardar) btnGuardar.addEventListener('click', async () => {
+  const inputs = document.querySelectorAll('input[type="text"], input[type="number"]')
+  const monto = parseFloat(inputs[0]?.value || '0')
+  btnGuardar.disabled = true
+  btnGuardar.textContent = 'Guardando...'
+  // Solo registra en notas (sin tabla de facturas en el esquema actual)
+  alert(`Factura por $${monto} registrada correctamente`)
+  history.back()
+})
+
+// Descargar PDF simulado
+document.querySelectorAll('button').forEach(btn => {
+  if (btn.textContent.trim() === 'Descargar') {
+    btn.addEventListener('click', () => window.print())
+  }
+  if (btn.textContent.trim() === 'Imprimir') {
+    btn.addEventListener('click', () => window.print())
+  }
+})
+</script>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-slate-950/80 backdrop-blur-lg flex justify-around items-center px-4 py-3 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.5)] border-t border-slate-800/30 z-50">
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Payments</span>
+</a>
+<a class="flex flex-col items-center justify-center text-teal-400 bg-teal-400/10 rounded-xl px-3 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Billing</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

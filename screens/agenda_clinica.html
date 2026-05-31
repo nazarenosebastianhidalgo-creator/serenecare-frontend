@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Agenda</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .notif-panel { position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+  @keyframes dropIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .notif-panel:not(.hidden) { animation: dropIn 0.2s ease forwards; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .cal-day { min-height: 90px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 8px; cursor: pointer; transition: all 0.2s; }
+  .cal-day:hover { background: rgba(20,184,166,0.05); border-color: rgba(20,184,166,0.2); }
+  .cal-day.today { background: rgba(20,184,166,0.08); border-color: rgba(20,184,166,0.35); }
+  .cal-day.other-month { opacity: 0.3; }
+  .cita-pill { font-size: 10px; padding: 3px 7px; border-radius: 6px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px; margin-top: 3px; cursor: pointer; transition: filter 0.15s, transform 0.1s; }
+  .cita-pill:hover { filter: brightness(1.25); transform: scale(1.03); }
+  .cita-pill .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .cal-day .btn-add { display: none; position: absolute; top: 5px; right: 5px; width: 18px; height: 18px; border-radius: 5px; background: rgba(20,184,166,0.2); border: 1px solid rgba(20,184,166,0.4); color: #2dd4bf; font-size: 13px; line-height: 1; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; }
+  .cal-day:hover .btn-add { display: flex; }
+  .cal-day { position: relative; }
+  .cal-day .day-num { cursor: pointer; display: inline-block; width: 22px; height: 22px; border-radius: 6px; text-align: center; line-height: 22px; transition: background 0.15s; }
+  .cal-day .day-num:hover { background: rgba(20,184,166,0.2); color: #2dd4bf !important; }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .modal-box { background: #0d1b2e; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; width: 100%; max-width: 480px; overflow: hidden; }
+  .field-m { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; padding: 10px 14px; border-radius: 10px; font-size: 13px; width: 100%; transition: border-color 0.2s; }
+  .field-m:focus { outline: none; border-color: rgba(20,184,166,0.5); }
+  .field-m option { background: #0d1b2e; }
+  @keyframes modalIn { from { opacity:0; transform:scale(0.95) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  .modal-box { animation: modalIn 0.25s cubic-bezier(0.16,1,0.3,1) forwards; }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] text-teal-500 font-bold uppercase tracking-widest">Admin Portal</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_admin_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="pacientes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Pacientes</span>
+    </a>
+    <a href="agenda_clinica.html" class="nav-active flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Agenda</span>
+    </a>
+
+    <a href="mensajes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="facturacion.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">receipt_long</span><span>Facturación</span>
+    </a>
+    
+  </nav>
+  <div id="demo-badge" class="hidden mb-3 px-3 py-2 rounded-xl text-center" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Modo Demo</p>
+  </div>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user-card" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">AC</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Admin</p>
+        <p class="text-[10px] text-slate-500">Admin Clínica</p>
+      </div>
+      <span id="chevron-user" class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<main class="pl-64 min-h-screen">
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/20" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(16px);">
+    <div class="flex items-center gap-4">
+      <div>
+        <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Agenda</h2>
+        <p id="mes-label" class="text-slate-500 text-xs"></p>
+      </div>
+      <div class="flex items-center gap-1">
+        <button id="btn-prev" class="p-1.5 rounded-lg hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400 text-lg">chevron_left</span>
+        </button>
+        <button id="btn-next" class="p-1.5 rounded-lg hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+        </button>
+        <button id="btn-hoy" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:bg-white/5 transition-colors">Hoy</button>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <select id="filter-terapeuta" class="text-xs bg-slate-800/60 border border-slate-700/50 rounded-xl px-3 py-2 text-slate-300 focus:outline-none cursor-pointer">
+        <option value="">Todos los terapeutas</option>
+        <option value="Ana Martínez">Ana Martínez</option>
+        <option value="Pedro Sánchez">Pedro Sánchez</option>
+        <option value="Sofía Ruiz">Sofía Ruiz</option>
+        <option value="Isabel López">Isabel López</option>
+      </select>
+      <button id="btn-nueva-cita" onclick="abrirModalNueva()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);">
+        <span class="material-symbols-outlined text-base">add</span>
+        Nueva cita
+      </button>
+      <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
+      <button id="btn-notif" onclick="toggleNotif()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400">notifications</span>
+        <span id="notif-dot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notificaciones dropdown -->
+  <div id="notif-panel" class="notif-panel hidden">
+    <div class="px-5 py-4 border-b border-slate-800/40 flex items-center justify-between">
+      <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
+      <button onclick="marcarLeidas()" class="text-xs text-teal-400 font-bold" style="background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+    </div>
+    <div id="notif-list" class="max-h-72 overflow-y-auto"></div>
+    <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+      <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones â†’</a>
+    </div>
+  </div>
+
+  <div class="p-8 max-w-6xl mx-auto space-y-5">
+
+    <!-- Resumen semana actual -->
+    <div class="grid grid-cols-4 gap-4">
+      <div class="card rounded-2xl p-4 text-center">
+        <p class="text-xs text-slate-500 mb-1">Esta semana</p>
+        <p class="text-2xl font-headline font-bold text-white">34</p>
+        <p class="text-[10px] text-slate-500">citas totales</p>
+      </div>
+      <div class="card rounded-2xl p-4 text-center">
+        <p class="text-xs mb-1" style="color:#4ade80;">Confirmadas</p>
+        <p class="text-2xl font-headline font-bold text-white">28</p>
+        <p class="text-[10px] text-slate-500">82%</p>
+      </div>
+      <div class="card rounded-2xl p-4 text-center">
+        <p class="text-xs mb-1" style="color:#fbbf24;">Pendientes</p>
+        <p class="text-2xl font-headline font-bold text-white">4</p>
+        <p class="text-[10px] text-slate-500">por confirmar</p>
+      </div>
+      <div class="card rounded-2xl p-4 text-center">
+        <p class="text-xs mb-1" style="color:#f87171;">Canceladas</p>
+        <p class="text-2xl font-headline font-bold text-white">2</p>
+        <p class="text-[10px] text-slate-500">esta semana</p>
+      </div>
+    </div>
+
+    <!-- Leyenda de colores -->
+    <div class="flex items-center gap-5 px-1">
+      <span class="text-[10px] text-slate-600 uppercase tracking-widest font-bold">Leyenda:</span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.25);">
+        <span class="material-symbols-outlined" style="font-size:13px;">check_circle</span>Confirmada
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);">
+        <span class="material-symbols-outlined" style="font-size:13px;">schedule</span>Pendiente
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
+        <span class="material-symbols-outlined" style="font-size:13px;">cancel</span>Cancelada
+      </span>
+      <span class="ml-4 text-[10px] text-slate-600 uppercase tracking-widest font-bold">Terapeuta:</span>
+      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
+        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#2dd4bf;"></span>Ana
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
+        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#818cf8;"></span>Pedro
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
+        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#a78bfa;"></span>Sofía
+      </span>
+      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
+        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#fbbf24;"></span>Isabel
+      </span>
+    </div>
+
+    <!-- Calendario -->
+    <div class="card rounded-2xl overflow-hidden">
+      <!-- Días semana header -->
+      <div class="grid grid-cols-7 border-b border-slate-800/40">
+        <div class="py-3 text-center text-[11px] font-bold uppercase tracking-widest text-slate-500">Lun</div>
+        <div class="py-3 text-center text-[11px] font-bold uppercase tracking-widest text-slate-500">Mar</div>
+        <div class="py-3 text-center text-[11px] font-bold uppercase tracking-widest text-slate-500">Mié</div>
+        <div class="py-3 text-center text-[11px] font-bold uppercase tracking-widest text-slate-500">Jue</div>
+        <div class="py-3 text-center text-[11px] font-bold uppercase tracking-widest text-slate-500">Vie</div>
+        <div class="py-3 text-center text-[11px] font-bold uppercase tracking-widest text-slate-500">Sáb</div>
+        <div class="py-3 text-center text-[11px] font-bold uppercase tracking-widest text-slate-500">Dom</div>
+      </div>
+      <!-- Grid días -->
+      <div id="cal-grid" class="grid grid-cols-7 gap-1 p-3"></div>
+    </div>
+
+    <!-- Citas del día seleccionado -->
+    <div class="card rounded-2xl overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-800/30 flex items-center justify-between">
+        <h3 class="font-headline font-bold text-white text-sm">Citas del <span id="selected-day-label">día seleccionado</span></h3>
+        <span id="citas-count" class="text-xs text-slate-500"></span>
+      </div>
+      <div id="citas-list" class="divide-y divide-slate-800/30"></div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ===================== MODAL NUEVA CITA ===================== -->
+<div id="modal-nueva" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="px-6 py-5 border-b border-slate-800/50 flex items-center justify-between">
+      <div>
+        <h3 class="font-headline font-bold text-white text-base">Nueva cita</h3>
+        <p class="text-xs text-slate-500 mt-0.5" id="modal-fecha-label">Selecciona los datos</p>
+      </div>
+      <button onclick="cerrarModal('modal-nueva')" class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors">
+        <span class="material-symbols-outlined text-slate-400 text-lg">close</span>
+      </button>
+    </div>
+    <div class="p-6 space-y-4">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Fecha</label>
+          <input type="date" id="nf-fecha" class="field-m"/>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Hora</label>
+          <select id="nf-hora" class="field-m">
+            <option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option>
+            <option>11:00</option><option>11:30</option><option>12:00</option><option>12:30</option>
+            <option>15:00</option><option>15:30</option><option>16:00</option><option>16:30</option>
+            <option>17:00</option><option>17:30</option><option>18:00</option><option>18:30</option>
+            <option>19:00</option><option>19:30</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Paciente</label>
+        <input type="text" id="nf-paciente" class="field-m" placeholder="Nombre del paciente"/>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Terapeuta</label>
+        <select id="nf-terapeuta" class="field-m">
+          <option value="Ana Martínez">Ana Martínez</option>
+          <option value="Pedro Sánchez">Pedro Sánchez</option>
+          <option value="Sofía Ruiz">Sofía Ruiz</option>
+          <option value="Isabel López">Isabel López</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Tipo de sesión</label>
+        <select id="nf-tipo" class="field-m">
+          <option>Sesión individual</option>
+          <option>Evaluación inicial</option>
+          <option>Seguimiento</option>
+          <option>Terapia cognitiva</option>
+          <option>Terapia familiar</option>
+          <option>Sesión de pareja</option>
+          <option>Sesión de grupo</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Notas (opcional)</label>
+        <textarea id="nf-notas" class="field-m" rows="2" placeholder="Observaciones para esta cita…" style="resize:none;"></textarea>
+      </div>
+    </div>
+    <div class="px-6 pb-6 flex gap-3">
+      <button onclick="cerrarModal('modal-nueva')" class="flex-1 py-3 rounded-xl text-sm font-bold text-slate-400 transition-all hover:bg-white/5" style="border:1px solid rgba(255,255,255,0.08);">
+        Cancelar
+      </button>
+      <button onclick="confirmarNuevaCita()" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.2);color:#2dd4bf;border:1px solid rgba(20,184,166,0.35);">
+        <span class="material-symbols-outlined text-base align-middle mr-1">check</span>
+        Agendar cita
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== MODAL DETALLE CITA ===================== -->
+<div id="modal-detalle" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="px-6 py-5 border-b border-slate-800/50 flex items-center justify-between">
+      <h3 class="font-headline font-bold text-white text-base">Detalle de cita</h3>
+      <button onclick="cerrarModal('modal-detalle')" class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors">
+        <span class="material-symbols-outlined text-slate-400 text-lg">close</span>
+      </button>
+    </div>
+    <div class="p-6">
+      <!-- Header cita -->
+      <div class="flex items-center gap-4 mb-6">
+        <div id="det-avatar" class="w-12 h-12 rounded-2xl flex items-center justify-center text-sm font-bold flex-shrink-0"></div>
+        <div>
+          <p id="det-paciente" class="text-base font-bold text-white font-headline"></p>
+          <p id="det-terapeuta" class="text-sm text-slate-400"></p>
+        </div>
+        <div class="ml-auto text-right">
+          <p id="det-hora" class="text-lg font-bold text-white font-headline"></p>
+          <p id="det-fecha" class="text-xs text-slate-500"></p>
+        </div>
+      </div>
+      <!-- Info -->
+      <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Tipo</p>
+          <p id="det-tipo" class="text-sm font-semibold text-slate-200"></p>
+        </div>
+        <div class="p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Estado</p>
+          <p id="det-estado-badge"></p>
+        </div>
+      </div>
+      <!-- Acciones de estado -->
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Cambiar estado</p>
+      <div class="flex gap-2 mb-2">
+        <button onclick="cambiarEstado('confirmada')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all hover:opacity-90" style="background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.2);">
+          <span class="material-symbols-outlined text-sm align-middle mr-1">check_circle</span>Confirmar
+        </button>
+        <button onclick="cambiarEstado('pendiente')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all hover:opacity-90" style="background:rgba(245,158,11,0.1);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);">
+          <span class="material-symbols-outlined text-sm align-middle mr-1">schedule</span>Pendiente
+        </button>
+        <button onclick="cambiarEstado('cancelada')" class="flex-1 py-2.5 rounded-xl text-xs font-bold transition-all hover:opacity-90" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
+          <span class="material-symbols-outlined text-sm align-middle mr-1">cancel</span>Cancelar
+        </button>
+      </div>
+    </div>
+    <div class="px-6 pb-6 flex gap-3">
+      <button onclick="eliminarCita()" class="py-3 px-4 rounded-xl text-xs font-bold text-red-400 hover:bg-red-500/10 transition-all" style="border:1px solid rgba(239,68,68,0.15);">
+        <span class="material-symbols-outlined text-sm align-middle">delete</span>
+      </button>
+      <button onclick="cerrarModal('modal-detalle')" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);">
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 px-5 py-3 rounded-xl text-sm font-bold text-white opacity-0 transition-opacity pointer-events-none" style="background:rgba(20,184,166,0.9);z-index:200;">OK</div>
+
+<script>
+var NOTIFS = [
+  { icon:'event_busy',  color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',   hora:'Hace 12 min', leida:false },
+  { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz', hora:'Hace 1 h',    leida:false },
+  { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada "” $80',        hora:'Hace 2 h',    leida:false },
+  { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',   hora:'Hace 3 h',    leida:true  },
+  { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5â˜… de Laura Pérez',            hora:'Ayer',        leida:true  },
+]
+var notifOpen = false
+function toggleNotif() {
+  notifOpen = !notifOpen
+  document.getElementById('notif-panel').classList.toggle('hidden', !notifOpen)
+}
+function renderNotifs() {
+  var unread = NOTIFS.filter(function(n){ return !n.leida }).length
+  document.getElementById('notif-dot').style.display = unread ? 'block' : 'none'
+  document.getElementById('notif-list').innerHTML = NOTIFS.map(function(n, i) {
+    return '<div onclick="leerNotif(' + i + ')" class="px-5 py-3.5 flex items-start gap-3 border-b border-slate-800/30 last:border-0 cursor-pointer hover:bg-white/[0.02] transition-colors">' +
+      '<span class="material-symbols-outlined text-base flex-shrink-0 mt-0.5" style="color:' + n.color + ';">' + n.icon + '</span>' +
+      '<div class="flex-1 min-w-0"><p class="text-xs text-slate-200' + (n.leida ? ' opacity-50' : ' font-semibold') + '">' + n.msg + '</p>' +
+      '<p class="text-[10px] text-slate-600 mt-0.5">' + n.hora + '</p></div>' +
+      (!n.leida ? '<span class="w-1.5 h-1.5 rounded-full bg-teal-400 flex-shrink-0 mt-1.5"></span>' : '') +
+    '</div>'
+  }).join('')
+}
+function leerNotif(i) { NOTIFS[i].leida = true; renderNotifs() }
+function marcarLeidas() { NOTIFS.forEach(function(n){ n.leida = true }); renderNotifs() }
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#btn-notif') && !e.target.closest('#notif-panel')) {
+    if (notifOpen) { notifOpen = false; document.getElementById('notif-panel').classList.add('hidden') }
+  }
+})
+
+var TERAPEUTAS_COLORS = {
+  'Ana Martínez':  { bg:'rgba(20,184,166,0.2)',  color:'#2dd4bf' },
+  'Pedro Sánchez': { bg:'rgba(99,102,241,0.2)',  color:'#818cf8' },
+  'Sofía Ruiz':    { bg:'rgba(139,92,246,0.2)', color:'#a78bfa' },
+  'Isabel López':  { bg:'rgba(245,158,11,0.2)', color:'#fbbf24' },
+}
+
+var CITAS_BASE = [
+  { dia:7,  hora:'09:00', paciente:'Laura Pérez',    terapeuta:'Ana Martínez',  tipo:'Sesión individual',   estado:'confirmada' },
+  { dia:7,  hora:'10:30', paciente:'Marcos Ruiz',    terapeuta:'Pedro Sánchez', tipo:'Terapia cognitiva',   estado:'confirmada' },
+  { dia:7,  hora:'12:00', paciente:'Carmen García',  terapeuta:'Ana Martínez',  tipo:'Evaluación inicial',  estado:'pendiente'  },
+  { dia:7,  hora:'16:00', paciente:'Jorge Morales',  terapeuta:'Sofía Ruiz',    tipo:'Seguimiento',         estado:'confirmada' },
+  { dia:7,  hora:'17:30', paciente:'Beatriz Torres', terapeuta:'Pedro Sánchez', tipo:'Sesión individual',   estado:'cancelada'  },
+  { dia:8,  hora:'09:00', paciente:'Elena Vidal',    terapeuta:'Pedro Sánchez', tipo:'Sesión individual',   estado:'confirmada' },
+  { dia:8,  hora:'11:00', paciente:'Roberto Díaz',   terapeuta:'Sofía Ruiz',    tipo:'Seguimiento',         estado:'confirmada' },
+  { dia:8,  hora:'15:00', paciente:'Antonio Blanco', terapeuta:'Isabel López',  tipo:'Terapia familiar',    estado:'pendiente'  },
+  { dia:9,  hora:'10:00', paciente:'Lucía Herrera',  terapeuta:'Ana Martínez',  tipo:'Sesión individual',   estado:'confirmada' },
+  { dia:9,  hora:'12:00', paciente:'Antonio Blanco', terapeuta:'Isabel López',  tipo:'Seguimiento',         estado:'confirmada' },
+  { dia:12, hora:'09:30', paciente:'Patricia Mora',  terapeuta:'Pedro Sánchez', tipo:'Evaluación inicial',  estado:'pendiente'  },
+  { dia:12, hora:'16:00', paciente:'Isabel Castillo',terapeuta:'Ana Martínez',  tipo:'Sesión individual',   estado:'confirmada' },
+  { dia:13, hora:'10:00', paciente:'Jorge Morales',  terapeuta:'Sofía Ruiz',    tipo:'Seguimiento',         estado:'confirmada' },
+  { dia:14, hora:'11:00', paciente:'Laura Pérez',    terapeuta:'Ana Martínez',  tipo:'Sesión individual',   estado:'confirmada' },
+  { dia:15, hora:'09:00', paciente:'Marcos Ruiz',    terapeuta:'Pedro Sánchez', tipo:'Terapia cognitiva',   estado:'confirmada' },
+  { dia:15, hora:'14:00', paciente:'Elena Vidal',    terapeuta:'Pedro Sánchez', tipo:'Seguimiento',         estado:'pendiente'  },
+]
+
+var now = new Date()
+var viewYear  = now.getFullYear()
+var viewMonth = now.getMonth()
+var selectedDay = now.getDate()
+var filterTer = ''
+
+function getCitas(day) {
+  return CITAS_BASE.filter(function(c) {
+    return c.dia === day && (!filterTer || c.terapeuta === filterTer)
+  })
+}
+
+function renderCalendar() {
+  var grid = document.getElementById('cal-grid')
+  var label = document.getElementById('mes-label')
+  var meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+  label.textContent = meses[viewMonth] + ' ' + viewYear
+
+  var firstDay = new Date(viewYear, viewMonth, 1).getDay()
+  var offset = firstDay === 0 ? 6 : firstDay - 1
+  var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
+  var daysInPrev  = new Date(viewYear, viewMonth, 0).getDate()
+  var today = now.getDate()
+  var isCurrentMonth = viewYear === now.getFullYear() && viewMonth === now.getMonth()
+
+  var cells = []
+  for (var i = offset - 1; i >= 0; i--) cells.push({ day: daysInPrev - i, other: true })
+  for (var d = 1; d <= daysInMonth; d++) cells.push({ day: d, other: false })
+  while (cells.length % 7 !== 0) cells.push({ day: cells.length - offset - daysInMonth + 1, other: true })
+
+  grid.innerHTML = cells.map(function(c) {
+    var citas = c.other ? [] : getCitas(c.day)
+    var isToday = isCurrentMonth && !c.other && c.day === today
+    var isSelected = isCurrentMonth && !c.other && c.day === selectedDay
+    var cls = 'cal-day' + (c.other ? ' other-month' : '') + (isToday ? ' today' : '')
+    var border = isSelected ? 'border:2px solid rgba(20,184,166,0.6);' : ''
+    var pills = citas.slice(0,2).map(function(ci, idx) {
+      var tc = TERAPEUTAS_COLORS[ci.terapeuta] || { color:'#94a3b8' }
+      var ec = ESTADO_COLORS[ci.estado] || ESTADO_COLORS.pendiente
+      return '<span class="cita-pill" style="background:' + ec.pillBg + ';color:' + ec.color + ';border:1px solid ' + ec.pillBdr + ';" data-cita-idx="' + getCitaIdx(c.day, idx) + '">' +
+        '<span class="dot" style="background:' + tc.color + ';"></span>' +
+        ci.hora + ' ' + ci.paciente.split(' ')[0] +
+      '</span>'
+    }).join('')
+    var more = citas.length > 2 ? '<span style="font-size:10px;color:#64748b;margin-top:2px;display:block;">+' + (citas.length-2) + ' más</span>' : ''
+    var addBtn = c.other ? '' : '<span class="btn-add" data-add-day="' + c.day + '">+</span>'
+    var dayColor = isToday ? '#2dd4bf' : (c.other ? '#334155' : '#94a3b8')
+    return '<div class="' + cls + '" style="' + border + '" data-day="' + (c.other ? 0 : c.day) + '">' +
+      addBtn +
+      '<span class="day-num" style="font-size:12px;font-weight:700;color:' + dayColor + ';margin-bottom:4px;" data-open-day="' + (c.other ? 0 : c.day) + '">' + c.day + '</span>' +
+      pills + more +
+    '</div>'
+  }).join('')
+
+  // Click en número â†’ abrir modal nueva cita
+  grid.querySelectorAll('[data-open-day]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation()
+      var d = parseInt(this.getAttribute('data-open-day'))
+      if (d > 0) { selectedDay = d; abrirModalNueva(d) }
+    })
+  })
+
+  // Click en "+" button
+  grid.querySelectorAll('[data-add-day]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation()
+      var d = parseInt(this.getAttribute('data-add-day'))
+      if (d > 0) { selectedDay = d; abrirModalNueva(d) }
+    })
+  })
+
+  // Click en pill â†’ abrir detalle
+  grid.querySelectorAll('[data-cita-idx]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation()
+      var idx = parseInt(this.getAttribute('data-cita-idx'))
+      abrirModalDetalle(idx)
+    })
+  })
+
+  // Click en celda â†’ seleccionar día
+  grid.querySelectorAll('[data-day]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var d = parseInt(this.getAttribute('data-day'))
+      if (d > 0) { selectedDay = d; renderCalendar(); renderCitasDia() }
+    })
+  })
+}
+
+function getCitaIdx(dia, posInDay) {
+  var count = 0
+  for (var i = 0; i < CITAS_BASE.length; i++) {
+    if (CITAS_BASE[i].dia === dia) {
+      if (count === posInDay) return i
+      count++
+    }
+  }
+  return -1
+}
+
+var citaDetalleIdx = -1
+
+function buildBadge(ec) {
+  return '<span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full" style="background:' + ec.badgeBg + ';color:' + ec.color + ';border:1px solid ' + ec.badgeBdr + ';">' +
+    '<span class="material-symbols-outlined text-sm" style="font-size:13px;">' + ec.icon + '</span>' +
+    ec.label +
+  '</span>'
+}
+
+/* ---- MODAL NUEVA CITA ---- */
+function abrirModalNueva(dia) {
+  var d = dia || selectedDay
+  var y = viewYear, m = viewMonth
+  var fecha = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0')
+  document.getElementById('nf-fecha').value = fecha
+  document.getElementById('nf-paciente').value = ''
+  document.getElementById('nf-notas').value = ''
+  var meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
+  document.getElementById('modal-fecha-label').textContent = d + ' de ' + meses[m] + ' · ' + y
+  document.getElementById('modal-nueva').classList.remove('hidden')
+}
+
+function confirmarNuevaCita() {
+  var paciente  = document.getElementById('nf-paciente').value.trim()
+  var terapeuta = document.getElementById('nf-terapeuta').value
+  var hora      = document.getElementById('nf-hora').value
+  var tipo      = document.getElementById('nf-tipo').value
+  var fechaStr  = document.getElementById('nf-fecha').value
+  if (!paciente) { document.getElementById('nf-paciente').focus(); return }
+  var parts = fechaStr.split('-')
+  var dia   = parseInt(parts[2])
+  CITAS_BASE.push({ dia: dia, hora: hora, paciente: paciente, terapeuta: terapeuta, tipo: tipo, estado: 'pendiente' })
+  CITAS_BASE.sort(function(a,b){ return a.dia !== b.dia ? a.dia - b.dia : a.hora.localeCompare(b.hora) })
+  cerrarModal('modal-nueva')
+  selectedDay = dia
+  renderCalendar()
+  renderCitasDia()
+  mostrarToast('Cita agendada "” ' + paciente)
+}
+
+/* ---- MODAL DETALLE CITA ---- */
+var ESTADO_COLORS = {
+  confirmada: {
+    pillBg:  'rgba(34,197,94,0.15)',
+    pillBdr: 'rgba(34,197,94,0.3)',
+    color:   '#4ade80',
+    badgeBg: 'rgba(34,197,94,0.12)',
+    badgeBdr:'rgba(34,197,94,0.25)',
+    label:   'Confirmada',
+    icon:    'check_circle'
+  },
+  pendiente: {
+    pillBg:  'rgba(251,191,36,0.13)',
+    pillBdr: 'rgba(251,191,36,0.28)',
+    color:   '#fbbf24',
+    badgeBg: 'rgba(251,191,36,0.1)',
+    badgeBdr:'rgba(251,191,36,0.25)',
+    label:   'Pendiente',
+    icon:    'schedule'
+  },
+  cancelada: {
+    pillBg:  'rgba(239,68,68,0.12)',
+    pillBdr: 'rgba(239,68,68,0.25)',
+    color:   '#f87171',
+    badgeBg: 'rgba(239,68,68,0.1)',
+    badgeBdr:'rgba(239,68,68,0.2)',
+    label:   'Cancelada',
+    icon:    'cancel'
+  },
+}
+
+function abrirModalDetalle(idx) {
+  if (idx < 0 || idx >= CITAS_BASE.length) return
+  citaDetalleIdx = idx
+  var c  = CITAS_BASE[idx]
+  var tc = TERAPEUTAS_COLORS[c.terapeuta] || { bg:'rgba(100,116,139,0.2)', color:'#94a3b8' }
+  var ec = ESTADO_COLORS[c.estado] || ESTADO_COLORS.pendiente
+  var init = c.paciente.split(' ').map(function(n){return n[0]}).slice(0,2).join('')
+  var av = document.getElementById('det-avatar')
+  av.textContent = init
+  av.style.background = tc.bg
+  av.style.color = tc.color
+  document.getElementById('det-paciente').textContent  = c.paciente
+  document.getElementById('det-terapeuta').textContent = c.terapeuta
+  document.getElementById('det-hora').textContent = c.hora
+  var meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']
+  document.getElementById('det-fecha').textContent = c.dia + ' ' + meses[viewMonth] + ' ' + viewYear
+  document.getElementById('det-tipo').textContent = c.tipo
+  document.getElementById('det-estado-badge').innerHTML = buildBadge(ec)
+  document.getElementById('modal-detalle').classList.remove('hidden')
+}
+
+function cambiarEstado(nuevoEstado) {
+  if (citaDetalleIdx < 0) return
+  CITAS_BASE[citaDetalleIdx].estado = nuevoEstado
+  var ec = ESTADO_COLORS[nuevoEstado]
+  document.getElementById('det-estado-badge').innerHTML = buildBadge(ec)
+  renderCalendar()
+  renderCitasDia()
+  mostrarToast('Estado actualizado: ' + ec.label)
+}
+
+function eliminarCita() {
+  if (citaDetalleIdx < 0) return
+  var nombre = CITAS_BASE[citaDetalleIdx].paciente
+  CITAS_BASE.splice(citaDetalleIdx, 1)
+  citaDetalleIdx = -1
+  cerrarModal('modal-detalle')
+  renderCalendar()
+  renderCitasDia()
+  mostrarToast('Cita eliminada "” ' + nombre)
+}
+
+function cerrarModal(id) {
+  document.getElementById(id).classList.add('hidden')
+}
+
+function mostrarToast(msg) {
+  var t = document.getElementById('toast')
+  t.textContent = msg
+  t.style.opacity = '1'
+  setTimeout(function(){ t.style.opacity = '0' }, 2500)
+}
+
+// Cerrar modal al clicar overlay
+document.addEventListener('click', function(e) {
+  if (e.target.id === 'modal-nueva' || e.target.id === 'modal-detalle') {
+    cerrarModal(e.target.id)
+  }
+})
+
+// Cerrar con Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    cerrarModal('modal-nueva')
+    cerrarModal('modal-detalle')
+  }
+})
+
+function renderCitasDia() {
+  var citas = getCitas(selectedDay)
+  var label = document.getElementById('selected-day-label')
+  var count = document.getElementById('citas-count')
+  var list  = document.getElementById('citas-list')
+  label.textContent = selectedDay + '/' + String(viewMonth+1).padStart(2,'0') + '/' + viewYear
+  count.textContent = citas.length + ' citas'
+
+  if (!citas.length) {
+    list.innerHTML = '<div class="py-10 text-center"><span class="material-symbols-outlined text-slate-700 text-3xl block mb-2">event_busy</span><p class="text-slate-500 text-sm">Sin citas este día</p><button onclick="abrirModalNueva()" class="mt-3 text-xs font-bold px-4 py-2 rounded-xl transition-all" style="background:rgba(20,184,166,0.1);color:#2dd4bf;border:1px solid rgba(20,184,166,0.2);">+ Agendar cita</button></div>'
+    return
+  }
+  list.innerHTML = citas.map(function(c, posInDay) {
+    var tc = TERAPEUTAS_COLORS[c.terapeuta] || { bg:'rgba(100,116,139,0.2)', color:'#94a3b8' }
+    var ec = ESTADO_COLORS[c.estado] || ESTADO_COLORS.pendiente
+    var init = c.paciente.split(' ').map(function(n){return n[0]}).slice(0,2).join('')
+    var globalIdx = getCitaIdx(selectedDay, posInDay)
+    return '<div class="px-6 py-4 flex items-center gap-4 cursor-pointer hover:bg-white/[0.02] transition-colors" onclick="abrirModalDetalle(' + globalIdx + ')">' +
+      '<div class="text-center flex-shrink-0 w-12"><p class="text-sm font-bold text-white">' + c.hora + '</p></div>' +
+      '<div class="w-px h-8 bg-slate-800"></div>' +
+      '<div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:' + tc.bg + ';color:' + tc.color + ';">' + init + '</div>' +
+      '<div class="flex-1">' +
+        '<p class="text-sm font-semibold text-slate-200">' + c.paciente + '</p>' +
+        '<p class="text-xs text-slate-500">' + c.terapeuta + ' · ' + c.tipo + '</p>' +
+      '</div>' +
+      buildBadge(ec) +
+      '<span class="material-symbols-outlined text-slate-700 text-base ml-1">chevron_right</span>' +
+    '</div>'
+  }).join('<div class="border-b border-slate-800/30 mx-6"></div>')
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var nombre  = localStorage.getItem('tp_nombre') || 'Admin'
+  var clinica = localStorage.getItem('tp_clinica') || 'Mi Clínica'
+  var demo    = localStorage.getItem('tp_demo') === 'true'
+  var el = document.getElementById('user-nombre'); if(el) el.textContent = nombre
+  var ec = document.getElementById('nombre-clinica'); if(ec) ec.textContent = clinica
+  var av = document.getElementById('user-avatar')
+  if(av) { var p = nombre.split(' '); av.textContent = (p[0]?.[0]||'')+(p[1]?.[0]||'') }
+  if(demo) { var b = document.getElementById('demo-badge'); if(b) b.classList.remove('hidden') }
+  renderNotifs()
+
+  document.getElementById('btn-prev').addEventListener('click', function() {
+    viewMonth--; if(viewMonth < 0){ viewMonth=11; viewYear-- }
+    renderCalendar(); renderCitasDia()
+  })
+  document.getElementById('btn-next').addEventListener('click', function() {
+    viewMonth++; if(viewMonth > 11){ viewMonth=0; viewYear++ }
+    renderCalendar(); renderCitasDia()
+  })
+  document.getElementById('btn-hoy').addEventListener('click', function() {
+    viewYear = now.getFullYear(); viewMonth = now.getMonth(); selectedDay = now.getDate()
+    renderCalendar(); renderCitasDia()
+  })
+  document.getElementById('filter-terapeuta').addEventListener('change', function() {
+    filterTer = this.value; renderCalendar(); renderCitasDia()
+  })
+  document.getElementById('btn-logout').addEventListener('click', function(e) {
+    e.preventDefault()
+    localStorage.removeItem('tp_rol'); localStorage.removeItem('tp_nombre')
+    localStorage.removeItem('tp_clinica_id'); localStorage.removeItem('tp_clinica')
+    localStorage.removeItem('tp_demo')
+    window.location.href = 'demo_clinica.html'
+  })
+
+  renderCalendar()
+  renderCitasDia()
+})
+</script>
+
+<!-- MINI CHAT WIDGET -->
+<div id="cw-panel" style="position:fixed;bottom:160px;right:24px;z-index:9998;width:320px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
+
+  <!-- Vista: lista de conversaciones -->
+  <div id="cw-lista-wrap" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">
+    <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:18px;font-variation-settings:'FILL' 1;">chat</span>
+        <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#f1f5f9;">Mensajes</span>
+        <span id="cw-total-badge" style="background:#f87171;color:#020617;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px;">2</span>
+      </div>
+      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;padding:4px 10px;border-radius:8px;background:rgba(20,184,166,0.1);">Ver todo</a>
+    </div>
+    <div id="cw-conv-list" style="max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+  </div>
+
+  <!-- Vista: chat individual -->
+  <div id="cw-chat-wrap" style="display:none;flex-direction:column;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);height:420px;">
+    <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <button onclick="cwVolverLista()" style="background:none;border:none;cursor:pointer;color:#64748b;display:flex;align-items:center;padding:2px;">
+        <span class="material-symbols-outlined" style="font-size:17px;">arrow_back</span>
+      </button>
+      <span id="cw-chat-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>
+      <span id="cw-chat-title" style="flex:1;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;flex-shrink:0;">Expandir â†—</a>
+    </div>
+    <div id="cw-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+    <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;flex-shrink:0;">
+      <input id="cw-input" type="text" placeholder="Escribe un mensaje..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;border-radius:10px;padding:8px 12px;font-size:12px;outline:none;font-family:'Inter',sans-serif;" onkeydown="if(event.key==='Enter')cwEnviar()"/>
+      <button onclick="cwEnviar()" style="width:32px;height:32px;border-radius:50%;background:rgba(20,184,166,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(20,184,166,0.35);">
+        <span class="material-symbols-outlined" style="font-size:15px;color:#fff;font-variation-settings:'FILL' 1;">send</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<button id="fab-mensajes" onclick="toggleChatWidget()" style="position:fixed;bottom:96px;right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(20,184,166,0.95),rgba(13,140,124,0.95));box-shadow:0 8px 28px rgba(20,184,166,0.4),0 2px 8px rgba(0,0,0,0.4);transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;outline:none;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Mensajes">
+  <span id="cw-fab-icon" class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+  <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
+</button>
+
+<script>
+(function(){
+var CW_DATA = [
+  { id:'c1', nombre:'Ana Martínez', rol:'Terapeuta', dot:'online', unread:1, msgs:[
+    { from:'them', text:'Buenos días, ¿tienes disponibilidad para el paciente García mañana?', time:'10:14' },
+    { from:'me',   text:'Sí, a las 11:00 lo tengo libre.', time:'10:16' },
+    { from:'them', text:'Perfecto, le confirmo la cita.', time:'10:17' },
+  ]},
+  { id:'c2', nombre:'Pedro Sánchez', rol:'Terapeuta', dot:'busy', unread:1, msgs:[
+    { from:'them', text:'Necesito cambiar la cita de Marcos del jueves.', time:'09:30' },
+    { from:'me',   text:'¿A qué hora te viene bien?', time:'09:32' },
+  ]},
+  { id:'c3', nombre:'Lucía Méndez', rol:'Secretaria', dot:'online', unread:0, msgs:[
+    { from:'me',   text:'¿Enviaste los recordatorios de mañana?', time:'Ayer' },
+    { from:'them', text:'Sí, ya los envié todos.', time:'Ayer' },
+  ]},
+  { id:'c4', nombre:'Sofía Ruiz', rol:'Terapeuta', dot:'offline', unread:0, msgs:[
+    { from:'them', text:'Informe de Vidal listo para revisión.', time:'Lun' },
+  ]},
+];
+var CW_DOT_COLOR = { online:'#4ade80', busy:'#fbbf24', offline:'#475569' };
+var cwOpen = false, cwActive = null;
+
+window.toggleChatWidget = function() {
+  cwOpen = !cwOpen;
+  var panel = document.getElementById('cw-panel');
+  if (cwOpen) {
+    panel.style.pointerEvents = 'auto';
+    panel.style.opacity = '1';
+    panel.style.transform = 'translateY(0) scale(1)';
+    document.getElementById('fab-badge').style.display = 'none';
+    document.getElementById('cw-fab-icon').textContent = 'close';
+    cwMostrarLista();
+  } else {
+    panel.style.opacity = '0';
+    panel.style.transform = 'translateY(14px) scale(0.97)';
+    panel.style.pointerEvents = 'none';
+    document.getElementById('cw-fab-icon').textContent = 'chat';
+  }
+};
+
+function cwMostrarLista() {
+  document.getElementById('cw-lista-wrap').style.display = 'block';
+  document.getElementById('cw-chat-wrap').style.display = 'none';
+  var html = CW_DATA.map(function(c) {
+    var last = c.msgs[c.msgs.length - 1];
+    return '<div onclick="cwAbrirConv(\'' + c.id + '\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'">'+
+      '<div style="position:relative;flex-shrink:0;">'+
+        '<div style="width:38px;height:38px;border-radius:50%;background:rgba(20,184,166,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2dd4bf;font-family:Manrope,sans-serif;">' + c.nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('') + '</div>'+
+        '<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:' + CW_DOT_COLOR[c.dot] + ';border:2px solid #0d1b2e;"></span>'+
+      '</div>'+
+      '<div style="flex:1;min-width:0;">'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">'+
+          '<span style="font-family:Manrope,sans-serif;font-weight:700;font-size:12px;color:#e2e8f0;">' + c.nombre + '</span>'+
+          '<span style="font-size:10px;color:#475569;">' + last.time + '</span>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;">'+
+          '<span style="font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;">' + (last.from === 'me' ? 'Tú: ' : '') + last.text + '</span>'+
+          (c.unread ? '<span style="min-width:16px;height:16px;background:#2dd4bf;border-radius:99px;font-size:9px;font-weight:800;color:#020617;display:flex;align-items:center;justify-content:center;padding:0 4px;margin-left:4px;flex-shrink:0;">' + c.unread + '</span>' : '') +
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('cw-conv-list').innerHTML = html;
+}
+
+window.cwAbrirConv = function(id) {
+  cwActive = CW_DATA.find(function(c){ return c.id === id; });
+  if (!cwActive) return;
+  cwActive.unread = 0;
+  document.getElementById('cw-lista-wrap').style.display = 'none';
+  var cw = document.getElementById('cw-chat-wrap');
+  cw.style.display = 'flex'; cw.style.flexDirection = 'column';
+  document.getElementById('cw-chat-title').textContent = cwActive.nombre;
+  document.getElementById('cw-chat-dot').style.background = CW_DOT_COLOR[cwActive.dot];
+  cwRenderMsgs();
+  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 40);
+};
+
+window.cwVolverLista = function() { cwMostrarLista(); };
+
+function cwRenderMsgs() {
+  var html = cwActive.msgs.map(function(m) {
+    var me = m.from === 'me';
+    return '<div style="display:flex;justify-content:' + (me ? 'flex-end' : 'flex-start') + ';animation:cwMsgIn 0.18s ease forwards;">'+
+      '<div style="max-width:80%;padding:8px 11px;border-radius:14px;' + (me ? 'background:rgba(20,184,166,0.18);border:1px solid rgba(20,184,166,0.28);border-bottom-right-radius:4px;' : 'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;') + '">'+
+        '<p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">' + m.text + '</p>'+
+        '<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:' + (me ? 'right' : 'left') + ';">' + m.time + '</p>'+
+      '</div></div>';
+  }).join('');
+  document.getElementById('cw-messages').innerHTML = html;
+}
+
+window.cwEnviar = function() {
+  if (!cwActive) return;
+  var input = document.getElementById('cw-input');
+  var text = (input.value || '').trim();
+  if (!text) return;
+  var t = new Date(); var time = t.getHours() + ':' + String(t.getMinutes()).padStart(2,'0');
+  cwActive.msgs.push({ from:'me', text:text, time:time });
+  input.value = '';
+  cwRenderMsgs();
+  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 30);
+};
+})();
+
+  // Apps overlay
+
+  // Sync apps footer user info
+  (function syncAppsUser() {
+    var nombre = localStorage.getItem('tp_nombre') || 'Admin';
+    var av = document.getElementById('apps-avatar');
+    var nm = document.getElementById('apps-nombre');
+    if (av) av.textContent = nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
+    if (nm) nm.textContent = nombre;
+  })();
+  window.toggleAppsPanel = function() {
+    var o = document.getElementById('apps-overlay');
+    var isHidden = o.style.display === 'none' || o.style.display === '';
+    if (isHidden) {
+      o.style.display = 'flex';
+    } else {
+      o.style.display = 'none';
+    }
+  };
+  window.cerrarApps = function(e) {
+    if (e && e.target !== document.getElementById('apps-overlay')) return;
+    document.getElementById('apps-overlay').style.display = 'none';
+  };
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var o = document.getElementById('apps-overlay');
+      if (o) o.style.display = 'none';
+    }
+  });
+
+  // User card popover
+  var userMenuOpen = false;
+  window.toggleUserMenu = function() {
+    userMenuOpen = !userMenuOpen;
+    document.getElementById('user-menu').classList.toggle('hidden', !userMenuOpen);
+    document.getElementById('chevron-user').textContent = userMenuOpen ? 'expand_more' : 'expand_less';
+  };
+  window.toggleTema = function() {
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    if (esClaro) {
+      localStorage.removeItem('tp_tema');
+      document.documentElement.style.filter = '';
+    } else {
+      localStorage.setItem('tp_tema', 'claro');
+      document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
+    }
+    actualizarLabelTema();
+    userMenuOpen = false;
+    document.getElementById('user-menu').classList.add('hidden');
+    document.getElementById('chevron-user').textContent = 'expand_less';
+  };
+  function actualizarLabelTema() {
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    var icon = document.getElementById('icon-tema');
+    var label = document.getElementById('label-tema');
+    if (icon) icon.textContent = esClaro ? 'light_mode' : 'dark_mode';
+    if (label) label.textContent = esClaro ? 'Modo oscuro' : 'Modo claro';
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu')) {
+      if (userMenuOpen) {
+        userMenuOpen = false;
+        var um = document.getElementById('user-menu');
+        if (um) um.classList.add('hidden');
+        var ch = document.getElementById('chevron-user');
+        if (ch) ch.textContent = 'expand_less';
+      }
+    }
+  });
+  actualizarLabelTema();
+
+</script>
+<style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
+
+<!-- =============== APPS OVERLAY =============== -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:680px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal de administración de clínica</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;transition:all 0.15s;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+
+      <a href="gestion_personal_admin.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(245,158,11,0.1)';this.style.borderColor='rgba(245,158,11,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">badge</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Personal</span>
+      </a>
+
+      <a href="facturacion.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(16,185,129,0.1)';this.style.borderColor='rgba(16,185,129,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.25);">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:22px;font-variation-settings:'FILL' 1;">payments</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Facturación</span>
+      </a>
+
+      <a href="estadisticas_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Estadísticas</span>
+      </a>
+
+      <a href="config_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(248,113,113,0.1)';this.style.borderColor='rgba(248,113,113,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.25);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">settings</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Configuración</span>
+      </a>
+
+      <a href="integraciones_clinica.html" class="app-card" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">cable</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Integraciones</span>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<!-- WhatsApp Widget flotante -->
+<div id="wa-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;">
+  <div id="wa-panel" class="hidden" style="position:absolute;bottom:calc(100% + 12px);right:0;width:300px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <div class="flex items-center justify-between px-4 py-3" style="background:rgba(37,211,102,0.1);border-bottom:1px solid rgba(37,211,102,0.15);">
+      <div class="flex items-center gap-2">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="text-sm font-bold text-white">WhatsApp</span>
+        <span class="text-xs px-1.5 py-0.5 rounded-full font-bold" style="background:rgba(37,211,102,0.2);color:#25d366;">3</span>
+      </div>
+      <button onclick="document.getElementById('wa-panel').classList.add('hidden')" class="p-1 rounded-lg hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-500" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">MP</div>
+        <div class="flex-1 overflow-hidden">
+          <p class="text-sm font-semibold text-white truncate">María Pérez</p>
+          <p class="text-xs text-slate-500 truncate">¿A qué hora es mi cita?</p>
+        </div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0">
+          <span class="text-[10px] text-slate-600">10:45</span>
+          <span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">2</span>
+        </div>
+      </a>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">JL</div>
+        <div class="flex-1 overflow-hidden">
+          <p class="text-sm font-semibold text-white truncate">Juan López</p>
+          <p class="text-xs text-slate-500 truncate">Confirmo asistencia ðŸ‘</p>
+        </div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0">
+          <span class="text-[10px] text-slate-600">09:15</span>
+          <span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">1</span>
+        </div>
+      </a>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">CR</div>
+        <div class="flex-1 overflow-hidden">
+          <p class="text-sm font-semibold text-white truncate">Carmen Ruiz</p>
+          <p class="text-xs text-slate-500 truncate">Necesito cancelar la sesión</p>
+        </div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0">
+          <span class="text-[10px] text-slate-600">Ayer</span>
+        </div>
+      </a>
+    </div>
+    <div class="px-4 py-3" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition-all" style="background:rgba(37,211,102,0.12);color:#25d366;text-decoration:none;border:1px solid rgba(37,211,102,0.2);">
+        <span class="material-symbols-outlined text-base">chat</span>
+        Ver todas las conversaciones
+      </a>
+    </div>
+  </div>
+  <div style="position:relative;">
+    <button onclick="document.getElementById('wa-panel').classList.toggle('hidden')" class="w-14 h-14 rounded-full flex items-center justify-center transition-transform hover:scale-110 active:scale-95" style="background:#25d366;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(37,211,102,0.35);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </button>
+    <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
+  </div>
+</div>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { cerrarSesion } from '../js/auth.js'
+window._cerrarSesion = cerrarSesion
+
+const oldLogout = document.getElementById('btn-logout')
+if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.replaceChild(n, oldLogout) }
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = '../login.html' }
+
+const clinicaId = localStorage.getItem('tp_clinica_id')
+const now = new Date()
+const mesInicio = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-01'
+const mesFin   = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-31'
+
+const { data: citasDB } = await supabase
+  .from('citas')
+  .select('*, pacientes(nombre,apellido), psicologo:psicologo_id(nombre,apellido)')
+  .eq('clinica_id', clinicaId)
+  .gte('fecha', mesInicio).lte('fecha', mesFin)
+  .order('fecha').order('hora_inicio')
+
+if (citasDB && citasDB.length) {
+  window.CITAS_BASE = citasDB.map(function(c) {
+    return {
+      dia: parseInt((c.fecha||'').split('-')[2], 10),
+      hora: (c.hora_inicio||'').slice(0,5),
+      paciente: c.pacientes ? c.pacientes.nombre+' '+c.pacientes.apellido : 'Paciente',
+      terapeuta: c.psicologo ? c.psicologo.nombre+' '+c.psicologo.apellido : 'Terapeuta',
+      tipo: c.tipo||'Sesión individual',
+      estado: c.estado||'pendiente',
+    }
+  })
+  if (typeof window.renderCalendar === 'function') window.renderCalendar()
+  if (typeof window.renderCitasDia === 'function') window.renderCitasDia()
+}
+</script>
+</body></html>

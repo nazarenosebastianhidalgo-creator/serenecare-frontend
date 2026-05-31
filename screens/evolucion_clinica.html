@@ -1,0 +1,691 @@
+﻿<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Evaluaciones de Progreso - Therapeutic Perspective</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;400;600;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary": "#e6ffee",
+                        "surface-container-high": "#e3e9eb",
+                        "tertiary": "#456653",
+                        "on-tertiary-fixed": "#2f503f",
+                        "outline": "#747c7e",
+                        "primary-container": "#a8e3f6",
+                        "inverse-surface": "#0b0f10",
+                        "surface-tint": "#296777",
+                        "error-dim": "#67040d",
+                        "on-secondary-fixed-variant": "#266372",
+                        "on-tertiary-fixed-variant": "#4c6d5a",
+                        "surface-bright": "#f8fafb",
+                        "on-tertiary-container": "#416350",
+                        "on-primary-fixed": "#00404d",
+                        "background": "#f8fafb",
+                        "on-primary": "#f0fbff",
+                        "surface": "#f8fafb",
+                        "primary-dim": "#195a6a",
+                        "on-primary-fixed-variant": "#1d5e6d",
+                        "on-primary-container": "#0e5463",
+                        "on-surface": "#2c3436",
+                        "primary-fixed": "#a8e3f6",
+                        "surface-container-low": "#f0f4f6",
+                        "on-secondary": "#effbff",
+                        "secondary-container": "#b2ecfd",
+                        "primary-fixed-dim": "#9ad5e7",
+                        "secondary": "#2b6775",
+                        "on-surface-variant": "#596063",
+                        "on-secondary-fixed": "#004653",
+                        "error": "#a83836",
+                        "tertiary-dim": "#395a48",
+                        "on-error-container": "#6e0a12",
+                        "secondary-dim": "#1b5a69",
+                        "inverse-primary": "#a8e3f6",
+                        "surface-variant": "#dce4e6",
+                        "surface-container": "#eaeff0",
+                        "on-background": "#2c3436",
+                        "secondary-fixed": "#b2ecfd",
+                        "outline-variant": "#acb3b6",
+                        "tertiary-fixed": "#d7fde4",
+                        "on-error": "#fff7f6",
+                        "surface-container-highest": "#dce4e6",
+                        "surface-dim": "#d4dbde",
+                        "tertiary-fixed-dim": "#c9eed6",
+                        "inverse-on-surface": "#9a9d9e",
+                        "error-container": "#fa746f",
+                        "on-secondary-container": "#195968",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#296777",
+                        "tertiary-container": "#d7fde4",
+                        "secondary-fixed-dim": "#a4ddef"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "display": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .phq9-zone-severe { background: rgba(168, 56, 54, 0.08); }
+        .phq9-zone-mod-severe { background: rgba(168, 56, 54, 0.04); }
+        .phq9-zone-moderate { background: rgba(250, 116, 111, 0.04); }
+        .phq9-zone-mild { background: rgba(178, 236, 253, 0.05); }
+        .phq9-zone-minimal { background: rgba(215, 253, 228, 0.05); }
+    </style>
+</head>
+<body class="bg-[#1a1c1e] text-[#f8fafb] font-body antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full z-40 p-4 h-screen w-64 flex flex-col bg-[#1a1c1e] font-['Manrope'] antialiased">
+<div class="mb-8 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-primary-dim flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-sm" data-icon="clinical_notes">clinical_notes</span>
+</div>
+<span class="text-lg font-bold tracking-tight text-[#f8fafb]">Serene Curator</span>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#acb3b6] hover:text-[#4A90A4] hover:bg-[#2c3436]/50 transition-colors duration-200 rounded-lg" href="dashboard_psicologo.html">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-[#2c3436] text-[#4A90A4] font-semibold rounded-lg shadow-sm" href="pacientes_psicologo.html">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-sm font-medium">Pacientes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#acb3b6] hover:text-[#4A90A4] hover:bg-[#2c3436]/50 transition-colors duration-200 rounded-lg" href="notas_soap.html">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="text-sm font-medium">Notas SOAP</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#acb3b6] hover:text-[#4A90A4] hover:bg-[#2c3436]/50 transition-colors duration-200 rounded-lg" href="mis_estadisticas.html">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="text-sm font-medium">Estadísticas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-[#acb3b6] hover:text-[#4A90A4] hover:bg-[#2c3436]/50 transition-colors duration-200 rounded-lg" href="configuracion_psicologo.html">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm font-medium">Configuración</span>
+</a>
+</nav>
+<div class="mt-auto p-4 bg-[#2c3436]/30 rounded-2xl">
+<button onclick="window.location.href='cuestionario_phq9.html'" class="w-full py-3 px-4 bg-gradient-to-br from-primary to-primary-dim text-[#f0fbff] rounded-xl text-sm font-semibold shadow-lg hover:opacity-90 transition-opacity active:scale-95 transition-transform">
+                Nueva Evaluación
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full h-16 sticky top-0 z-50 bg-[#1a1c1e]/70 backdrop-blur-xl flex justify-between items-center px-8">
+<div class="flex items-center gap-4">
+<span class="text-xl font-black text-[#4A90A4] tracking-tighter uppercase">Therapeutic Perspective</span>
+<div class="h-4 w-px bg-outline-variant/30"></div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg" data-icon="person">person</span>
+<span class="font-medium text-sm text-[#acb3b6]">Elena Rodríguez • ID: 8821</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<input id="search-input" oninput="filtrarTabla(this.value)" class="bg-[#2c3436] border-none rounded-full py-1.5 pl-10 pr-4 text-xs w-64 focus:ring-1 focus:ring-primary-fixed outline-none transition-all placeholder:text-[#596063]" placeholder="Buscar en historial..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#596063] text-sm" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-2">
+  <button onclick="toggleAppsPanel()" style="background:none;border:none;cursor:pointer;padding:8px;border-radius:12px;" class="hover:bg-white/5">
+    <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+  </button>
+  <div style="position:relative;">
+    <button id="btn-notif" onclick="toggleNotif()" style="background:none;border:none;cursor:pointer;padding:8px;border-radius:12px;position:relative;" class="hover:bg-white/5">
+      <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">notifications</span>
+      <span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#a78bfa;"></span>
+    </button>
+    <div id="notif-panel" class="hidden" style="position:absolute;top:calc(100% + 8px);right:0;width:300px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,0.5);z-index:100;overflow:hidden;">
+      <div style="padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <p style="font-family:Manrope,sans-serif;font-size:13px;font-weight:800;color:#f1f5f9;">Notificaciones</p>
+      </div>
+      <div style="padding:8px;">
+        <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:12px;background:rgba(139,92,246,0.06);">
+          <span class="material-symbols-outlined" style="font-size:16px;color:#fbbf24;">pending_actions</span>
+          <div><p style="font-size:12px;font-weight:700;color:#e2e8f0;">3 notas SOAP pendientes</p><p style="font-size:11px;color:#475569;margin-top:2px;">Mateo, Carlos, Sofía</p></div>
+        </div>
+      </div>
+      <div style="padding:8px 16px 12px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
+        <a href="notificaciones_psicologo.html" style="font-size:12px;font-weight:700;color:#a78bfa;text-decoration:none;">Ver todas →</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 max-w-[1400px] mx-auto space-y-8">
+<!-- Breadcrumbs & Time Filter -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="text-3xl font-bold font-display tracking-tight text-[#f8fafb] mb-1">Evaluaciones de Progreso</h1>
+<p class="text-on-surface-variant text-sm">Monitoreo longitudinal de síntomas PHQ-9 y GAD-7</p>
+</div>
+<div class="flex p-1 bg-[#2c3436] rounded-xl">
+<button onclick="setPeriodo('mes',this)" class="periodo-btn px-4 py-2 text-xs font-medium text-[#596063] hover:text-[#acb3b6] transition-colors">Último mes</button>
+<button onclick="setPeriodo('3m',this)" class="periodo-btn px-4 py-2 text-xs font-medium text-on-secondary-container bg-secondary-container rounded-lg shadow-sm">3 meses</button>
+<button onclick="setPeriodo('6m',this)" class="periodo-btn px-4 py-2 text-xs font-medium text-[#596063] hover:text-[#acb3b6] transition-colors">6 meses</button>
+<button onclick="setPeriodo('todo',this)" class="periodo-btn px-4 py-2 text-xs font-medium text-[#596063] hover:text-[#acb3b6] transition-colors">Todo el historial</button>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Main Graphs Area -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<!-- PHQ-9 Card -->
+<div class="bg-[#2c3436]/40 backdrop-blur-md rounded-3xl p-6 relative group border border-[#ffffff]/0 hover:border-[#ffffff]/5 transition-all duration-500">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-lg font-bold font-display text-[#f8fafb]">Evolución PHQ-9</h3>
+<p class="text-xs text-[#acb3b6]">Cuestionario sobre la salud del paciente</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-gradient-to-r from-error to-error-container"></span>
+<span class="text-[10px] uppercase tracking-wider text-[#acb3b6] font-semibold">Puntuación</span>
+</div>
+<div style="position:relative">
+<button onclick="toggleMenu('menu-phq9',event)" class="material-symbols-outlined text-[#acb3b6] hover:text-white" style="cursor:pointer;background:none;border:none;font-size:24px" data-icon="more_vert">more_vert</button>
+<div id="menu-phq9" style="display:none;position:absolute;right:0;top:32px;z-index:50;background:#2c3436;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:1px solid rgba(172,179,182,0.1);width:185px">
+  <button onclick="window.location.href='cuestionario_phq9.html'" style="width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:#f8fafb;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:18px">add_circle</span>Nueva evaluación</button>
+  <button onclick="exportarInforme()" style="width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:#f8fafb;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:18px">download</span>Descargar datos</button>
+  <button onclick="mostrarToast('Compartido con el equipo')" style="width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:#f8fafb;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:18px">share</span>Compartir</button>
+</div>
+</div>
+</div>
+<!-- PHQ-9 Graph Mockup -->
+<div class="relative h-64 w-full flex flex-col">
+<!-- Background Zones -->
+<div class="absolute inset-0 flex flex-col">
+<div class="flex-1 phq9-zone-severe flex items-start px-4 pt-1"><span class="text-[9px] uppercase tracking-tighter text-error/40 font-bold">Grave</span></div>
+<div class="flex-1 phq9-zone-mod-severe flex items-start px-4 pt-1"><span class="text-[9px] uppercase tracking-tighter text-error/30 font-bold">Moderadamente Grave</span></div>
+<div class="flex-1 phq9-zone-moderate flex items-start px-4 pt-1"><span class="text-[9px] uppercase tracking-tighter text-error-container/30 font-bold">Moderado</span></div>
+<div class="flex-1 phq9-zone-mild flex items-start px-4 pt-1"><span class="text-[9px] uppercase tracking-tighter text-primary/30 font-bold">Leve</span></div>
+<div class="flex-1 phq9-zone-minimal flex items-start px-4 pt-1"><span class="text-[9px] uppercase tracking-tighter text-tertiary/30 font-bold">Mínimo</span></div>
+</div>
+<!-- Graph SVG Line (Mock) -->
+<svg class="absolute inset-0 h-full w-full preserve-3d" preserveaspectratio="none" viewbox="0 0 1000 200">
+<path d="M0,40 L200,60 L400,110 L600,130 L800,160 L1000,155" fill="none" stroke="url(#phq-gradient)" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<defs>
+<lineargradient id="phq-gradient" x1="0" x2="1" y1="0" y2="0">
+<stop offset="0%" stop-color="#a83836"></stop>
+<stop offset="30%" stop-color="#fa746f"></stop>
+<stop offset="70%" stop-color="#296777"></stop>
+<stop offset="100%" stop-color="#456653"></stop>
+</lineargradient>
+</defs>
+</svg>
+<!-- Interactive Points -->
+<div class="absolute inset-0 flex justify-between px-[5%] items-end pb-4">
+<div class="group/dot relative" style="margin-bottom: 75%">
+<div class="w-4 h-4 bg-error border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div>
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#1a1c1e] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/dot:opacity-100 transition-opacity whitespace-nowrap">Sesión 1: 19 (Grave)</div>
+</div>
+<div class="group/dot relative" style="margin-bottom: 68%">
+<div class="w-4 h-4 bg-error-container border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div>
+</div>
+<div class="group/dot relative" style="margin-bottom: 45%">
+<div class="w-4 h-4 bg-primary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div>
+</div>
+<div class="group/dot relative" style="margin-bottom: 35%">
+<div class="w-4 h-4 bg-primary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div>
+</div>
+<div class="group/dot relative" style="margin-bottom: 20%">
+<div class="w-4 h-4 bg-tertiary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div>
+</div>
+<div class="group/dot relative" style="margin-bottom: 22%">
+<div class="w-4 h-4 bg-tertiary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- GAD-7 Card -->
+<div class="bg-[#2c3436]/40 backdrop-blur-md rounded-3xl p-6 relative border border-[#ffffff]/0 hover:border-[#ffffff]/5 transition-all duration-500">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-lg font-bold font-display text-[#f8fafb]">Evolución GAD-7</h3>
+<p class="text-xs text-[#acb3b6]">Escala de ansiedad generalizada</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="text-[10px] uppercase tracking-wider text-[#acb3b6] font-semibold">Puntuación</span>
+</div>
+<div style="position:relative">
+<button onclick="toggleMenu('menu-gad7',event)" class="material-symbols-outlined text-[#acb3b6] hover:text-white" style="cursor:pointer;background:none;border:none;font-size:24px" data-icon="more_vert">more_vert</button>
+<div id="menu-gad7" style="display:none;position:absolute;right:0;top:32px;z-index:50;background:#2c3436;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.4);border:1px solid rgba(172,179,182,0.1);width:185px">
+  <button onclick="window.location.href='cuestionario_phq9.html?escala=gad7'" style="width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:#f8fafb;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:18px">add_circle</span>Nueva evaluación</button>
+  <button onclick="exportarInforme()" style="width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:#f8fafb;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:18px">download</span>Descargar datos</button>
+  <button onclick="mostrarToast('Compartido con el equipo')" style="width:100%;text-align:left;padding:10px 14px;background:none;border:none;color:#f8fafb;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px"><span class="material-symbols-outlined" style="font-size:18px">share</span>Compartir</button>
+</div>
+</div>
+</div>
+</div>
+<!-- GAD-7 Graph Mockup -->
+<div class="relative h-64 w-full flex flex-col">
+<div class="absolute inset-0 flex flex-col">
+<div class="flex-1 phq9-zone-severe opacity-40"></div>
+<div class="flex-1 phq9-zone-moderate opacity-40"></div>
+<div class="flex-1 phq9-zone-mild opacity-40"></div>
+<div class="flex-1 phq9-zone-minimal opacity-40"></div>
+</div>
+<svg class="absolute inset-0 h-full w-full" preserveaspectratio="none" viewbox="0 0 1000 200">
+<path d="M0,30 L200,45 L400,60 L600,65 L800,40 L1000,35" fill="none" stroke="#2b6775" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+</svg>
+<div class="absolute inset-0 flex justify-between px-[5%] items-end pb-4">
+<div class="group/dot relative" style="margin-bottom: 80%"><div class="w-4 h-4 bg-secondary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#1a1c1e] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/dot:opacity-100 transition-opacity whitespace-nowrap">15 Jul: 16 (Grave)</div></div>
+<div class="group/dot relative" style="margin-bottom: 72%"><div class="w-4 h-4 bg-secondary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#1a1c1e] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/dot:opacity-100 transition-opacity whitespace-nowrap">02 Ago: 14 (Moderado)</div></div>
+<div class="group/dot relative" style="margin-bottom: 60%"><div class="w-4 h-4 bg-secondary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#1a1c1e] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/dot:opacity-100 transition-opacity whitespace-nowrap">20 Ago: 13 (Moderado)</div></div>
+<div class="group/dot relative" style="margin-bottom: 58%"><div class="w-4 h-4 bg-secondary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#1a1c1e] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/dot:opacity-100 transition-opacity whitespace-nowrap">10 Sep: 13 (Moderado)</div></div>
+<div class="group/dot relative" style="margin-bottom: 70%"><div class="w-4 h-4 bg-secondary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#1a1c1e] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/dot:opacity-100 transition-opacity whitespace-nowrap">28 Sep: 14 (Moderado)</div></div>
+<div class="group/dot relative" style="margin-bottom: 74%"><div class="w-4 h-4 bg-secondary border-2 border-white rounded-full cursor-pointer shadow-lg active:scale-90 transition-transform"></div><div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-[#1a1c1e] text-white text-[10px] py-1 px-2 rounded opacity-0 group-hover/dot:opacity-100 transition-opacity whitespace-nowrap">12 Oct: 12 (Moderado)</div></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Summary Card -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<div class="bg-gradient-to-br from-[#2c3436] to-[#1a1c1e] rounded-3xl p-8 border border-outline-variant/10 shadow-[0_20px_40px_rgba(0,0,0,0.3)] sticky top-24">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="auto_awesome">auto_awesome</span>
+<h2 class="text-xl font-bold font-display">Resumen de progreso</h2>
+</div>
+<div class="space-y-8">
+<!-- PHQ Score Box -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-[#acb3b6]">Actual PHQ-9</span>
+<span class="text-[10px] px-2 py-0.5 bg-tertiary-container text-on-tertiary-container rounded-full font-bold">MEJORÍA</span>
+</div>
+<div class="flex items-baseline gap-4">
+<span class="text-6xl font-black text-white tracking-tighter">07</span>
+<div class="flex flex-col">
+<div class="flex items-center text-tertiary text-sm font-bold">
+<span class="material-symbols-outlined text-sm" data-icon="trending_down">trending_down</span>
+<span>40%</span>
+</div>
+<span class="text-[10px] text-[#596063] uppercase">vs inicio</span>
+</div>
+</div>
+</div>
+<div class="h-px bg-outline-variant/10"></div>
+<!-- GAD Score Box -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-[#acb3b6]">Actual GAD-7</span>
+<span class="text-[10px] px-2 py-0.5 bg-error-container/20 text-error-container rounded-full font-bold">ESTABLE</span>
+</div>
+<div class="flex items-baseline gap-4">
+<span class="text-6xl font-black text-white tracking-tighter">12</span>
+<div class="flex flex-col">
+<div class="flex items-center text-error-container text-sm font-bold">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>8%</span>
+</div>
+<span class="text-[10px] text-[#596063] uppercase">vs inicio</span>
+</div>
+</div>
+</div>
+<!-- AI Insight -->
+<div class="mt-8 p-6 bg-primary-container/10 rounded-2xl border border-primary/20">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="psychology">psychology</span>
+<span class="text-[10px] font-bold tracking-widest uppercase text-primary">Interpretación IA</span>
+</div>
+<p class="text-sm leading-relaxed text-[#f8fafb]/90 italic">
+                                    "El paciente muestra una reducción del 40% en síntomas depresivos desde el inicio del tratamiento. La mejoría es consistente con la introducción de técnicas CBT en sesión 4, aunque los niveles de ansiedad muestran una ligera meseta."
+                                </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Table Section -->
+<div class="col-span-12">
+<div class="bg-[#2c3436]/20 rounded-3xl overflow-hidden">
+<div class="px-8 py-6 flex items-center justify-between">
+<h3 class="text-lg font-bold font-display">Historial Completo</h3>
+<button onclick="exportarInforme()" class="text-sm text-primary font-semibold flex items-center gap-2 hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="file_download">file_download</span>
+                                Exportar Informe
+                            </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-[10px] uppercase tracking-widest text-[#596063] font-bold bg-[#1a1c1e]/40">
+<th class="px-8 py-4">Fecha</th>
+<th class="px-8 py-4">Escala</th>
+<th class="px-8 py-4">Puntuación</th>
+<th class="px-8 py-4">Interpretación</th>
+<th class="px-8 py-4">Completado por</th>
+<th class="px-8 py-4 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody id="tabla-body" class="text-sm divide-y divide-outline-variant/5"></tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Visible on mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-6 pb-4 bg-white/80 dark:bg-[#1a1c1e]/80 backdrop-blur-md h-20 rounded-t-[2rem] shadow-[0_-10px_30px_rgba(44,52,54,0.04)]">
+<a class="flex flex-col items-center justify-center text-[#596063] dark:text-[#acb3b6]" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Manrope'] text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#b2ecfd] dark:bg-[#195968] text-[#195968] dark:text-[#b2ecfd] rounded-2xl px-5 py-2" href="#">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+<span class="font-['Manrope'] text-[10px] font-medium">Measures</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#596063] dark:text-[#acb3b6]" href="#">
+<span class="material-symbols-outlined" data-icon="auto_stories">auto_stories</span>
+<span class="font-['Manrope'] text-[10px] font-medium">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#596063] dark:text-[#acb3b6]" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-['Manrope'] text-[10px] font-medium">Profile</span>
+</a>
+</nav>
+
+  <div id='error-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+  <div id='success-msg' class='hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50'></div>
+<!-- Modal Ver Respuestas -->
+<div id="modal-respuestas" style="display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px)">
+  <div class="bg-[#2c3436] rounded-3xl p-8 w-full max-w-lg mx-4 shadow-2xl border border-outline-variant/10">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h3 id="modal-titulo" class="text-lg font-bold text-[#f8fafb]">PHQ-9 — 12 Oct 2023</h3>
+        <p id="modal-subtitulo" class="text-xs text-[#acb3b6]">Puntuación: 07 · Leve</p>
+      </div>
+      <button onclick="cerrarModal()" class="material-symbols-outlined text-[#acb3b6] hover:text-white">close</button>
+    </div>
+    <div id="modal-preguntas" class="space-y-3 max-h-80 overflow-y-auto pr-1"></div>
+    <div class="mt-6 flex justify-end gap-3">
+      <button onclick="cerrarModal()" class="px-5 py-2 rounded-xl text-sm font-semibold text-[#acb3b6] hover:bg-white/5 transition-all">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var PREGUNTAS_PHQ9 = ['Poco interés o placer en hacer cosas','Se ha sentido decaído o sin esperanzas','Problemas para dormir o duerme demasiado','Se siente cansado o con poca energía','Come poco o come en exceso','Se siente mal consigo mismo','Dificultad para concentrarse','Se mueve o habla tan lento que otros lo notan','Pensamientos de hacerse daño'];
+var PREGUNTAS_GAD7 = ['Se ha sentido nervioso o ansioso','No ha podido dejar de preocuparse','Se ha preocupado demasiado por diferentes cosas','Dificultad para relajarse','Tan inquieto que es difícil permanecer sentado','Se molesta o irrita con facilidad','Ha sentido miedo de que algo terrible pueda pasar'];
+var OPCIONES = ['Para nada (0)','Varios días (1)','Más de la mitad de los días (2)','Casi todos los días (3)'];
+
+var HISTORIAL = [
+  {fecha:'12 Oct 2023', escala:'PHQ-9', score:7,  interp:'Leve',               badge:'tertiary', quien:'Paciente (App)',      respuestas:[1,0,1,1,0,1,1,1,1]},
+  {fecha:'12 Oct 2023', escala:'GAD-7', score:12, interp:'Moderado',           badge:'warning',  quien:'Paciente (App)',      respuestas:[2,2,2,2,1,2,1]},
+  {fecha:'28 Sep 2023', escala:'PHQ-9', score:14, interp:'Moderado',           badge:'warning',  quien:'Psicólogo (Sesión)', respuestas:[2,2,2,1,2,1,1,2,1]},
+  {fecha:'28 Sep 2023', escala:'GAD-7', score:14, interp:'Moderado',           badge:'warning',  quien:'Psicólogo (Sesión)', respuestas:[2,2,2,2,2,2,2]},
+  {fecha:'10 Sep 2023', escala:'PHQ-9', score:11, interp:'Moderado',           badge:'warning',  quien:'Paciente (App)',      respuestas:[2,1,1,2,1,1,1,1,1]},
+  {fecha:'20 Ago 2023', escala:'PHQ-9', score:14, interp:'Moderado',           badge:'warning',  quien:'Psicólogo (Sesión)', respuestas:[2,2,2,2,1,2,1,1,1]},
+  {fecha:'02 Ago 2023', escala:'PHQ-9', score:17, interp:'Mod. Grave',         badge:'error',    quien:'Psicólogo (Sesión)', respuestas:[3,2,2,2,2,2,2,1,1]},
+  {fecha:'15 Jul 2023', escala:'PHQ-9', score:19, interp:'Grave',              badge:'error',    quien:'Psicólogo (Sesión)', respuestas:[3,3,3,2,2,2,2,1,1]}
+];
+
+var BADGE_STYLES = {
+  tertiary: 'background:rgba(69,102,83,0.3);color:#c9eed6',
+  warning:  'background:rgba(250,116,111,0.15);color:#fa746f',
+  error:    'background:rgba(168,56,54,0.3);color:#fa746f'
+};
+
+var periodoActual = '3m';
+
+function historialPorPeriodo(p) {
+  if (p === 'mes') return HISTORIAL.slice(0,2);
+  if (p === '3m')  return HISTORIAL.slice(0,4);
+  if (p === '6m')  return HISTORIAL.slice(0,6);
+  return HISTORIAL;
+}
+
+function scoreStr(s) { return s < 10 ? '0' + s : '' + s; }
+
+function renderTabla(rows) {
+  var tbody = document.getElementById('tabla-body');
+  if (!tbody) return;
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="padding:2.5rem 2rem;text-align:center;color:#596063">Sin registros para este período</td></tr>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var bs = BADGE_STYLES[r.badge] || BADGE_STYLES.warning;
+    html += '<tr style="border-bottom:1px solid rgba(172,179,182,0.08)">' +
+      '<td style="padding:1.5rem 2rem;font-weight:500">' + r.fecha + '</td>' +
+      '<td style="padding:1.5rem 2rem"><span style="padding:2px 8px;background:rgba(255,255,255,0.08);border-radius:4px;font-size:11px;font-weight:600">' + r.escala + '</span></td>' +
+      '<td style="padding:1.5rem 2rem;font-weight:700;font-size:18px">' + scoreStr(r.score) + '</td>' +
+      '<td style="padding:1.5rem 2rem"><span style="padding:3px 12px;border-radius:999px;font-size:11px;font-weight:700;' + bs + '">' + r.interp + '</span></td>' +
+      '<td style="padding:1.5rem 2rem;color:#596063">' + r.quien + '</td>' +
+      '<td style="padding:1.5rem 2rem;text-align:right"><button onclick="verRespuestas(' + i + ')" style="padding:6px 14px;background:rgba(168,227,246,0.12);color:#a8e3f6;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer">Ver respuestas</button></td>' +
+    '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+window.setPeriodo = function(p, btn) {
+  periodoActual = p;
+  document.querySelectorAll('.periodo-btn').forEach(function(b) {
+    b.style.background = '';
+    b.style.color = '#596063';
+    b.style.borderRadius = '';
+    b.style.boxShadow = '';
+  });
+  btn.style.background = '#b2ecfd';
+  btn.style.color = '#195968';
+  btn.style.borderRadius = '8px';
+  btn.style.boxShadow = '0 1px 4px rgba(0,0,0,0.2)';
+  renderTabla(historialPorPeriodo(p));
+};
+
+window.filtrarTabla = function(q) {
+  var q2 = q.toLowerCase();
+  var rows = historialPorPeriodo(periodoActual);
+  renderTabla(q2 ? rows.filter(function(r){ return (r.fecha + r.escala + r.interp + r.quien).toLowerCase().indexOf(q2) !== -1; }) : rows);
+};
+
+window.verRespuestas = function(idx) {
+  var r = historialPorPeriodo(periodoActual)[idx];
+  if (!r) return;
+  document.getElementById('modal-titulo').textContent = r.escala + ' — ' + r.fecha;
+  document.getElementById('modal-subtitulo').textContent = 'Puntuación: ' + scoreStr(r.score) + ' · ' + r.interp;
+  var preguntas = r.escala === 'PHQ-9' ? PREGUNTAS_PHQ9 : PREGUNTAS_GAD7;
+  var html = '';
+  for (var i = 0; i < preguntas.length; i++) {
+    var val = r.respuestas[i] !== undefined ? r.respuestas[i] : 0;
+    var col = val >= 2 ? '#fa746f' : val === 1 ? '#a8e3f6' : '#596063';
+    html += '<div style="display:flex;gap:12px;padding:10px;border-radius:10px;background:rgba(255,255,255,0.04);margin-bottom:6px">' +
+      '<span style="font-size:12px;font-weight:700;color:' + col + ';min-width:16px;padding-top:2px">' + val + '</span>' +
+      '<div><p style="font-size:13px;color:#f8fafb;margin:0">' + preguntas[i] + '</p>' +
+      '<p style="font-size:10px;color:#596063;margin:3px 0 0">' + OPCIONES[val] + '</p></div></div>';
+  }
+  document.getElementById('modal-preguntas').innerHTML = html;
+  document.getElementById('modal-respuestas').style.display = 'flex';
+};
+
+window.cerrarModal = function() {
+  document.getElementById('modal-respuestas').style.display = 'none';
+};
+
+window.exportarInforme = function() {
+  var rows = historialPorPeriodo(periodoActual);
+  var csv = 'Fecha,Escala,Puntuacion,Interpretacion,Completado por\n';
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    csv += r.fecha + ',' + r.escala + ',' + r.score + ',' + r.interp + ',' + r.quien + '\n';
+  }
+  var blob = new Blob([csv], {type:'text/csv'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'evaluaciones_Elena_Rodriguez.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  mostrarToast('Informe exportado');
+};
+
+window.toggleMenu = function(id, ev) {
+  ev.stopPropagation();
+  var el = document.getElementById(id);
+  var visible = el.style.display === 'block';
+  document.querySelectorAll('[id^="menu-"]').forEach(function(m){ m.style.display = 'none'; });
+  el.style.display = visible ? 'none' : 'block';
+};
+
+window.mostrarToast = function(msg) {
+  var t = document.getElementById('success-msg');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  setTimeout(function(){ t.classList.add('hidden'); }, 2500);
+};
+
+document.addEventListener('click', function() {
+  document.querySelectorAll('[id^="menu-"]').forEach(function(m){ m.style.display = 'none'; });
+});
+
+document.getElementById('modal-respuestas').addEventListener('click', function(e) {
+  if (e.target === this) window.cerrarModal();
+});
+
+renderTabla(historialPorPeriodo('3m'));
+
+function toggleAppsPanel() {
+  var o = document.getElementById('apps-overlay');
+  o.style.display = o.style.display === 'flex' ? 'none' : 'flex';
+}
+function cerrarApps(e) {
+  if (!e || e.target === document.getElementById('apps-overlay')) document.getElementById('apps-overlay').style.display = 'none';
+}
+function toggleNotif() { document.getElementById('notif-panel').classList.toggle('hidden'); }
+</script>
+
+<!-- Apps overlay -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:480px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal Clínico</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+      <a href="notas_soap.html" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;" onmouseover="this.style.background='rgba(251,191,36,0.1)';this.style.borderColor='rgba(251,191,36,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;">description</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Notas SOAP</span>
+      </a>
+      <a href="perfil_psicologo.html" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;">account_circle</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mi Perfil</span>
+      </a>
+      <a href="recursos_psicologo.html" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;" onmouseover="this.style.background='rgba(96,165,250,0.1)';this.style.borderColor='rgba(96,165,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.25);">
+          <span class="material-symbols-outlined" style="color:#60a5fa;font-size:22px;">menu_book</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Recursos</span>
+      </a>
+      <a href="mis_estadisticas.html" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;">bar_chart</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Estadísticas</span>
+      </a>
+      <a href="gestion_documentos_ia.html" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;">folder_special</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Docs IA</span>
+      </a>
+      <a href="revisor_conversaciones_ia.html" style="display:flex;flex-direction:column;align-items:center;gap:0.6rem;padding:1.25rem 0.75rem;border-radius:1.25rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;" onmouseover="this.style.background='rgba(239,68,68,0.08)';this.style.borderColor='rgba(239,68,68,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;">mark_chat_unread</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Revisor IA</span>
+      </a>
+    </div>
+    <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div id="apps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#a78bfa;">PS</div>
+        <div>
+          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">Psicólogo</p>
+          <p id="apps-clinica" style="font-size:0.7rem;color:#64748b;">SereneCare</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem;">
+        <button onclick="window._cerrarSesion&&window._cerrarSesion()" title="Cerrar sesión" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#f87171;">
+          <span class="material-symbols-outlined" style="font-size:16px;">logout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { cerrarSesion } from '../js/auth.js'
+window._cerrarSesion = cerrarSesion
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = '../login.html' }
+
+const clinicaId = localStorage.getItem('tp_clinica_id')
+
+// Actualizar paciente si viene por URL param
+const params = new URLSearchParams(window.location.search)
+const pacienteId = params.get('id') || params.get('paciente')
+
+if (pacienteId) {
+  const [{ data: pac }, { data: citas }, { data: notas }] = await Promise.all([
+    supabase.from('pacientes').select('nombre, apellido, motivo_consulta, fecha_nacimiento').eq('id', pacienteId).single(),
+    supabase.from('citas').select('fecha, hora_inicio, estado, tipo').eq('paciente_id', pacienteId).order('fecha'),
+    supabase.from('notas_soap').select('id, subjetivo, objetivo, evaluacion, plan, created_at').eq('paciente_id', pacienteId).order('created_at', { ascending: false }),
+  ])
+
+  if (pac) {
+    const elNombre = document.getElementById('pac-nombre') || document.getElementById('patient-name')
+    if (elNombre) elNombre.textContent = pac.nombre+' '+pac.apellido
+    const elMotivo = document.getElementById('pac-motivo') || document.getElementById('patient-motivo')
+    if (elMotivo) elMotivo.textContent = pac.motivo_consulta||''
+  }
+
+  if (citas) {
+    const elSesiones = document.getElementById('total-sesiones') || document.getElementById('num-sesiones')
+    if (elSesiones) elSesiones.textContent = citas.filter(function(c){ return c.estado==='realizada'||c.estado==='completada' }).length
+  }
+
+  if (notas) {
+    const elNotas = document.getElementById('total-notas') || document.getElementById('num-notas')
+    if (elNotas) elNotas.textContent = notas.length
+  }
+}
+</script>
+</body></html>

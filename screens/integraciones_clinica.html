@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Integraciones</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+  .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .app-card { display:flex; flex-direction:column; align-items:center; gap:0.6rem; padding:1.25rem 0.75rem; border-radius:1.25rem; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); text-decoration:none; transition:all 0.2s; cursor:pointer; }
+  @keyframes dropIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
+      <p class="text-[10px] text-teal-500 font-bold uppercase tracking-widest">Admin Portal</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_admin_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="pacientes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Pacientes</span>
+    </a>
+    <a href="agenda_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Agenda</span>
+    </a>
+    <a href="mensajes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="facturacion.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">receipt_long</span><span>Facturación</span>
+    </a>
+  </nav>
+  <div id="demo-badge" class="hidden mb-3 px-3 py-2 rounded-xl text-center" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Modo Demo</p>
+  </div>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user-card" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">AC</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Admin</p>
+        <p class="text-[10px] text-slate-500">Admin Clínica</p>
+      </div>
+      <span id="chevron-user" class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="pl-64 min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/30" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(16px);">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Integraciones</h2>
+      <p id="fecha-hoy" class="text-slate-500 text-xs capitalize"></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
+      <button id="btn-notif-int" onclick="toggleNotifInt()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400">notifications</span>
+        <span id="notif-dot-int" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notif panel -->
+  <div id="notif-panel-int" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:dropIn 0.2s ease forwards;">
+    <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
+      <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
+      <button class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+    </div>
+    <div class="px-5 py-8 text-center">
+      <p class="text-slate-500 text-sm">No hay notificaciones nuevas</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="px-8 py-10 max-w-5xl">
+
+    <!-- Page header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+      <div>
+        <h1 class="text-3xl font-extrabold font-headline text-white tracking-tight mb-2">Integraciones</h1>
+        <p class="text-slate-400 max-w-lg text-sm leading-relaxed">Conecta tus herramientas favoritas para automatizar el flujo de trabajo de tu clínica y ofrecer una mejor experiencia a tus pacientes.</p>
+      </div>
+      <span class="px-4 py-1.5 rounded-full text-sm font-bold w-fit" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">3 de 6 conectadas</span>
+    </div>
+
+    <!-- Integrations Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- Calendario -->
+      <div class="space-y-6">
+        <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">calendar_today</span> Calendario y Agenda
+        </h2>
+        <!-- Google Calendar -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                <img alt="Google Calendar" class="w-8 h-8" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQ0BaYUAvkgxPX4_xDM1nWv1OdSKwY-8U33sv7sMeZ3XM5MpXCzLjU8sjUXuPYY10uWxBNkc_wgFmfVTLQfUBJ19cgg-y6w3TfnhrCFmoOEI3IB_KT9htKZYdhznOu_8FHDtUH1ZUiWIWwrYk01nqjTcb9_bqySHQ5xVrj2Ga_YHHxWPRGoseb3dtagGWOsYnC4n1EdlhV6mKxaiEPJPMsHZlXlOzN-SGdOxE1Y26zLmeM2ppZ15lneRwiGNZSjjZLiIYDM4l6lnao"/>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">Google Calendar</h3>
+                <p class="text-sm text-slate-400">Sincronización bidireccional de citas.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);">Conectado</span>
+          </div>
+          <div class="p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            <p class="text-xs text-slate-500 mb-1">Cuenta vinculada:</p>
+            <p class="text-sm font-mono" style="color:#2dd4bf;">dr.valencia@serenecare.com</p>
+          </div>
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-[11px] text-slate-500 italic">Ãšltima sincronización: Hace 5 minutos</span>
+            <div class="flex gap-2">
+              <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+              <button class="px-4 py-2 text-sm font-headline font-semibold text-red-400/80 hover:bg-red-400/10 rounded-xl transition-all">Desconectar</button>
+            </div>
+          </div>
+        </div>
+        <!-- iCal / Outlook -->
+        <div class="glass-card p-6 rounded-3xl opacity-50">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center grayscale">
+                <span class="material-symbols-outlined text-slate-500 text-3xl">event_repeat</span>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">iCal / Outlook</h3>
+                <p class="text-sm text-slate-400">Próximamente disponible.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">No disponible</span>
+          </div>
+          <div class="pt-4">
+            <button class="w-full py-2.5 bg-slate-800 text-slate-600 rounded-xl font-headline font-bold cursor-not-allowed" disabled>Conectar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comunicación -->
+      <div class="space-y-6">
+        <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">chat</span> Comunicación
+        </h2>
+        <!-- WhatsApp Business -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(37,211,102,0.1);">
+                <span class="material-symbols-outlined text-3xl" style="color:#25D366;">chat</span>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">WhatsApp Business</h3>
+                <p class="text-sm text-slate-400">Recordatorios automáticos vía WA.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);">Conectado</span>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+              <span class="text-sm text-slate-300">Recordatorios Automáticos</span>
+              <div class="w-10 h-5 rounded-full relative flex items-center px-1 cursor-pointer" style="background:rgba(20,184,166,0.8);">
+                <div class="h-3.5 w-3.5 bg-white rounded-full ml-auto"></div>
+              </div>
+            </div>
+            <div class="p-3 bg-white/5 rounded-xl" style="border-left:2px solid rgba(20,184,166,0.4);">
+              <p class="text-[10px] text-slate-500 mb-1 uppercase font-bold tracking-tighter">Plantilla Activa</p>
+              <p class="text-xs text-slate-300 italic leading-relaxed">"Hola <span style="color:#2dd4bf;">{nombre}</span>, te recordamos tu cita para el <span style="color:#2dd4bf;">{fecha}</span> a las <span style="color:#2dd4bf;">{hora}</span>. Responde CONFIRMAR..."</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-[11px] text-slate-500 italic">Número: +34 612 â€¢â€¢â€¢ â€¢89</span>
+            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+          </div>
+        </div>
+        <!-- Email SendGrid -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(26,130,226,0.1);">
+                <span class="material-symbols-outlined text-3xl" style="color:#1A82E2;">mail</span>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">Email (SendGrid)</h3>
+                <p class="text-sm text-slate-400">Confirmaciones y notas clínicas.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);">Conectado</span>
+          </div>
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-[11px] text-slate-500 italic">Tasa de entrega: 99.8%</span>
+            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagos -->
+      <div class="space-y-6">
+        <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">payments</span> Facturación y Pagos
+        </h2>
+        <!-- Stripe -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(99,91,255,0.1);">
+                <span class="material-symbols-outlined text-3xl" style="color:#635BFF;font-variation-settings:'FILL' 1;">payments</span>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">Stripe</h3>
+                <p class="text-sm text-slate-400">Pasarela de pagos y suscripciones.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);">Conectado</span>
+          </div>
+          <div class="flex gap-3">
+            <button class="flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-widest" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.3);color:#2dd4bf;">Producción</button>
+            <button class="flex-1 py-2 rounded-xl bg-slate-900 text-slate-500 text-xs font-bold uppercase tracking-widest hover:text-slate-300 transition-colors" style="border:1px solid rgba(255,255,255,0.05);">Sandbox</button>
+          </div>
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-[11px] text-slate-500 italic">Ãšltimo cobro: Hoy, 09:41 AM</span>
+            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Videollamada -->
+      <div class="space-y-6">
+        <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">video_call</span> Telemedicina
+        </h2>
+        <!-- Google Meet / Zoom -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-3xl" style="color:#ea4335;">videocam</span>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">Google Meet / Zoom</h3>
+                <p class="text-sm text-slate-400">Generación automática de enlaces de sesión.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">No conectado</span>
+          </div>
+          <div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            <span class="text-sm text-slate-400">Link automático al reservar</span>
+            <div class="w-10 h-5 bg-slate-800 rounded-full relative flex items-center px-1">
+              <div class="h-3.5 w-3.5 bg-slate-600 rounded-full"></div>
+            </div>
+          </div>
+          <div class="pt-2">
+            <button class="w-full py-3 rounded-xl font-headline font-bold transition-all hover:opacity-90 active:scale-[0.98]" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.35);">Conectar Videollamada</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- Apps Overlay -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:680px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal de administración de clínica</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+      <a href="gestion_personal_admin.html" class="app-card" onmouseover="this.style.background='rgba(245,158,11,0.1)';this.style.borderColor='rgba(245,158,11,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">badge</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Personal</span>
+      </a>
+      <a href="facturacion.html" class="app-card" onmouseover="this.style.background='rgba(16,185,129,0.1)';this.style.borderColor='rgba(16,185,129,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.25);">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:22px;font-variation-settings:'FILL' 1;">payments</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Facturación</span>
+      </a>
+      <a href="estadisticas_clinica.html" class="app-card" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Estadísticas</span>
+      </a>
+      <a href="config_clinica.html" class="app-card" onmouseover="this.style.background='rgba(248,113,113,0.1)';this.style.borderColor='rgba(248,113,113,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.25);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">settings</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Configuración</span>
+      </a>
+      <a href="integraciones_clinica.html" class="app-card" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'" style="outline:2px solid rgba(20,184,166,0.3);">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.4);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">cable</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#2dd4bf;text-align:center;font-family:Manrope,sans-serif;">Integraciones</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function init() {
+  var nombre = localStorage.getItem('tp_nombre') || 'Admin';
+  var clinica = localStorage.getItem('tp_clinica') || 'Clínica Sol';
+  var demo = localStorage.getItem('tp_demo') === 'true';
+
+  var nc = document.getElementById('nombre-clinica');
+  if (nc) nc.textContent = clinica;
+  var av = document.getElementById('user-avatar');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
+  var un = document.getElementById('user-nombre');
+  if (un) un.textContent = nombre;
+  if (demo) { var db = document.getElementById('demo-badge'); if (db) db.classList.remove('hidden'); }
+
+  var fh = document.getElementById('fecha-hoy');
+  if (fh) {
+    var d = new Date();
+    fh.textContent = d.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+  }
+
+  document.getElementById('btn-logout').addEventListener('click', function(e) {
+    e.preventDefault(); localStorage.clear(); window.location.href = 'demo_clinica.html';
+  });
+  actualizarLabelTema();
+})();
+
+window.toggleAppsPanel = function() {
+  var o = document.getElementById('apps-overlay');
+  o.style.display = (o.style.display === 'none' || o.style.display === '') ? 'flex' : 'none';
+};
+window.cerrarApps = function(e) {
+  if (e && e.target !== document.getElementById('apps-overlay')) return;
+  document.getElementById('apps-overlay').style.display = 'none';
+};
+window.toggleNotifInt = function() {
+  document.getElementById('notif-panel-int').classList.toggle('hidden');
+};
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('apps-overlay').style.display = 'none';
+    document.getElementById('notif-panel-int').classList.add('hidden');
+  }
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#btn-notif-int') && !e.target.closest('#notif-panel-int')) {
+    var p = document.getElementById('notif-panel-int');
+    if (p) p.classList.add('hidden');
+  }
+  if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu')) {
+    var um = document.getElementById('user-menu');
+    if (um && !um.classList.contains('hidden')) {
+      um.classList.add('hidden');
+      document.getElementById('chevron-user').textContent = 'expand_less';
+    }
+  }
+});
+
+window.toggleUserMenu = function() {
+  var um = document.getElementById('user-menu');
+  var open = um.classList.contains('hidden');
+  um.classList.toggle('hidden', !open);
+  document.getElementById('chevron-user').textContent = open ? 'expand_more' : 'expand_less';
+};
+window.toggleTema = function() {
+  var esClaro = localStorage.getItem('tp_tema') === 'claro';
+  if (esClaro) { localStorage.removeItem('tp_tema'); document.documentElement.style.filter = ''; }
+  else { localStorage.setItem('tp_tema', 'claro'); document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)'; }
+  actualizarLabelTema();
+  document.getElementById('user-menu').classList.add('hidden');
+  document.getElementById('chevron-user').textContent = 'expand_less';
+};
+function actualizarLabelTema() {
+  var esClaro = localStorage.getItem('tp_tema') === 'claro';
+  var icon = document.getElementById('icon-tema');
+  var label = document.getElementById('label-tema');
+  if (icon) icon.textContent = esClaro ? 'light_mode' : 'dark_mode';
+  if (label) label.textContent = esClaro ? 'Modo oscuro' : 'Modo claro';
+}
+</script>
+<!-- WhatsApp Widget flotante -->
+<div id="wa-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;">
+  <div id="wa-panel" class="hidden" style="position:absolute;bottom:calc(100% + 12px);right:0;width:300px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <div class="flex items-center justify-between px-4 py-3" style="background:rgba(37,211,102,0.1);border-bottom:1px solid rgba(37,211,102,0.15);">
+      <div class="flex items-center gap-2">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="text-sm font-bold text-white">WhatsApp</span>
+        <span class="text-xs px-1.5 py-0.5 rounded-full font-bold" style="background:rgba(37,211,102,0.2);color:#25d366;">3</span>
+      </div>
+      <button onclick="document.getElementById('wa-panel').classList.add('hidden')" class="p-1 rounded-lg hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-500" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">MP</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">María Pérez</p><p class="text-xs text-slate-500 truncate">¿A qué hora es mi cita?</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">10:45</span><span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">2</span></div>
+      </a>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">JL</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Juan López</p><p class="text-xs text-slate-500 truncate">Confirmo asistencia ðŸ‘</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">09:15</span><span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">1</span></div>
+      </a>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">CR</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Carmen Ruiz</p><p class="text-xs text-slate-500 truncate">Necesito cancelar la sesión</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">Ayer</span></div>
+      </a>
+    </div>
+    <div class="px-4 py-3" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition-all" style="background:rgba(37,211,102,0.12);color:#25d366;text-decoration:none;border:1px solid rgba(37,211,102,0.2);">
+        <span class="material-symbols-outlined text-base">chat</span>Ver todas las conversaciones
+      </a>
+    </div>
+  </div>
+  <div style="position:relative;">
+    <button onclick="document.getElementById('wa-panel').classList.toggle('hidden')" class="w-14 h-14 rounded-full flex items-center justify-center transition-transform hover:scale-110 active:scale-95" style="background:#25d366;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(37,211,102,0.35);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </button>
+    <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
+  </div>
+</div>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { cerrarSesion } from '../js/auth.js'
+window._cerrarSesion = cerrarSesion
+
+const oldLogout = document.getElementById('btn-logout')
+if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.replaceChild(n, oldLogout) }
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = '../login.html' }
+
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()
+if (usu) {
+  const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = usu.nombre+' '+usu.apellido
+  const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = (usu.nombre[0]||'')+(usu.apellido[0]||'')
+}
+</script>
+</body>
+</html>

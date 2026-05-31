@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Asistente IA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-active { background: rgba(52,211,153,0.12); color: #34d399; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+</style>
+<style>
+/* === MODO DÍA / LIGHT MODE === */
+html.light body{background-color:#f1f5f9;color:#1e293b;}
+html.light .sidebar-dark{background-color:#ffffff!important;border-right-color:#e2e8f0!important;}
+html.light .nav-item{color:#64748b!important;}
+html.light .nav-item:hover{background:#f1f5f9!important;color:#334155!important;}
+html.light .nav-active{background:rgba(5,150,105,0.12)!important;color:#059669!important;}
+html.light .text-white{color:#0f172a!important;}
+html.light .text-slate-100{color:#1e293b!important;}
+html.light .text-slate-200{color:#334155!important;}
+html.light .text-slate-300{color:#475569!important;}
+html.light .text-slate-400{color:#64748b!important;}
+html.light .text-slate-500{color:#94a3b8!important;}
+html.light .text-slate-600{color:#b0bcc8!important;}
+html.light .border-slate-800\/20,html.light .border-slate-800\/30,html.light .border-slate-800\/40,html.light .border-slate-800\/50{border-color:#e2e8f0!important;}
+html.light .hover\:bg-white\/5:hover,html.light .hover\:bg-white\/8:hover{background:rgba(0,0,0,0.04)!important;}
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.2);border:1px solid rgba(52,211,153,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#34d399;font-variation-settings:'FILL' 1;">spa</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Mi Clínica</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#34d399;">Portal Paciente</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="portal_paciente_inicio.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">home</span><span>Inicio</span>
+    </a>
+    <a href="historial_sesiones.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">event_note</span><span>Mis Sesiones</span>
+    </a>
+    <a href="asistente_ia_paciente.html" class="nav-active flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">psychology</span><span>Asistente IA</span>
+    </a>
+    <a href="escalas_paciente.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">assignment</span><span>Mis Escalas</span>
+    </a>
+    <div class="my-2 border-t border-slate-800/50"></div>
+    <a href="perfil_paciente.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">person</span><span>Mi Perfil</span>
+    </a>
+    <a href="preferencias_paciente.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">tune</span><span>Preferencias</span>
+    </a>
+  </nav>
+  <div id="demo-badge" class="hidden mb-3 px-3 py-2 rounded-xl text-center" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+    <p class="text-[10px] text-amber-400 font-bold uppercase tracking-widest">Modo Demo</p>
+  </div>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="window.__toggleTheme()" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;text-align:left;border-bottom:1px solid rgba(255,255,255,0.06);width:100%;">
+        <span id="theme-menu-icon" class="material-symbols-outlined" style="color:#94a3b8;font-size:17px;">light_mode</span>
+        <span id="theme-menu-label" class="text-sm font-semibold" style="color:#94a3b8;">Modo día</span>
+      </button>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button onclick="document.getElementById('user-menu').classList.toggle('hidden')" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(52,211,153,0.2);color:#34d399;">P</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Paciente</p>
+        <p class="text-[10px] text-slate-500">Portal Paciente</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN: layout de chat full height -->
+<div class="pl-64 h-screen flex flex-col">
+
+  <!-- Header del chat -->
+  <header class="h-16 flex items-center justify-between px-8 flex-shrink-0 border-b border-slate-800/30" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(16px);">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,rgba(52,211,153,0.3),rgba(52,211,153,0.1));border:1px solid rgba(52,211,153,0.3);">
+        <span class="material-symbols-outlined" style="color:#34d399;font-variation-settings:'FILL' 1;">psychology</span>
+      </div>
+      <div>
+        <h1 class="font-headline font-bold text-white text-sm">Asistente Terapéutico IA</h1>
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span class="text-[10px] text-slate-400">Listo para escucharte</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="document.getElementById('chat-messages').innerHTML='';iniciarChat()" class="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold transition-all" style="background:rgba(255,255,255,0.04);color:#94a3b8;border:1px solid rgba(255,255,255,0.07);">
+        <span class="material-symbols-outlined text-sm">add_comment</span>
+        Nueva conversación
+      </button>
+      <button onclick="abrirSOS()" style="padding:6px 13px;border-radius:10px;border:1px solid rgba(239,68,68,0.35);background:rgba(239,68,68,0.1);color:#f87171;font-size:0.75rem;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;gap:5px;animation:sosPulse 2s ease-in-out infinite;flex-shrink:0;" title="Ayuda de emergencia"><span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1;">emergency</span>SOS</button>
+      <button onclick="toggleAppsPanel()" title="Módulos" style="padding:7px;border-radius:10px;border:none;background:none;cursor:pointer;color:#94a3b8;transition:background 0.15s;flex-shrink:0;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'"><span class="material-symbols-outlined" style="font-size:22px;display:block;">apps</span></button>
+      <button onclick="toggleNotif()" style="position:relative;padding:7px;border-radius:10px;border:none;background:none;cursor:pointer;color:#94a3b8;transition:background 0.15s;flex-shrink:0;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'"><span class="material-symbols-outlined" style="font-size:22px;display:block;">notifications</span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#f87171;border:2px solid #020617;"></span></button>
+    </div>
+  </header>
+
+  <!-- Área de chat -->
+  <div class="flex flex-1 overflow-hidden">
+
+    <!-- Historial de conversaciones (lateral) -->
+    <aside class="w-64 flex flex-col border-r border-slate-800/30 p-4 overflow-y-auto flex-shrink-0" style="background:#0a1628;">
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Conversaciones</p>
+      <div class="space-y-1">
+        <div class="flex flex-col gap-0.5 p-3 rounded-xl cursor-pointer" style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);">
+          <span class="font-headline font-semibold text-xs" style="color:#34d399;">Asistente Terapéutico IA</span>
+          <span class="text-[10px] text-slate-400">Activa ahora</span>
+        </div>
+        <div class="flex flex-col gap-0.5 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
+          <span class="font-headline font-semibold text-xs text-slate-300">Reflexión Diaria</span>
+          <span class="text-[10px] text-slate-500">Ayer</span>
+        </div>
+        <div class="flex flex-col gap-0.5 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
+          <span class="font-headline font-semibold text-xs text-slate-300">Higiene del Sueño</span>
+          <span class="text-[10px] text-slate-500">Hace 3 días</span>
+        </div>
+        <div class="flex flex-col gap-0.5 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
+          <span class="font-headline font-semibold text-xs text-slate-300">Equilibrio Vida-Trabajo</span>
+          <span class="text-[10px] text-slate-500">12 oct</span>
+        </div>
+      </div>
+      <div class="mt-auto p-3 rounded-xl" style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.1);">
+        <p class="text-[10px] text-slate-400 leading-relaxed">
+          <span class="font-bold block mb-0.5" style="color:#f87171;">Apoyo de Emergencia</span>
+          Si estás en crisis, llama al <strong class="text-white">024</strong> (España) o <strong class="text-white">135</strong> (Argentina).
+        </p>
+      </div>
+    </aside>
+
+    <!-- Chat principal -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <div id="chat-messages" class="flex-1 overflow-y-auto px-8 py-6 space-y-5"></div>
+
+      <!-- Input -->
+      <div class="px-8 pb-6 flex-shrink-0">
+        <div class="flex items-end gap-3 p-3 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+          <textarea id="input-msg" placeholder="Escribe tu reflexión aquí..." rows="1"
+            class="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-500 resize-none focus:outline-none min-h-[36px] max-h-32"
+            style="font-family:'Inter',sans-serif;"></textarea>
+          <button id="btn-enviar" onclick="enviar()"
+            class="p-2.5 rounded-xl flex items-center justify-center transition-all hover:opacity-90 active:scale-95"
+            style="background:linear-gradient(135deg,rgba(52,211,153,0.8),rgba(16,185,129,0.8));">
+            <span class="material-symbols-outlined text-white text-lg">send</span>
+          </button>
+        </div>
+        <p class="text-[10px] text-center text-slate-600 mt-2">La IA puede cometer errores. Para emergencias llama al 024.</p>
+      </div>
+    </div>
+
+    <!-- Panel lateral de recursos -->
+    <aside class="hidden xl:flex flex-col w-64 border-l border-slate-800/30 p-5 gap-5 flex-shrink-0" style="background:rgba(10,22,40,0.5);">
+      <div class="p-4 rounded-2xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="material-symbols-outlined text-base" style="color:#fbbf24;font-variation-settings:'FILL' 1;">lightbulb</span>
+          <h3 class="font-headline font-bold text-white text-sm">Sabiduría Diaria</h3>
+        </div>
+        <p class="text-xs text-slate-400 italic leading-relaxed mb-2">"No tienes que ver toda la escalera, solo da el primer paso."</p>
+        <span class="text-[10px] font-bold uppercase tracking-tighter text-slate-500">— Martin Luther King Jr.</span>
+      </div>
+      <div class="p-4 rounded-2xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+        <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Meta de Enfoque</h4>
+        <div class="flex justify-between text-xs font-bold text-white mb-1.5">
+          <span>Calma</span><span>75%</span>
+        </div>
+        <div class="h-1.5 w-full rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06);">
+          <div class="h-full rounded-full" style="width:75%;background:#34d399;"></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full font-semibold text-sm z-50" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.2);"></div>
+
+<script>
+// Escapa caracteres HTML para prevenir XSS antes de insertar texto en el DOM
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function bubbleIA(texto) {
+  return `<div class="flex gap-3 max-w-2xl">
+    <div class="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center" style="background:rgba(52,211,153,0.15);">
+      <span class="material-symbols-outlined text-sm" style="color:#34d399;">auto_awesome</span>
+    </div>
+    <div>
+      <div class="px-5 py-3 rounded-2xl rounded-tl-none text-sm leading-relaxed text-slate-200" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);">${escHtml(texto)}</div>
+      <span class="text-[10px] text-slate-600 px-1 mt-1 block">Asistente IA</span>
+    </div>
+  </div>`;
+}
+
+function bubbleUsuario(texto) {
+  var initiales = (localStorage.getItem('pac_nombre') || 'P').split(' ').map(function(p){return p[0]||'';}).slice(0,2).join('').toUpperCase() || 'P';
+  return `<div class="flex gap-3 max-w-2xl ml-auto flex-row-reverse">
+    <div class="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold font-headline" style="background:rgba(52,211,153,0.2);color:#34d399;">${escHtml(initiales)}</div>
+    <div>
+      <div class="px-5 py-3 rounded-2xl rounded-tr-none text-sm leading-relaxed text-slate-200" style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);">${escHtml(texto)}</div>
+      <span class="text-[10px] text-slate-600 px-1 mt-1 block text-right">Tú</span>
+    </div>
+  </div>`;
+}
+
+function iniciarChat() {
+  var chatContainer = document.getElementById('chat-messages');
+  chatContainer.innerHTML = bubbleIA('Hola 👋 Soy tu asistente de bienestar. Estoy aquí para acompañarte en cualquier momento. ¿Cómo te sentís hoy?');
+}
+
+(function(){
+  var nombre = localStorage.getItem('pac_nombre') || 'Paciente';
+  var clinica = localStorage.getItem('tp_clinica') || 'Mi Clínica';
+  var initiales = nombre.split(' ').map(function(p){return p[0]||'';}).slice(0,2).join('').toUpperCase() || 'P';
+  document.getElementById('user-nombre').textContent = nombre;
+  document.getElementById('user-avatar').textContent = initiales;
+  document.getElementById('nombre-clinica').textContent = clinica;
+  if (!localStorage.getItem('tp_user_id') || nombre === 'Paciente Demo') {
+    document.getElementById('demo-badge').classList.remove('hidden');
+  }
+  iniciarChat();
+})();
+
+document.getElementById('input-msg').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviar(); }
+});
+</script>
+
+<script type="module">
+  import { guardaPaciente, enviarMensajeAsistente, obtenerHistorialChat } from '../js/paciente.js'
+  import { mostrarError } from '../js/auth.js'
+  import { supabase } from '../js/supabase-client.js'
+
+  const { data: { session } } = await supabase.auth.getSession()
+  const modoDemo = !session
+  if (!modoDemo) await guardaPaciente()
+
+  const chatContainer = document.getElementById('chat-messages')
+  const inputMsg = document.getElementById('input-msg')
+  const btnEnviar = document.getElementById('btn-enviar')
+
+  const historial = obtenerHistorialChat()
+  if (historial.length > 0) {
+    chatContainer.innerHTML = historial.map(m =>
+      m.rol === 'assistant' ? bubbleIA(m.texto) : bubbleUsuario(m.texto)
+    ).join('')
+    chatContainer.scrollTop = chatContainer.scrollHeight
+  }
+
+  window.enviar = async function() {
+    const texto = inputMsg.value.trim()
+    if (!texto) return
+
+    chatContainer.innerHTML += bubbleUsuario(texto)
+    chatContainer.scrollTop = chatContainer.scrollHeight
+    inputMsg.value = ''
+    btnEnviar.disabled = true
+
+    const typingId = 'typing-' + Date.now()
+    chatContainer.innerHTML += `<div id="${typingId}" class="flex justify-start mb-4">
+      <div class="px-4 py-3 rounded-2xl text-sm text-slate-500 italic" style="background:rgba(255,255,255,0.04);">Escribiendo...</div>
+    </div>`
+    chatContainer.scrollTop = chatContainer.scrollHeight
+
+    const respuesta = await enviarMensajeAsistente(texto)
+    document.getElementById(typingId)?.remove()
+    chatContainer.innerHTML += bubbleIA(respuesta.texto)
+    chatContainer.scrollTop = chatContainer.scrollHeight
+    btnEnviar.disabled = false
+  }
+
+  document.querySelectorAll('[data-sugerencia]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      inputMsg.value = btn.textContent.trim()
+      window.enviar()
+    })
+  })
+</script>
+
+<!-- APPS OVERLAY -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.97);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:620px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.1rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Portal Paciente</p>
+        <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">Acceso rápido a tus módulos</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.875rem;">
+      <a href="portal_paciente_inicio.html" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.1rem 0.5rem;border-radius:1.1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='rgba(52,211,153,0.1)';this.style.borderColor='rgba(52,211,153,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'"><div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);"><span class="material-symbols-outlined" style="color:#34d399;font-size:20px;font-variation-settings:'FILL' 1;">home</span></div><span style="font-size:0.65rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Inicio</span></a>
+      <a href="historial_sesiones.html" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.1rem 0.5rem;border-radius:1.1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='rgba(96,165,250,0.1)';this.style.borderColor='rgba(96,165,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'"><div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.25);"><span class="material-symbols-outlined" style="color:#60a5fa;font-size:20px;font-variation-settings:'FILL' 1;">event_note</span></div><span style="font-size:0.65rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mis Sesiones</span></a>
+      <a href="asistente_ia_paciente.html" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.1rem 0.5rem;border-radius:1.1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='rgba(167,139,250,0.1)';this.style.borderColor='rgba(167,139,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'"><div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);"><span class="material-symbols-outlined" style="color:#a78bfa;font-size:20px;font-variation-settings:'FILL' 1;">psychology</span></div><span style="font-size:0.65rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Asistente IA</span></a>
+      <a href="escalas_paciente.html" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.1rem 0.5rem;border-radius:1.1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='rgba(251,146,60,0.1)';this.style.borderColor='rgba(251,146,60,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'"><div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(251,146,60,0.15);border:1px solid rgba(251,146,60,0.25);"><span class="material-symbols-outlined" style="color:#fb923c;font-size:20px;font-variation-settings:'FILL' 1;">assignment</span></div><span style="font-size:0.65rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mis Escalas</span></a>
+      <a href="feedback_sesion.html" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.1rem 0.5rem;border-radius:1.1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='rgba(244,114,182,0.1)';this.style.borderColor='rgba(244,114,182,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'"><div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(244,114,182,0.15);border:1px solid rgba(244,114,182,0.25);"><span class="material-symbols-outlined" style="color:#f472b6;font-size:20px;font-variation-settings:'FILL' 1;">rate_review</span></div><span style="font-size:0.65rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Feedback</span></a>
+      <a href="telemedicina_paciente.html" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;padding:1.1rem 0.5rem;border-radius:1.1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;" onmouseover="this.style.background='rgba(34,211,238,0.1)';this.style.borderColor='rgba(34,211,238,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'"><div style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(34,211,238,0.15);border:1px solid rgba(34,211,238,0.25);"><span class="material-symbols-outlined" style="color:#22d3ee;font-size:20px;font-variation-settings:'FILL' 1;">videocam</span></div><span style="font-size:0.65rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Telemedicina</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div id="notif-panel" style="display:none;position:fixed;top:56px;right:24px;z-index:150;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:1.5rem;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.07);">
+    <p style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:700;color:#f1f5f9;">Notificaciones</p>
+    <button onclick="document.getElementById('notif-panel').style.display='none'" style="background:none;border:none;cursor:pointer;color:#64748b;"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+  </div>
+  <div>
+    <div style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:flex-start;gap:0.75rem;">
+      <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(52,211,153,0.12);"><span class="material-symbols-outlined" style="color:#34d399;font-size:18px;">calendar_today</span></div>
+      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Sesión mañana a las 10:00</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Dra. Marta Rivadavia — Online</p></div>
+      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">1h</span>
+    </div>
+    <div style="padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:0.75rem;">
+      <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(245,158,11,0.12);"><span class="material-symbols-outlined" style="color:#fbbf24;font-size:18px;">assignment</span></div>
+      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Tenés 2 escalas por completar</p></div>
+      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">ayer</span>
+    </div>
+  </div>
+  <div style="padding:0.875rem 1.25rem;border-top:1px solid rgba(255,255,255,0.06);">
+    <button onclick="document.getElementById('notif-panel').style.display='none'" style="width:100%;padding:0.6rem;border-radius:0.75rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:#94a3b8;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Marcar todo como leído</button>
+  </div>
+</div>
+
+<script>
+window.toggleAppsPanel = function() {
+  var o = document.getElementById('apps-overlay');
+  var isHidden = o.style.display === 'none' || o.style.display === '';
+  if (isHidden) { o.style.display = 'flex'; } else { o.style.display = 'none'; }
+};
+window.cerrarApps = function(e) {
+  if (e && e.target !== document.getElementById('apps-overlay')) return;
+  document.getElementById('apps-overlay').style.display = 'none';
+};
+window.toggleNotif = function() {
+  var p = document.getElementById('notif-panel');
+  var isHidden = p.style.display === 'none' || p.style.display === '';
+  if (isHidden) { p.style.display = 'block'; } else { p.style.display = 'none'; }
+};
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    var o = document.getElementById('apps-overlay');
+    if (o) o.style.display = 'none';
+    var p = document.getElementById('notif-panel');
+    if (p) p.style.display = 'none';
+  }
+});
+</script>
+<!-- WIDGET DE MENSAJES -->
+<div id="cw-panel" style="position:fixed;bottom:88px;right:24px;z-index:9998;width:320px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
+  <div id="cw-lista-wrap" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">
+    <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="material-symbols-outlined" style="color:#34d399;font-size:18px;font-variation-settings:'FILL' 1;">chat</span>
+        <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#f1f5f9;">Mensajes</span>
+        <span id="cw-total-badge" style="background:#f87171;color:#020617;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px;">1</span>
+      </div>
+      <a href="asistente_ia_paciente.html" style="font-size:11px;font-weight:700;color:#34d399;text-decoration:none;padding:4px 10px;border-radius:8px;background:rgba(52,211,153,0.1);">Ver todo</a>
+    </div>
+    <div id="cw-conv-list" style="max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+  </div>
+  <div id="cw-chat-wrap" style="display:none;flex-direction:column;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);height:420px;">
+    <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <button onclick="cwVolverLista()" style="background:none;border:none;cursor:pointer;color:#64748b;display:flex;align-items:center;padding:2px;">
+        <span class="material-symbols-outlined" style="font-size:17px;">arrow_back</span>
+      </button>
+      <span id="cw-chat-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>
+      <span id="cw-chat-title" style="flex:1;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+      <a href="asistente_ia_paciente.html" style="font-size:11px;font-weight:700;color:#34d399;text-decoration:none;flex-shrink:0;">Expandir &#x2197;</a>
+    </div>
+    <div id="cw-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+    <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;flex-shrink:0;">
+      <input id="cw-input" type="text" placeholder="Escribe un mensaje..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;border-radius:10px;padding:8px 12px;font-size:12px;outline:none;font-family:'Inter',sans-serif;" onkeydown="if(event.key==='Enter')cwEnviar()"/>
+      <button onclick="cwEnviar()" style="width:32px;height:32px;border-radius:50%;background:rgba(52,211,153,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(52,211,153,0.35);">
+        <span class="material-symbols-outlined" style="font-size:15px;color:#020617;font-variation-settings:'FILL' 1;">send</span>
+      </button>
+    </div>
+  </div>
+</div>
+<button id="fab-mensajes" onclick="toggleChatWidget()" style="position:fixed;bottom:24px;right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(52,211,153,0.95),rgba(16,185,129,0.95));box-shadow:0 8px 28px rgba(52,211,153,0.4),0 2px 8px rgba(0,0,0,0.4);transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;outline:none;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Mensajes">
+  <span id="cw-fab-icon" class="material-symbols-outlined" style="color:#020617;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+  <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">1</span>
+</button>
+<style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
+<script>
+(function(){
+var CW_DATA=[
+  {id:'c1',nombre:'Tu Psicologo',dot:'online',unread:1,msgs:[
+    {from:'them',text:'Como te sentiste despues de nuestra ultima sesion?',time:'10:30'},
+    {from:'me',text:'Mucho mejor, gracias. Pude practicar lo que hablamos.',time:'10:45'}
+  ]},
+  {id:'c2',nombre:'Asistente IA',dot:'online',unread:0,msgs:[
+    {from:'them',text:'Hola, estoy aqui para ayudarte cuando lo necesites.',time:'09:00'},
+    {from:'me',text:'Gracias, lo tendre en cuenta.',time:'09:05'}
+  ]}
+];
+var CW_DOT_COLOR={online:'#4ade80',busy:'#fbbf24',offline:'#475569'};
+var cwOpen=false,cwActive=null;
+window.toggleChatWidget=function(){
+  cwOpen=!cwOpen;
+  var panel=document.getElementById('cw-panel');
+  if(cwOpen){
+    panel.style.pointerEvents='auto';panel.style.opacity='1';panel.style.transform='translateY(0) scale(1)';
+    document.getElementById('fab-badge').style.display='none';
+    document.getElementById('cw-fab-icon').textContent='close';
+    cwMostrarLista();
+  }else{
+    panel.style.opacity='0';panel.style.transform='translateY(14px) scale(0.97)';panel.style.pointerEvents='none';
+    document.getElementById('cw-fab-icon').textContent='chat';
+  }
+};
+function cwMostrarLista(){
+  document.getElementById('cw-lista-wrap').style.display='block';
+  document.getElementById('cw-chat-wrap').style.display='none';
+  var html=CW_DATA.map(function(c){
+    var last=c.msgs[c.msgs.length-1];
+    return '<div onclick="cwAbrirConv(\''+c.id+'\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'">'+
+      '<div style="position:relative;flex-shrink:0;">'+
+        '<div style="width:38px;height:38px;border-radius:50%;background:rgba(52,211,153,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#34d399;font-family:Manrope,sans-serif;">'+c.nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('')+'</div>'+
+        '<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:'+CW_DOT_COLOR[c.dot]+';border:2px solid #0d1b2e;"></span>'+
+      '</div>'+
+      '<div style="flex:1;min-width:0;">'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">'+
+          '<span style="font-family:Manrope,sans-serif;font-weight:700;font-size:12px;color:#e2e8f0;">'+c.nombre+'</span>'+
+          '<span style="font-size:10px;color:#475569;">'+last.time+'</span>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;">'+
+          '<span style="font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;">'+(last.from==='me'?'Tu: ':'')+last.text+'</span>'+
+          (c.unread?'<span style="min-width:16px;height:16px;background:#34d399;border-radius:99px;font-size:9px;font-weight:800;color:#020617;display:flex;align-items:center;justify-content:center;padding:0 4px;margin-left:4px;flex-shrink:0;">'+c.unread+'</span>':'')+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  document.getElementById('cw-conv-list').innerHTML=html;
+}
+window.cwAbrirConv=function(id){
+  cwActive=CW_DATA.find(function(c){return c.id===id;});
+  if(!cwActive)return;
+  cwActive.unread=0;
+  document.getElementById('cw-lista-wrap').style.display='none';
+  var cw=document.getElementById('cw-chat-wrap');
+  cw.style.display='flex';cw.style.flexDirection='column';
+  document.getElementById('cw-chat-title').textContent=cwActive.nombre;
+  document.getElementById('cw-chat-dot').style.background=CW_DOT_COLOR[cwActive.dot];
+  cwRenderMsgs();
+  setTimeout(function(){var m=document.getElementById('cw-messages');m.scrollTop=m.scrollHeight;},40);
+};
+window.cwVolverLista=function(){cwMostrarLista();};
+function cwRenderMsgs(){
+  var html=cwActive.msgs.map(function(m){
+    var me=m.from==='me';
+    return '<div style="display:flex;justify-content:'+(me?'flex-end':'flex-start')+';animation:cwMsgIn 0.18s ease forwards;">'+
+      '<div style="max-width:80%;padding:8px 11px;border-radius:14px;'+(me?'background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);border-bottom-right-radius:4px;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;')+'">'+
+        '<p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">'+m.text+'</p>'+
+        '<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:'+(me?'right':'left')+';">'+m.time+'</p>'+
+      '</div></div>';
+  }).join('');
+  document.getElementById('cw-messages').innerHTML=html;
+}
+window.cwEnviar=function(){
+  if(!cwActive)return;
+  var input=document.getElementById('cw-input');
+  var text=(input.value||'').trim();
+  if(!text)return;
+  var t=new Date();var time=t.getHours()+':'+String(t.getMinutes()).padStart(2,'0');
+  cwActive.msgs.push({from:'me',text:text,time:time});
+  input.value='';cwRenderMsgs();
+  setTimeout(function(){var m=document.getElementById('cw-messages');m.scrollTop=m.scrollHeight;},30);
+};
+})();
+</script>
+<!-- MODAL SOS -->
+<div id="modal-sos" onclick="if(event.target===this)cerrarModal('modal-sos')" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#0d1b2e;border:1px solid rgba(239,68,68,0.3);border-radius:24px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.7);">
+    <div style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05));padding:24px 24px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">
+      <div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:14px;background:rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:center;border:1px solid rgba(239,68,68,0.3);"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">emergency</span></div><div><p style="font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#fef2f2;margin:0;">¿Necesitás ayuda ahora?</p><p style="font-size:0.75rem;color:#94a3b8;margin:0;">Estamos aquí para vos</p></div></div>
+    </div>
+    <div style="padding:20px 24px;display:flex;flex-direction:column;gap:10px;">
+      <a href="telemedicina_paciente.html" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);text-decoration:none;" onmouseover="this.style.background='rgba(52,211,153,0.14)'" onmouseout="this.style.background='rgba(52,211,153,0.08)'"><div style="width:38px;height:38px;border-radius:10px;background:rgba(52,211,153,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-symbols-outlined" style="color:#34d399;font-size:18px;font-variation-settings:'FILL' 1;">videocam</span></div><div><p style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:700;color:#e2e8f0;margin:0 0 2px;">Llamar a mi psicólogo</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Iniciar videollamada de emergencia</p></div></a>
+      <a href="tel:+5408001234" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:rgba(251,146,60,0.08);border:1px solid rgba(251,146,60,0.2);text-decoration:none;" onmouseover="this.style.background='rgba(251,146,60,0.14)'" onmouseout="this.style.background='rgba(251,146,60,0.08)'"><div style="width:38px;height:38px;border-radius:10px;background:rgba(251,146,60,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-symbols-outlined" style="color:#fb923c;font-size:18px;font-variation-settings:'FILL' 1;">call</span></div><div><p style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:700;color:#e2e8f0;margin:0 0 2px;">Línea de crisis</p><p style="font-size:0.72rem;color:#64748b;margin:0;">0800-123-4567 · Atención 24/7</p></div></a>
+      <a href="asistente_ia_paciente.html" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);text-decoration:none;" onmouseover="this.style.background='rgba(167,139,250,0.14)'" onmouseout="this.style.background='rgba(167,139,250,0.08)'"><div style="width:38px;height:38px;border-radius:10px;background:rgba(167,139,250,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-symbols-outlined" style="color:#a78bfa;font-size:18px;font-variation-settings:'FILL' 1;">psychology</span></div><div><p style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:700;color:#e2e8f0;margin:0 0 2px;">Hablar con el Asistente IA</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Apoyo inmediato disponible ahora</p></div></a>
+    </div>
+    <div style="padding:0 24px 20px;"><button onclick="cerrarModal('modal-sos')" style="width:100%;padding:11px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#64748b;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Estoy bien, cerrar</button></div>
+  </div>
+</div>
+<style>@keyframes sosPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}60%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}</style>
+<script>window.abrirSOS=function(){var m=document.getElementById('modal-sos');m.style.display='flex';};window.cerrarModal=window.cerrarModal||function(id){document.getElementById(id).style.display='none';};</script>
+<script>
+/* === SISTEMA DE TEMAS SereneCare === */
+window.__setTheme=function(m){
+  var L=m==='light';
+  document.documentElement.classList.toggle('light',L);
+  var h=document.querySelector('header');
+  if(h){h.style.background=L?'rgba(241,245,249,0.92)':'rgba(2,6,23,0.85)';h.style.borderBottomColor=L?'#e2e8f0':'rgba(255,255,255,0.06)';}
+  var d=document.querySelector('div[style*="left:256px"]');
+  if(d){d.style.background=L?'rgba(241,245,249,0.92)':'rgba(2,6,23,0.9)';d.style.borderBottomColor=L?'#e2e8f0':'rgba(255,255,255,0.06)';}
+  var um=document.getElementById('user-menu');
+  if(um){um.style.background=L?'#ffffff':'#0d1b2e';um.style.borderColor=L?'#e2e8f0':'rgba(255,255,255,0.12)';}
+  var np=document.getElementById('notif-panel');
+  if(np){np.style.background=L?'#ffffff':'#0d1b2e';np.style.borderColor=L?'#e2e8f0':'rgba(255,255,255,0.12)';}
+  var ap=document.getElementById('apps-panel');
+  if(ap){ap.style.background=L?'#ffffff':'#0d1b2e';ap.style.borderColor=L?'#e2e8f0':'rgba(255,255,255,0.12)';}
+  document.querySelectorAll('[style*="border:2px solid #020617"]').forEach(function(el){el.style.borderColor=L?'#f1f5f9':'#020617';});
+  var ti=document.getElementById('theme-menu-icon');
+  var tl=document.getElementById('theme-menu-label');
+  if(ti)ti.textContent=L?'dark_mode':'light_mode';
+  if(tl)tl.textContent=L?'Modo noche':'Modo día';
+  localStorage.setItem('sc-theme',m);
+};
+window.__toggleTheme=function(){window.__setTheme(document.documentElement.classList.contains('light')?'dark':'light');};
+(function(){var s=localStorage.getItem('sc-theme')||'dark';if(s==='light')window.__setTheme('light');})();
+</script>
+</body>
+</html>
