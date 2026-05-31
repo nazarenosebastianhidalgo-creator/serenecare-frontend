@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Crear cuenta | SereneCare</title>
+<title>Acceso Beta — SereneCare</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -13,28 +13,32 @@
   .font-headline { font-family: 'Manrope', sans-serif; }
 
   .field-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #e2e8f0; font-size: 14px; padding: 12px 16px; width: 100%; outline: none; transition: border-color 0.2s; color-scheme: dark; font-family: 'Inter', sans-serif; }
-  .field-input:focus { border-color: rgba(99,102,241,0.5); }
+  .field-input:focus { border-color: rgba(41,103,119,0.6); }
+  .field-input.error { border-color: rgba(248,113,113,0.5); }
+  .field-input.success { border-color: rgba(52,211,153,0.5); }
   .field-input::placeholder { color: #475569; }
-  select.field-input option { background: #0d1b2e; }
+
   .field-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
 
-  /* Plan cards */
-  .plan-card { border-radius: 18px; border: 2px solid rgba(255,255,255,0.07); background: rgba(255,255,255,0.02); padding: 22px 20px; cursor: pointer; transition: all 0.2s; position: relative; }
-  .plan-card:hover { border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.04); }
-  .plan-card.selected { border-color: rgba(99,102,241,0.6); background: rgba(99,102,241,0.08); }
-  .plan-card.popular { border-color: rgba(99,102,241,0.3); }
+  .badge-beta { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; background: rgba(41,103,119,0.15); border: 1px solid rgba(41,103,119,0.35); color: #5eead4; }
+  .plazas-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+  .plazas-fill { height: 100%; background: linear-gradient(90deg,#296777,#5eead4); border-radius: 99px; transition: width 0.5s ease; }
 
-  /* Feature list */
-  .feat { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
-  .feat .material-symbols-outlined { font-size: 14px; color: #6366f1; flex-shrink: 0; }
+  .feat { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+  .feat .material-symbols-outlined { font-size: 16px; color: #5eead4; flex-shrink: 0; }
 
-  .error-msg { color: #f87171; font-size: 12px; font-weight: 600; margin-top: 4px; display: none; }
+  .btn-primary { background: linear-gradient(135deg,#296777,#195a6a); color: white; border: none; cursor: pointer; font-family: 'Manrope', sans-serif; font-weight: 700; transition: all 0.2s; }
+  .btn-primary:hover { brightness: 1.1; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(41,103,119,0.3); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-  body::before { content: ''; position: fixed; top: -150px; left: -150px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%); pointer-events: none; }
-  body::after { content: ''; position: fixed; bottom: -150px; right: -150px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%); pointer-events: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spin { animation: spin 1s linear infinite; display: inline-block; }
+
+  body::before { content: ''; position: fixed; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(41,103,119,0.08) 0%, transparent 70%); pointer-events: none; }
+  body::after { content: ''; position: fixed; bottom: -100px; left: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(41,103,119,0.05) 0%, transparent 70%); pointer-events: none; }
 
   ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
 </style>
 </head>
@@ -42,107 +46,68 @@
 
 <div class="min-h-screen flex flex-col lg:flex-row">
 
-  <!-- ═══════ COLUMNA IZQUIERDA — Planes ═══════ -->
+  <!-- ═══════ COLUMNA IZQUIERDA — Info Beta ═══════ -->
   <div class="lg:w-[52%] p-8 lg:p-14 flex flex-col justify-between lg:min-h-screen lg:sticky lg:top-0">
-
-    <!-- Logo -->
     <div>
-      <a href="#" class="flex items-center gap-2 mb-12" style="text-decoration:none;">
-        <span class="material-symbols-outlined text-3xl" style="color:#818cf8;font-variation-settings:'FILL' 1;">psychology</span>
+      <!-- Logo -->
+      <a href="../index.html" class="flex items-center gap-2 mb-12" style="text-decoration:none;">
+        <span class="material-symbols-outlined text-3xl" style="color:#5eead4;font-variation-settings:'FILL' 1;">psychology</span>
         <span class="font-headline text-xl font-extrabold text-white tracking-tight">SereneCare</span>
       </a>
 
+      <!-- Badge + título -->
       <div class="mb-8">
-        <h1 class="font-headline text-4xl font-extrabold text-white leading-tight mb-3">Elegí el plan<br/>para tu clínica</h1>
-        <p class="text-slate-400 text-sm">14 días gratis en todos los planes. Sin tarjeta de crédito.</p>
+        <div class="badge-beta mb-4">
+          <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">lock</span>
+          Beta cerrada · Acceso por invitación
+        </div>
+        <h1 class="font-headline text-4xl font-extrabold text-white leading-tight mb-3">
+          La plataforma clínica<br/>que trabaja contigo
+        </h1>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Gestión de pacientes, agenda, notas SOAP con IA y telemedicina.<br/>
+          Todo en uno, diseñado para psicólogos.
+        </p>
       </div>
 
-      <!-- Plan cards -->
-      <div class="space-y-3" id="planes">
-
-        <!-- Starter -->
-        <div class="plan-card" id="plan-starter" onclick="seleccionarPlan('starter')">
-          <div class="flex items-start justify-between mb-3">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-3 h-3 rounded-full border-2 border-slate-600 flex-shrink-0" id="radio-starter"></div>
-                <p class="font-headline font-bold text-white text-base">Starter</p>
-              </div>
-              <p class="text-slate-500 text-xs ml-5">Para psicólogos independientes</p>
+      <!-- Precio beta -->
+      <div class="rounded-2xl p-6 mb-8" style="background:rgba(41,103,119,0.08);border:1px solid rgba(41,103,119,0.2);">
+        <div class="flex items-start justify-between mb-4">
+          <div>
+            <p class="text-xs font-bold text-teal-400 uppercase tracking-widest mb-1">Precio fundadores</p>
+            <div class="flex items-baseline gap-1">
+              <span class="font-headline text-5xl font-extrabold text-white">€29</span>
+              <span class="text-slate-500 text-sm">/mes</span>
             </div>
-            <div class="text-right">
-              <p class="font-headline font-extrabold text-white text-xl">$29</p>
-              <p class="text-slate-600 text-xs">/mes</p>
-            </div>
+            <p class="text-slate-500 text-xs mt-1">Precio bloqueado para siempre · Sube a €39 cuando se llene</p>
           </div>
-          <div class="ml-5">
-            <div class="feat"><span class="material-symbols-outlined">check</span>1 psicólogo</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>Hasta 30 pacientes</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>Agenda + videollamadas</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>Portal del paciente</div>
+          <div class="text-right">
+            <p class="font-headline text-2xl font-extrabold text-white" id="plazas-restantes">—</p>
+            <p class="text-xs text-slate-500">plazas restantes</p>
           </div>
         </div>
-
-        <!-- Clínica -->
-        <div class="plan-card popular selected" id="plan-clinica" onclick="seleccionarPlan('clinica')">
-          <div class="absolute -top-3 left-5">
-            <span class="px-3 py-1 rounded-full text-xs font-bold font-headline" style="background:rgba(99,102,241,0.2);color:#818cf8;border:1px solid rgba(99,102,241,0.4);">Más popular</span>
-          </div>
-          <div class="flex items-start justify-between mb-3">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-3 h-3 rounded-full flex-shrink-0" id="radio-clinica" style="background:#6366f1;border:2px solid #818cf8;"></div>
-                <p class="font-headline font-bold text-white text-base">Clínica</p>
-              </div>
-              <p class="text-slate-500 text-xs ml-5">Para consultorios y clínicas</p>
-            </div>
-            <div class="text-right">
-              <p class="font-headline font-extrabold text-white text-xl">$99</p>
-              <p class="text-slate-600 text-xs">/mes</p>
-            </div>
-          </div>
-          <div class="ml-5">
-            <div class="feat"><span class="material-symbols-outlined">check</span>Hasta 10 psicólogos</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>Pacientes ilimitados</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>IA clínica + informes</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>Facturación + consentimientos</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>Soporte prioritario</div>
-          </div>
+        <div class="plazas-bar">
+          <div class="plazas-fill" id="plazas-bar" style="width:0%"></div>
         </div>
+        <p class="text-xs text-slate-600 mt-2" id="plazas-texto">Cargando disponibilidad...</p>
+      </div>
 
-        <!-- Enterprise -->
-        <div class="plan-card" id="plan-enterprise" onclick="seleccionarPlan('enterprise')">
-          <div class="flex items-start justify-between mb-3">
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <div class="w-3 h-3 rounded-full border-2 border-slate-600 flex-shrink-0" id="radio-enterprise"></div>
-                <p class="font-headline font-bold text-white text-base">Enterprise</p>
-              </div>
-              <p class="text-slate-500 text-xs ml-5">Para instituciones grandes</p>
-            </div>
-            <div class="text-right">
-              <p class="font-headline font-extrabold text-white text-xl">$299</p>
-              <p class="text-slate-600 text-xs">/mes</p>
-            </div>
-          </div>
-          <div class="ml-5">
-            <div class="feat"><span class="material-symbols-outlined">check</span>Psicólogos ilimitados</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>White label (tu marca)</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>API + integraciones custom</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>Manager de cuenta dedicado</div>
-            <div class="feat"><span class="material-symbols-outlined">check</span>SLA garantizado</div>
-          </div>
-        </div>
-
+      <!-- Features -->
+      <div class="space-y-1">
+        <div class="feat"><span class="material-symbols-outlined">check_circle</span>Agenda inteligente con recordatorios automáticos</div>
+        <div class="feat"><span class="material-symbols-outlined">check_circle</span>Notas SOAP asistidas por IA</div>
+        <div class="feat"><span class="material-symbols-outlined">check_circle</span>Videollamadas integradas</div>
+        <div class="feat"><span class="material-symbols-outlined">check_circle</span>Portal del paciente + escalas clínicas</div>
+        <div class="feat"><span class="material-symbols-outlined">check_circle</span>Informes clínicos automáticos</div>
+        <div class="feat"><span class="material-symbols-outlined">check_circle</span>RGPD y Ley 25.326 · Datos en Europa</div>
       </div>
     </div>
 
-    <!-- Footer links -->
+    <!-- Footer -->
     <div class="mt-10 pt-6 border-t border-slate-800/40 flex flex-wrap gap-4 text-xs text-slate-600">
       <a href="#" class="hover:text-slate-400">Privacidad</a>
       <a href="#" class="hover:text-slate-400">Términos</a>
-      <a href="#" class="hover:text-slate-400">Soporte</a>
-      <span>· Precios en USD</span>
+      <a href="mailto:serenecare.espana@hotmail.com" class="hover:text-slate-400">Soporte</a>
     </div>
   </div>
 
@@ -152,69 +117,71 @@
 
       <div class="mb-8">
         <h2 class="font-headline text-2xl font-extrabold text-white mb-1">Crear tu cuenta</h2>
-        <p class="text-slate-500 text-sm">Plan seleccionado: <span class="font-bold" id="label-plan" style="color:#818cf8;">Clínica — $99/mes</span></p>
+        <p class="text-slate-500 text-sm">14 días gratis · Sin compromiso · Cancela cuando quieras</p>
       </div>
 
-      <form class="space-y-4" onsubmit="registrar(event)">
+      <form class="space-y-4" id="form-registro" onsubmit="registrar(event)" autocomplete="off">
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="field-label">Nombre</label>
-            <input type="text" id="f-nombre" class="field-input" placeholder="Tu nombre"/>
+            <label class="field-label">Nombre *</label>
+            <input type="text" id="f-nombre" class="field-input" placeholder="Ana" autocomplete="given-name"/>
           </div>
           <div>
-            <label class="field-label">Apellido</label>
-            <input type="text" id="f-apellido" class="field-input" placeholder="Tu apellido"/>
+            <label class="field-label">Apellido *</label>
+            <input type="text" id="f-apellido" class="field-input" placeholder="Martínez" autocomplete="family-name"/>
           </div>
         </div>
 
         <div>
           <label class="field-label">Nombre de la clínica *</label>
-          <input type="text" id="f-clinica" class="field-input" placeholder="Ej. Centro de Psicología Integral"/>
+          <input type="text" id="f-clinica" class="field-input" placeholder="Centro de Psicología Integral" autocomplete="organization"/>
         </div>
 
         <div>
           <label class="field-label">Email profesional *</label>
-          <input type="email" id="f-email" class="field-input" placeholder="admin@tuclinica.com"/>
-        </div>
-
-        <div>
-          <label class="field-label">País</label>
-          <select id="f-pais" class="field-input">
-            <option>Argentina</option>
-            <option>España</option>
-            <option>México</option>
-            <option>Colombia</option>
-            <option>Chile</option>
-            <option>Otro</option>
-          </select>
+          <input type="email" id="f-email" class="field-input" placeholder="ana@tuclinica.com" autocomplete="email"/>
         </div>
 
         <div>
           <label class="field-label">Contraseña *</label>
           <div class="relative">
-            <input type="password" id="f-pw" class="field-input pr-12" placeholder="Mínimo 8 caracteres"/>
+            <input type="password" id="f-pw" class="field-input pr-12" placeholder="Mínimo 8 caracteres" autocomplete="new-password"/>
             <button type="button" onclick="toggleVer()" class="absolute right-3 top-3 text-slate-500 hover:text-slate-300" style="background:none;border:none;cursor:pointer;">
               <span class="material-symbols-outlined text-lg" id="eye-reg">visibility</span>
             </button>
           </div>
         </div>
 
-        <p class="error-msg" id="err-reg">Completá nombre de clínica, email y contraseña (mín. 8 caracteres).</p>
+        <!-- Código invitación -->
+        <div>
+          <label class="field-label">Código de invitación *</label>
+          <div class="relative">
+            <input type="text" id="f-codigo" class="field-input pr-10" placeholder="BETA-FUND-001" autocomplete="off"
+              style="text-transform:uppercase;letter-spacing:0.05em;"
+              oninput="this.value=this.value.toUpperCase(); resetCodigoState()"/>
+            <span class="material-symbols-outlined absolute right-3 top-3 text-lg hidden" id="ico-codigo-ok" style="color:#34d399;">check_circle</span>
+            <span class="material-symbols-outlined absolute right-3 top-3 text-lg hidden" id="ico-codigo-err" style="color:#f87171;">cancel</span>
+          </div>
+          <p class="text-xs mt-1 hidden" id="msg-codigo"></p>
+        </div>
+
+        <!-- Error general -->
+        <div id="err-general" class="hidden rounded-xl px-4 py-3 text-sm" style="background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:#fca5a5;"></div>
 
         <!-- CTA -->
-        <button type="submit" id="btn-registro" class="w-full py-4 rounded-xl font-bold text-base font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95 mt-2" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">
+        <button type="submit" id="btn-registro" class="btn-primary w-full py-4 rounded-xl text-base flex items-center justify-center gap-2 mt-2">
           <span class="material-symbols-outlined text-base">rocket_launch</span>
-          Comenzar prueba gratis
+          Empezar prueba de 14 días gratis
         </button>
 
         <p class="text-center text-xs text-slate-600 mt-2">
-          Al registrarte aceptás los <a href="#" style="color:#818cf8;">Términos de uso</a> y la <a href="#" style="color:#818cf8;">Política de privacidad</a>.
+          Al registrarte aceptás los <a href="#" style="color:#5eead4;">Términos de uso</a> y la <a href="#" style="color:#5eead4;">Política de privacidad</a>.
+          Después del trial, €29/mes. Cancela cuando quieras.
         </p>
 
       </form>
 
-      <!-- Divider -->
       <div class="flex items-center gap-3 my-6">
         <div class="flex-1 h-px bg-slate-800"></div>
         <span class="text-xs text-slate-600">¿Ya tenés cuenta?</span>
@@ -226,7 +193,6 @@
         Iniciar sesión
       </a>
 
-      <!-- Trust badges -->
       <div class="mt-8 flex flex-wrap items-center justify-center gap-5 text-xs text-slate-600">
         <div class="flex items-center gap-1.5">
           <span class="material-symbols-outlined text-sm" style="color:#34d399;">lock</span>
@@ -247,83 +213,145 @@
 
 </div>
 
-<script>
-var planSeleccionado = 'clinica';
-var planes = {
-  starter:    { label: 'Starter — $29/mes',    precio: '$29' },
-  clinica:    { label: 'Clínica — $99/mes',    precio: '$99' },
-  enterprise: { label: 'Enterprise — $299/mes', precio: '$299' }
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL  = 'https://wnuwuxenzwfqmhxagryk.supabase.co';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o';
+const LS_STORE      = 'https://serenecare.lemonsqueezy.com/checkout/buy/';
+
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── Cargar plazas disponibles ─────────────────────────────────
+async function cargarPlazas() {
+  const { data } = await sb
+    .from('codigos_invitacion')
+    .select('id, usado')
+    .eq('batch', 1);
+
+  if (!data) return;
+  const total = data.length;
+  const usados = data.filter(c => c.usado).length;
+  const restantes = total - usados;
+  const pct = (usados / total) * 100;
+
+  document.getElementById('plazas-restantes').textContent = restantes;
+  document.getElementById('plazas-bar').style.width = pct + '%';
+  document.getElementById('plazas-texto').textContent =
+    restantes > 0
+      ? `${usados} de ${total} plazas ocupadas · Quedan ${restantes}`
+      : 'Batch 1 completo · Precio sube a €39';
+}
+cargarPlazas();
+
+// ── Toggle password ───────────────────────────────────────────
+window.toggleVer = function() {
+  const inp = document.getElementById('f-pw');
+  const ico = document.getElementById('eye-reg');
+  if (inp.type === 'password') { inp.type = 'text'; ico.textContent = 'visibility_off'; }
+  else { inp.type = 'password'; ico.textContent = 'visibility'; }
 };
 
-function seleccionarPlan(plan) {
-  planSeleccionado = plan;
+window.resetCodigoState = function() {
+  document.getElementById('f-codigo').classList.remove('error','success');
+  document.getElementById('ico-codigo-ok').classList.add('hidden');
+  document.getElementById('ico-codigo-err').classList.add('hidden');
+  document.getElementById('msg-codigo').classList.add('hidden');
+};
 
-  ['starter','clinica','enterprise'].forEach(function(p) {
-    var card  = document.getElementById('plan-' + p);
-    var radio = document.getElementById('radio-' + p);
-    if (p === plan) {
-      card.classList.add('selected');
-      radio.style.background = '#6366f1';
-      radio.style.border = '2px solid #818cf8';
-    } else {
-      card.classList.remove('selected');
-      radio.style.background = '';
-      radio.style.borderColor = '#475569';
-    }
-  });
-
-  document.getElementById('label-plan').textContent = planes[plan].label;
-}
-
-function toggleVer() {
-  var inp = document.getElementById('f-pw');
-  var ico = document.getElementById('eye-reg');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  ico.textContent = inp.type === 'password' ? 'visibility' : 'visibility_off';
-}
-
-function registrar(e) {
+// ── Submit ────────────────────────────────────────────────────
+window.registrar = async function(e) {
   e.preventDefault();
-  var clinica = document.getElementById('f-clinica').value.trim();
-  var email   = document.getElementById('f-email').value.trim();
-  var pw      = document.getElementById('f-pw').value;
-  var err     = document.getElementById('err-reg');
 
-  if (!clinica || !email || pw.length < 8) {
-    err.style.display = 'block';
+  const nombre  = document.getElementById('f-nombre').value.trim();
+  const apellido = document.getElementById('f-apellido').value.trim();
+  const clinica = document.getElementById('f-clinica').value.trim();
+  const email   = document.getElementById('f-email').value.trim().toLowerCase();
+  const pw      = document.getElementById('f-pw').value;
+  const codigo  = document.getElementById('f-codigo').value.trim().toUpperCase();
+
+  const errEl = document.getElementById('err-general');
+  const btn   = document.getElementById('btn-registro');
+
+  const mostrarError = (msg) => {
+    errEl.textContent = msg;
+    errEl.classList.remove('hidden');
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined text-base">rocket_launch</span> Empezar prueba de 14 días gratis';
+  };
+
+  // Validar campos
+  if (!nombre || !clinica || !email || pw.length < 8 || !codigo) {
+    mostrarError('Completá todos los campos. La contraseña debe tener al menos 8 caracteres.');
     return;
   }
-  err.style.display = 'none';
+  errEl.classList.add('hidden');
 
-  var btn = document.getElementById('btn-registro');
   btn.disabled = true;
-  btn.innerHTML = '<span class="material-symbols-outlined text-base animate-spin">progress_activity</span> Creando cuenta...';
+  btn.innerHTML = '<span class="material-symbols-outlined text-base spin">progress_activity</span> Validando código...';
 
-  // Guardar en localStorage para onboarding
-  localStorage.setItem('admin_clinica_nombre', document.getElementById('f-nombre').value.trim());
-  localStorage.setItem('admin_clinica_email', email);
-  localStorage.setItem('admin_plan', planSeleccionado);
+  // 1. Validar código de invitación
+  const { data: codigoData, error: codigoErr } = await sb
+    .from('codigos_invitacion')
+    .select('id, variant_id, precio, batch, usado')
+    .eq('codigo', codigo)
+    .single();
 
-  setTimeout(function() {
-    window.location.href = 'onboarding_admin.html';
-  }, 1200);
-}
-
-// Numpad fix
-document.addEventListener('keydown', function(e) {
-  var map = {'Numpad0':'0','Numpad1':'1','Numpad2':'2','Numpad3':'3','Numpad4':'4','Numpad5':'5','Numpad6':'6','Numpad7':'7','Numpad8':'8','Numpad9':'9','NumpadDecimal':'.'};
-  var d = map[e.code];
-  if (d && e.key !== d) {
-    var el = document.activeElement;
-    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
-      e.preventDefault();
-      var s = el.selectionStart, end = el.selectionEnd;
-      el.value = el.value.slice(0, s) + d + el.value.slice(end);
-      el.selectionStart = el.selectionEnd = s + 1;
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-    }
+  if (codigoErr || !codigoData) {
+    document.getElementById('f-codigo').classList.add('error');
+    document.getElementById('ico-codigo-err').classList.remove('hidden');
+    const msgEl = document.getElementById('msg-codigo');
+    msgEl.textContent = 'Código no válido. Verificá que esté escrito correctamente.';
+    msgEl.className = 'text-xs mt-1';
+    msgEl.style.color = '#f87171';
+    msgEl.classList.remove('hidden');
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined text-base">rocket_launch</span> Empezar prueba de 14 días gratis';
+    return;
   }
-});
+
+  if (codigoData.usado) {
+    document.getElementById('f-codigo').classList.add('error');
+    document.getElementById('ico-codigo-err').classList.remove('hidden');
+    const msgEl = document.getElementById('msg-codigo');
+    msgEl.textContent = 'Este código ya fue utilizado.';
+    msgEl.className = 'text-xs mt-1';
+    msgEl.style.color = '#f87171';
+    msgEl.classList.remove('hidden');
+    btn.disabled = false;
+    btn.innerHTML = '<span class="material-symbols-outlined text-base">rocket_launch</span> Empezar prueba de 14 días gratis';
+    return;
+  }
+
+  // Código válido
+  document.getElementById('f-codigo').classList.add('success');
+  document.getElementById('ico-codigo-ok').classList.remove('hidden');
+
+  btn.innerHTML = '<span class="material-symbols-outlined text-base spin">progress_activity</span> Redirigiendo al pago...';
+
+  // 2. Guardar datos temporales en sessionStorage (el webhook los usa después)
+  sessionStorage.setItem('sc_registro', JSON.stringify({
+    nombre, apellido, clinica, email, codigo, batch: codigoData.batch
+  }));
+
+  // 3. Marcar código como en uso (optimistic — el webhook confirma)
+  await sb.from('codigos_invitacion')
+    .update({ usado: true, usado_por: email, usado_at: new Date().toISOString() })
+    .eq('id', codigoData.id);
+
+  // 4. Redirigir a Lemon Squeezy checkout
+  const checkoutUrl = new URL(LS_STORE + codigoData.variant_id);
+  checkoutUrl.searchParams.set('checkout[email]', email);
+  checkoutUrl.searchParams.set('checkout[name]', `${nombre} ${apellido}`);
+  checkoutUrl.searchParams.set('checkout[custom][clinica_nombre]', clinica);
+  checkoutUrl.searchParams.set('checkout[custom][codigo_invitacion]', codigo);
+  checkoutUrl.searchParams.set('checkout[custom][nombre]', nombre);
+  checkoutUrl.searchParams.set('checkout[custom][apellido]', apellido);
+  checkoutUrl.searchParams.set('checkout[custom][password_hash]', btoa(pw)); // base64 temporal — el backend crea el usuario real
+
+  window.location.href = checkoutUrl.toString();
+};
 </script>
+
 </body>
 </html>
