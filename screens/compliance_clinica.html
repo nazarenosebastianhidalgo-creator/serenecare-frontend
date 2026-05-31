@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Compliance & RGPD</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  .fade-up { animation: fadeUp 0.45s cubic-bezier(0.16,1,0.3,1) both; }
+  .section-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; padding: 24px; transition: border-color 0.2s; }
+  .section-card:hover { border-color: rgba(255,255,255,0.12); }
+  .toggle-track { width:44px;height:24px;border-radius:99px;transition:background 0.2s;cursor:pointer;position:relative;flex-shrink:0; }
+  .toggle-thumb { width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:transform 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.3); }
+  .toggle-on .toggle-track { background:#0d9488; }
+  .toggle-on .toggle-thumb { transform:translateX(20px); }
+  .toggle-off .toggle-track { background:rgba(255,255,255,0.12); }
+  .audit-row { border-bottom:1px solid rgba(255,255,255,0.04); }
+  .audit-row:last-child { border-bottom:none; }
+  .badge-ok { background:rgba(34,197,94,0.12);color:#4ade80;border:1px solid rgba(34,197,94,0.22); }
+  .badge-warn { background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.22); }
+  .badge-err { background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.18); }
+  .notif-panel { position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+  @keyframes dropIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+  .notif-panel { animation: dropIn 0.2s ease forwards; }
+  .apps-panel { position:fixed;top:64px;right:24px;width:340px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);padding:20px; }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Mi Clínica</p>
+      <p class="text-[10px] text-teal-500 font-bold uppercase tracking-widest">Admin Portal</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_admin_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="pacientes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Pacientes</span>
+    </a>
+    <a href="agenda_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Agenda</span>
+    </a>
+    <a href="mensajes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="facturacion.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">receipt_long</span><span>Facturación</span>
+    </a>
+    <a href="compliance_clinica.html" class="nav-active flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">verified_user</span><span>Compliance</span>
+    </a>
+  </nav>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user-card" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">AC</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Admin</p>
+        <p class="text-[10px] text-slate-500">Admin Clínica</p>
+      </div>
+      <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="pl-64 min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/30" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(16px);">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Compliance & RGPD</h2>
+      <p id="fecha-hoy" class="text-slate-500 text-xs capitalize"></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="exportarInforme()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);">
+        <span class="material-symbols-outlined text-base">download</span>
+        Exportar informe
+      </button>
+      <button onclick="toggleNotif()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400">notifications</span>
+        <span id="notif-dot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="px-8 py-8 max-w-5xl">
+
+    <!-- Score global -->
+    <div class="fade-up mb-8 rounded-2xl p-6 flex items-center gap-6" style="background:linear-gradient(135deg,rgba(13,148,136,0.15),rgba(99,102,241,0.08));border:1px solid rgba(20,184,166,0.2);">
+      <div class="relative flex-shrink-0">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+          <circle id="score-arc" cx="40" cy="40" r="34" fill="none" stroke="#2dd4bf" stroke-width="8" stroke-linecap="round"
+            stroke-dasharray="213.6" stroke-dashoffset="53.4" transform="rotate(-90 40 40)"/>
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <span id="score-val" class="font-headline text-2xl font-extrabold text-white">75%</span>
+        </div>
+      </div>
+      <div>
+        <p class="font-headline text-lg font-extrabold text-white mb-1">Nivel de cumplimiento</p>
+        <p class="text-slate-400 text-sm">Tu clínica tiene <span id="issues-count" class="text-amber-400 font-bold">3 puntos</span> pendientes para cumplimiento completo del RGPD.</p>
+        <div class="flex gap-2 mt-3">
+          <span class="badge-ok text-xs font-bold px-2.5 py-1 rounded-lg">5 cumplidos</span>
+          <span class="badge-warn text-xs font-bold px-2.5 py-1 rounded-lg">3 pendientes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6">
+
+      <!-- Consentimientos -->
+      <div class="fade-up section-card" style="animation-delay:0.05s">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.2);">
+              <span class="material-symbols-outlined text-base" style="color:#4ade80;">task_alt</span>
+            </div>
+            <div>
+              <p class="font-headline font-bold text-white text-sm">Consentimientos informados</p>
+              <p class="text-slate-500 text-xs">Estado de firma de pacientes activos</p>
+            </div>
+          </div>
+          <span id="badge-consentimientos" class="badge-ok text-xs font-bold px-3 py-1 rounded-lg">Revisando...</span>
+        </div>
+        <div class="grid grid-cols-3 gap-4 mb-5">
+          <div class="rounded-xl p-4 text-center" style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.12);">
+            <p id="cnt-firmados" class="font-headline text-2xl font-extrabold text-green-400">—</p>
+            <p class="text-slate-500 text-xs mt-1">Firmados</p>
+          </div>
+          <div class="rounded-xl p-4 text-center" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.12);">
+            <p id="cnt-pendientes" class="font-headline text-2xl font-extrabold text-amber-400">—</p>
+            <p class="text-slate-500 text-xs mt-1">Pendientes</p>
+          </div>
+          <div class="rounded-xl p-4 text-center" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
+            <p id="cnt-total" class="font-headline text-2xl font-extrabold text-white">—</p>
+            <p class="text-slate-500 text-xs mt-1">Total pacientes</p>
+          </div>
+        </div>
+        <button onclick="verPacientesSinConsentimiento()" class="text-sm font-semibold text-teal-400 hover:text-teal-300 transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+          Ver pacientes sin consentimiento firmado
+        </button>
+      </div>
+
+      <!-- Políticas RGPD -->
+      <div class="fade-up section-card" style="animation-delay:0.1s">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.2);">
+            <span class="material-symbols-outlined text-base" style="color:#818cf8;">policy</span>
+          </div>
+          <div>
+            <p class="font-headline font-bold text-white text-sm">Políticas de privacidad</p>
+            <p class="text-slate-500 text-xs">Configuración RGPD de tu clínica</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="flex items-center justify-between py-3 border-b border-slate-800/40">
+            <div>
+              <p class="text-sm font-semibold text-white">Consentimiento explícito en registro</p>
+              <p class="text-xs text-slate-500 mt-0.5">El paciente acepta el tratamiento de datos al registrarse</p>
+            </div>
+            <div id="toggle-registro" class="toggle-on" onclick="toggleSwitch('toggle-registro','rgpd_registro')" style="cursor:pointer;">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-slate-800/40">
+            <div>
+              <p class="text-sm font-semibold text-white">Retención de datos limitada a 5 años</p>
+              <p class="text-xs text-slate-500 mt-0.5">Los datos de pacientes dados de alta se eliminan tras 5 años</p>
+            </div>
+            <div id="toggle-retencion" class="toggle-off" onclick="toggleSwitch('toggle-retencion','rgpd_retencion')" style="cursor:pointer;">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-slate-800/40">
+            <div>
+              <p class="text-sm font-semibold text-white">Notificación de brechas de seguridad</p>
+              <p class="text-xs text-slate-500 mt-0.5">Alerta automática al DPD en caso de incidente</p>
+            </div>
+            <div id="toggle-brechas" class="toggle-on" onclick="toggleSwitch('toggle-brechas','rgpd_brechas')" style="cursor:pointer;">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between py-3">
+            <div>
+              <p class="text-sm font-semibold text-white">Registro de actividad de acceso</p>
+              <p class="text-xs text-slate-500 mt-0.5">Guarda quién accede a qué datos y cuándo</p>
+            </div>
+            <div id="toggle-auditoria" class="toggle-on" onclick="toggleSwitch('toggle-auditoria','rgpd_auditoria')" style="cursor:pointer;">
+              <div class="toggle-track"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Derechos del paciente -->
+      <div class="fade-up section-card" style="animation-delay:0.15s">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.2);">
+            <span class="material-symbols-outlined text-base" style="color:#2dd4bf;">person_check</span>
+          </div>
+          <div>
+            <p class="font-headline font-bold text-white text-sm">Solicitudes de derechos RGPD</p>
+            <p class="text-slate-500 text-xs">Acceso, rectificación, supresión y portabilidad</p>
+          </div>
+        </div>
+        <div id="lista-solicitudes" class="flex flex-col gap-3">
+          <div class="rounded-xl p-4 flex items-center justify-between" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-slate-500 text-lg">hourglass_empty</span>
+              <p class="text-slate-400 text-sm">No hay solicitudes pendientes</p>
+            </div>
+          </div>
+        </div>
+        <button onclick="abrirNuevaSolicitud()" class="mt-4 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;">
+          <span class="material-symbols-outlined text-base">add</span>
+          Registrar solicitud manual
+        </button>
+      </div>
+
+      <!-- Log de auditoría -->
+      <div class="fade-up section-card" style="animation-delay:0.2s">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);">
+              <span class="material-symbols-outlined text-base" style="color:#fbbf24;">history</span>
+            </div>
+            <div>
+              <p class="font-headline font-bold text-white text-sm">Log de auditoría</p>
+              <p class="text-slate-500 text-xs">Últimas 20 acciones registradas</p>
+            </div>
+          </div>
+          <button onclick="cargarLogs()" class="text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1" style="border:none;background:none;cursor:pointer;">
+            <span class="material-symbols-outlined text-sm">refresh</span>
+            Actualizar
+          </button>
+        </div>
+        <div id="audit-log" class="flex flex-col">
+          <div class="py-4 text-center text-slate-500 text-sm">Cargando registros...</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- Modal solicitud manual -->
+<div id="modal-solicitud" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(4px);z-index:100;display:none;align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:24px;width:100%;max-width:420px;padding:28px;">
+    <h3 class="font-headline text-lg font-extrabold text-white mb-1">Nueva solicitud RGPD</h3>
+    <p class="text-slate-500 text-xs mb-5">Registra una solicitud de derecho recibida del paciente</p>
+    <div class="flex flex-col gap-3">
+      <div>
+        <label class="text-xs text-slate-400 font-semibold mb-1.5 block">Tipo de derecho</label>
+        <select id="tipo-solicitud" class="w-full rounded-xl px-4 py-2.5 text-sm text-white" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);outline:none;">
+          <option value="acceso">Derecho de acceso</option>
+          <option value="rectificacion">Derecho de rectificación</option>
+          <option value="supresion">Derecho de supresión (olvido)</option>
+          <option value="portabilidad">Derecho de portabilidad</option>
+          <option value="oposicion">Derecho de oposición</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs text-slate-400 font-semibold mb-1.5 block">Email del paciente</label>
+        <input id="email-solicitud" type="email" placeholder="paciente@email.com" class="w-full rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);outline:none;"/>
+      </div>
+      <div>
+        <label class="text-xs text-slate-400 font-semibold mb-1.5 block">Notas</label>
+        <textarea id="notas-solicitud" rows="3" placeholder="Detalles de la solicitud..." class="w-full rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 resize-none" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);outline:none;"></textarea>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button onclick="cerrarModal()" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:bg-white/5 transition-colors" style="border:1px solid rgba(255,255,255,0.08);background:none;cursor:pointer;">Cancelar</button>
+      <button onclick="guardarSolicitud()" class="flex-1 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90" style="background:#0d9488;border:none;cursor:pointer;">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js';
+
+// Fecha
+const f = new Date();
+document.getElementById('fecha-hoy').textContent = f.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+// Nombre clínica
+const cid = localStorage.getItem('tp_clinica_id');
+if (cid) {
+  supabase.from('clinicas').select('nombre').eq('id', cid).single()
+    .then(({data}) => { if(data) document.getElementById('nombre-clinica').textContent = data.nombre; });
+}
+
+// Cargar consentimientos
+async function cargarConsentimientos() {
+  if (!cid) return;
+  const { data } = await supabase.from('pacientes').select('id, consentimiento_firmado').eq('clinica_id', cid).eq('estado','activo');
+  if (!data) return;
+  const firmados = data.filter(p => p.consentimiento_firmado).length;
+  const pendientes = data.length - firmados;
+  document.getElementById('cnt-firmados').textContent = firmados;
+  document.getElementById('cnt-pendientes').textContent = pendientes;
+  document.getElementById('cnt-total').textContent = data.length;
+  const badge = document.getElementById('badge-consentimientos');
+  if (pendientes === 0) {
+    badge.className = 'badge-ok text-xs font-bold px-3 py-1 rounded-lg';
+    badge.textContent = 'Al día ✓';
+  } else {
+    badge.className = 'badge-warn text-xs font-bold px-3 py-1 rounded-lg';
+    badge.textContent = `${pendientes} pendiente${pendientes>1?'s':''}`;
+  }
+}
+
+// Log de auditoría simulado (en producción vendría de una tabla audit_logs)
+function cargarLogs() {
+  const eventos = [
+    { tipo:'acceso', usuario:'Ana Martínez', accion:'Accedió a ficha de paciente #1042', ts:'hace 5 min', nivel:'ok' },
+    { tipo:'edicion', usuario:'Admin Clínica', accion:'Actualizó datos de contacto — Paciente #1038', ts:'hace 12 min', nivel:'ok' },
+    { tipo:'exportacion', usuario:'Admin Clínica', accion:'Exportó historial de sesiones', ts:'hace 1h', nivel:'warn' },
+    { tipo:'acceso', usuario:'Luis Herrera', accion:'Accedió a notas SOAP — Paciente #1021', ts:'hace 2h', nivel:'ok' },
+    { tipo:'login', usuario:'Admin Clínica', accion:'Inicio de sesión desde IP 89.x.x.x', ts:'hace 3h', nivel:'ok' },
+    { tipo:'borrado', usuario:'Sistema', accion:'Eliminó sesión expirada — Token revocado', ts:'hace 5h', nivel:'ok' },
+    { tipo:'login_fallo', usuario:'Desconocido', accion:'Intento de acceso fallido (3 intentos)', ts:'hace 8h', nivel:'err' },
+  ];
+  const iconos = { acceso:'visibility', edicion:'edit', exportacion:'download', login:'login', borrado:'delete', login_fallo:'warning' };
+  const colores = { ok:'#4ade80', warn:'#fbbf24', err:'#f87171' };
+  const container = document.getElementById('audit-log');
+  container.innerHTML = eventos.map(e => `
+    <div class="audit-row flex items-center gap-3 py-3">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.04);">
+        <span class="material-symbols-outlined text-sm" style="color:${colores[e.nivel]};">${iconos[e.tipo]||'info'}</span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm text-white truncate">${e.accion}</p>
+        <p class="text-xs text-slate-500">${e.usuario} · ${e.ts}</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+cargarConsentimientos();
+cargarLogs();
+window.cargarLogs = cargarLogs;
+</script>
+
+<script>
+function toggleUserMenu() {
+  const m = document.getElementById('user-menu');
+  m.classList.toggle('hidden');
+}
+function toggleTema() {
+  const t = localStorage.getItem('tp_tema');
+  if (t === 'claro') { localStorage.removeItem('tp_tema'); document.documentElement.style.filter=''; }
+  else { localStorage.setItem('tp_tema','claro'); document.documentElement.style.filter='invert(1) hue-rotate(180deg)'; }
+}
+function toggleSwitch(id, key) {
+  const el = document.getElementById(id);
+  const isOn = el.classList.contains('toggle-on');
+  el.classList.toggle('toggle-on', !isOn);
+  el.classList.toggle('toggle-off', isOn);
+  localStorage.setItem(key, (!isOn).toString());
+}
+function verPacientesSinConsentimiento() {
+  window.location.href = 'pacientes_clinica.html?filtro=sin_consentimiento';
+}
+function abrirNuevaSolicitud() {
+  const m = document.getElementById('modal-solicitud');
+  m.style.display = 'flex';
+}
+function cerrarModal() {
+  document.getElementById('modal-solicitud').style.display = 'none';
+}
+function guardarSolicitud() {
+  const tipo = document.getElementById('tipo-solicitud').value;
+  const email = document.getElementById('email-solicitud').value;
+  if (!email) { alert('Ingresa el email del paciente'); return; }
+  // En producción → INSERT en tabla solicitudes_rgpd
+  cerrarModal();
+  const lista = document.getElementById('lista-solicitudes');
+  const tipos = { acceso:'Acceso', rectificacion:'Rectificación', supresion:'Supresión', portabilidad:'Portabilidad', oposicion:'Oposición' };
+  lista.innerHTML = `
+    <div class="rounded-xl p-4 flex items-center justify-between" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-amber-400 text-lg">pending</span>
+        <div>
+          <p class="text-sm font-semibold text-white">Derecho de ${tipos[tipo]}</p>
+          <p class="text-xs text-slate-500">${email} · Recibida hoy</p>
+        </div>
+      </div>
+      <span class="badge-warn text-xs font-bold px-2.5 py-1 rounded-lg">Pendiente</span>
+    </div>` + lista.innerHTML.replace('<div class="rounded-xl p-4 flex items-center justify-between" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-slate-500 text-lg">hourglass_empty</span><p class="text-slate-400 text-sm">No hay solicitudes pendientes</p></div></div>','');
+}
+function exportarInforme() {
+  const lines = [
+    'INFORME DE COMPLIANCE RGPD — SereneCare',
+    '========================================',
+    `Fecha: ${new Date().toLocaleDateString('es-ES')}`,
+    '',
+    'CONSENTIMIENTOS: Ver panel',
+    'POLITICAS: Consentimiento en registro: ON | Retención 5 años: OFF | Notif. brechas: ON | Auditoría: ON',
+    '',
+    'Generado automáticamente por SereneCare',
+  ];
+  const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `compliance_${new Date().toISOString().split('T')[0]}.txt`;
+  a.click();
+}
+function toggleNotif() {}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('user-menu');
+  if (!menu.classList.contains('hidden') && !document.getElementById('btn-user-card').contains(e.target) && !menu.contains(e.target)) {
+    menu.classList.add('hidden');
+  }
+});
+// Cargar estado toggles desde localStorage
+['rgpd_registro','rgpd_retencion','rgpd_brechas','rgpd_auditoria'].forEach((k,i) => {
+  const ids = ['toggle-registro','toggle-retencion','toggle-brechas','toggle-auditoria'];
+  const val = localStorage.getItem(k);
+  if (val !== null) {
+    const el = document.getElementById(ids[i]);
+    el.classList.toggle('toggle-on', val==='true');
+    el.classList.toggle('toggle-off', val!=='true');
+  }
+});
+</script>
+</body>
+</html>
