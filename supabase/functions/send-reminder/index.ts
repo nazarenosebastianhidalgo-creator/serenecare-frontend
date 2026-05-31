@@ -5,8 +5,9 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
 )
 
-const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY') ?? ''
-const FROM_EMAIL     = Deno.env.get('FROM_EMAIL') ?? 'citas@therapeutic-perspective.com'
+const RESEND_API_KEY  = Deno.env.get('RESEND_API_KEY') ?? ''
+const FROM_EMAIL      = Deno.env.get('FROM_EMAIL') ?? 'citas@therapeutic-perspective.com'
+const CRON_SECRET     = Deno.env.get('CRON_SECRET') ?? ''
 
 // ── Enviar email con Resend ─────────────────────────────────────
 async function enviarEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
@@ -77,11 +78,17 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
       headers: {
-        'Access-Control-Allow-Origin':  '*',
+        'Access-Control-Allow-Origin':  'https://serenecare-app.vercel.app',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-cron-secret',
       },
     })
+  }
+
+  // Solo se puede llamar con el secret del cron (protege contra abuso externo)
+  const incomingSecret = req.headers.get('x-cron-secret') ?? ''
+  if (!CRON_SECRET || incomingSecret !== CRON_SECRET) {
+    return Response.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   try {
