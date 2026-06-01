@@ -95,19 +95,27 @@
       </a>
     </div>
   </nav>
-  <div class="mt-auto pt-6 border-t border-slate-800/40">
-    <div class="flex items-center gap-3 mb-6 px-2">
-      <div id="sa-avatar" class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-sm font-bold" style="color:#818cf8;">SA</div>
-      <div class="flex-1 overflow-hidden">
-        <p id="sa-nombre" class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
-        <p class="text-xs text-slate-500 truncate">Super Administrador</p>
-      </div>
-    </div>
-    <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-error-container hover:bg-error-dim/20 rounded-xl transition-all" href="#" id="btn-logout">
-      <span class="material-symbols-outlined">logout</span>
-      <span class="font-headline tracking-tight">Logout</span>
-    </a>
+  <div class="mt-auto pt-6 border-t border-slate-800/40 relative">
+<div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+  <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+    <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+  </button>
+  <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+  <a href="#" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+    <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+    <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+  </a>
+</div>
+<button id="btn-user" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+  <div id="sa-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(99,102,241,0.2);color:#818cf8;">SA</div>
+  <div class="flex-1 overflow-hidden text-left">
+    <p id="sa-nombre" class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
+    <p class="text-[10px] text-slate-500">Super Administrador</p>
   </div>
+  <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+</button>
+</div>
 </aside>
 
 <main class="pl-72 min-h-screen">
@@ -135,20 +143,6 @@
           </div>
         </div>
       </div>
-      <div class="relative">
-        <button id="btn-settings" class="p-2 rounded-full hover:bg-white/5 transition-colors">
-          <span class="material-symbols-outlined text-slate-400">settings</span>
-        </button>
-        <div id="panel-settings" class="hidden absolute right-0 top-12 w-64 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl z-50 p-4">
-          <p class="text-xs text-slate-500 uppercase tracking-widest mb-3 font-semibold">Apariencia</p>
-          <div id="toggle-tema-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors cursor-pointer">
-            <div class="flex items-center gap-3">
-              <span id="icon-tema" class="material-symbols-outlined text-indigo-400">dark_mode</span>
-              <div>
-                <p class="text-sm font-semibold text-slate-200">Tema oscuro</p>
-                <p id="label-tema" class="text-xs text-slate-500">Activo</p>
-              </div>
-            </div>
             <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
               <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
             </div>
@@ -551,13 +545,32 @@ if (usuarios && usuarios.length) {
   if (typeof window._reloadUsuarios === 'function') { window._reloadUsuarios(realUsers) }
 }
 </script>
+
 <script>
 (function(){
   var nombre = localStorage.getItem('tp_nombre') || 'Super Admin';
   var av = document.getElementById('sa-avatar');
   var nm = document.getElementById('sa-nombre');
-  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'SA';
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase()||'SA';
   if (nm) nm.textContent = nombre;
+  var tema = localStorage.getItem('tp_tema')||'oscuro';
+  var iconTema = document.getElementById('icon-tema');
+  var labelTema = document.getElementById('label-tema');
+  if (iconTema) iconTema.textContent = tema==='claro'?'light_mode':'dark_mode';
+  if (labelTema) labelTema.textContent = tema==='claro'?'Modo oscuro':'Modo claro';
+  var btnUser = document.getElementById('btn-user');
+  var userMenu = document.getElementById('user-menu');
+  if (btnUser && userMenu) {
+    btnUser.addEventListener('click', function(e){ e.stopPropagation(); userMenu.classList.toggle('hidden'); });
+    document.addEventListener('click', function(){ userMenu.classList.add('hidden'); });
+  }
 })();
-</script>
-</body></html>
+function toggleTema(){
+  var nuevo=(localStorage.getItem('tp_tema')||'oscuro')==='oscuro'?'claro':'oscuro';
+  localStorage.setItem('tp_tema',nuevo);
+  document.documentElement.style.filter=nuevo==='claro'?'invert(1) hue-rotate(180deg)':'';
+  var i=document.getElementById('icon-tema'),l=document.getElementById('label-tema');
+  if(i)i.textContent=nuevo==='claro'?'light_mode':'dark_mode';
+  if(l)l.textContent=nuevo==='claro'?'Modo oscuro':'Modo claro';
+}
+</script></body></html>

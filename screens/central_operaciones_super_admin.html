@@ -67,18 +67,27 @@
         <span class="material-symbols-outlined">contact_support</span><span class="font-medium">Support</span>
       </a>
     </nav>
-    <div class="mt-auto pt-6 border-t border-slate-800/40">
-      <div class="p-4 bg-slate-800/40 rounded-2xl mb-4">
-        <div class="flex items-center gap-2 text-xs font-bold text-teal-400 uppercase tracking-widest mb-1">
-          <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>System Healthy
-        </div>
-        <p class="text-[10px] text-slate-500">99.98% uptime — Todos los nodos activos</p>
-      </div>
-      <button id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-rose-400 rounded-xl transition-all">
-        <span class="material-symbols-outlined">logout</span><span class="font-medium">Logout</span>
-      </button>
-    </div>
-  </aside>
+    <div class="pt-6 border-t border-slate-800/50 relative">
+<div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+  <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+    <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+  </button>
+  <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+  <a href="#" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+    <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+    <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+  </a>
+</div>
+<button id="btn-user" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+  <div id="sa-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(99,102,241,0.2);color:#818cf8;">SA</div>
+  <div class="flex-1 overflow-hidden text-left">
+    <p id="sa-nombre" class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
+    <p class="text-[10px] text-slate-500">Super Administrador</p>
+  </div>
+  <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+</button>
+</div></aside>
 
   <!-- Dim background content (dashboard-like ghost) -->
   <div class="ml-72 p-8 opacity-20 pointer-events-none select-none">
