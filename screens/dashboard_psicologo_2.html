@@ -107,9 +107,7 @@
 <button class="p-2 text-slate-400 hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out">
 <span class="material-symbols-outlined">settings</span>
 </button>
-<div class="w-8 h-8 rounded-full overflow-hidden border border-slate-700">
-<img alt="Clinician profile" class="w-full h-full object-cover" data-alt="Professional headshot of a female clinician with glasses in a modern office setting, warm lighting, soft background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl-95YNhcjYCY560oIfdKPTXYbo-YXrCRfH_rwr36XbKsWhXDqsvwl-ZIV1jT-NQqN5oHy_V2qnUdn9q6Q5LBqeCsP-czzHA7PQikvAbZNcdRNeWsMDaAUa7qjdvqcn8yn9RditNWqlbV8Ezh08PrBvHRx62ZN-bdJvIihqCqCY1YOAz5veCXEKBnjHhkA1ziLchsB8QMxpG6WInQXqmvw4GLEzt4LZoTPLmN4tZ5gqyNAWmD-I03grd-oqUklhRt_rP3-VwGfkUYT"/>
-</div>
+<div id="user-avatar-header" class="w-8 h-8 rounded-full border border-slate-700 flex items-center justify-center text-xs font-bold bg-slate-800 text-slate-300">AM</div>
 </div>
 </header>
 <!-- Sidebar Navigation -->
@@ -634,4 +632,12 @@ window.cwEnviar=function(){
     </button>
     <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
   </div>
-</div></body></html>
+</div>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script>
+</body></html>

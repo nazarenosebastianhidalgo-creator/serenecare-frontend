@@ -164,8 +164,8 @@
 </button>
 <div class="h-8 w-[1px] bg-slate-200/50 dark:bg-slate-800/50"></div>
 <div class="flex items-center gap-3">
-<img alt="Avatar del especialista" class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm" data-alt="portrait of a professional female therapist with a warm smile in a clean clinical setting, professional photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrLc_aTCgx0AD-4B7MWF_l2uGxNdQNeBlGQJjiDehRVlPqdZmwH5S5BmxY4_0sck8fOC9w3uH8UERUB8eSz4dtyqU4UzLj9UrQcYw1pxL-fvP9f-fV08_Cng_INGnBiGt_Sy_jdl39xREJQPVEi98fh1qk6AKDTJKhHIk_tzFGYELektC2IX1P3A7hH0XyLFEvTxECKYpwW3i_Ww4YuIxqOOHLO4G_USvYbQ24_p0Cb3fyewsLXScrc6MtEmuWsXQkKCS_YgMH-8_G"/>
-<span class="hidden sm:block font-semibold text-cyan-800 dark:text-cyan-300 text-sm">Dra. Elena Rossi</span>
+<div id="user-avatar-header" class="w-9 h-9 rounded-full border-2 border-white shadow-sm flex items-center justify-center text-xs font-bold" style="background:rgba(8,145,178,0.15);color:#0e7490;">ER</div>
+<span id="user-nombre-header" class="hidden sm:block font-semibold text-cyan-800 dark:text-cyan-300 text-sm">Dra. Elena Rossi</span>
 </div>
 </div>
 </header>
@@ -474,4 +474,14 @@
     btnEnviar?.addEventListener('click', enviar)
     inputMsg?.addEventListener('keydown', e => { if (e.key === 'Enter') enviar() })
   </script>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Elena Rossi';
+  var av = document.getElementById('user-avatar-header');
+  var nm = document.getElementById('user-nombre-header');
+  var initials = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'ER';
+  if (av) av.textContent = initials;
+  if (nm) nm.textContent = nombre;
+})();
+</script>
 </body></html>

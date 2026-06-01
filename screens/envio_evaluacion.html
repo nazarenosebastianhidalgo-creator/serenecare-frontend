@@ -108,7 +108,7 @@
 <div class="flex items-center gap-4">
 <span class="material-symbols-outlined text-[#acb3b6] hover:text-[#296777] transition-all cursor-pointer active:opacity-70" data-icon="notifications">notifications</span>
 <span class="material-symbols-outlined text-[#acb3b6] hover:text-[#296777] transition-all cursor-pointer active:opacity-70" data-icon="help_outline">help_outline</span>
-<img alt="User avatar" class="w-8 h-8 rounded-full border border-outline-variant/15" data-alt="Close-up portrait of a professional female clinician with a calm and confident expression in a bright modern medical office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhcD417cqmzHVJ5vH8x2rlqSNhf1d75yMqjFCGCYYChQQebrc6ubDMTf7MZYF9heGEEz0HZsHphBV6ex5NdvMWpOF4DSRaDmT5qr-QCIAzneD6fPp5zUuTygQlkDj-uGwEELQEsKDapMcabj88jrcKRleTNMgre7g6rGDZE4WFInhlXS5F6fiTS8xP_o7eGufzHr92x0Z8EfnDraKiSav0dZJf-L1S_FNu19jKx0U6Dq9LDuVo59QMsKbHKvbrCmFHDFS-y4xysKgK"/>
+<div id="user-avatar-header" class="w-8 h-8 rounded-full border border-outline-variant/15 flex items-center justify-center text-xs font-bold" style="background:rgba(41,103,119,0.1);color:#296777;">AM</div>
 </div>
 </div>
 </header>
@@ -463,4 +463,10 @@ if (btnEnviar) btnEnviar.addEventListener('click', async () => {
 const btnCancelar = document.querySelector('button.px-6.py-3.rounded-xl.text-on-surface-variant')
 if (btnCancelar) btnCancelar.addEventListener('click', () => history.back())
 </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

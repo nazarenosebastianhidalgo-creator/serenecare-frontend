@@ -308,9 +308,7 @@
     </div>
   </div>
 
-  <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-slate-800">
-    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi1b2VE-elRx6_Q6bZvfJ64ZOj1lr_seM_yiQoXpgtDrtYadvM4r_N1EeYMlIIKjGFJgBa0KrnVVbYqbu7pUfshL3oT-2HSfCIeCfkS0JXtfZ8dUkz4WVt4DWgMFEmDFHTqL319iNH9hcVAKcPbvfFbZuEqCln0qtxSm6nVrWsE7merzFQmlicn3iUC8_qS7JC0k3FuBtzxbx4IB3fkYpwKbzNSKdkXZmPAAHZYEpMQKnQUHQedpNdsK3BFv_k4UOitP4ZkfMvlScK"/>
-  </div>
+  <div id="sa-avatar" class="h-10 w-10 rounded-full bg-indigo-500/20 border-2 border-slate-800 flex items-center justify-center text-sm font-bold" style="color:#818cf8;">SA</div>
 </div>
 </header>
 <!-- Content Canvas -->
@@ -776,4 +774,11 @@
       window.location.href = 'acceso_super_admin.html'
     })
   </script>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Super Admin';
+  var av = document.getElementById('sa-avatar');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'SA';
+})();
+</script>
 </body></html>

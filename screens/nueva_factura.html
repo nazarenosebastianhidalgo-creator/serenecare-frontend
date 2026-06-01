@@ -110,9 +110,7 @@
 </div>
 <span class="material-symbols-outlined text-teal-400 cursor-pointer scale-95 duration-200" data-icon="notifications">notifications</span>
 <span class="material-symbols-outlined text-teal-400 cursor-pointer scale-95 duration-200" data-icon="settings">settings</span>
-<div class="w-8 h-8 rounded-full overflow-hidden border border-teal-400/30">
-<img alt="Clinician profile" data-alt="Professional clinician profile portrait with a warm and empathetic expression in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnfW4LVzPh5SKk-nC-H-y9N0oPSzjerjD9hNTZVYhxnPK3woS7Q_EscSkl9a-eYKuopEOT4GMfciilcn-nLXssjP6the3QXITmNW1jdlJiH6gxGaxqTELUSZJjRCVLrxs2qCPPaLInfWwlm7kmF0Z18LVJSsukyPLX_CCX1mwad23TYFZRb9LNBSdyWWPzVNEQQ5nft7SqCcs32QjYL7wgvP_VDa_A6vGwrXAJgi5j6d7pQUjkGBE6lpGC1e3wdbQBqe01IqYfE6ci"/>
-</div>
+<div id="user-avatar-header" class="w-8 h-8 rounded-full border border-teal-400/30 flex items-center justify-center text-xs font-bold" style="background:rgba(45,212,191,0.1);color:#14b8a6;">AM</div>
 </div>
 </header>
 <div class="flex h-[calc(100vh-72px)]">
@@ -437,4 +435,10 @@ document.querySelectorAll('button').forEach(btn => {
 <span class="text-[10px] font-manrope uppercase tracking-widest mt-1">Profile</span>
 </a>
 </nav>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

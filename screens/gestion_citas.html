@@ -163,9 +163,7 @@
 <button class="w-10 h-10 flex items-center justify-center hover:bg-slate-800/50 rounded-lg transition-all">
 <span class="material-symbols-outlined text-slate-400" data-icon="settings">settings</span>
 </button>
-<div class="w-8 h-8 rounded-full overflow-hidden border border-slate-700 ml-2">
-<img alt="Clinician profile" class="w-full h-full object-cover" data-alt="professional portrait of a female clinician in a modern office setting with soft professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_yXRgknYOAisZvhpJGYVcRa5ed_iy4_tszWGSgYdKDqaXS1QUa_MX0PNNzDlsDcFAP89uhMgiAWQM3jyT6gf-o49EEWpijpr0b7_ojPR_s4R5V4tE3mLxiVeowNQQ3rX4b1qNtChKpnVCJPtylyFxIVipEeByyKpCaWOMeK28C5L9KLTqMHYJHNfc5FWLI9Hy5zgMhtQnjbrHDodN25xCeoX9GN35MrGZg7T0JEPPh_9pZx_u7pj8uqrNaDsKie1J21I4FCfTocY3"/>
-</div>
+<div id="user-avatar-header" class="w-8 h-8 rounded-full border border-slate-700 ml-2 flex items-center justify-center text-xs font-bold bg-slate-800 text-slate-300">AM</div>
 </div>
 </header>
 <!-- Calendar Content -->
@@ -397,4 +395,10 @@
 
     await cargar()
   </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

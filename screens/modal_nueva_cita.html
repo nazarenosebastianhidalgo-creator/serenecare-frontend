@@ -105,9 +105,7 @@
 <button class="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-lg transition-all scale-95 duration-200 ease-in-out">
 <span class="material-symbols-outlined text-cyan-800 dark:text-cyan-400">notifications</span>
 </button>
-<div class="h-8 w-8 rounded-full bg-surface-container overflow-hidden">
-<img alt="Clinician profile" class="w-full h-full object-cover" data-alt="Professional headshot of a smiling female doctor in her 40s wearing a white clinical coat in a bright modern office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnQFD56Ve36PVJeSq2PitugBocNMzRKn0lr9nOhLSAa-aWYKv4qPVt8Tnal8RiSs-8ZDmeTJdlsD8EOnfONXRzfvLhg9EUtY5k_e4rlgJIX6r34XvYXo1Mb73VsihHo0T4kguTEt__2kvVq7-6JNOQMgvGwO-4lRNUbYk5U4kD2W8JKXyDuqRQpoohPKihLcLrUMWxb5pLn2PWpItEju6fmyWurQPjT3azzuZT15cjFfJ6MJ8GNGlQZFBKHhcJnI9_7Oac3CRAmqbi"/>
-</div>
+<div id="user-avatar-header" class="h-8 w-8 rounded-full bg-surface-container flex items-center justify-center text-xs font-bold" style="background:rgba(41,103,119,0.1);color:#296777;">AM</div>
 </div>
 </nav>
 <!-- Main Content (Calendar Context Background) -->
@@ -339,4 +337,10 @@
         b.addEventListener('click', () => location.href = 'gestion_citas.html')
     })
   </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

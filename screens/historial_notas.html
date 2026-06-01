@@ -113,9 +113,7 @@
 <button class="text-slate-400 hover:bg-white/5 p-2 rounded-lg transition-all active:scale-90">
 <span class="material-symbols-outlined" data-icon="settings">settings</span>
 </button>
-<div class="w-8 h-8 rounded-full overflow-hidden border border-white/10 ml-2">
-<img alt="Clinician profile avatar" class="w-full h-full object-cover" data-alt="professional clinician headshot with a friendly expression in a modern clinic setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs1bSg59h6xlScslVak0DM1BfSCX1yAVLQ1RK9MhyrjFtMmT_BNYN17DX_FDgY0J_F4JC9FL0aIOt-3fZhsLBgZ3ontCrBeC4rZUuvQ91SoSU2YyC7u69hJDwp2lEohjIxIT1JldjYCYgsDgYY2S41fF2lWGyU3xOvJCl0pJeRW1LwAnqxdbow7nsBaeMSvNbirxtRpkxNUNcfJqL6V_a47-AhWqYfdyTyaDJZEXxijc_Rz68kfWpxzMMKmHq2XVqalAcQtuc8Kb8I"/>
-</div>
+<div id="user-avatar-header" class="w-8 h-8 rounded-full border border-white/10 ml-2 flex items-center justify-center text-xs font-bold bg-slate-800 text-slate-300">AM</div>
 </div>
 </div>
 </header>
@@ -470,4 +468,10 @@
         b.addEventListener('click', () => location.href = `ficha_paciente.html?id=${pacienteId}`)
     })
   </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

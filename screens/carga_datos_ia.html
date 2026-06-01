@@ -124,9 +124,7 @@
 </div>
 <div class="pt-4 border-t border-slate-200/50 dark:border-slate-800/50 space-y-1">
 <div class="flex items-center gap-3 px-4 py-3 mb-2">
-<div class="w-8 h-8 rounded-full bg-cyan-200 flex items-center justify-center overflow-hidden">
-<img class="w-full h-full object-cover" data-alt="professional portrait of a clinical director with a warm smile and spectacles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMVAb6TrM2zIIlskQwpkX_cYrdXdyH56qVacB-ElmNSAhWDhZe2Jyx1xCA7CG-iyaQ2VXQRwK1DWW2uC7kqCvPr6kqaE-_Dj3vlBzVvnZm7rHJTDgfhJlClYtNxNZD328AOIIXp1BuCBA1OWdW6Zb8skJBTg35DyCfueXm8rKwPw3DRuUMhttAwg627cZ0wmuxXEcLrKq0mRXA1Fj21em6AfZFmAiKOdwLL-U4w8nzsKrufxSCcyS1w5-NcQjLe9r8PKoo_M5MJqBM"/>
-</div>
+<div id="user-avatar-header" class="w-8 h-8 rounded-full bg-cyan-100 flex items-center justify-center text-xs font-bold" style="color:#0e7490;">AM</div>
 <div>
 <p class="text-xs font-bold text-cyan-900 dark:text-cyan-100 leading-none">Dr. Aris</p>
 <p class="text-[10px] text-slate-500">Clinical Director</p>
@@ -431,4 +429,10 @@
       })
     }
   </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

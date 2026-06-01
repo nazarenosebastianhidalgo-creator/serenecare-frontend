@@ -101,7 +101,7 @@
 <button class="p-2 text-slate-400 hover:bg-white/5 rounded-lg transition-all scale-95 active:scale-90">
 <span class="material-symbols-outlined">settings</span>
 </button>
-<img alt="Clinician profile avatar" class="w-10 h-10 rounded-full border border-white/10 object-cover" data-alt="professional clinician headshot with a friendly smile wearing medical scrubs in a softly lit office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkO_1aRx7PijTcd68GV0T4BENnZPwILjTgbLrEtj6MYNGpXdAWNviyFRkFhGdBEr33LlMjkmBFqBPSFU3vx5qSSs-SJSwYmaWd48z5W2dllLnb9OiNLRnS0_-1ponUPEbxzHwVqgBBdkPGQElypWDkQyLNe3X2rmHK6CCFBX1RylHC3K3fNagJMKG15zyKxLzBAu27VZfDt9nJ_68mqof-r9cCJdIoUuqKhkg7r0VtO3rw_cjNYiG0O2cqG3LUxD1D-x5GYze9-Lpn"/>
+<div id="user-avatar-header" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-xs font-bold bg-slate-800 text-slate-300">AM</div>
 </div>
 </div>
 </nav>
@@ -316,4 +316,10 @@
       }
     })
   </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

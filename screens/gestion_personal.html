@@ -109,9 +109,7 @@
 <button class="p-2 hover:bg-slate-800/50 rounded-lg transition-all duration-300 ease-in-out text-slate-400">
 <span class="material-symbols-outlined">settings</span>
 </button>
-<div class="h-8 w-8 rounded-full overflow-hidden border border-slate-700">
-<img class="w-full h-full object-cover" data-alt="Professional clinical headshot of a woman doctor with a calm expression in a modern office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvZ7MfmytXA9CXwdCzGKfBcL8-RUBLrF9uEIZfW3vixgKhTMGuyBn_uFlFN-L9qIVEjU_SSRGeyB5m-pDM8y9yom0I6IU3BCogGVZgcFvQ5SHlla47wRWiT9AV7BGUH_romag_mQ04kZd2J2qB350LdXBqjJeRVYPFZ_h2t9E8SBRDM0c9PyXfHtThd6SkusUghYFTiUMXWuSjcis5qDtsHDg9uEyDF8JuI1AOV0PICfTYGIc37luZ7nX6Bsag7caXv6kF4HPn-DuT"/>
-</div>
+<div id="user-avatar-header" class="h-8 w-8 rounded-full border border-slate-700 flex items-center justify-center text-xs font-bold bg-slate-800 text-slate-300">AM</div>
 </div>
 </nav>
 <!-- SideNavBar Implementation (Floating Style) -->
@@ -462,4 +460,10 @@
 
     await cargar()
   </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

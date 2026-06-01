@@ -113,7 +113,7 @@
 <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">HD Connection</span>
 </div>
 <button class="material-symbols-outlined text-slate-500 hover:text-cyan-700 transition-colors">notifications</button>
-<img alt="Clinician Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-container" data-alt="professional portrait of a clinician in a light-filled office, soft lighting, wearing professional attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB67p55sWUZUANt_UUmbewG-S4Wh8YtfjcAFiqiBNKqeQQjADt3j1j1o7SEOwrWqHh1RXbxuWeQNz4sPe2K8_UcJhxl7zJlBqGVAgrcuwscK_EU5ko4RQ-r1wz2MOBFK9thO8I1C6xCz5uGGBEhz7WOE3WaMo4tr1z4HvSk77rNV2Vl5U-weK5UmUH5mdeN5gaaxOzhr2vQQl4FwMFSxzKAcJH2PphGfWAekm6Qc5U1x_YH8OIIyrvXCJ2z1UDobSVRFVjMOVltiZ4D"/>
+<div id="user-avatar-header" class="w-8 h-8 rounded-full ring-2 ring-primary-container flex items-center justify-center text-xs font-bold" style="background:rgba(41,103,119,0.15);color:#296777;">AM</div>
 </div>
 </header>
 <main class="flex h-[calc(100vh-72px)] w-full overflow-hidden bg-surface">
@@ -502,4 +502,12 @@ window.cwEnviar=function(){
     </button>
     <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
   </div>
-</div></body></html>
+</div>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script>
+</body></html>

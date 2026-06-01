@@ -161,9 +161,7 @@
 <button class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-slate-400 hover:text-white transition-colors border border-slate-800">
 <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
 </button>
-<div class="w-10 h-10 rounded-full border-2 border-primary/30 overflow-hidden">
-<img alt="Clinician Profile" class="w-full h-full object-cover" data-alt="professional portrait of a female doctor in a clinical setting with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPNXHEEB9Cm5LxOnpahpbkS8QXAoFPyRo82f4H5Ij80zbHOJamV6NI5KEOBsqXA8l9fphDKh33Iki-QZrhp6ByqZ5lUBpxSapHnYInD3FVMNFONoKW9I1zjqaIFW-HRjPTcJ3okV-Mhv6Xf2uQ72DjAx3B3_KeLzxAuWetAvnn5myYivdlJ_9XS8VB83yZ0jXuCOIcKUMU9i-5jh90qJtevhpPJ-aDOicOdKG_sMIsOnBUehGuuU9CrKHvOjTfUDhyfmL99TzNHWLx"/>
-</div>
+<div id="user-avatar-header" class="w-10 h-10 rounded-full border-2 border-primary/30 flex items-center justify-center text-xs font-bold" style="background:rgba(41,103,119,0.1);color:#296777;">AM</div>
 </div>
 </div>
 </header>
@@ -577,4 +575,10 @@ document.querySelectorAll('a').forEach(a => {
 const btnManual = Array.from(document.querySelectorAll('button')).find(b => b.textContent.includes('Nueva Cita'))
 // No hay botón manual explícito, se deja para acción futura
 </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

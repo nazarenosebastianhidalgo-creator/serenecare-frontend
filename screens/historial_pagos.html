@@ -112,9 +112,7 @@
 <div class="flex items-center gap-4">
 <span class="material-symbols-outlined text-slate-400 hover:text-teal-200 cursor-pointer transition-all duration-200 scale-95">notifications</span>
 <span class="material-symbols-outlined text-slate-400 hover:text-teal-200 cursor-pointer transition-all duration-200 scale-95">settings</span>
-<div class="w-10 h-10 rounded-full overflow-hidden border border-slate-800">
-<img alt="Clinician profile" class="w-full h-full object-cover" data-alt="Professional portrait of a middle-aged female clinician in a modern medical setting, soft studio lighting, professional and empathetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-ehKjyjne8zKAt2L4pPfD3gXQxiP_3XV2JYvildZU6jd9ncvLT0jhkFCwc_4_VLwkIvrnLtPbemqrm76SUJFNacIsBpTUIntVBrw2uHdXZXCFbevyQbcxZbZKBslOuQae2Iii6BF_4Cd8Jaba-O93915PGs59ChJrsBOxS-8gESxT4ZG_52BpAwXs72gXd6EOAkTddwHE2g-krSsmKSfQ5x0BFF7lnhr_cypWGiMVkajE9va1Ey0B2fcPKzGVnTH-_NXe-0bJz36b"/>
-</div>
+<div id="user-avatar-header" class="w-10 h-10 rounded-full border border-slate-800 flex items-center justify-center text-xs font-bold bg-slate-900 text-slate-300">AM</div>
 </div>
 </header>
 <div class="flex min-h-[calc(100vh-72px)]">
@@ -480,4 +478,10 @@
       }
     } catch(e) { mostrarError(e.message) }
   </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

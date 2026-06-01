@@ -154,10 +154,10 @@
 </div>
 <div class="flex items-center gap-3 pl-4 border-l border-white/10">
 <div class="text-right">
-<p class="text-sm font-bold">Admin User</p>
+<p id="sa-nombre" class="text-sm font-bold">Super Admin</p>
 <p class="text-xs text-slate-400">Super Admin</p>
 </div>
-<img alt="Admin User" class="w-10 h-10 rounded-full object-cover border-2 border-indigo-500/30" data-alt="professional portrait of a confident male executive in a modern office setting with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXP1-6JG4wZ9NvI1boVjnmlLNB2FJsJid4VGdIghFCVV3fngR4Bzx9EdeqYJybqbRbnyUiwJsJWfn3Nf4knB7Et46QGL0lsqhRrbptVMGITyPUgjqi9xw5pD4j7II1EBvrxflebwdbdshDin-9U_eLDTXtwNqAO19_BiEw-8_ST9Wn9sLigIRY-z0_8yX_9esMJgdtO_jBe_HlEQ7VP4z4iN1MXXmiiPoOKbuADL-Bv6SoPR73L-UcPbw0Rsy5DOUZDpKgBDSLDFkF"/>
+<div id="sa-avatar" class="w-10 h-10 rounded-full bg-indigo-500/20 border-2 border-indigo-500/30 flex items-center justify-center text-sm font-bold" style="color:#818cf8;">SA</div>
 </div>
 </div>
 </header>
@@ -166,8 +166,8 @@
 <!-- Header Section -->
 <section class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
 <div class="flex items-center gap-6">
-<div class="w-24 h-24 bg-surface-container-lowest rounded-2xl flex items-center justify-center shadow-sm p-4">
-<img alt="Clinic Logo" class="w-full h-full object-contain" data-alt="abstract minimalist logo design for a healthcare brand with teal and soft green color palette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAOuvu8fR4GyXYcoLHjHKmMqCZ2w8UOyfejErUu5v-habgg4EUVaAAwWRAcWPVeE2D668ZoS0v8iKrjkpi5EDY-zSYQbCOXm8NoRPtlbY4kdbSWZURa5EWsuNYoM5r_pSa7dMX7DItjdiR-CcC3eqMJWnJQImIwxsMTF5j9TdWDwWg5DKAFIn4g1JTcPZAJwc3m9-V3N5_C93LKP020lHCkd_fcnKE5cfEHD4wI_cQ4vDywoRhv_21oXNQNB6dwv8XBVaKFMzrbEbN"/>
+<div class="w-24 h-24 bg-surface-container-lowest rounded-2xl flex items-center justify-center shadow-sm text-3xl font-extrabold text-primary">
+CS
 </div>
 <div>
 <div class="flex items-center gap-3 mb-1">
@@ -474,4 +474,13 @@
       window.location.href = 'acceso_super_admin.html'
     })
   </script>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Super Admin';
+  var av = document.getElementById('sa-avatar');
+  var nm = document.getElementById('sa-nombre');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'SA';
+  if (nm) nm.textContent = nombre;
+})();
+</script>
 </body></html>

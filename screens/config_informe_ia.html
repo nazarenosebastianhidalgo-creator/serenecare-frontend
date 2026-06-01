@@ -105,7 +105,7 @@
 <button class="bg-gradient-teal text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-all active:scale-95">Nuevo Informe</button>
 <span class="material-symbols-outlined text-slate-500 dark:text-slate-400 cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-full transition-colors">notifications</span>
 <span class="material-symbols-outlined text-slate-500 dark:text-slate-400 cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-900 rounded-full transition-colors">settings</span>
-<img alt="Avatar del psicólogo" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-800 object-cover" data-alt="professional psychologist with a calm expression in a modern office setting, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA21xiIl1bD92asB0pRJR6AO1I17u8Yo_phw4qINwZJ5ABb8Icwi6HODKKql2iorNIFCyog90mf-x4nPSVQJy-5k_rXzKwmBNU1V7MGHl3-W5B0uYbVe03T2fEtx9E690rO6C6IElUldYCr7tHbuQcDgvgJFLC-s_dXfDrFW61ARZELoi79pIvgAW55q0oE_QHT945LOYnZVOPyIJrv_iuL8LDMXCLhHT6Y7e4Y-YHvIlvBuTkzOFktIZWZMnQ4IalFGKzwSzGhKI7k"/>
+<div id="user-avatar-header" class="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xs font-bold bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300">AM</div>
 </div>
 </nav>
 <!-- SideNavBar (Shared Component) -->
@@ -322,4 +322,10 @@
       if (b.textContent.toLowerCase().includes('volver')) b.addEventListener('click', () => history.back())
     })
   </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>

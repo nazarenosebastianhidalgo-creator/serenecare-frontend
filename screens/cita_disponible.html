@@ -116,9 +116,7 @@
 <div class="flex items-center gap-4">
 <span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
 <span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">settings</span>
-<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-surface-container-high">
-<img alt="Clinical Director Profile" data-alt="professional clinical director headshot with a friendly smile, clean medical background, soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1TEj5SLNBq0B3_fZ9dEIcvJBE_SkUUV8tahbxdTxaiH4ERKXkbEWDUVbHtd7Ih8Wdly_r6tIdCdyG01ikvDZSxO5lgUZxi25hAJQgxZqpDGswi0OzEXZRXo7t90ORZqAJapAQG4COt35Gom2ItHoyqyoR8rmIAZPcaoy8ojufufNDsimGxR_61krEZoaSMino7D_txvHX770gsiXsljBLP1-19NQ2Dy7WznlNTFIMVfkpfOYXxeN1VzPFtJ8STkh6UJ9bB3XFRRIL"/>
-</div>
+<div id="user-avatar-header" class="w-10 h-10 rounded-full border-2 border-surface-container-high flex items-center justify-center text-xs font-bold" style="background:rgba(41,103,119,0.1);color:#296777;">AM</div>
 </div>
 </div>
 </header>
@@ -322,4 +320,10 @@ if (btnOtras) btnOtras.addEventListener('click', () => {
   window.location.href = '/screens/directorio_clinicas.html'
 })
 </script>
-</body></html>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var av = document.getElementById('user-avatar-header');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
+})();
+</script></body></html>
