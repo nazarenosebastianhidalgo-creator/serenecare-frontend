@@ -1,4 +1,4 @@
-import { supabase } from './supabase-client.js'
+import { supabase, callEdge } from './supabase-client.js'
 import { verificarSesion } from './auth.js'
 
 const ROLES_CLINICA = ['admin_clinica', 'psicologo', 'secretario']
@@ -124,12 +124,7 @@ export async function obtenerPaciente(pacienteId) {
 }
 
 export async function crearPaciente(datos) {
-  const { data, error } = await supabase.from('pacientes').insert({
-    ...datos,
-    clinica_id: clinicaId(),
-  }).select().single()
-  if (error) throw new Error('No se pudo crear el paciente.')
-  return data
+  return callEdge('invitar-paciente', datos)
 }
 
 // ══════════════════════════════════════════

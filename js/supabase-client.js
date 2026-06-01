@@ -28,8 +28,9 @@ export async function callEdge(fn, body) {
     headers,
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(`Edge function ${fn} failed`);
-  return res.json();
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error || `Edge function ${fn} failed`);
+  return json;
 }
 
 // ── Sesión / perfil ────────────────────────────────────────────
