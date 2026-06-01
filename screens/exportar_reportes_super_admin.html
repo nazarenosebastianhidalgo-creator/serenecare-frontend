@@ -92,12 +92,10 @@
   </nav>
   <div class="mt-auto pt-6 border-t border-slate-800/40">
     <div class="flex items-center gap-3 mb-6 px-2">
-      <div class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 overflow-hidden">
-        <img alt="Super Admin" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEkOniiDt2PI6tNxEg91jxORg_SnN49152Jl6fY0T0JQUpJUPEg640XGgrfxvoylvoIyfuB_qrZInikAzWkPLaBJtEGs8a1m5DWI6nSGiYx73x1gDkG_t73ZqxnT_mOdYgJr7hEeYCmEENDwwewakrZq2-XJTTIpjE2B4KTh0YatVFUdgbxtr_nb61J_UtkE46ijL9rAKcI8k2TXNFOM6T6ot4VleySKenIKVZQe28hAAVPd-jK3442dleEBj7QRHC8feyZZ9114e4"/>
-      </div>
+      <div id="sa-avatar" class="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-sm font-bold" style="color:#818cf8;">SA</div>
       <div class="flex-1 overflow-hidden">
-        <p class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
-        <p class="text-xs text-slate-500 truncate">System Status: Healthy</p>
+        <p id="sa-nombre" class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
+        <p class="text-xs text-slate-500 truncate">Super Administrador</p>
       </div>
     </div>
     <a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-error-container hover:bg-error-dim/20 rounded-xl transition-all" href="#" id="btn-logout">
@@ -510,5 +508,14 @@ if (usuarios) {
   el('rep-users-admins', admins)
   el('rep-users-ts', 'Actualizado: ' + ahora)
 }
+</script>
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Super Admin';
+  var av = document.getElementById('sa-avatar');
+  var nm = document.getElementById('sa-nombre');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'SA';
+  if (nm) nm.textContent = nombre;
+})();
 </script>
 </body></html>
