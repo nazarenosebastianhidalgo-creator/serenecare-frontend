@@ -41,6 +41,12 @@
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
 </style>
+  <script src="https://js-de.sentry-cdn.com/6b59869e522b711e9fa58d6786863c2c.min.js" crossorigin="anonymous"></script>
+  <script>
+    Sentry.onLoad(function () {
+      Sentry.init({ tracesSampleRate: 0.2, environment: 'production' });
+    });
+  </script>
 </head>
 <body class="text-slate-200 antialiased min-h-screen">
 
@@ -157,7 +163,7 @@
         <div>
           <label class="field-label">Código de invitación *</label>
           <div class="relative">
-            <input type="text" id="f-codigo" class="field-input pr-10" placeholder="BETA-FUND-001" autocomplete="off"
+            <input type="text" id="f-codigo" class="field-input pr-10" placeholder="Tu código de invitación" autocomplete="off"
               style="text-transform:uppercase;letter-spacing:0.05em;"
               oninput="this.value=this.value.toUpperCase(); resetCodigoState()"/>
             <span class="material-symbols-outlined absolute right-3 top-3 text-lg hidden" id="ico-codigo-ok" style="color:#34d399;">check_circle</span>

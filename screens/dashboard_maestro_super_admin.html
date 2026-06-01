@@ -92,6 +92,12 @@
         @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
         .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
     </style>
+  <script src="https://js-de.sentry-cdn.com/6b59869e522b711e9fa58d6786863c2c.min.js" crossorigin="anonymous"></script>
+  <script>
+    Sentry.onLoad(function () {
+      Sentry.init({ tracesSampleRate: 0.2, environment: 'production' });
+    });
+  </script>
 </head>
 <body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
 <!-- Sidebar Navigation Shell -->

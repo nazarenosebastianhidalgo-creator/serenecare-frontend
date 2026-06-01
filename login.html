@@ -35,6 +35,12 @@
     .tab-inactive { color: #64748b; border-bottom: 2px solid transparent; }
     .tab-inactive:hover { color: #94a3b8; }
   </style>
+  <script src="https://js-de.sentry-cdn.com/6b59869e522b711e9fa58d6786863c2c.min.js" crossorigin="anonymous"></script>
+  <script>
+    Sentry.onLoad(function () {
+      Sentry.init({ tracesSampleRate: 0.2, environment: 'production' });
+    });
+  </script>
 </head>
 <body class="min-h-screen bg-main flex items-center justify-center p-6">
 
@@ -158,6 +164,7 @@
     );
 
     const RUTAS = {
+      super_admin:   'screens/dashboard_maestro_super_admin.html',
       admin_clinica: 'screens/dashboard_admin_clinica.html',
       psicologo:     'screens/dashboard_psicologo.html',
       secretario:    'screens/dashboard_psicologo.html',

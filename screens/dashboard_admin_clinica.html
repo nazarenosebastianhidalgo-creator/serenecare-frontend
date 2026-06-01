@@ -52,6 +52,12 @@
   .alerta:hover { filter:brightness(1.1); }
   .alerta:last-child { margin-bottom:0; }
 </style>
+  <script src="https://js-de.sentry-cdn.com/6b59869e522b711e9fa58d6786863c2c.min.js" crossorigin="anonymous"></script>
+  <script>
+    Sentry.onLoad(function () {
+      Sentry.init({ tracesSampleRate: 0.2, environment: 'production' });
+    });
+  </script>
 </head>
 <body class="text-slate-200 antialiased min-h-screen">
 

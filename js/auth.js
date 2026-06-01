@@ -117,8 +117,11 @@ export async function verificarOTP(token) {
 
 // ─── RECUPERAR CONTRASEÑA ─────────────────────────────────────────
 export async function recuperarPassword(email) {
+  const base = window.location.hostname === 'localhost' || window.location.protocol === 'file:'
+    ? 'https://serenecare-app.vercel.app'
+    : window.location.origin;
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/screens/restablecer_password.html`,
+    redirectTo: `${base}/screens/restablecer_password.html`,
   })
   if (error) throw new Error('No se pudo enviar el email de recuperación.')
 }
