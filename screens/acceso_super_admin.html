@@ -197,7 +197,7 @@
         const { data: perfil, error: perfilError } = await supabase
           .from('usuarios').select('rol,nombre').eq('id', authData.user.id).single()
 
-        if (perfilError || !perfil) throw new Error('No se encontró tu perfil.')
+        if (perfilError || !perfil) throw new Error('Perfil error: ' + (perfilError?.message || perfilError?.code || 'null') + ' | uid: ' + authData.user.id)
         if (perfil.rol !== 'super_admin') {
           await supabase.auth.signOut()
           throw new Error('Esta cuenta no tiene permisos de super admin.')
