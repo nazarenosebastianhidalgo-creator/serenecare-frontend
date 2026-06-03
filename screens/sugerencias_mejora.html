@@ -391,5 +391,19 @@ renderSugerencias();
   renderSugerencias();
 })();
 </script>
+
+<script type="module">
+import { guardaSuperAdmin } from '../js/admin.js';
+import { supabase } from '../js/supabase-client.js';
+await guardaSuperAdmin();
+const btn = document.getElementById('btn-logout');
+if (btn) {
+  btn.addEventListener('click', async e => {
+    e.preventDefault();
+    await supabase.auth.signOut();
+    window.location.href = 'acceso_super_admin.html';
+  });
+}
+</script>
 </body>
 </html>

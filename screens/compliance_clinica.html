@@ -309,6 +309,10 @@
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js';
+import { cerrarSesion } from '../js/auth.js';
+window._cerrarSesion = cerrarSesion;
+const { data: { session } } = await supabase.auth.getSession();
+if (!session) { window.location.href = 'acceso_clinica.html'; }
 
 // Fecha
 const f = new Date();
