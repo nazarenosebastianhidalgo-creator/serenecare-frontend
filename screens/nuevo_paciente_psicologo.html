@@ -1284,5 +1284,32 @@ window.guardarPaciente = async function() {
 }
 </script>
 
+
+<!-- TEST INVITE BTN - BORRAR DESPUES -->
+<div id='test-invite-bar' style='position:fixed;bottom:0;left:0;right:0;background:#1e1b4b;color:#fff;padding:10px;z-index:9999;display:flex;gap:8px;align-items:center;font-size:13px;'>
+  <span>TEST:</span>
+  <input id='test-pac-id' placeholder='ID paciente' style='padding:4px 8px;border-radius:6px;border:none;color:#000;width:280px;'>
+  <button onclick='testInvite()' style='background:#7c3aed;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;'>Enviar invite</button>
+  <span id='test-result' style='flex:1;'></span>
+</div>
+<script>
+async function testInvite() {
+  var pacId = document.getElementById('test-pac-id').value.trim();
+  var res = document.getElementById('test-result');
+  if (!pacId) { res.textContent = 'Pon un ID de paciente'; return; }
+  res.textContent = 'Enviando...';
+  try {
+    var m = await import('../js/supabase-client.js');
+    var sess = (await m.supabase.auth.getSession()).data.session;
+    if (!sess) { res.textContent = 'Sin sesion'; return; }
+    var r = await fetch('https://serenecare-backend-production.up.railway.app/api/patients/' + pacId + '/invite', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + sess.access_token, 'Content-Type': 'application/json' }
+    });
+    var j = await r.json();
+    res.textContent = 'Status ' + r.status + ': ' + JSON.stringify(j);
+  } catch(e) { res.textContent = 'Error: ' + e.message; }
+}
+</script>
 </body>
 </html>
