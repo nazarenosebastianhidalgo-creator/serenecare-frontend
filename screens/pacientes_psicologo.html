@@ -329,7 +329,9 @@ function renderPacientes() {
       +'<div>'+estadoBadge(p.estado)+'</div>'
       +'<div style="display:flex;align-items:center;gap:6px;">'+hoyBadge+'</div>'
       +'<div style="font-size:12px;font-weight:600;color:#94a3b8;text-align:center;">'+p.sesiones+'</div>'
-      +'<div style="display:flex;justify-content:flex-end;"><span style="font-size:11px;font-weight:700;color:#a78bfa;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:4px 10px;">Ver ficha</span></div>'
+      +'<div style="display:flex;justify-content:flex-end;gap:6px;align-items:center;">'
+      +(p.estado !== 'invitado' ? '<button onclick="event.preventDefault();event.stopPropagation();invitarPaciente(''+p.id+'');" style="font-size:11px;font-weight:700;color:#34d399;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:8px;padding:4px 10px;cursor:pointer;">Invitar</button>' : '<span style="font-size:10px;color:#34d399;font-weight:600;">✓ Invitado</span>')
+      +'<span style="font-size:11px;font-weight:700;color:#a78bfa;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:4px 10px;">Ver ficha</span></div>'
       +'</a>';
   }).join('');
 }
@@ -482,6 +484,33 @@ function formatProxima(cita) {
 
   renderPacientes();
 })();
+
+window.invitarPaciente = async function(pacId) {
+  var BACKEND = 'https://serenecare-backend-production.up.railway.app';
+  var btn = document.querySelector('[onclick*="'+pacId+'"]');
+  if (btn) { btn.textContent = 'Enviando...'; btn.disabled = true; }
+  try {
+    var sess = (await supabase.auth.getSession()).data.session;
+    if (!sess) { alert('Sin sesion activa'); return; }
+    var r = await fetch(BACKEND + '/api/patients/' + pacId + '/invite', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + sess.access_token, 'Content-Type': 'application/json' }
+    });
+    var j = await r.json();
+    if (!r.ok) {
+      alert('Error al invitar: ' + (j.error || r.status));
+      if (btn) { btn.textContent = 'Invitar'; btn.disabled = false; }
+    } else {
+      alert('Invitacion enviada correctamente al email del paciente');
+      var pac = window.PACIENTES.find(function(p){ return p.id === pacId; });
+      if (pac) { pac.estado = 'invitado'; renderPacientes(); }
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+    if (btn) { btn.textContent = 'Invitar'; btn.disabled = false; }
+  }
+};
+
 </script>
 
 <!-- MINI CHAT WIDGET -->
@@ -631,20 +660,62 @@ function setInviteMethod(m) {
   });
 }
 
-function enviarInvite() {
+async function enviarInvite() {
   var nombre = document.getElementById('np-nombre').value.trim();
   var email  = document.getElementById('np-email').value.trim();
+  var tel    = document.getElementById('np-telefono').value.trim();
+  var motivo = document.getElementById('np-motivo').value.trim();
+
   if (!nombre) { document.getElementById('np-nombre').style.borderColor = '#f87171'; document.getElementById('np-nombre').focus(); return; }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('np-email').style.borderColor = '#f87171'; document.getElementById('np-email').focus(); return; }
 
-  cerrarModalPaciente();
+  var btn = document.querySelector('#modal-nuevo-paciente button[onclick="enviarInvite()"]');
+  if (btn) { btn.textContent = 'Guardando...'; btn.disabled = true; }
 
-  var msg = 'Invitación enviada a ' + nombre;
-  var t = document.getElementById('toast-np');
-  document.getElementById('toast-np-msg').textContent = msg;
-  t.style.display = 'flex';
-  t.style.opacity = '1';
-  setTimeout(function(){ t.style.transition = 'opacity 0.4s'; t.style.opacity = '0'; setTimeout(function(){ t.style.display = 'none'; t.style.transition = ''; t.style.opacity = '1'; }, 400); }, 3000);
+  try {
+    var m = await import('../js/supabase-client.js');
+    var sess = (await m.supabase.auth.getSession()).data.session;
+    if (!sess) { window.location.href = 'acceso_clinica.html'; return; }
+
+    var psicologoId = sess.user.id;
+    var clinicaId   = localStorage.getItem('tp_clinica_id');
+    if (!clinicaId) {
+      var uRes = await m.supabase.from('usuarios').select('clinica_id').eq('id', psicologoId).single();
+      clinicaId = uRes.data && uRes.data.clinica_id;
+    }
+
+    var apellido    = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : '';
+    var solo_nombre = nombre.split(' ')[0] || nombre;
+
+    var iRes = await m.supabase.from('pacientes').insert({
+      nombre: solo_nombre, apellido, email,
+      telefono: tel || null,
+      clinica_id: clinicaId,
+      psicologo_id: psicologoId,
+      motivo_consulta: motivo || null,
+      estado: 'activo',
+    }).select('id').single();
+
+    if (iRes.error) throw new Error(iRes.error.message);
+
+    var r = await fetch('https://serenecare-backend-production.up.railway.app/api/patients/' + iRes.data.id + '/invite', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + sess.access_token, 'Content-Type': 'application/json' }
+    });
+    var j = await r.json();
+    if (!r.ok) throw new Error(j.error || 'Error al invitar: ' + r.status);
+
+    cerrarModalPaciente();
+    var t = document.getElementById('toast-np');
+    document.getElementById('toast-np-msg').textContent = 'Paciente guardado. Invitacion enviada a ' + email;
+    t.style.display = 'flex'; t.style.opacity = '1';
+    setTimeout(function(){ t.style.transition = 'opacity 0.4s'; t.style.opacity = '0'; setTimeout(function(){ t.style.display = 'none'; t.style.transition = ''; t.style.opacity = '1'; }, 400); }, 4000);
+    setTimeout(function(){ window.location.reload(); }, 1500);
+
+  } catch(e) {
+    if (btn) { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:17px;">send</span> Enviar invitacion'; btn.disabled = false; }
+    alert('Error: ' + e.message);
+  }
 }
 
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cerrarModalPaciente(); });
