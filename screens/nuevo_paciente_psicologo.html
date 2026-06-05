@@ -1265,9 +1265,17 @@ window.guardarPaciente = async function() {
         headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' }
       })
       const invJson = await invRes.json()
-      if (!invRes.ok) console.warn('Invite failed:', invJson)
-      else console.log('Invite sent:', invJson)
-    } catch(invE) { console.warn('Invite error:', invE.message) }
+      if (!invRes.ok) {
+        console.warn('Invite failed:', invJson)
+        if (typeof mostrarToast === 'function') mostrarToast('Invite error: ' + (invJson.error || invRes.status))
+      } else {
+        console.log('Invite sent:', invJson)
+        if (typeof mostrarToast === 'function') mostrarToast('Invitacion enviada al correo del paciente')
+      }
+    } catch(invE) {
+      console.warn('Invite error:', invE.message)
+      if (typeof mostrarToast === 'function') mostrarToast('Invite error: ' + invE.message)
+    }
 
     setTimeout(function(){ window.location.href = 'pacientes_psicologo.html' }, 1500)
   } catch(e) {
