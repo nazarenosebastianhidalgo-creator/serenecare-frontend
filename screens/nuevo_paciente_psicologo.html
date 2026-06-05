@@ -1226,19 +1226,49 @@ if (usu) {
   }
 }
 window.guardarPaciente = async function() {
-  var nombre = (document.getElementById('f-nombre') || {}).value || ''
-  var email  = (document.getElementById('f-email')  || {}).value || ''
-  var tel    = (document.getElementById('f-tel')    || {}).value || ''
+  var nombre     = (document.getElementById('f-nombre')     || {}).value || ''
+  var email      = (document.getElementById('f-email')      || {}).value || ''
+  var tel        = (document.getElementById('f-tel')        || {}).value || ''
+  var nacimiento = (document.getElementById('f-nacimiento') || {}).value || null
+  var motivo     = (document.getElementById('f-como-llego') || {}).value || null
   nombre = nombre.trim(); email = email.trim(); tel = tel.trim()
   if (!nombre || !email || !tel) {
-    if (typeof mostrarToast === 'function') mostrarToast('Completá al menos Nombre, Email y Teléfono antes de guardar.')
+    if (typeof mostrarToast === 'function') mostrarToast('Completa al menos Nombre, Email y Telefono antes de guardar.')
     return
   }
   try {
-    const apellido = nombre.split(' ').slice(1).join(' ') || ''
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) { window.location.href = 'acceso_clinica.html'; return }
+    const psicologoId = session.user.id
+    const clinicaId   = (typeof usu !== 'undefined' && usu?.clinica_id) || localStorage.getItem('tp_clinica_id')
+    const apellido    = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : ''
     const solo_nombre = nombre.split(' ')[0] || nombre
-    await crearPaciente({ nombre: solo_nombre, apellido, email, telefono: tel })
-    if (typeof mostrarToast === 'function') mostrarToast('Paciente guardado correctamente.')
+
+    const { data: pac, error: insErr } = await supabase.from('pacientes').insert({
+      nombre: solo_nombre, apellido, email,
+      telefono: tel,
+      clinica_id: clinicaId,
+      psicologo_id: psicologoId,
+      fecha_nacimiento: nacimiento || null,
+      motivo_consulta: motivo || null,
+      estado: 'activo',
+    }).select('id').single()
+
+    if (insErr) { if (typeof mostrarToast === 'function') mostrarToast('Error al guardar: ' + insErr.message); return }
+
+    if (typeof mostrarToast === 'function') mostrarToast('Paciente guardado. Enviando invitacion...')
+
+    try {
+      const BACKEND = 'https://serenecare-backend-production.up.railway.app'
+      const invRes = await fetch(BACKEND + '/api/patients/' + pac.id + '/invite', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' }
+      })
+      const invJson = await invRes.json()
+      if (!invRes.ok) console.warn('Invite failed:', invJson)
+      else console.log('Invite sent:', invJson)
+    } catch(invE) { console.warn('Invite error:', invE.message) }
+
     setTimeout(function(){ window.location.href = 'pacientes_psicologo.html' }, 1500)
   } catch(e) {
     if (typeof mostrarToast === 'function') mostrarToast('Error al guardar: ' + (e.message || 'intente nuevamente'))
