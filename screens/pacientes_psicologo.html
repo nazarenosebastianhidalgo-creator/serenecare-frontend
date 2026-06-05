@@ -730,12 +730,26 @@ document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cerrarM
   <span id='tst-res' style='flex:1;font-size:11px;'></span>
 </div>
 <script>
+async function tstGetSess() {
+  var m = await import('../js/supabase-client.js');
+  var { data: { session } } = await m.supabase.auth.getSession();
+  if (!session) return null;
+  // Refresh if token expires in less than 60s
+  var exp = session.expires_at ? session.expires_at * 1000 : 0;
+  if (Date.now() > exp - 60000) {
+    var ref = await m.supabase.auth.refreshSession();
+    return ref.data.session;
+  }
+  return session;
+}
 async function tstCargar() {
   var res = document.getElementById('tst-res');
   var sel = document.getElementById('tst-sel');
   res.textContent = 'Cargando...';
   try {
     var m = await import('../js/supabase-client.js');
+    var sess = await tstGetSess();
+    if (!sess) { res.textContent = 'SIN SESION — vuelve a iniciar sesion'; return; }
     var r = await m.supabase.from('pacientes').select('id, nombre, apellido, email, estado').limit(20);
     if (r.error) { res.textContent = 'Error: ' + r.error.message; return; }
     if (!r.data || !r.data.length) { res.textContent = 'No hay pacientes en BD'; return; }
@@ -749,9 +763,8 @@ async function tstInvite() {
   if (!pacId || pacId.startsWith('--')) { res.textContent = 'Primero pulsa Cargar'; return; }
   res.textContent = 'Enviando...';
   try {
-    var m = await import('../js/supabase-client.js');
-    var sess = (await m.supabase.auth.getSession()).data.session;
-    if (!sess) { res.textContent = 'SIN SESION'; return; }
+    var sess = await tstGetSess();
+    if (!sess) { res.textContent = 'SIN SESION — vuelve a iniciar sesion'; return; }
     var r = await fetch('https://serenecare-backend-production.up.railway.app/api/patients/' + pacId + '/invite', {
       method: 'POST', headers: { 'Authorization': 'Bearer ' + sess.access_token, 'Content-Type': 'application/json' }
     });
