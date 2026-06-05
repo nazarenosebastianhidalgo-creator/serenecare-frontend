@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
@@ -1121,18 +1121,41 @@ function addFilesToList(files) {
 }
 
 // Guardar
-function guardarPaciente() {
+async function guardarPaciente() {
   var nombre = document.getElementById('f-nombre').value.trim();
-  var email = document.getElementById('f-email').value.trim();
-  var tel = document.getElementById('f-tel').value.trim();
+  var email  = document.getElementById('f-email').value.trim();
+  var tel    = document.getElementById('f-tel').value.trim();
   if (!nombre || !email || !tel) {
-    mostrarToast('Completá al menos Nombre, Email y Teléfono antes de guardar.');
+    mostrarToast('Completa al menos Nombre, Email y Telefono antes de guardar.');
     return;
   }
+
+  const { supabase } = await import('../js/supabase-client.js');
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) { window.location.href = 'acceso_clinica.html'; return; }
+
+  const clinicaId   = localStorage.getItem('tp_clinica_id');
+  const psicologoId = session.user.id;
+  const nacimiento  = (document.getElementById('f-nacimiento') || {}).value || null;
+  const motivo      = (document.getElementById('f-como-llego') || {}).value || null;
+  const apellidoEl  = document.getElementById('f-apellido');
+  const apellido    = apellidoEl ? apellidoEl.value.trim() : '';
+
+  const { error } = await supabase.from('pacientes').insert({
+    nombre, apellido, email,
+    telefono:         tel,
+    clinica_id:       clinicaId,
+    psicologo_id:     psicologoId,
+    fecha_nacimiento: nacimiento || null,
+    motivo_consulta:  motivo || null,
+    estado:           'activo',
+  });
+
+  if (error) { mostrarToast('Error al guardar: ' + error.message); return; }
+
   mostrarToast('Paciente guardado correctamente.');
   setTimeout(function(){ window.location.href = 'pacientes_psicologo.html'; }, 1500);
 }
-
 // Toast
 var _tt = null;
 function mostrarToast(msg) {
