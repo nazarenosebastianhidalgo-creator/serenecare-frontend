@@ -730,32 +730,28 @@ document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cerrarM
   <span id='tst-res' style='flex:1;font-size:11px;'></span>
 </div>
 <script>
-async function tstGetSess() {
-  var m = await import('../js/supabase-client.js');
-  var { data: { session } } = await m.supabase.auth.getSession();
-  if (!session) return null;
-  // Refresh if token expires in less than 60s
-  var exp = session.expires_at ? session.expires_at * 1000 : 0;
-  if (Date.now() > exp - 60000) {
-    var ref = await m.supabase.auth.refreshSession();
-    return ref.data.session;
-  }
-  return session;
-}
 async function tstCargar() {
   var res = document.getElementById('tst-res');
   var sel = document.getElementById('tst-sel');
-  res.textContent = 'Cargando...';
+  res.textContent = 'Verificando sesion...';
   try {
     var m = await import('../js/supabase-client.js');
-    var sess = await tstGetSess();
-    if (!sess) { res.textContent = 'SIN SESION — vuelve a iniciar sesion'; return; }
+    // Siempre forzar refresh
+    var refRes = await m.supabase.auth.refreshSession();
+    var sess = refRes.data.session;
+    if (!sess) {
+      var gsRes = await m.supabase.auth.getSession();
+      sess = gsRes.data.session;
+    }
+    if (!sess) { res.textContent = 'SIN SESION — inicia sesion en acceso_clinica.html'; return; }
+    var exp = sess.expires_at ? new Date(sess.expires_at * 1000).toLocaleTimeString() : '?';
+    res.textContent = 'Sesion OK (expira ' + exp + '). Cargando pacientes...';
     var r = await m.supabase.from('pacientes').select('id, nombre, apellido, email, estado').limit(20);
-    if (r.error) { res.textContent = 'Error: ' + r.error.message; return; }
-    if (!r.data || !r.data.length) { res.textContent = 'No hay pacientes en BD'; return; }
+    if (r.error) { res.textContent = 'Query error: ' + r.error.message + ' (code:' + r.error.code + ')'; return; }
+    if (!r.data || !r.data.length) { res.textContent = 'Sesion OK pero no hay pacientes en la BD'; return; }
     sel.innerHTML = r.data.map(function(p){ return '<option value="'+p.id+'">'+p.nombre+' '+p.apellido+' — '+p.email+' ('+p.estado+')</option>'; }).join('');
     res.textContent = r.data.length + ' pacientes cargados';
-  } catch(e) { res.textContent = 'Error: ' + e.message; }
+  } catch(e) { res.textContent = 'CATCH: ' + e.message; }
 }
 async function tstInvite() {
   var pacId = document.getElementById('tst-sel').value;
