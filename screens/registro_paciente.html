@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
@@ -453,7 +453,21 @@ document.addEventListener('keydown', function(e) {
 </script>
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
+
+// Manejar token de invitacion en el hash de la URL
+const hash = window.location.hash
+if (hash.includes('access_token') && hash.includes('type=invite')) {
+  const params = new URLSearchParams(hash.substring(1))
+  const accessToken = params.get('access_token')
+  const refreshToken = params.get('refresh_token') || ''
+  if (accessToken) {
+    await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
+    window.history.replaceState(null, '', window.location.pathname)
+  }
+}
+
 const { data: { session } } = await supabase.auth.getSession()
+
 if (session) {
   const meta = session.user.user_metadata || {}
   const nombre = meta.nombre || meta.name || ''
@@ -462,7 +476,33 @@ if (session) {
     const saludo = document.getElementById('saludo')
     if (saludo) saludo.textContent = 'Hola, ' + nombre.split(' ')[0] + ' 👋'
   }
+
+  // Vincular auth user con el registro de paciente
+  const pacienteId = meta.paciente_id
+  const clinicaId  = meta.clinica_id
+  if (pacienteId) {
+    await supabase.from('pacientes').update({ usuario_id: session.user.id, estado: 'activo' }).eq('id', pacienteId)
+    if (clinicaId) localStorage.setItem('tp_clinica_id', clinicaId)
+  }
+
+  // Crear/actualizar registro en usuarios con rol paciente
+  const { data: existing } = await supabase.from('usuarios').select('id').eq('id', session.user.id).single()
+  if (!existing) {
+    await supabase.from('usuarios').insert({
+      id:         session.user.id,
+      clinica_id: clinicaId || null,
+      nombre:     meta.nombre || '',
+      email:      session.user.email,
+      rol:        'paciente',
+      activo:     true,
+    })
+  }
+
+  localStorage.setItem('tp_user_id', session.user.id)
+  localStorage.setItem('tp_rol', 'paciente')
+  localStorage.setItem('tp_email', session.user.email)
 }
+
 const _irPasoOrig = window.irPaso
 window.irPaso = async function(n) {
   if (n === 2 && session) {
@@ -470,10 +510,9 @@ window.irPaso = async function(n) {
     if (pw.length >= 8) await supabase.auth.updateUser({ password: pw })
   }
   if (n === 4 && session) {
-    const clinicaId = localStorage.getItem('tp_clinica_id') || (session.user.user_metadata || {}).clinica_id
-    const datos = { activo: true, updated_at: new Date().toISOString() }
-    if (clinicaId) datos.clinica_id = clinicaId
-    await supabase.from('usuarios').update(datos).eq('id', session.user.id)
+    const saludo = document.getElementById('saludo')
+    if (saludo) saludo.textContent = '¡Todo listo!'
+    setTimeout(() => { window.location.href = 'portal_paciente_inicio.html' }, 1500)
   }
   if (typeof _irPasoOrig === 'function') _irPasoOrig(n)
 }
