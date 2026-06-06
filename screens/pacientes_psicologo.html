@@ -677,12 +677,11 @@ async function enviarInvite() {
     var sess = (await m.supabase.auth.getSession()).data.session;
     if (!sess) { window.location.href = 'acceso_clinica.html'; return; }
 
-    var psicologoId = sess.user.id;
-    var clinicaId   = localStorage.getItem('tp_clinica_id');
-    if (!clinicaId) {
-      var uRes = await m.supabase.from('usuarios').select('clinica_id').eq('id', psicologoId).single();
-      clinicaId = uRes.data && uRes.data.clinica_id;
-    }
+    // Buscar el registro en usuarios por email para obtener id y clinica_id correctos
+    var uRes = await m.supabase.from('usuarios').select('id, clinica_id').eq('email', sess.user.email).single();
+    var psicologoId = uRes.data && uRes.data.id;
+    var clinicaId   = (uRes.data && uRes.data.clinica_id) || localStorage.getItem('tp_clinica_id');
+    if (!psicologoId) throw new Error('No se encontro tu usuario en la BD. Contacta al admin.');
 
     var apellido    = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : '';
     var solo_nombre = nombre.split(' ')[0] || nombre;
