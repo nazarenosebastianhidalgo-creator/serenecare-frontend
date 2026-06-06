@@ -690,7 +690,7 @@ async function enviarInvite() {
       nombre: solo_nombre, apellido, email,
       telefono: tel || null,
       clinica_id: clinicaId,
-      psicologo_id: psicologoId,
+      psicologo_id: psicologoId || null,
       motivo_consulta: motivo || null,
       estado: 'activo',
     }).select('id').single();
