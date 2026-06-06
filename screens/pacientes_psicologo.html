@@ -686,14 +686,16 @@ async function enviarInvite() {
     var apellido    = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : '';
     var solo_nombre = nombre.split(' ')[0] || nombre;
 
-    var iRes = await m.supabase.from('pacientes').insert({
+    var insertData = {
       nombre: solo_nombre, apellido, email,
       telefono: tel || null,
       clinica_id: clinicaId,
-      psicologo_id: psicologoId || null,
       motivo_consulta: motivo || null,
       estado: 'activo',
-    }).select('id').single();
+    };
+    if (psicologoId) insertData.psicologo_id = psicologoId;
+
+    var iRes = await m.supabase.from('pacientes').insert(insertData).select('id').single();
 
     if (iRes.error) throw new Error(iRes.error.message);
 
