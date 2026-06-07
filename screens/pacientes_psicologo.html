@@ -715,56 +715,6 @@ async function enviarInvite() {
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cerrarModalPaciente(); });
 </script>
 
-<!-- TEST INVITE BAR -->
-<div style='position:fixed;bottom:0;left:0;right:0;background:#1e1b4b;color:#fff;padding:8px 12px;z-index:9999;display:flex;gap:8px;align-items:center;font-size:12px;flex-wrap:wrap;'>
-  <span style='font-weight:700;color:#a78bfa;'>TEST INVITE:</span>
-  <select id='tst-sel' style='padding:4px 8px;border-radius:6px;border:none;color:#000;min-width:240px;'><option>-- pulsa Cargar --</option></select>
-  <button onclick='tstCargar()' style='background:#4f46e5;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;'>Cargar pacientes</button>
-  <button onclick='tstInvite()' style='background:#7c3aed;color:#fff;border:none;padding:5px 12px;border-radius:6px;cursor:pointer;'>Enviar invite</button>
-  <span id='tst-res' style='flex:1;font-size:11px;'></span>
-</div>
-<script>
-async function tstCargar() {
-  var res = document.getElementById('tst-res');
-  var sel = document.getElementById('tst-sel');
-  res.textContent = 'Verificando sesion...';
-  try {
-    var m = await import('../js/supabase-client.js');
-    // Siempre forzar refresh
-    var refRes = await m.supabase.auth.refreshSession();
-    var sess = refRes.data.session;
-    if (!sess) {
-      var gsRes = await m.supabase.auth.getSession();
-      sess = gsRes.data.session;
-    }
-    if (!sess) { res.textContent = 'SIN SESION — inicia sesion en acceso_clinica.html'; return; }
-    var exp = sess.expires_at ? new Date(sess.expires_at * 1000).toLocaleTimeString() : '?';
-    res.textContent = 'Sesion OK (expira ' + exp + '). Cargando pacientes...';
-    var r = await m.supabase.from('pacientes').select('id, nombre, apellido, email, estado').limit(20);
-    if (r.error) { res.textContent = 'Query error: ' + r.error.message + ' (code:' + r.error.code + ')'; return; }
-    if (!r.data || !r.data.length) { res.textContent = 'Sesion OK pero no hay pacientes en la BD'; return; }
-    sel.innerHTML = r.data.map(function(p){ return '<option value="'+p.id+'">'+p.nombre+' '+p.apellido+' — '+p.email+' ('+p.estado+')</option>'; }).join('');
-    res.textContent = r.data.length + ' pacientes cargados';
-  } catch(e) { res.textContent = 'CATCH: ' + e.message; }
-}
-async function tstInvite() {
-  var pacId = document.getElementById('tst-sel').value;
-  var res = document.getElementById('tst-res');
-  if (!pacId || pacId.startsWith('--')) { res.textContent = 'Primero pulsa Cargar'; return; }
-  res.textContent = 'Enviando...';
-  try {
-    var m = await import('../js/supabase-client.js');
-    var refRes = await m.supabase.auth.refreshSession();
-    var sess = refRes.data.session || (await m.supabase.auth.getSession()).data.session;
-    if (!sess) { res.textContent = 'SIN SESION — vuelve a iniciar sesion'; return; }
-    var r = await fetch('https://serenecare-backend-production.up.railway.app/api/patients/' + pacId + '/invite', {
-      method: 'POST', headers: { 'Authorization': 'Bearer ' + sess.access_token, 'Content-Type': 'application/json' }
-    });
-    var j = await r.json();
-    res.textContent = 'HTTP ' + r.status + ' → ' + JSON.stringify(j);
-  } catch(e) { res.textContent = 'Error: ' + e.message; }
-}
-</script>
 
 </body>
 </html>
