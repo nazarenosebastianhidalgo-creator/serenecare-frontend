@@ -735,6 +735,129 @@ window.cwEnviar = function() {
   </div>
 </div>
 
+<!-- MODAL — NUEVO PACIENTE -->
+<div id="modal-nuevo-paciente" style="display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;background:rgba(2,6,23,0.75);backdrop-filter:blur(8px);" onclick="(function(e){if(e.target===document.getElementById('modal-nuevo-paciente'))cerrarModalPaciente();})(event)">
+  <div style="background:#0d1b2e;border:1px solid rgba(20,184,166,0.25);border-radius:24px;width:100%;max-width:480px;margin:16px;padding:32px;position:relative;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.3);display:flex;align-items:center;justify-content:center;">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:20px;font-variation-settings:'FILL' 1;">person_add</span>
+        </div>
+        <div>
+          <p style="font-family:Manrope,sans-serif;font-size:16px;font-weight:700;color:#fff;margin:0;">Nuevo paciente</p>
+          <p style="font-size:11px;color:#64748b;margin:0;">El paciente recibirá un link para activar su cuenta</p>
+        </div>
+      </div>
+      <button onclick="cerrarModalPaciente()" style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+        <span class="material-symbols-outlined" style="color:#64748b;font-size:16px;">close</span>
+      </button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Nombre completo <span style="color:#f87171;">*</span></label>
+        <input id="np-nombre" type="text" placeholder="Ej. María García" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;font-family:Inter,sans-serif;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(20,184,166,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Email <span style="color:#f87171;">*</span></label>
+        <input id="np-email" type="email" placeholder="paciente@email.com" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;font-family:Inter,sans-serif;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(20,184,166,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Teléfono <span style="color:#475569;font-weight:400;text-transform:none;">(opcional)</span></label>
+        <input id="np-telefono" type="tel" placeholder="+34 600 000 000" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;font-family:Inter,sans-serif;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(20,184,166,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Motivo de consulta <span style="color:#475569;font-weight:400;text-transform:none;">(opcional)</span></label>
+        <textarea id="np-motivo" rows="2" placeholder="Ej. Ansiedad generalizada, duelo…" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;font-family:Inter,sans-serif;resize:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(20,184,166,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"></textarea>
+      </div>
+      <div style="background:rgba(20,184,166,0.07);border:1px solid rgba(20,184,166,0.2);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;">
+        <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:16px;margin-top:1px;flex-shrink:0;">info</span>
+        <p style="font-size:12px;color:#94a3b8;line-height:1.5;margin:0;">El paciente recibirá un link seguro para crear su contraseña, completar su perfil y firmar el consentimiento informado.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px;">
+      <button onclick="cerrarModalPaciente()" style="flex:1;padding:11px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:14px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;">Cancelar</button>
+      <button onclick="enviarInvite()" style="flex:2;padding:11px;border-radius:12px;background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.4);color:#2dd4bf;font-size:14px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(20,184,166,0.2)'">
+        <span class="material-symbols-outlined" style="font-size:17px;">send</span>
+        Enviar invitación
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-np" style="display:none;position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:10001;background:#0d1b2e;border:1px solid rgba(20,184,166,0.35);border-radius:14px;padding:12px 20px;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+  <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:18px;font-variation-settings:'FILL' 1;">check_circle</span>
+  <span id="toast-np-msg" style="color:#e2e8f0;font-size:13px;font-weight:600;font-family:Manrope,sans-serif;"></span>
+</div>
+
+<script>
+document.getElementById('btn-nuevo-paciente').onclick = function() {
+  document.getElementById('modal-nuevo-paciente').style.display = 'flex';
+  document.getElementById('np-nombre').value = '';
+  document.getElementById('np-email').value = '';
+  document.getElementById('np-telefono').value = '';
+  document.getElementById('np-motivo').value = '';
+  setTimeout(function(){ document.getElementById('np-nombre').focus(); }, 80);
+};
+
+function cerrarModalPaciente() {
+  document.getElementById('modal-nuevo-paciente').style.display = 'none';
+}
+
+async function enviarInvite() {
+  var nombre = document.getElementById('np-nombre').value.trim();
+  var email  = document.getElementById('np-email').value.trim();
+  var tel    = document.getElementById('np-telefono').value.trim();
+  var motivo = document.getElementById('np-motivo').value.trim();
+
+  if (!nombre) { document.getElementById('np-nombre').style.borderColor = '#f87171'; document.getElementById('np-nombre').focus(); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('np-email').style.borderColor = '#f87171'; document.getElementById('np-email').focus(); return; }
+
+  var btn = document.querySelector('#modal-nuevo-paciente button[onclick="enviarInvite()"]');
+  if (btn) { btn.textContent = 'Guardando...'; btn.disabled = true; }
+
+  try {
+    var m = await import('../js/supabase-client.js');
+    var sess = (await m.supabase.auth.getSession()).data.session;
+    if (!sess) { window.location.href = 'acceso_clinica.html'; return; }
+
+    var clinicaId   = localStorage.getItem('tp_clinica_id') || 'e5a87f07-a1bf-4701-90d5-193cb65a1e89';
+    var apellido    = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : '';
+    var solo_nombre = nombre.split(' ')[0] || nombre;
+
+    var iRes = await m.supabase.from('pacientes').insert({
+      nombre: solo_nombre, apellido, email,
+      telefono: tel || null,
+      clinica_id: clinicaId,
+      motivo_consulta: motivo || null,
+      estado: 'activo',
+    }).select('id').single();
+
+    if (iRes.error) throw new Error(iRes.error.message);
+
+    var r = await fetch('https://serenecare-backend-production.up.railway.app/api/patients/' + iRes.data.id + '/invite', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + sess.access_token, 'Content-Type': 'application/json' }
+    });
+    var j = await r.json();
+    if (!r.ok) throw new Error(j.error || 'Error al invitar: ' + r.status);
+
+    cerrarModalPaciente();
+    var t = document.getElementById('toast-np');
+    document.getElementById('toast-np-msg').textContent = 'Paciente guardado. Invitación enviada a ' + email;
+    t.style.display = 'flex';
+    setTimeout(function(){ t.style.display = 'none'; }, 4000);
+    setTimeout(function(){ window.location.reload(); }, 1500);
+
+  } catch(e) {
+    if (btn) { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:17px;">send</span> Enviar invitación'; btn.disabled = false; }
+    alert('Error: ' + e.message);
+  }
+}
+
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cerrarModalPaciente(); });
+</script>
+
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion } from '../js/auth.js'
