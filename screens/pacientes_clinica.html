@@ -197,54 +197,6 @@
   </div>
 </main>
 
-<!-- Modal nuevo paciente -->
-<div id="modal-nuevo-pac" class="modal-overlay hidden">
-  <div class="modal-box">
-    <div class="px-6 py-5 border-b border-slate-800/50 flex items-center justify-between">
-      <h3 class="font-headline font-bold text-white">Nuevo paciente</h3>
-      <button onclick="document.getElementById('modal-nuevo-pac').classList.add('hidden')" class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors">
-        <span class="material-symbols-outlined text-slate-400 text-lg">close</span>
-      </button>
-    </div>
-    <div class="p-6 space-y-4">
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Nombre</label>
-          <input id="np-nombre" type="text" placeholder="Nombre" class="field"/>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Apellido</label>
-          <input id="np-apellido" type="text" placeholder="Apellido" class="field"/>
-        </div>
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Email</label>
-        <input id="np-email" type="email" placeholder="paciente@email.com" class="field"/>
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Terapeuta asignado</label>
-        <select id="np-terapeuta" class="field" style="background:#0d1b2e;cursor:pointer;">
-          <option value="Ana Martínez">Ana Martínez</option>
-          <option value="Pedro Sánchez">Pedro Sánchez</option>
-          <option value="Sofía Ruiz">Sofía Ruiz</option>
-          <option value="Isabel López">Isabel López</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Estado inicial</label>
-        <select id="np-estado" class="field" style="background:#0d1b2e;cursor:pointer;">
-          <option value="espera">En espera</option>
-          <option value="activo">Activo</option>
-        </select>
-      </div>
-    </div>
-    <div class="px-6 pb-6 flex gap-3">
-      <button onclick="document.getElementById('modal-nuevo-pac').classList.add('hidden')" class="flex-1 py-3 rounded-xl text-sm font-bold text-slate-400 transition-all hover:bg-white/5" style="border:1px solid rgba(255,255,255,0.08);">Cancelar</button>
-      <button onclick="crearPaciente()" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);">Crear paciente</button>
-    </div>
-
-  </div>
-</div>
 
 <script>
 var NOTIFS = [
@@ -363,13 +315,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('filter-estado').addEventListener('change', applyFilters)
   document.getElementById('filter-terapeuta').addEventListener('change', applyFilters)
 
-  document.getElementById('btn-nuevo-paciente').addEventListener('click', function() {
-    document.getElementById('modal-nuevo-pac').classList.remove('hidden')
-  })
-  document.getElementById('modal-nuevo-pac').addEventListener('click', function(e) {
-    if (e.target === this) this.classList.add('hidden')
-  })
-
   document.getElementById('btn-logout').addEventListener('click', function(e) {
     e.preventDefault()
     localStorage.removeItem('tp_rol'); localStorage.removeItem('tp_nombre')
@@ -381,21 +326,6 @@ document.addEventListener('DOMContentLoaded', function() {
   renderTabla()
 })
 
-function crearPaciente() {
-  var nombre    = (document.getElementById('np-nombre').value || '').trim()
-  var apellido  = (document.getElementById('np-apellido').value || '').trim()
-  var email     = (document.getElementById('np-email').value || '').trim()
-  var terapeuta = document.getElementById('np-terapeuta').value
-  var estado    = document.getElementById('np-estado').value
-  if (!nombre || !email) { alert('Nombre y email son obligatorios'); return }
-  PACIENTES.unshift({ nombre: nombre + ' ' + apellido, email: email, terapeuta: terapeuta, proxima: '—', sesiones: 0, estado: estado, consentimiento: 'pendiente' })
-  filtered = PACIENTES.slice()
-  renderTabla()
-  document.getElementById('modal-nuevo-pac').classList.add('hidden')
-  document.getElementById('np-nombre').value = ''
-  document.getElementById('np-apellido').value = ''
-  document.getElementById('np-email').value = ''
-}
 </script>
 
 <!-- MINI CHAT WIDGET -->
