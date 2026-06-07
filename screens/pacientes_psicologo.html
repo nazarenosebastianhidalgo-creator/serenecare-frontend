@@ -753,7 +753,9 @@ async function tstInvite() {
   if (!pacId || pacId.startsWith('--')) { res.textContent = 'Primero pulsa Cargar'; return; }
   res.textContent = 'Enviando...';
   try {
-    var sess = await tstGetSess();
+    var m = await import('../js/supabase-client.js');
+    var refRes = await m.supabase.auth.refreshSession();
+    var sess = refRes.data.session || (await m.supabase.auth.getSession()).data.session;
     if (!sess) { res.textContent = 'SIN SESION — vuelve a iniciar sesion'; return; }
     var r = await fetch('https://serenecare-backend-production.up.railway.app/api/patients/' + pacId + '/invite', {
       method: 'POST', headers: { 'Authorization': 'Bearer ' + sess.access_token, 'Content-Type': 'application/json' }
