@@ -1,400 +1,399 @@
 <!DOCTYPE html>
-<html class="dark" lang="es">
+<html lang="es">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Activación de Cuenta | SereneCare</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<title>Activar cuenta | SereneCare</title>
+<script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-    tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                colors: { "brand-accent": "#a78bfa", "on-surface-variant": "#94a3b8" },
-                fontFamily: { "headline": ["Manrope"], "body": ["Inter"] }
-            }
-        }
-    }
-</script>
 <style>
-    body { font-family: 'Inter', sans-serif; background: #020617; }
-    h1, h2, h3 { font-family: 'Manrope', sans-serif; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    .wizard-step { display: none; }
-    .wizard-step.active { display: block; animation: fadeSlide 0.3s ease; }
-    @keyframes fadeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
-    .step-pill { transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
-    .field-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 16px; color: #f1f5f9; font-size: 14px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.2s; color-scheme: dark; }
-    .field-input:focus { border-color: rgba(167,139,250,0.5); }
-    .field-input::placeholder { color: #334155; }
-    select.field-input option { background: #0d1b2e; }
-    textarea.field-input { resize: vertical; }
-    .chip-enfoque { padding: 7px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: #94a3b8; transition: all 0.15s; font-family: 'Manrope', sans-serif; }
-    .chip-enfoque.on { background: rgba(167,139,250,0.15); border-color: rgba(167,139,250,0.4); color: #a78bfa; }
-    .dia-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .dia-row:last-child { border-bottom: none; }
-    .toggle { position: relative; display: inline-block; width: 40px; height: 22px; }
-    .toggle input { opacity: 0; width: 0; height: 0; }
-    .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.1); border-radius: 99px; transition: 0.2s; }
-    .toggle-slider:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; bottom: 3px; background: #94a3b8; border-radius: 50%; transition: 0.2s; }
-    .toggle input:checked + .toggle-slider { background: rgba(167,139,250,0.4); }
-    .toggle input:checked + .toggle-slider:before { transform: translateX(18px); background: #a78bfa; }
-    .error-msg { color: #f87171; font-size: 12px; font-weight: 600; margin-top: 6px; display: none; }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-    body::before { content: ''; position: fixed; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(167,139,250,0.06) 0%, transparent 70%); pointer-events: none; }
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .field-input { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #e2e8f0; font-size: 14px; padding: 12px 16px; width: 100%; outline: none; font-family: 'Inter', sans-serif; transition: border-color 0.2s; color-scheme: dark; }
+  .field-input:focus { border-color: rgba(167,139,250,0.5); }
+  .field-input::placeholder { color: #475569; }
+  select.field-input option { background: #0d1b2e; }
+  .field-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; display: block; }
+  .glass-card { background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.07); border-radius: 20px; }
+  .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; font-family: 'Manrope', sans-serif; flex-shrink: 0; }
+  .step-active .step-circle { background: rgba(167,139,250,0.2); color: #a78bfa; border: 2px solid rgba(167,139,250,0.5); }
+  .step-done .step-circle { background: rgba(167,139,250,0.15); color: #a78bfa; border: 2px solid rgba(167,139,250,0.3); }
+  .step-pending .step-circle { background: rgba(255,255,255,0.04); color: #475569; border: 2px solid rgba(255,255,255,0.08); }
+  .step-active .step-label { color: #a78bfa; font-weight: 700; }
+  .step-done .step-label { color: #a78bfa; }
+  .step-pending .step-label { color: #475569; }
+  .strength-bar { height: 4px; border-radius: 99px; flex: 1; transition: background 0.3s; }
+  .check-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; transition: border-color 0.15s; }
+  .check-row:hover { border-color: rgba(167,139,250,0.2); }
+  .check-row input[type=checkbox] { accent-color: #a78bfa; width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+  body::before { content: ''; position: fixed; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(167,139,250,0.05) 0%, transparent 70%); pointer-events: none; }
+  .step-section { animation: fadeSlide 0.3s ease; }
+  @keyframes fadeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+  .check-anim { animation: popIn 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+  @keyframes ringPing { 0% { transform: scale(1); opacity: 0.3; } 100% { transform: scale(1.6); opacity: 0; } }
+  .ring-anim { animation: ringPing 1.2s ease-out infinite; }
+  .error-msg { color: #f87171; font-size: 12px; font-weight: 600; margin-top: 4px; display: none; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
 </style>
 </head>
-<body class="text-white min-h-screen flex items-center justify-center p-4">
+<body class="text-slate-200 antialiased min-h-screen">
 
-<main class="w-full max-w-2xl">
+<main class="max-w-[520px] mx-auto px-6 py-12">
 
-  <!-- Progress pills -->
-  <nav class="flex justify-between items-center mb-12 px-2">
-    <div class="flex space-x-3 items-center">
-      <div class="step-pill w-12 h-1.5 rounded-full bg-brand-accent shadow-[0_0_15px_rgba(167,139,250,0.5)]" id="pill-1"></div>
-      <div class="step-pill w-12 h-1.5 rounded-full bg-white/10" id="pill-2"></div>
-      <div class="step-pill w-12 h-1.5 rounded-full bg-white/10" id="pill-3"></div>
-      <div class="step-pill w-12 h-1.5 rounded-full bg-white/10" id="pill-4"></div>
+  <header class="mb-10 text-center">
+    <div class="flex items-center justify-center gap-2 mb-3">
+      <span class="material-symbols-outlined text-4xl" style="color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
+      <h1 class="font-headline text-2xl font-extrabold text-white tracking-tight">SereneCare</h1>
     </div>
-    <span class="text-on-surface-variant font-medium tracking-widest text-xs uppercase">Paso <span id="step-counter">1</span> de 4</span>
+    <p class="text-slate-500 text-sm">Activa tu cuenta de psicólogo</p>
+  </header>
+
+  <nav class="w-full mb-10" id="stepper">
+    <div class="flex items-center justify-between">
+      <div class="flex flex-col items-center gap-1.5 step-active" id="s1">
+        <div class="step-circle">1</div>
+        <span class="step-label text-[10px] uppercase tracking-widest font-bold">Seguridad</span>
+      </div>
+      <div class="flex-1 h-px mx-2" style="background:rgba(255,255,255,0.06);"></div>
+      <div class="flex flex-col items-center gap-1.5 step-pending" id="s2">
+        <div class="step-circle">2</div>
+        <span class="step-label text-[10px] uppercase tracking-widest font-bold">Perfil</span>
+      </div>
+      <div class="flex-1 h-px mx-2" style="background:rgba(255,255,255,0.06);"></div>
+      <div class="flex flex-col items-center gap-1.5 step-pending" id="s3">
+        <div class="step-circle">3</div>
+        <span class="step-label text-[10px] uppercase tracking-widest font-bold">Términos</span>
+      </div>
+      <div class="flex-1 h-px mx-2" style="background:rgba(255,255,255,0.06);"></div>
+      <div class="flex flex-col items-center gap-1.5 step-pending" id="s4">
+        <div class="step-circle">4</div>
+        <span class="step-label text-[10px] uppercase tracking-widest font-bold">Listo</span>
+      </div>
+    </div>
   </nav>
 
-  <section id="wizard-form" class="space-y-8">
-
-    <!-- ═══════ PASO 1: Seguridad ═══════ -->
-    <div class="wizard-step active" id="step-1">
-      <header class="mb-10">
-        <h1 class="text-4xl font-extrabold tracking-tight mb-2" id="saludo-ps">Hola, Dr. 👋</h1>
-        <p class="text-on-surface-variant text-lg">Comencemos por asegurar tu entorno de trabajo clínico.</p>
-      </header>
-      <div class="space-y-6">
-        <div class="space-y-2">
-          <label class="text-sm font-semibold text-brand-accent/80 ml-1">Contraseña de acceso</label>
-          <div class="relative group">
-            <input id="pw1" class="field-input pr-12" placeholder="Mínimo 8 caracteres" type="password" oninput="evalStrengthPs()"/>
-            <button type="button" onclick="toggleVerPs('pw1','eye1')" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-brand-accent" style="background:none;border:none;cursor:pointer;">
-              <span class="material-symbols-outlined" id="eye1">visibility</span>
-            </button>
-          </div>
-        </div>
-        <!-- Strength -->
-        <div class="space-y-2">
-          <div class="flex justify-between items-center px-1">
-            <span class="text-xs font-medium text-on-surface-variant uppercase tracking-wider">Fortaleza</span>
-            <span class="text-xs font-bold" id="strength-ps-label" style="color:#a78bfa;"></span>
-          </div>
-          <div class="grid grid-cols-4 gap-2 h-1.5" id="strength-ps-bars">
-            <div class="rounded-full bg-white/10" id="psbar1"></div>
-            <div class="rounded-full bg-white/10" id="psbar2"></div>
-            <div class="rounded-full bg-white/10" id="psbar3"></div>
-            <div class="rounded-full bg-white/10" id="psbar4"></div>
-          </div>
-        </div>
-        <div class="space-y-2">
-          <label class="text-sm font-semibold text-on-surface-variant ml-1">Confirmar contraseña</label>
-          <div class="relative group">
-            <input id="pw2" class="field-input pr-12" placeholder="Repetí la contraseña" type="password"/>
-            <button type="button" onclick="toggleVerPs('pw2','eye2')" class="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-brand-accent" style="background:none;border:none;cursor:pointer;">
-              <span class="material-symbols-outlined" id="eye2">visibility</span>
-            </button>
-          </div>
-          <p class="error-msg" id="err-pw-ps">Las contraseñas no coinciden o son muy cortas (mín. 8 caracteres).</p>
-        </div>
-      </div>
-      <footer class="mt-12">
-        <button onclick="nextStep(2)" class="w-full py-4 bg-gradient-to-br from-brand-accent to-[#7c3aed] text-white rounded-xl font-bold text-lg shadow-lg shadow-brand-accent/20 hover:scale-[1.02] active:scale-95 transition-all duration-300">
-          Continuar configuración
-        </button>
-      </footer>
+  <!-- PASO 1 Contraseña -->
+  <section id="step-1" class="step-section space-y-6">
+    <div class="text-center space-y-1">
+      <h2 class="font-headline text-2xl font-extrabold text-white" id="saludo">Hola!</h2>
+      <p class="text-slate-400 text-sm">Te han invitado a SereneCare como psicólogo. Creá tu contraseña para activar tu cuenta.</p>
     </div>
-
-    <!-- ═══════ PASO 2: Perfil Profesional ═══════ -->
-    <div class="wizard-step" id="step-2">
-      <header class="mb-8">
-        <h2 class="text-3xl font-bold tracking-tight mb-2">Perfil Profesional</h2>
-        <p class="text-on-surface-variant">Esta información será visible para tus pacientes.</p>
-      </header>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Foto -->
-        <div class="flex flex-col items-center space-y-4">
-          <div class="relative group cursor-pointer" onclick="document.getElementById('foto-ps').click()">
-            <div id="avatar-ps" class="w-32 h-32 rounded-full border-2 border-dashed border-white/20 flex items-center justify-center overflow-hidden bg-white/5 hover:border-brand-accent transition-colors">
-              <span class="material-symbols-outlined text-white/30 text-4xl">add_a_photo</span>
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
-              <span class="material-symbols-outlined text-white">photo_camera</span>
-            </div>
-          </div>
-          <input type="file" id="foto-ps" accept="image/*" class="hidden" onchange="previsualizarFotoPs(this)"/>
-          <span class="text-xs text-on-surface-variant font-medium">Foto de perfil</span>
+    <div class="glass-card p-7 space-y-5">
+      <div>
+        <label class="field-label">Nueva contraseña</label>
+        <div class="relative">
+          <input id="pw1" type="password" class="field-input pr-12" placeholder="Mínimo 8 caracteres" oninput="evalStrength()"/>
+          <button type="button" onclick="toggleVer('pw1','eye1')" class="absolute right-3 top-3 text-slate-500 hover:text-slate-300" style="background:none;border:none;cursor:pointer;">
+            <span class="material-symbols-outlined text-lg" id="eye1">visibility</span>
+          </button>
         </div>
-        <!-- Campos -->
-        <div class="md:col-span-2 space-y-4">
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1 block mb-1">Especialidad</label>
-              <select class="field-input">
-                <option class="bg-[#020617]">Psicología clínica</option>
-                <option class="bg-[#020617]">Neuropsicología</option>
-                <option class="bg-[#020617]">Psicología infantil</option>
-                <option class="bg-[#020617]">Terapia de pareja</option>
-                <option class="bg-[#020617]">Otra</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1 block mb-1">Nº Matrícula</label>
-              <input class="field-input" placeholder="MP-0000" type="text"/>
-            </div>
+        <div class="mt-2 space-y-1">
+          <div class="flex gap-1">
+            <div class="strength-bar" style="background:rgba(255,255,255,0.06);" id="bar1"></div>
+            <div class="strength-bar" style="background:rgba(255,255,255,0.06);" id="bar2"></div>
+            <div class="strength-bar" style="background:rgba(255,255,255,0.06);" id="bar3"></div>
+            <div class="strength-bar" style="background:rgba(255,255,255,0.06);" id="bar4"></div>
           </div>
-          <div>
-            <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1 block mb-1">Bio profesional</label>
-            <textarea class="field-input" placeholder="Describí tu experiencia y enfoque terapéutico..." rows="3"></textarea>
-          </div>
-          <div>
-            <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1 block mb-2">Teléfono profesional</label>
-            <input class="field-input" placeholder="+54 9 11 0000 0000" type="tel"/>
-          </div>
+          <p class="text-[11px] text-slate-500" id="strength-label">Escribe una contraseña</p>
         </div>
       </div>
-      <!-- Enfoques -->
-      <div class="mt-8 space-y-3">
-        <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Enfoques terapéuticos</label>
-        <div class="flex flex-wrap gap-2">
-          <span class="chip-enfoque on" onclick="this.classList.toggle('on')">TCC</span>
-          <span class="chip-enfoque" onclick="this.classList.toggle('on')">Psicoanálisis</span>
-          <span class="chip-enfoque" onclick="this.classList.toggle('on')">Sistémica</span>
-          <span class="chip-enfoque" onclick="this.classList.toggle('on')">EMDR</span>
-          <span class="chip-enfoque on" onclick="this.classList.toggle('on')">Gestalt</span>
-          <span class="chip-enfoque" onclick="this.classList.toggle('on')">ACT</span>
-          <span class="chip-enfoque" onclick="this.classList.toggle('on')">Mindfulness</span>
-          <span class="chip-enfoque" onclick="this.classList.toggle('on')">Integrativa</span>
+      <div>
+        <label class="field-label">Confirmar contraseña</label>
+        <div class="relative">
+          <input id="pw2" type="password" class="field-input pr-12" placeholder="Repite la contraseña"/>
+          <button type="button" onclick="toggleVer('pw2','eye2')" class="absolute right-3 top-3 text-slate-500 hover:text-slate-300" style="background:none;border:none;cursor:pointer;">
+            <span class="material-symbols-outlined text-lg" id="eye2">visibility</span>
+          </button>
         </div>
+        <p class="error-msg" id="err-pw">Las contraseñas no coinciden o son muy cortas.</p>
       </div>
-      <footer class="mt-10 flex gap-4">
-        <button class="flex-1 py-4 bg-white/5 border border-white/10 text-white rounded-xl font-bold hover:bg-white/10 transition-all" onclick="nextStep(1)">Atrás</button>
-        <button class="flex-[2] py-4 bg-gradient-to-br from-brand-accent to-[#7c3aed] text-white rounded-xl font-bold text-lg hover:scale-[1.02] transition-all" onclick="nextStep(3)">Siguiente paso</button>
-      </footer>
+      <button onclick="irPaso(2)" class="w-full py-3.5 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#5b21b6,#a78bfa);">
+        Continuar <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </button>
     </div>
-
-    <!-- ═══════ PASO 3: Disponibilidad ═══════ -->
-    <div class="wizard-step" id="step-3">
-      <header class="mb-8">
-        <h2 class="text-3xl font-bold tracking-tight mb-2">Disponibilidad</h2>
-        <p class="text-on-surface-variant">Configurá tus horarios. Podés cambiarlo después desde tu perfil.</p>
-      </header>
-
-      <div class="glass-card rounded-2xl mb-6">
-        <div class="dia-row">
-          <span class="font-medium">Lunes – Viernes</span>
-          <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2">
-              <input type="time" value="08:00" class="field-input text-sm" style="width:100px;padding:6px 10px;"/>
-              <span class="text-slate-500 text-sm">–</span>
-              <input type="time" value="18:00" class="field-input text-sm" style="width:100px;padding:6px 10px;"/>
-            </div>
-            <label class="toggle"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
-          </div>
-        </div>
-        <div class="dia-row">
-          <span class="font-medium">Sábado</span>
-          <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2">
-              <input type="time" value="09:00" class="field-input text-sm" style="width:100px;padding:6px 10px;"/>
-              <span class="text-slate-500 text-sm">–</span>
-              <input type="time" value="13:00" class="field-input text-sm" style="width:100px;padding:6px 10px;"/>
-            </div>
-            <label class="toggle"><input type="checkbox"/><span class="toggle-slider"></span></label>
-          </div>
-        </div>
-        <div class="dia-row">
-          <span class="font-medium text-slate-500">Domingo</span>
-          <div class="flex items-center gap-4">
-            <span class="text-xs text-slate-600">Cerrado</span>
-            <label class="toggle"><input type="checkbox"/><span class="toggle-slider"></span></label>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div class="space-y-3">
-          <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Duración de sesión</label>
-          <div class="flex flex-wrap gap-2" id="chips-dur-ps">
-            <button class="chip-enfoque" onclick="chipSingle(this,'chips-dur-ps')">45 min</button>
-            <button class="chip-enfoque on" onclick="chipSingle(this,'chips-dur-ps')">50 min</button>
-            <button class="chip-enfoque" onclick="chipSingle(this,'chips-dur-ps')">60 min</button>
-            <button class="chip-enfoque" onclick="chipSingle(this,'chips-dur-ps')">90 min</button>
-          </div>
-        </div>
-        <div class="space-y-3">
-          <label class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider ml-1">Modalidad</label>
-          <div class="flex flex-wrap gap-2" id="chips-mod-ps">
-            <button class="chip-enfoque on" onclick="this.classList.toggle('on')">Presencial</button>
-            <button class="chip-enfoque" onclick="this.classList.toggle('on')">Online</button>
-            <button class="chip-enfoque" onclick="this.classList.toggle('on')">Híbrida</button>
-          </div>
-        </div>
-      </div>
-
-      <footer class="mt-12 flex gap-4">
-        <button class="flex-1 py-4 bg-white/5 border border-white/10 text-white rounded-xl font-bold hover:bg-white/10 transition-all" onclick="nextStep(2)">Regresar</button>
-        <button class="flex-[2] py-4 bg-gradient-to-br from-brand-accent to-[#7c3aed] text-white rounded-xl font-bold text-lg hover:scale-[1.02] transition-all" onclick="nextStep(4)">Finalizar registro</button>
-      </footer>
-    </div>
-
-    <!-- ═══════ PASO 4: Éxito ═══════ -->
-    <div class="wizard-step text-center py-12" id="step-4">
-      <div class="relative inline-block mb-10">
-        <div class="w-32 h-32 bg-brand-accent/10 rounded-full flex items-center justify-center animate-pulse"></div>
-        <div class="absolute inset-0 flex items-center justify-center">
-          <div class="w-20 h-20 bg-gradient-to-br from-brand-accent to-[#7c3aed] rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(167,139,250,0.5)]">
-            <span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings:'FILL' 1;">check</span>
-          </div>
-        </div>
-      </div>
-      <h2 class="text-4xl font-extrabold mb-4" id="exito-nombre">¡Todo listo!</h2>
-      <p class="text-on-surface-variant text-lg max-w-sm mx-auto mb-12">Tu perfil profesional está activo. Ya podés gestionar tus sesiones y pacientes.</p>
-      <div class="space-y-4 max-w-xs mx-auto">
-        <a href="dashboard_psicologo.html" class="w-full py-4 bg-gradient-to-br from-brand-accent to-[#7c3aed] text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:shadow-brand-accent/20 transition-all flex items-center justify-center gap-3 group" style="text-decoration:none;">
-          <span>Ir a mi dashboard</span>
-          <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-        </a>
-      </div>
-    </div>
-
   </section>
+
+  <!-- PASO 2 Datos profesionales -->
+  <section id="step-2" class="step-section space-y-6 hidden">
+    <div class="text-center space-y-1">
+      <h2 class="font-headline text-2xl font-extrabold text-white">Tu perfil profesional</h2>
+      <p class="text-slate-400 text-sm">Estos datos apareceran en tu ficha para los pacientes.</p>
+    </div>
+    <div class="glass-card p-7 space-y-4">
+      <div>
+        <label class="field-label">Especialidad</label>
+        <select class="field-input" id="d-especialidad">
+          <option value="">Seleccionar...</option>
+          <option>Psicología clínica</option>
+          <option>Psicología infantil</option>
+          <option>Psicología de pareja / familia</option>
+          <option>Psicología organizacional</option>
+          <option>Neuropsicología</option>
+          <option>Otra</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Numero de colegiado / licencia</label>
+        <input type="text" class="field-input" id="d-colegiado" placeholder="Ej. COP-12345"/>
+      </div>
+      <div>
+        <label class="field-label">Telefono de contacto</label>
+        <input type="tel" class="field-input" id="d-tel" placeholder="+34 600 000 000"/>
+      </div>
+      <div class="flex gap-3 pt-2">
+        <button onclick="irPaso(1)" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+          Atras
+        </button>
+        <button onclick="irPaso(3)" class="flex-[2] py-3.5 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#5b21b6,#a78bfa);">
+          Continuar <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASO 3 Términos -->
+  <section id="step-3" class="step-section space-y-6 hidden">
+    <div class="text-center space-y-1">
+      <h2 class="font-headline text-2xl font-extrabold text-white">Términos de uso</h2>
+      <p class="text-slate-400 text-sm">Lee el acuerdo profesional y acepta para continuar.</p>
+    </div>
+    <div class="glass-card p-7 space-y-5">
+      <div class="max-h-56 overflow-y-auto p-4 rounded-xl text-sm text-slate-400 leading-relaxed space-y-3" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);">
+        <p><strong class="text-slate-300">1. Uso profesional.</strong> SereneCare es una plataforma de gestión clínica destinada exclusivamente a profesionales de la salud mental habilitados. El uso implica que el profesional cuenta con la titulación y habilitación necesarias para ejercer.</p>
+        <p><strong class="text-slate-300">2. Confidencialidad.</strong> El profesional se compromete a tratar toda la informacion de los pacientes con estricta confidencialidad, conforme al secreto profesional y la normativa de proteccion de datos vigente (RGPD / Ley 25.326).</p>
+        <p><strong class="text-slate-300">3. Uso de datos.</strong> Los datos de los pacientes gestionados a través de SereneCare son propiedad del profesional y su clínica. SereneCare actúa como encargado del tratamiento y no cede datos a terceros.</p>
+        <p><strong class="text-slate-300">4. Inteligencia Artificial.</strong> Las herramientas de IA disponibles (analisis SOAP, cuestionarios) son herramientas de apoyo. La responsabilidad clínica recae íntegramente en el profesional.</p>
+        <p><strong class="text-slate-300">5. Grabacion de sesiones.</strong> La grabacion de videollamadas requiere el consentimiento informado previo del paciente. El profesional es responsable de obtenerlo.</p>
+        <p><strong class="text-slate-300">6. Uso aceptable.</strong> Queda prohibida la cesion de credenciales a terceros no autorizados o cualquier actividad que vulnere los derechos de los pacientes.</p>
+      </div>
+      <div class="space-y-3">
+        <label class="check-row" id="chk-row-1">
+          <input type="checkbox" id="chk1" onchange="checkConsent()"/>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Leí y acepto los términos de uso profesional <span style="color:#f87171;">*</span></p>
+            <p class="text-xs text-slate-500 mt-0.5">Requerido para activar tu cuenta</p>
+          </div>
+        </label>
+        <label class="check-row">
+          <input type="checkbox" id="chk2"/>
+          <div>
+            <p class="text-sm font-semibold text-slate-200">Acepto recibir notificaciones y comunicaciones de SereneCare</p>
+            <p class="text-xs text-slate-500 mt-0.5">Opcional</p>
+          </div>
+        </label>
+      </div>
+      <p class="error-msg" id="err-consent" style="display:none;">Debés aceptar los términos para continuar.</p>
+      <div class="flex gap-3 pt-2">
+        <button onclick="irPaso(2)" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+          Atras
+        </button>
+        <button onclick="irPaso(4)" id="btn-activar" class="flex-[2] py-3.5 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#5b21b6,#a78bfa);">
+          <span class="material-symbols-outlined text-base">verified_user</span>
+          Activar mi cuenta
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASO 4 Listo -->
+  <section id="step-4" class="step-section space-y-8 text-center hidden">
+    <div class="relative inline-block mx-auto">
+      <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto check-anim" style="background:rgba(167,139,250,0.12);border:2px solid rgba(167,139,250,0.3);">
+        <span class="material-symbols-outlined text-5xl" style="color:#a78bfa;font-variation-settings:'FILL' 1;">check_circle</span>
+      </div>
+      <div class="absolute inset-0 rounded-full ring-anim" style="border:2px solid rgba(167,139,250,0.2);"></div>
+    </div>
+    <div class="space-y-2">
+      <h2 class="font-headline text-3xl font-extrabold text-white">Cuenta activada!</h2>
+      <p class="text-slate-400 text-sm max-w-xs mx-auto">Ya puedes acceder a tu panel de psicólogo y gestionar tus pacientes.</p>
+    </div>
+    <div class="glass-card p-5 text-left flex items-center gap-4 mx-auto" style="max-width:380px;">
+      <div class="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);">
+        <span class="material-symbols-outlined text-2xl" style="font-variation-settings:'FILL' 1;">local_hospital</span>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Tu clínica</p>
+        <p class="font-bold text-white text-sm" id="clinica-nombre">SereneCare</p>
+        <p class="text-slate-500 text-xs flex items-center gap-1 mt-0.5">
+          <span class="material-symbols-outlined text-xs">person</span>
+          Rol: Psicólogo/a
+        </p>
+      </div>
+    </div>
+    <a href="dashboard_psicologo.html" class="block w-full max-w-xs mx-auto py-4 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#5b21b6,#a78bfa);text-decoration:none;">
+      <span class="material-symbols-outlined text-base">dashboard</span>
+      Ir a mi panel
+    </a>
+  </section>
+
 </main>
 
+<footer class="text-center pb-10 space-y-3">
+  <p class="text-slate-600 text-xs">Tus datos están protegidos con encriptación AES-256.</p>
+  <div class="flex justify-center gap-6">
+    <a href="#" class="text-xs font-semibold text-slate-500 hover:text-slate-300">Privacidad</a>
+    <a href="#" class="text-xs font-semibold text-slate-500 hover:text-slate-300">Soporte</a>
+  </div>
+</footer>
+
 <script>
-// Nombre desde localStorage o invite
+var paso = 1;
+
 (function() {
-  var nombre = localStorage.getItem('ps_nombre') || localStorage.getItem('inv_nombre') || '';
-  if (nombre) {
-    var primero = nombre.split(' ')[0];
-    document.getElementById('saludo-ps').textContent = '¡Hola, ' + primero + '! 👋';
-    document.getElementById('exito-nombre').textContent = '¡Todo listo, ' + primero + '!';
-  }
+  var nombre = localStorage.getItem('tp_nombre') || '';
+  if (nombre) document.getElementById('saludo').textContent = 'Hola, ' + nombre.split(' ')[0] + '!';
 })();
 
-function nextStep(step) {
-  if (step === 2 && !validarPaso1Ps()) return;
-
-  document.querySelectorAll('.wizard-step').forEach(function(el) { el.classList.remove('active'); });
-  var target = document.getElementById('step-' + step);
-  if (target) target.classList.add('active');
-
-  document.getElementById('step-counter').innerText = step;
-
-  for (var i = 1; i <= 4; i++) {
-    var pill = document.getElementById('pill-' + i);
-    if (i < step) pill.className = 'step-pill w-12 h-1.5 rounded-full bg-brand-accent opacity-50';
-    else if (i === step) pill.className = 'step-pill w-12 h-1.5 rounded-full bg-brand-accent shadow-[0_0_15px_rgba(167,139,250,0.5)]';
-    else pill.className = 'step-pill w-12 h-1.5 rounded-full bg-white/10';
-  }
-
+function irPaso(n) {
+  if (n === 2 && !validarPaso1()) return;
+  if (n === 4 && !validarPaso3()) return;
+  document.getElementById('step-' + paso).classList.add('hidden');
+  paso = n;
+  document.getElementById('step-' + paso).classList.remove('hidden');
+  actualizarStepper();
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (step === 4) localStorage.setItem('ps_registrado', 'true');
 }
 
-function validarPaso1Ps() {
+function actualizarStepper() {
+  for (var i = 1; i <= 4; i++) {
+    var el = document.getElementById('s' + i);
+    el.className = el.className.replace(/step-(active|done|pending)/g, '');
+    if (i < paso) el.classList.add('step-done');
+    else if (i === paso) el.classList.add('step-active');
+    else el.classList.add('step-pending');
+    var circle = el.querySelector('.step-circle');
+    if (i < paso) {
+      circle.innerHTML = '<span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\' 1;">check<\/span>';
+    } else {
+      circle.textContent = i;
+    }
+  }
+}
+
+function validarPaso1() {
   var p1 = document.getElementById('pw1').value;
   var p2 = document.getElementById('pw2').value;
-  var err = document.getElementById('err-pw-ps');
+  var err = document.getElementById('err-pw');
   if (p1.length < 8 || p1 !== p2) { err.style.display = 'block'; return false; }
   err.style.display = 'none';
   return true;
 }
 
-function toggleVerPs(id, iconId) {
-  var inp = document.getElementById(id);
-  var ico = document.getElementById(iconId);
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  ico.textContent = inp.type === 'password' ? 'visibility' : 'visibility_off';
+function validarPaso3() {
+  var chk = document.getElementById('chk1').checked;
+  var err = document.getElementById('err-consent');
+  if (!chk) {
+    err.style.display = 'block';
+    document.getElementById('chk-row-1').style.borderColor = 'rgba(248,113,113,0.4)';
+    return false;
+  }
+  err.style.display = 'none';
+  return true;
 }
 
-function evalStrengthPs() {
+function checkConsent() {
+  if (document.getElementById('chk1').checked) {
+    document.getElementById('chk-row-1').style.borderColor = 'rgba(167,139,250,0.3)';
+    document.getElementById('err-consent').style.display = 'none';
+  } else {
+    document.getElementById('chk-row-1').style.borderColor = '';
+  }
+}
+
+function toggleVer(inputId, iconId) {
+  var inp = document.getElementById(inputId);
+  var ico = document.getElementById(iconId);
+  if (inp.type === 'password') { inp.type = 'text'; ico.textContent = 'visibility_off'; }
+  else { inp.type = 'password'; ico.textContent = 'visibility'; }
+}
+
+function evalStrength() {
   var pw = document.getElementById('pw1').value;
-  var bars = ['psbar1','psbar2','psbar3','psbar4'].map(function(id){ return document.getElementById(id); });
-  var label = document.getElementById('strength-ps-label');
+  var bars = ['bar1','bar2','bar3','bar4'].map(function(id) { return document.getElementById(id); });
+  var label = document.getElementById('strength-label');
   var score = 0;
   if (pw.length >= 8) score++;
   if (/[A-Z]/.test(pw)) score++;
   if (/[0-9]/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
   var colores = ['#f87171','#fb923c','#fbbf24','#a78bfa'];
-  var textos = ['Muy débil','Débil','Media','Segura'];
-  bars.forEach(function(b, i) { b.style.background = i < score ? colores[score-1] : 'rgba(255,255,255,0.1)'; });
-  label.textContent = pw.length === 0 ? '' : (textos[score-1] || 'Muy débil');
-  label.style.color = colores[score-1] || '#f87171';
+  var textos = ['Muy debil','Debil','Media','Fuerte'];
+  bars.forEach(function(b, i) { b.style.background = i < score ? colores[score - 1] : 'rgba(255,255,255,0.06)'; });
+  label.textContent = pw.length === 0 ? 'Escribe una contraseña' : (textos[score - 1] || 'Muy debil');
+  label.style.color = pw.length === 0 ? '#475569' : (colores[score - 1] || '#f87171');
 }
-
-function chipSingle(el, groupId) {
-  document.getElementById(groupId).querySelectorAll('.chip-enfoque').forEach(function(c){ c.classList.remove('on'); });
-  el.classList.add('on');
-}
-
-function previsualizarFotoPs(input) {
-  var file = input.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var av = document.getElementById('avatar-ps');
-    av.style.backgroundImage = 'url(' + e.target.result + ')';
-    av.style.backgroundSize = 'cover';
-    av.style.backgroundPosition = 'center';
-    av.innerHTML = '';
-  };
-  reader.readAsDataURL(file);
-}
-
-// Numpad fix
-document.addEventListener('keydown', function(e) {
-  var map = {'Numpad0':'0','Numpad1':'1','Numpad2':'2','Numpad3':'3','Numpad4':'4','Numpad5':'5','Numpad6':'6','Numpad7':'7','Numpad8':'8','Numpad9':'9','NumpadDecimal':'.'};
-  var d = map[e.code];
-  if (d && e.key !== d) {
-    var el = document.activeElement;
-    if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
-      e.preventDefault();
-      var s = el.selectionStart, end = el.selectionEnd;
-      el.value = el.value.slice(0, s) + d + el.value.slice(end);
-      el.selectionStart = el.selectionEnd = s + 1;
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-  }
-});
 </script>
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
-const { data: { session } } = await supabase.auth.getSession()
-if (session) {
-  const meta = session.user.user_metadata || {}
-  const nombre = meta.nombre || meta.name || ''
-  if (nombre) {
-    localStorage.setItem('ps_nombre', nombre)
-    const primero = nombre.split(' ')[0]
-    const saludo = document.getElementById('saludo-ps')
-    const exito  = document.getElementById('exito-nombre')
-    if (saludo) saludo.textContent = '¡Hola, ' + primero + '! 👋'
-    if (exito)  exito.textContent  = '¡Todo listo, ' + primero + '!'
+
+const hash = window.location.hash
+if (hash.includes('access_token') && hash.includes('type=invite')) {
+  const params = new URLSearchParams(hash.substring(1))
+  const accessToken = params.get('access_token')
+  const refreshToken = params.get('refresh_token') || ''
+  if (accessToken) {
+    await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
+    window.history.replaceState(null, '', window.location.pathname)
   }
 }
-const _nextStepOrig = window.nextStep
-window.nextStep = async function(step) {
-  if (step === 2 && session) {
+
+const { data: { session } } = await supabase.auth.getSession()
+
+if (session) {
+  const meta = session.user.user_metadata || {}
+  const nombre    = meta.nombre || meta.name || ''
+  const apellido  = meta.apellido || ''
+  const clinicaId = meta.clinica_id || null
+
+  if (nombre) {
+    const fullName = nombre + (apellido ? ' ' + apellido : '')
+    localStorage.setItem('tp_nombre', fullName)
+    const saludo = document.getElementById('saludo')
+    if (saludo) saludo.textContent = 'Hola, ' + nombre.split(' ')[0] + '!'
+  }
+
+  localStorage.setItem('tp_user_id', session.user.id)
+  localStorage.setItem('tp_rol',     'psicologo')
+  localStorage.setItem('tp_email',   session.user.email)
+  if (clinicaId) localStorage.setItem('tp_clinica_id', clinicaId)
+
+  if (clinicaId) {
+    const { data: clinica } = await supabase.from('clinicas').select('nombre').eq('id', clinicaId).single()
+    if (clinica?.nombre) {
+      localStorage.setItem('tp_clinica', clinica.nombre)
+      const el = document.getElementById('clinica-nombre')
+      if (el) el.textContent = clinica.nombre
+    }
+  }
+
+  await supabase.from('usuarios').upsert({
+    id:         session.user.id,
+    nombre:     nombre,
+    apellido:   apellido,
+    email:      session.user.email,
+    clinica_id: clinicaId,
+    rol:        'psicologo',
+    activo:     true,
+  }, { onConflict: 'id' })
+}
+
+const _irPasoOrig = window.irPaso
+window.irPaso = async function(n) {
+  if (n === 2 && session) {
     const pw = (document.getElementById('pw1') || {}).value || ''
-    if (pw.length >= 8) await supabase.auth.updateUser({ password: pw })
+    if (pw.length >= 8) {
+      await supabase.auth.updateUser({ password: pw })
+    }
   }
-  if (step === 4 && session) {
-    const clinicaId = localStorage.getItem('tp_clinica_id') || (session.user.user_metadata || {}).clinica_id
-    const datos = { perfil_completado: true, updated_at: new Date().toISOString() }
-    if (clinicaId) datos.clinica_id = clinicaId
-    await supabase.from('usuarios').update(datos).eq('id', session.user.id)
+  if (n === 4) {
+    setTimeout(() => { window.location.href = 'dashboard_psicologo.html' }, 1800)
   }
-  if (typeof _nextStepOrig === 'function') _nextStepOrig(step)
+  if (typeof _irPasoOrig === 'function') _irPasoOrig(n)
 }
 </script>
 </body>
