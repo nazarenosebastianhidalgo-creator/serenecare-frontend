@@ -341,15 +341,59 @@ function checkValidation() {
   }
 }
 
-submitBtn.addEventListener('click', function() {
-  if (!submitBtn.disabled) {
-    submitBtn.innerHTML = '<span class="material-symbols-outlined" style="animation:spin 1s linear infinite;">sync</span> Procesando...';
-    submitBtn.disabled = true;
-    setTimeout(function() {
+var BACKEND = 'https://serenecare-backend-production.up.railway.app';
+var firmaToken = new URLSearchParams(window.location.search).get('token');
+
+// Cargar datos del consentimiento
+(async function() {
+  if (!firmaToken) return;
+  try {
+    var res = await fetch(BACKEND + '/api/consents/sign/' + firmaToken);
+    var data = await res.json();
+    if (data.ya_firmado) {
+      mainContent.classList.add('hidden');
+      successScreen.classList.remove('hidden');
+      return;
+    }
+    if (data.paciente) {
+      var el = document.getElementById('nombre-paciente-doc');
+      if (el) el.textContent = data.paciente;
+    }
+    if (data.clinica) {
+      var nc = document.getElementById('nombre-clinica');
+      if (nc) nc.textContent = data.clinica;
+    }
+  } catch(e) {}
+})();
+
+submitBtn.addEventListener('click', async function() {
+  if (submitBtn.disabled) return;
+  if (!firmaToken) { alert('Token inválido'); return; }
+
+  submitBtn.innerHTML = '<span class="material-symbols-outlined" style="animation:spin 1s linear infinite;">sync</span> Procesando...';
+  submitBtn.disabled = true;
+
+  try {
+    var firmaImg = canvas.toDataURL('image/png');
+    var res = await fetch(BACKEND + '/api/consents/sign/' + firmaToken, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firma_imagen: firmaImg })
+    });
+    var data = await res.json();
+    if (data.ok) {
       mainContent.classList.add('hidden');
       successScreen.classList.remove('hidden');
       window.scrollTo(0, 0);
-    }, 1500);
+    } else {
+      submitBtn.innerHTML = 'Confirmar y firmar';
+      submitBtn.disabled = false;
+      alert('Error al guardar la firma: ' + (data.error || 'Inténtalo de nuevo'));
+    }
+  } catch(e) {
+    submitBtn.innerHTML = 'Confirmar y firmar';
+    submitBtn.disabled = false;
+    alert('Error de conexión');
   }
 });
 </script>
@@ -588,20 +632,8 @@ window.__setTheme=function(m){
 window.__toggleTheme=function(){window.__setTheme(document.documentElement.classList.contains('light')?'dark':'light');};
 (function(){var s=localStorage.getItem('sc-theme')||'dark';if(s==='light')window.__setTheme('light');})();
 </script>
-<script type="module">
-import { supabase } from '../js/supabase-client.js'
-import { cerrarSesion, verificarSesion } from '../js/auth.js'
-window._cerrarSesion = cerrarSesion
-const perfil = await verificarSesion(['paciente'])
-if (!perfil) return
-const nombre = ((perfil.nombre || '') + ' ' + (perfil.apellido || '')).trim()
-const ini = nombre.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2)
-const n = document.getElementById('user-nombre'); if (n) n.textContent = nombre
-const a = document.getElementById('user-avatar'); if (a) a.textContent = ini
-if (perfil.clinica_id) {
-  const { data: cl } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single()
-  if (cl) { const nc = document.getElementById('nombre-clinica'); if (nc) nc.textContent = cl.nombre }
-}
+<script>
+// Sin login requerido — el token en la URL es suficiente
 </script>
 </body>
 </html>

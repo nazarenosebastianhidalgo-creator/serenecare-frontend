@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>SereneCare — Consentimientos Informados</title>
+<title>SereneCare — Consentimientos · Admin Clínica</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
@@ -13,13 +13,13 @@
   .sidebar-dark { background-color: #0a1628; }
   .nav-item { color: #94a3b8; transition: all 0.2s; text-decoration: none; }
   .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
-  .nav-active { background: rgba(139,92,246,0.12); color: #a78bfa; }
+  .nav-active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
   .font-headline { font-family: 'Manrope', sans-serif; }
   .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
   tr:hover td { background: rgba(255,255,255,0.02); }
   .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
   .tab-btn { padding: 7px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: all 0.18s; }
-  .tab-btn.active { background: rgba(139,92,246,0.18); color: #a78bfa; }
+  .tab-btn.active { background: rgba(20,184,166,0.18); color: #2dd4bf; }
   .tab-btn:not(.active) { background: transparent; color: #64748b; }
   .tab-btn:not(.active):hover { color: #94a3b8; }
   .app-card { display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 10px;border-radius:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);text-decoration:none;transition:all 0.2s;cursor:pointer; }
@@ -27,7 +27,7 @@
   .modal-box { background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:24px;width:100%;max-width:860px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;animation:mIn 0.22s cubic-bezier(0.16,1,0.3,1) forwards; }
   @keyframes mIn { from{opacity:0;transform:scale(0.96) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
   .field { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9; padding: 10px 14px; border-radius: 10px; font-size: 13px; width: 100%; transition: border-color 0.2s; }
-  .field:focus { outline: none; border-color: rgba(139,92,246,0.5); }
+  .field:focus { outline: none; border-color: rgba(20,184,166,0.5); }
   .field option, select.field option { background: #0d1b2e; color: #f1f5f9; }
   ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
 </style>
@@ -37,41 +37,41 @@
 <!-- SIDEBAR -->
 <aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
   <div class="flex items-center gap-3 mb-8">
-    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);">
-      <span class="material-symbols-outlined text-lg" style="color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
     </div>
     <div class="overflow-hidden">
       <p id="nombre-clinica" class="text-sm font-bold text-white truncate font-headline">Clínica Sol</p>
-      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Portal Clínico</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#2dd4bf;">Admin Portal</p>
     </div>
   </div>
   <nav class="flex-1 flex flex-col gap-1 overflow-y-auto min-h-0">
-    <a href="dashboard_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+    <a href="dashboard_admin_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
       <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
     </a>
-    <a href="agenda_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
-      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Mi Agenda</span>
+    <a href="pacientes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Pacientes</span>
     </a>
-    <a href="pacientes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
-      <span class="material-symbols-outlined text-lg">group</span><span>Mis Pacientes</span>
+    <a href="agenda_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Agenda</span>
     </a>
-    <a href="mensajes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+    <a href="mensajes_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
       <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
     </a>
-    <a href="sala_espera_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline" style="color:#4ade80;">
-      <span class="material-symbols-outlined text-lg" style="color:#4ade80;font-variation-settings:'FILL' 1;">videocam</span><span>Videollamadas</span>
+    <a href="facturacion.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">receipt_long</span><span>Facturación</span>
     </a>
-    <a href="consentimientos_psicologo.html" class="nav-active nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline font-semibold">
+    <a href="consentimientos_clinica.html" class="nav-active nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline font-semibold">
       <span class="material-symbols-outlined text-lg">history_edu</span><span>Consentimientos</span>
     </a>
-    <a href="integraciones_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+    <a href="integraciones_clinica.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
       <span class="material-symbols-outlined text-lg">cable</span><span>Integraciones</span>
     </a>
   </nav>
   <div class="border-t border-slate-800/40 pt-3 relative">
     <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
       <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#2dd4bf;font-size:17px;">dark_mode</span>
         <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
       </button>
       <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
@@ -81,7 +81,7 @@
       </a>
     </div>
     <button id="btn-user" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(139,92,246,0.2);color:#a78bfa;">PS</div>
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">PS</div>
       <div class="flex-1 overflow-hidden text-left">
         <p id="user-nombre" class="text-sm font-semibold text-white truncate font-headline">Psicólogo</p>
         <p class="text-[10px] text-slate-500 uppercase tracking-tighter">Mi cuenta</p>
@@ -101,7 +101,7 @@
       <p class="text-slate-500 text-xs">Documentación legal y ética</p>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="abrirModal()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">
+      <button onclick="abrirModal()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);">
         <span class="material-symbols-outlined text-base">add</span>
         Nuevo consentimiento
       </button>
@@ -119,11 +119,11 @@
   <div id="notif-panel-con" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
     <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
       <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
-      <button id="btn-marcar-con" class="text-xs font-bold" style="color:#a78bfa;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+      <button id="btn-marcar-con" class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
     </div>
     <div id="notif-list-con" class="max-h-72 overflow-y-auto"></div>
     <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
-      <a href="notificaciones_psicologo.html" style="font-size:11px;font-weight:700;color:#a78bfa;text-decoration:none;">Ver todas las notificaciones →</a>
+      <a href="dashboard_admin_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones →</a>
     </div>
   </div>
 
@@ -133,8 +133,8 @@
     <div class="grid grid-cols-3 gap-5 mb-8">
       <div class="card rounded-2xl p-6">
         <div class="flex items-center justify-between mb-4">
-          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,0.15);">
-            <span class="material-symbols-outlined" style="color:#a78bfa;font-variation-settings:'FILL' 1;">send</span>
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(20,184,166,0.15);">
+            <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">send</span>
           </div>
           <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:rgba(74,222,128,0.1);color:#4ade80;">+12% vs anterior</span>
         </div>
@@ -226,16 +226,16 @@
           <div>
             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tipo de documento</label>
             <div class="space-y-2">
-              <label class="flex items-center gap-3 p-3.5 rounded-xl cursor-pointer transition-all" style="border:1px solid rgba(139,92,246,0.3);background:rgba(139,92,246,0.07);">
-                <input checked name="docType" type="radio" value="terapeutico" style="accent-color:#a78bfa;"/>
+              <label class="flex items-center gap-3 p-3.5 rounded-xl cursor-pointer transition-all" style="border:1px solid rgba(20,184,166,0.3);background:rgba(20,184,166,0.07);">
+                <input checked name="docType" type="radio" value="terapeutico" style="accent-color:#2dd4bf;"/>
                 <span class="text-sm font-semibold text-slate-200">Consentimiento Terapéutico General</span>
               </label>
               <label class="flex items-center gap-3 p-3.5 rounded-xl cursor-pointer transition-all" style="border:1px solid rgba(255,255,255,0.07);">
-                <input name="docType" type="radio" value="videollamada" style="accent-color:#a78bfa;"/>
+                <input name="docType" type="radio" value="videollamada" style="accent-color:#2dd4bf;"/>
                 <span class="text-sm font-semibold text-slate-400">Autorización de Videollamada</span>
               </label>
               <label class="flex items-center gap-3 p-3.5 rounded-xl cursor-pointer transition-all" style="border:1px solid rgba(255,255,255,0.07);">
-                <input name="docType" type="radio" value="datos" style="accent-color:#a78bfa;"/>
+                <input name="docType" type="radio" value="datos" style="accent-color:#2dd4bf;"/>
                 <span class="text-sm font-semibold text-slate-400">Manejo de Datos Sensibles (LOPD)</span>
               </label>
             </div>
@@ -243,7 +243,7 @@
           <div>
             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Método de envío</label>
             <div class="grid grid-cols-2 gap-3">
-              <button id="btn-email" onclick="selMetodo('email')" class="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:#a78bfa;">
+              <button id="btn-email" onclick="selMetodo('email')" class="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all" style="background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.4);color:#2dd4bf;">
                 <span class="material-symbols-outlined text-base">mail</span> Email
               </button>
               <button id="btn-whatsapp" onclick="selMetodo('whatsapp')" class="flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#64748b;">
@@ -271,7 +271,7 @@
     <!-- Footer modal -->
     <div class="px-8 py-5 flex justify-end gap-3" style="border-top:1px solid rgba(255,255,255,0.07);">
       <button onclick="cerrarModal()" class="px-6 py-2.5 rounded-xl text-sm font-bold text-slate-400 hover:text-slate-200 transition-colors" style="border:none;background:none;cursor:pointer;">Cancelar</button>
-      <button onclick="enviarConsentimiento()" class="flex items-center gap-2 px-7 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95" style="background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#a78bfa;">
+      <button onclick="enviarConsentimiento()" class="flex items-center gap-2 px-7 py-2.5 rounded-xl text-sm font-bold transition-all active:scale-95" style="background:rgba(20,184,166,0.2);border:1px solid rgba(20,184,166,0.4);color:#2dd4bf;">
         <span class="material-symbols-outlined text-base">send</span>Enviar para firma
       </button>
     </div>
@@ -284,53 +284,53 @@
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
       <div>
         <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
-        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal Clínico</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Admin Portal</p>
       </div>
       <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
         <span class="material-symbols-outlined" style="font-size:18px;">close</span>
       </button>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
-      <a href="notas_soap.html" class="app-card" onmouseover="this.style.background='rgba(251,191,36,0.1)';this.style.borderColor='rgba(251,191,36,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+      <a href="pacientes_clinica.html" class="app-card" onmouseover="this.style.background='rgba(251,191,36,0.1)';this.style.borderColor='rgba(251,191,36,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
         <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.25);">
           <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">description</span>
         </div>
-        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Notas SOAP</span>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Pacientes</span>
       </a>
-      <a href="perfil_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
-        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
-          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">account_circle</span>
+      <a href="config_clinica.html" class="app-card" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">account_circle</span>
         </div>
-        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mi Perfil</span>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Configuración</span>
       </a>
-      <a href="recursos_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(96,165,250,0.1)';this.style.borderColor='rgba(96,165,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+      <a href="estadisticas_clinica.html" class="app-card" onmouseover="this.style.background='rgba(96,165,250,0.1)';this.style.borderColor='rgba(96,165,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
         <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.25);">
           <span class="material-symbols-outlined" style="color:#60a5fa;font-size:22px;font-variation-settings:'FILL' 1;">menu_book</span>
         </div>
-        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Recursos</span>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Estadísticas</span>
       </a>
-      <a href="mis_estadisticas.html" class="app-card" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+      <a href="estadisticas_clinica.html" class="app-card" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
         <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
           <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
         </div>
-        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mis Estadísticas</span>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Estadísticas</span>
       </a>
-      <a href="gestion_documentos_ia.html" class="app-card" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
-        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
-          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">folder_special</span>
+      <a href="gestion_personal_admin.html" class="app-card" onmouseover="this.style.background='rgba(20,184,166,0.1)';this.style.borderColor='rgba(20,184,166,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.25);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">folder_special</span>
         </div>
-        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Docs IA</span>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Personal</span>
       </a>
-      <a href="revisor_conversaciones_ia.html" class="app-card" onmouseover="this.style.background='rgba(239,68,68,0.08)';this.style.borderColor='rgba(239,68,68,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+      <a href="integraciones_clinica.html" class="app-card" onmouseover="this.style.background='rgba(239,68,68,0.08)';this.style.borderColor='rgba(239,68,68,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
         <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);">
           <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">mark_chat_unread</span>
         </div>
-        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Revisor IA</span>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Integraciones</span>
       </a>
     </div>
     <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
       <div style="display:flex;align-items:center;gap:0.75rem;">
-        <div id="apps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#a78bfa;">PS</div>
+        <div id="apps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(20,184,166,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#2dd4bf;">PS</div>
         <div>
           <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">Psicólogo</p>
           <p id="apps-clinica" style="font-size:0.7rem;color:#64748b;">Clínica Sol</p>
@@ -354,15 +354,15 @@
 <script>
 /* ── DATOS ─────────────────────────────────────────────── */
 var CONSENTIMIENTOS = [
-  { id:1, paciente:'Julián Restrepo',   initiales:'JR', color:'#a78bfa', tipo:'Consentimiento Terapéutico', fecha:'12 Oct, 2023', estado:'firmado'    },
-  { id:2, paciente:'Elena Sofia Varga', initiales:'EV', color:'#818cf8', tipo:'Política de Privacidad (GDPR)', fecha:'14 Oct, 2023', estado:'pendiente' },
+  { id:1, paciente:'Julián Restrepo',   initiales:'JR', color:'#2dd4bf', tipo:'Consentimiento Terapéutico', fecha:'12 Oct, 2023', estado:'firmado'    },
+  { id:2, paciente:'Elena Sofia Varga', initiales:'EV', color:'#2dd4bf', tipo:'Política de Privacidad (GDPR)', fecha:'14 Oct, 2023', estado:'pendiente' },
   { id:3, paciente:'Mateo Torres',      initiales:'MT', color:'#64748b', tipo:'Contrato de Telesalud',      fecha:'—',            estado:'sin-enviar' },
 ];
 
 var NOTIFS_CON = [
   { icon:'draw',          color:'#4ade80', msg:'Elena Sofia Varga firmó su consentimiento',      hora:'Hace 10 min', leida:false },
   { icon:'pending_actions',color:'#fbbf24',msg:'Mateo Torres: consentimiento pendiente de envío',hora:'Hace 2 h',    leida:false },
-  { icon:'history_edu',   color:'#818cf8', msg:'Nuevo paciente requiere consentimiento GDPR',    hora:'Ayer',        leida:true  },
+  { icon:'history_edu',   color:'#2dd4bf', msg:'Nuevo paciente requiere consentimiento GDPR',    hora:'Ayer',        leida:true  },
 ];
 
 /* ── TABLA ──────────────────────────────────────────────── */
@@ -472,7 +472,7 @@ function cerrarModalFuera(e) {
 }
 function selMetodo(m) {
   metodoEnvio = m;
-  var activo = 'background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);color:#a78bfa;';
+  var activo = 'background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.4);color:#2dd4bf;';
   var inactivo = 'background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);color:#64748b;';
   document.getElementById('btn-email').style.cssText = m==='email' ? activo : inactivo;
   document.getElementById('btn-whatsapp').style.cssText = m==='whatsapp' ? activo : inactivo;
@@ -483,7 +483,7 @@ function enviarConsentimiento() {
   if (!paciente) { toast('Selecciona un paciente primero','error'); return; }
   var tipoLabel = { terapeutico:'Consentimiento Terapéutico General', videollamada:'Autorización de Videollamada', datos:'Manejo de Datos Sensibles (LOPD)' };
   var ini = paciente.trim().split(' ').map(function(p){return p[0]||'';}).slice(0,2).join('').toUpperCase();
-  var colores = ['#a78bfa','#818cf8','#60a5fa','#4ade80','#fbbf24'];
+  var colores = ['#2dd4bf','#2dd4bf','#60a5fa','#4ade80','#fbbf24'];
   var color = colores[CONSENTIMIENTOS.length % colores.length];
   var nuevoId = Date.now();
   CONSENTIMIENTOS.push({ id:nuevoId, paciente:paciente, initiales:ini, color:color, tipo:tipoLabel[tipo], fecha:new Date().toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}), estado:'pendiente' });
@@ -508,7 +508,7 @@ function renderNotifs() {
         '<p style="font-size:12px;color:'+(n.leida?'#64748b':'#e2e8f0')+';line-height:1.4;font-weight:'+(n.leida?'400':'600')+';">'+n.msg+'</p>'+
         '<p style="font-size:10px;color:#475569;margin-top:2px;">'+n.hora+'</p>'+
       '</div>'+
-      (!n.leida ? '<span style="width:7px;height:7px;border-radius:50%;background:#a78bfa;flex-shrink:0;margin-top:5px;"></span>' : '')+
+      (!n.leida ? '<span style="width:7px;height:7px;border-radius:50%;background:#2dd4bf;flex-shrink:0;margin-top:5px;"></span>' : '')+
     '</div>';
   }).join('');
 }
@@ -522,7 +522,7 @@ window.cerrarApps = function(e){ if(e&&e.target!==document.getElementById('apps-
 var toastTimer;
 function toast(msg, icon) {
   var t = document.getElementById('toast');
-  t.innerHTML = (icon?'<span class="material-symbols-outlined" style="font-size:16px;color:#a78bfa;flex-shrink:0;">'+icon+'</span>':'')+
+  t.innerHTML = (icon?'<span class="material-symbols-outlined" style="font-size:16px;color:#2dd4bf;flex-shrink:0;">'+icon+'</span>':'')+
     '<span>'+msg+'</span>';
   t.classList.remove('hidden');
   clearTimeout(toastTimer);
@@ -602,13 +602,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js';
-import { cerrarSesion, verificarSesion } from '../js/auth.js';
+import { cerrarSesion } from '../js/auth.js';
 
 window._cerrarSesion = cerrarSesion;
 
 const BACKEND = 'https://serenecare-backend-production.up.railway.app';
 const { data: { session } } = await supabase.auth.getSession();
-if (!session) { window.location.href = 'acceso_psicologo.html'; }
+if (!session) { window.location.href = 'acceso_clinica.html'; }
 
 // ── Perfil ──────────────────────────────────────────────────────
 try {
@@ -630,19 +630,18 @@ try {
 
 // ── Cargar pacientes en el select ──────────────────────────────
 try {
-  const { data: psis } = await supabase.from('psicologos').select('id').eq('email', (await supabase.auth.getUser()).data.user?.email || '').single();
-  const qPac = psis
-    ? await supabase.from('pacientes').select('id, nombre').eq('psicologo_id', psis.id).eq('activo', true)
-    : await supabase.from('pacientes').select('id, nombre').eq('activo', true).limit(50);
-
-  const sel = document.getElementById('modal-paciente');
-  if (sel && qPac.data?.length) {
-    qPac.data.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.id;
-      opt.textContent = p.nombre;
-      sel.appendChild(opt);
-    });
+  const { data: usu2 } = await supabase.from('usuarios').select('clinica_id').eq('id', session.user.id).single();
+  if (usu2?.clinica_id) {
+    const { data: pacs } = await supabase.from('pacientes').select('id, nombre').eq('clinica_id', usu2.clinica_id).eq('activo', true).limit(100);
+    const sel = document.getElementById('modal-paciente');
+    if (sel && pacs?.length) {
+      pacs.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.nombre;
+        sel.appendChild(opt);
+      });
+    }
   }
 } catch(_) {}
 
@@ -659,7 +658,7 @@ async function cargarConsentimientos() {
       id: c.id,
       paciente: c.pacientes?.nombre || '—',
       initiales: (c.pacientes?.nombre||'P').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),
-      color: '#a78bfa',
+      color: '#2dd4bf',
       tipo: { terapeutico:'Consentimiento Terapéutico', videollamada:'Autorización Videollamada', datos:'Datos Sensibles (LOPD)' }[c.tipo] || c.tipo,
       fecha: c.enviado_en ? new Date(c.enviado_en).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}) : '—',
       estado: c.estado,
@@ -670,7 +669,6 @@ async function cargarConsentimientos() {
 cargarConsentimientos();
 
 // ── Enviar consentimiento real ─────────────────────────────────
-const enviarOriginal = window.enviarConsentimiento;
 window.enviarConsentimiento = async function() {
   const paciente_id = document.getElementById('modal-paciente').value;
   const tipo = document.querySelector('input[name="docType"]:checked')?.value || 'terapeutico';
