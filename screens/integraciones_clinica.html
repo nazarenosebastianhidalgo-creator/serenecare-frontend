@@ -234,7 +234,7 @@
           </div>
           <div class="flex items-center justify-between pt-2">
             <span class="text-[11px] text-slate-500 italic">Tasa de entrega: 99.8%</span>
-            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+            <button onclick="abrirConfigEmail()" class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
           </div>
         </div>
       </div>
@@ -537,6 +537,44 @@ if (urlParams.get('gcal') === 'ok') {
   alert('Error al conectar Google Calendar. Inténtalo de nuevo.')
 }
 
+// ── Config Email Modal ─────────────────────────────────────────
+window.abrirConfigEmail = function() {
+  document.getElementById('modal-email').style.display = 'flex'
+  cargarConfigEmail()
+}
+window.cerrarConfigEmail = function() {
+  document.getElementById('modal-email').style.display = 'none'
+}
+
+async function cargarConfigEmail() {
+  const { data: usu } = await supabase.from('usuarios').select('clinica_id').eq('id', session.user.id).single()
+  if (!usu?.clinica_id) return
+  window._clinicaId = usu.clinica_id
+  const { data } = await supabase.from('clinicas').select('config_emails').eq('id', usu.clinica_id).single()
+  const cfg = data?.config_emails || {}
+  document.getElementById('tog-recordatorio').checked    = cfg.recordatorio_24h      !== false
+  document.getElementById('tog-confirmacion').checked    = cfg.confirmacion_cita      !== false
+  document.getElementById('tog-resumen').checked         = cfg.resumen_semanal        === true
+  document.getElementById('tog-nuevo-pac').checked       = cfg.notif_nuevo_paciente   !== false
+}
+
+window.guardarConfigEmail = async function() {
+  const cfg = {
+    recordatorio_24h:      document.getElementById('tog-recordatorio').checked,
+    confirmacion_cita:     document.getElementById('tog-confirmacion').checked,
+    resumen_semanal:       document.getElementById('tog-resumen').checked,
+    notif_nuevo_paciente:  document.getElementById('tog-nuevo-pac').checked,
+  }
+  const { error } = await supabase.from('clinicas')
+    .update({ config_emails: cfg }).eq('id', window._clinicaId)
+  cerrarConfigEmail()
+  const t = document.createElement('div')
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0d1b2e;border:1px solid rgba(20,184,166,0.35);border-radius:14px;padding:12px 20px;color:#2dd4bf;font-weight:700;font-size:13px;z-index:9999;'
+  t.textContent = error ? '✗ Error al guardar' : '✓ Preferencias guardadas'
+  document.body.appendChild(t)
+  setTimeout(() => t.remove(), 3000)
+}
+
 window.conectarGCal = function() {
   const userId = session.user.id
   window.location.href = `https://serenecare-backend-production.up.railway.app/api/integrations/google/auth?userId=${userId}`
@@ -551,5 +589,53 @@ window.desconectarGCal = async function() {
   if (res.ok) renderGCalStatus(false)
 }
 </script>
+<!-- Modal config email -->
+<div id="modal-email" onclick="if(event.target===this)cerrarConfigEmail()" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div onclick="event.stopPropagation()" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:2rem;width:100%;max-width:440px;padding:2rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#f1f5f9;">Configurar Email</p>
+        <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">Elige qué emails se envían automáticamente</p>
+      </div>
+      <button onclick="cerrarConfigEmail()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:16px;">close</span>
+      </button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.75rem;">
+      <label style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-radius:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;">
+        <div>
+          <p style="font-size:0.85rem;font-weight:600;color:#e2e8f0;">Recordatorio 24h antes de cita</p>
+          <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">El paciente recibe un email de recordatorio</p>
+        </div>
+        <input type="checkbox" id="tog-recordatorio" style="width:18px;height:18px;accent-color:#2dd4bf;cursor:pointer;flex-shrink:0;margin-left:1rem;">
+      </label>
+      <label style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-radius:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;">
+        <div>
+          <p style="font-size:0.85rem;font-weight:600;color:#e2e8f0;">Confirmación al crear cita</p>
+          <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">El paciente recibe confirmación inmediata</p>
+        </div>
+        <input type="checkbox" id="tog-confirmacion" style="width:18px;height:18px;accent-color:#2dd4bf;cursor:pointer;flex-shrink:0;margin-left:1rem;">
+      </label>
+      <label style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-radius:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;">
+        <div>
+          <p style="font-size:0.85rem;font-weight:600;color:#e2e8f0;">Resumen semanal de la clínica</p>
+          <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">Recibes un resumen cada lunes</p>
+        </div>
+        <input type="checkbox" id="tog-resumen" style="width:18px;height:18px;accent-color:#2dd4bf;cursor:pointer;flex-shrink:0;margin-left:1rem;">
+      </label>
+      <label style="display:flex;align-items:center;justify-content:space-between;padding:1rem;border-radius:1rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;">
+        <div>
+          <p style="font-size:0.85rem;font-weight:600;color:#e2e8f0;">Notificación nuevo paciente</p>
+          <p style="font-size:0.72rem;color:#64748b;margin-top:2px;">Te avisamos cuando un paciente se registra</p>
+        </div>
+        <input type="checkbox" id="tog-nuevo-pac" style="width:18px;height:18px;accent-color:#2dd4bf;cursor:pointer;flex-shrink:0;margin-left:1rem;">
+      </label>
+    </div>
+    <div style="display:flex;gap:0.75rem;margin-top:1.5rem;">
+      <button onclick="cerrarConfigEmail()" style="flex:1;padding:0.75rem;border-radius:0.875rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:0.875rem;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
+      <button onclick="guardarConfigEmail()" style="flex:2;padding:0.75rem;border-radius:0.875rem;background:linear-gradient(135deg,rgba(20,184,166,0.8),rgba(45,212,191,0.9));border:none;color:#fff;font-size:0.875rem;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Guardar</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
