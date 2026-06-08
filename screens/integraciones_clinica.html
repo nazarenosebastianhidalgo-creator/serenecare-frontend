@@ -291,28 +291,35 @@
         <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
           <span class="material-symbols-outlined text-sm">video_call</span> Telemedicina
         </h2>
-        <!-- Google Meet / Zoom -->
-        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+        <!-- Google Meet -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-4" id="gmeet-card">
           <div class="flex justify-between items-start">
             <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
-                <span class="material-symbols-outlined text-3xl" style="color:#ea4335;">videocam</span>
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(234,67,53,0.1);">
+                <svg viewBox="0 0 24 24" class="w-7 h-7"><path fill="#00832D" d="M3 11l4 4 4-4V7H3z"/><path fill="#0066DA" d="M17 3h-4v8l4 4V3z"/><path fill="#E94235" d="M17 15l4-4V7l-4 4z"/><path fill="#00AC47" d="M7 15l4 4h6l-4-4H7z"/><path fill="#0066DA" d="M3 15v4h4l4-4H3z"/><path fill="#FFBA00" d="M21 7l-4 4 4 4V7z"/></svg>
               </div>
               <div>
-                <h3 class="text-base font-headline font-bold text-white">Google Meet / Zoom</h3>
-                <p class="text-sm text-slate-400">Generación automática de enlaces de sesión.</p>
+                <h3 class="text-base font-headline font-bold text-white">Google Meet</h3>
+                <p class="text-sm text-slate-400">Se genera un link de Meet automáticamente al crear cada cita de videollamada.</p>
               </div>
             </div>
-            <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">No conectado</span>
+            <span id="gmeet-badge" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-500">Cargando...</span>
           </div>
-          <div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
-            <span class="text-sm text-slate-400">Link automático al reservar</span>
-            <div class="w-10 h-5 bg-slate-800 rounded-full relative flex items-center px-1">
-              <div class="h-3.5 w-3.5 bg-slate-600 rounded-full"></div>
-            </div>
+          <div id="gmeet-connected" class="hidden p-3 rounded-xl text-sm" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            <p class="text-xs text-slate-400 flex items-center gap-2">
+              <span class="material-symbols-outlined text-green-400" style="font-size:16px;">check_circle</span>
+              Cada cita de tipo "videollamada" genera un link de Meet automáticamente.
+            </p>
           </div>
-          <div class="pt-2">
-            <button class="w-full py-3 rounded-xl font-headline font-bold transition-all hover:opacity-90 active:scale-[0.98]" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.35);">Conectar Videollamada</button>
+          <div id="gmeet-disconnected" class="hidden p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            Conecta Google Calendar para activar la generación automática de links de Meet.
+          </div>
+          <button id="gmeet-btn-connect" onclick="conectarGCal()" class="hidden w-full py-2.5 rounded-xl font-headline font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#00832D,#00AC47);color:#fff;">
+            <span class="material-symbols-outlined text-sm align-middle mr-1">link</span>
+            Conectar Google Meet
+          </button>
+          <div id="gmeet-active" class="hidden w-full py-2 rounded-xl text-center text-sm font-bold" style="background:rgba(0,131,45,0.1);color:#00AC47;border:1px solid rgba(0,131,45,0.25);">
+            ✓ Activo — links de Meet generados automáticamente
           </div>
         </div>
       </div>
@@ -517,6 +524,25 @@ const gcalDiscDiv     = document.getElementById('gcal-disconnected')
 const gcalBtnConnect  = document.getElementById('gcal-btn-connect')
 const gcalBtnDisc     = document.getElementById('gcal-btn-disconnect')
 
+function renderGMeetStatus(connected) {
+  const badge = document.getElementById('gmeet-badge')
+  const conn  = document.getElementById('gmeet-connected')
+  const disc  = document.getElementById('gmeet-disconnected')
+  const btn   = document.getElementById('gmeet-btn-connect')
+  const active= document.getElementById('gmeet-active')
+  if (connected) {
+    badge.textContent = 'Activo'
+    badge.style.cssText = 'background:rgba(0,131,45,0.12);color:#00AC47;border:1px solid rgba(0,131,45,0.25);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
+    conn.classList.remove('hidden'); disc.classList.add('hidden')
+    btn.classList.add('hidden');     active.classList.remove('hidden')
+  } else {
+    badge.textContent = 'No conectado'
+    badge.style.cssText = 'background:rgba(100,116,139,0.15);color:#64748b;border:1px solid rgba(100,116,139,0.2);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
+    conn.classList.add('hidden');    disc.classList.remove('hidden')
+    btn.classList.remove('hidden');  active.classList.add('hidden')
+  }
+}
+
 function renderGCalStatus(connected) {
   if (connected) {
     gcalBadge.textContent = 'Conectado'
@@ -538,11 +564,13 @@ function renderGCalStatus(connected) {
 }
 
 renderGCalStatus(gcalConnected)
+renderGMeetStatus(gcalConnected)
 
 // Mostrar toast si viene de OAuth callback
 const urlParams = new URLSearchParams(window.location.search)
 if (urlParams.get('gcal') === 'ok') {
   renderGCalStatus(true)
+  renderGMeetStatus(true)
   history.replaceState(null, '', window.location.pathname)
   const t = document.createElement('div')
   t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0d1b2e;border:1px solid rgba(20,184,166,0.35);border-radius:14px;padding:12px 20px;color:#2dd4bf;font-weight:700;font-size:13px;z-index:9999;'
@@ -667,7 +695,7 @@ window.desconectarGCal = async function() {
     method: 'POST',
     headers: { Authorization: 'Bearer ' + session.access_token }
   })
-  if (res.ok) renderGCalStatus(false)
+  if (res.ok) { renderGCalStatus(false); renderGMeetStatus(false) }
 }
 </script>
 <!-- Modal config email -->
