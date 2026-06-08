@@ -5,6 +5,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>SereneCare — Pacientes</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
   .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
@@ -701,14 +702,17 @@ window.cwEnviar = function() {
       </div>
       <div style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.2);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;">
         <span class="material-symbols-outlined" style="color:#a78bfa;font-size:16px;margin-top:1px;flex-shrink:0;">info</span>
-        <p style="font-size:12px;color:#94a3b8;line-height:1.5;margin:0;">El psicólogo recibirá un link para activar su cuenta y acceder al portal clínico.</p>
+        <div>
+          <p style="font-size:12px;color:#e2e8f0;font-weight:700;margin:0 0 2px;">29€/mes por psicólogo</p>
+          <p style="font-size:12px;color:#94a3b8;line-height:1.5;margin:0;">Se procesará el pago y el psicólogo recibirá el link para activar su cuenta.</p>
+        </div>
       </div>
     </div>
     <div style="display:flex;gap:12px;margin-top:24px;">
       <button onclick="cerrarModalPsicologo()" style="flex:1;padding:11px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;font-size:14px;font-weight:600;cursor:pointer;font-family:Inter,sans-serif;">Cancelar</button>
-      <button onclick="invitarPsicologo()" style="flex:2;padding:11px;border-radius:12px;background:rgba(139,92,246,0.2);border:1px solid rgba(139,92,246,0.4);color:#a78bfa;font-size:14px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(139,92,246,0.2)'">
-        <span class="material-symbols-outlined" style="font-size:17px;">send</span>
-        Enviar invitación
+      <button id="btn-pagar-psicologo" onclick="invitarPsicologo()" style="flex:2;padding:11px;border-radius:12px;background:linear-gradient(135deg,#5b21b6,#a78bfa);border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+        <span class="material-symbols-outlined" style="font-size:17px;">credit_card</span>
+        Pagar 29€/mes e invitar
       </button>
     </div>
   </div>
@@ -782,6 +786,16 @@ function cerrarModalPsicologo() {
   document.getElementById('modal-nuevo-psicologo').style.display = 'none';
 }
 
+// Lemon Squeezy: mostrar toast cuando el pago se completa
+window.addEventListener('message', function(event) {
+  if (event.data && event.data.event === 'Checkout.Success') {
+    var t = document.getElementById('toast-np');
+    document.getElementById('toast-np-msg').textContent = 'Pago confirmado. La invitación se enviará al psicólogo en breve.';
+    t.style.display = 'flex';
+    setTimeout(function(){ t.style.display = 'none'; }, 6000);
+  }
+});
+
 async function invitarPsicologo() {
   var nombre = document.getElementById('ps-nombre').value.trim();
   var email  = document.getElementById('ps-email').value.trim();
@@ -790,36 +804,36 @@ async function invitarPsicologo() {
   if (!nombre) { document.getElementById('ps-nombre').style.borderColor = '#f87171'; document.getElementById('ps-nombre').focus(); return; }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('ps-email').style.borderColor = '#f87171'; document.getElementById('ps-email').focus(); return; }
 
-  var btn = document.querySelector('#modal-nuevo-psicologo button[onclick="invitarPsicologo()"]');
-  if (btn) { btn.textContent = 'Enviando...'; btn.disabled = true; }
+  var m = await import('../js/supabase-client.js');
+  var sess = (await m.supabase.auth.getSession()).data.session;
+  if (!sess) { window.location.href = 'acceso_clinica.html'; return; }
 
-  try {
-    var m = await import('../js/supabase-client.js');
-    var sess = (await m.supabase.auth.getSession()).data.session;
-    if (!sess) { window.location.href = 'acceso_clinica.html'; return; }
+  var clinicaId  = localStorage.getItem('tp_clinica_id') || '';
+  var adminEmail = sess.user.email || localStorage.getItem('tp_email') || '';
+  var apellido   = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : '';
+  var soloNombre = nombre.split(' ')[0] || nombre;
 
-    var clinicaId = localStorage.getItem('tp_clinica_id') || 'e5a87f07-a1bf-4701-90d5-193cb65a1e89';
-    var apellido    = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : '';
-    var solo_nombre = nombre.split(' ')[0] || nombre;
+  // Construir URL de checkout Lemon Squeezy con custom data
+  var params = new URLSearchParams({
+    'checkout[email]': adminEmail,
+    'checkout[custom][action]': 'invite_psicologo',
+    'checkout[custom][email_psicologo]': email,
+    'checkout[custom][nombre]': soloNombre,
+    'checkout[custom][apellido]': apellido,
+    'checkout[custom][clinica_id]': clinicaId,
+    'checkout[custom][telefono]': tel || ''
+  });
 
-    // Crear usuario en auth + usuarios con rol psicologo via backend
-    var r = await fetch('https://serenecare-backend-production.up.railway.app/api/staff/invite', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + sess.access_token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nombre: solo_nombre, apellido, email, telefono: tel || null, clinica_id: clinicaId, rol: 'psicologo' })
-    });
-    var j = await r.json();
-    if (!r.ok) throw new Error(j.error || 'Error al invitar: ' + r.status);
+  var checkoutUrl = 'https://serenecare.lemonsqueezy.com/buy/1728535?' + params.toString();
 
-    cerrarModalPsicologo();
-    var t = document.getElementById('toast-np');
-    document.getElementById('toast-np-msg').textContent = 'Invitación enviada a ' + email;
-    t.style.display = 'flex';
-    setTimeout(function(){ t.style.display = 'none'; }, 4000);
+  // Cerrar modal antes de abrir overlay de pago
+  cerrarModalPsicologo();
 
-  } catch(e) {
-    if (btn) { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:17px;">send</span> Enviar invitación'; btn.disabled = false; }
-    alert('Error: ' + e.message);
+  // Abrir checkout Lemon Squeezy como overlay
+  if (window.LemonSqueezy && window.LemonSqueezy.Url) {
+    window.LemonSqueezy.Url.Open(checkoutUrl);
+  } else {
+    window.open(checkoutUrl, '_blank');
   }
 }
 
