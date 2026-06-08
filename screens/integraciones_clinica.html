@@ -624,10 +624,12 @@ window.guardarConfigEmail = async function() {
 const BACKEND = 'https://serenecare-backend-production.up.railway.app'
 
 async function cargarIcalStatus() {
-  const { data: usu2 } = await supabase.from('usuarios').select('clinica_id').eq('id', session.user.id).single()
-  if (!usu2?.clinica_id) return
-  const { data: cl } = await supabase.from('clinicas').select('ical_token').eq('id', usu2.clinica_id).single()
-  renderIcalStatus(cl?.ical_token || null)
+  try {
+    const { data: usu2 } = await supabase.from('usuarios').select('clinica_id').eq('id', session.user.id).single()
+    if (!usu2?.clinica_id) return renderIcalStatus(null)
+    const { data: cl } = await supabase.from('clinicas').select('ical_token').eq('id', usu2.clinica_id).single()
+    renderIcalStatus(cl?.ical_token || null)
+  } catch { renderIcalStatus(null) }
 }
 
 function renderIcalStatus(token) {
