@@ -166,21 +166,38 @@
           </div>
         </div>
         <!-- iCal / Outlook -->
-        <div class="glass-card p-6 rounded-3xl opacity-50">
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5" id="ical-card">
           <div class="flex justify-between items-start">
             <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center grayscale">
-                <span class="material-symbols-outlined text-slate-500 text-3xl">event_repeat</span>
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(251,146,60,0.1);">
+                <span class="material-symbols-outlined text-3xl" style="color:#fb923c;">event_repeat</span>
               </div>
               <div>
                 <h3 class="text-base font-headline font-bold text-white">iCal / Outlook</h3>
-                <p class="text-sm text-slate-400">Próximamente disponible.</p>
+                <p class="text-sm text-slate-400">Sincroniza con Apple Calendar, Outlook o cualquier app de calendario.</p>
               </div>
             </div>
-            <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">No disponible</span>
+            <span id="ical-badge" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-500">Cargando...</span>
           </div>
-          <div class="pt-4">
-            <button class="w-full py-2.5 bg-slate-800 text-slate-600 rounded-xl font-headline font-bold cursor-not-allowed" disabled>Conectar</button>
+          <div id="ical-url-box" class="hidden p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            <p class="text-xs text-slate-500 mb-2">Tu URL de suscripción:</p>
+            <div class="flex items-center gap-2">
+              <code id="ical-url-text" class="text-xs flex-1 truncate" style="color:#fb923c;"></code>
+              <button onclick="copiarIcalUrl()" class="flex-shrink-0 px-3 py-1 rounded-lg text-xs font-bold transition-all hover:opacity-80" style="background:rgba(251,146,60,0.15);color:#fb923c;border:1px solid rgba(251,146,60,0.3);">
+                <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">content_copy</span>
+              </button>
+            </div>
+            <p class="text-[10px] text-slate-600 mt-2">Pega esta URL en tu app de calendario (Apple Cal, Outlook, Google Cal...).</p>
+          </div>
+          <div id="ical-disconnected" class="hidden p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            Genera tu URL única para sincronizar con cualquier app de calendario.
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button id="ical-btn-generar" onclick="generarIcalToken()" class="hidden w-full py-2.5 rounded-xl font-headline font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#ea580c,#fb923c);color:#fff;">
+              <span class="material-symbols-outlined text-sm align-middle mr-1">link</span>
+              Generar URL de suscripción
+            </button>
+            <button id="ical-btn-revocar" onclick="revocarIcalToken()" class="hidden px-4 py-2 text-sm font-headline font-semibold text-red-400/80 hover:bg-red-400/10 rounded-xl transition-all">Revocar</button>
           </div>
         </div>
       </div>
@@ -535,6 +552,69 @@ window.guardarConfigEmail = async function() {
   document.body.appendChild(t)
   setTimeout(() => t.remove(), 3000)
 }
+
+// ── iCal ───────────────────────────────────────────────────────
+const BACKEND = 'https://serenecare-backend-production.up.railway.app'
+
+async function cargarIcalStatus() {
+  const { data: psi } = await supabase.from('psicologos')
+    .select('ical_token').eq('email', usu?.email || session.user.email).single()
+  renderIcalStatus(psi?.ical_token || null)
+}
+
+function renderIcalStatus(token) {
+  const badge   = document.getElementById('ical-badge')
+  const urlBox  = document.getElementById('ical-url-box')
+  const disc    = document.getElementById('ical-disconnected')
+  const btnGen  = document.getElementById('ical-btn-generar')
+  const btnRev  = document.getElementById('ical-btn-revocar')
+  const urlText = document.getElementById('ical-url-text')
+  if (token) {
+    badge.textContent = 'Conectado'
+    badge.style.cssText = 'background:rgba(251,146,60,0.12);color:#fb923c;border:1px solid rgba(251,146,60,0.25);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
+    urlText.textContent = `${BACKEND}/api/calendar/feed/${token}`
+    urlBox.classList.remove('hidden')
+    disc.classList.add('hidden')
+    btnGen.classList.add('hidden')
+    btnRev.classList.remove('hidden')
+  } else {
+    badge.textContent = 'No conectado'
+    badge.style.cssText = 'background:rgba(100,116,139,0.15);color:#64748b;border:1px solid rgba(100,116,139,0.2);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
+    urlBox.classList.add('hidden')
+    disc.classList.remove('hidden')
+    btnGen.classList.remove('hidden')
+    btnRev.classList.add('hidden')
+  }
+}
+
+window.generarIcalToken = async function() {
+  const res = await fetch(`${BACKEND}/api/calendar/token`, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + session.access_token }
+  })
+  const { token } = await res.json()
+  renderIcalStatus(token)
+}
+
+window.revocarIcalToken = async function() {
+  if (!confirm('¿Revocar la URL actual? Se generará una nueva y la anterior dejará de funcionar.')) return
+  const res = await fetch(`${BACKEND}/api/calendar/token`, {
+    method: 'DELETE',
+    headers: { Authorization: 'Bearer ' + session.access_token }
+  })
+  const { token } = await res.json()
+  renderIcalStatus(token)
+}
+
+window.copiarIcalUrl = function() {
+  const url = document.getElementById('ical-url-text').textContent
+  navigator.clipboard.writeText(url)
+  const btn = document.querySelector('#ical-url-box button')
+  btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">check</span>'
+  setTimeout(() => { btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle;">content_copy</span>' }, 2000)
+}
+
+cargarIcalStatus()
 
 window.conectarGCal = function() {
   const userId = session.user.id
