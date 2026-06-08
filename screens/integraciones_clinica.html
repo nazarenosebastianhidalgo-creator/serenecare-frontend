@@ -129,29 +129,37 @@
           <span class="material-symbols-outlined text-sm">calendar_today</span> Calendario y Agenda
         </h2>
         <!-- Google Calendar -->
-        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5" id="gcal-card">
           <div class="flex justify-between items-start">
             <div class="flex items-center gap-4">
               <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
-                <img alt="Google Calendar" class="w-8 h-8" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQ0BaYUAvkgxPX4_xDM1nWv1OdSKwY-8U33sv7sMeZ3XM5MpXCzLjU8sjUXuPYY10uWxBNkc_wgFmfVTLQfUBJ19cgg-y6w3TfnhrCFmoOEI3IB_KT9htKZYdhznOu_8FHDtUH1ZUiWIWwrYk01nqjTcb9_bqySHQ5xVrj2Ga_YHHxWPRGoseb3dtagGWOsYnC4n1EdlhV6mKxaiEPJPMsHZlXlOzN-SGdOxE1Y26zLmeM2ppZ15lneRwiGNZSjjZLiIYDM4l6lnao"/>
+                <svg viewBox="0 0 24 24" class="w-7 h-7"><path fill="#4285F4" d="M21 6H3v14h18V6z"/><path fill="#fff" d="M3 6h18v2H3z"/><path fill="#EA4335" d="M16 2H8v4h8V2z"/><path fill="#FBBC05" d="M8 2H3v4h5V2z"/><path fill="#34A853" d="M21 2h-5v4h5V2z"/><text x="12" y="16" text-anchor="middle" fill="#4285F4" font-size="7" font-family="sans-serif" font-weight="bold">31</text></svg>
               </div>
               <div>
                 <h3 class="text-base font-headline font-bold text-white">Google Calendar</h3>
-                <p class="text-sm text-slate-400">Sincronización bidireccional de citas.</p>
+                <p class="text-sm text-slate-400">Las citas creadas en SereneCare aparecen automáticamente en tu calendario.</p>
               </div>
             </div>
-            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);">Conectado</span>
+            <span id="gcal-badge" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-500">Cargando...</span>
           </div>
-          <div class="p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+
+          <!-- Estado: conectado -->
+          <div id="gcal-connected" class="hidden p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
             <p class="text-xs text-slate-500 mb-1">Cuenta vinculada:</p>
-            <p class="text-sm font-mono" style="color:#2dd4bf;">dr.valencia@serenecare.com</p>
+            <p class="text-sm font-mono" id="gcal-email" style="color:#2dd4bf;">—</p>
           </div>
-          <div class="flex items-center justify-between pt-2">
-            <span class="text-[11px] text-slate-500 italic">Ãšltima sincronización: Hace 5 minutos</span>
-            <div class="flex gap-2">
-              <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
-              <button class="px-4 py-2 text-sm font-headline font-semibold text-red-400/80 hover:bg-red-400/10 rounded-xl transition-all">Desconectar</button>
-            </div>
+
+          <!-- Estado: no conectado -->
+          <div id="gcal-disconnected" class="hidden p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            Conecta tu cuenta de Google para que las citas se sincronicen automáticamente.
+          </div>
+
+          <div class="flex gap-2 pt-1">
+            <button id="gcal-btn-connect" onclick="conectarGCal()" class="hidden w-full py-2.5 rounded-xl font-headline font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#4285F4,#34A853);color:#fff;">
+              <span class="material-symbols-outlined text-sm align-middle mr-1">link</span>
+              Conectar Google Calendar
+            </button>
+            <button id="gcal-btn-disconnect" onclick="desconectarGCal()" class="hidden px-4 py-2 text-sm font-headline font-semibold text-red-400/80 hover:bg-red-400/10 rounded-xl transition-all">Desconectar</button>
           </div>
         </div>
         <!-- iCal / Outlook -->
@@ -478,10 +486,69 @@ if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.repla
 const { data: { session } } = await supabase.auth.getSession()
 if (!session) { window.location.href = '../login.html' }
 
-const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido, email, google_refresh_token').eq('id', session.user.id).single()
 if (usu) {
   const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = usu.nombre+' '+usu.apellido
   const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = (usu.nombre[0]||'')+(usu.apellido[0]||'')
+}
+
+// ── Google Calendar status ─────────────────────────────────────
+const gcalConnected = !!usu?.google_refresh_token
+const gcalBadge       = document.getElementById('gcal-badge')
+const gcalConnDiv     = document.getElementById('gcal-connected')
+const gcalDiscDiv     = document.getElementById('gcal-disconnected')
+const gcalBtnConnect  = document.getElementById('gcal-btn-connect')
+const gcalBtnDisc     = document.getElementById('gcal-btn-disconnect')
+
+function renderGCalStatus(connected) {
+  if (connected) {
+    gcalBadge.textContent = 'Conectado'
+    gcalBadge.style.cssText = 'background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);'
+    gcalConnDiv.classList.remove('hidden')
+    gcalDiscDiv.classList.add('hidden')
+    gcalBtnConnect.classList.add('hidden')
+    gcalBtnDisc.classList.remove('hidden')
+    const emailEl = document.getElementById('gcal-email')
+    if (emailEl) emailEl.textContent = usu?.email || session.user.email
+  } else {
+    gcalBadge.textContent = 'No conectado'
+    gcalBadge.style.cssText = 'background:rgba(100,116,139,0.15);color:#64748b;border:1px solid rgba(100,116,139,0.2);'
+    gcalConnDiv.classList.add('hidden')
+    gcalDiscDiv.classList.remove('hidden')
+    gcalBtnConnect.classList.remove('hidden')
+    gcalBtnDisc.classList.add('hidden')
+  }
+}
+
+renderGCalStatus(gcalConnected)
+
+// Mostrar toast si viene de OAuth callback
+const urlParams = new URLSearchParams(window.location.search)
+if (urlParams.get('gcal') === 'ok') {
+  renderGCalStatus(true)
+  history.replaceState(null, '', window.location.pathname)
+  const t = document.createElement('div')
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0d1b2e;border:1px solid rgba(20,184,166,0.35);border-radius:14px;padding:12px 20px;color:#2dd4bf;font-weight:700;font-size:13px;z-index:9999;'
+  t.textContent = '✓ Google Calendar conectado correctamente'
+  document.body.appendChild(t)
+  setTimeout(() => t.remove(), 4000)
+} else if (urlParams.get('gcal') === 'error') {
+  history.replaceState(null, '', window.location.pathname)
+  alert('Error al conectar Google Calendar. Inténtalo de nuevo.')
+}
+
+window.conectarGCal = function() {
+  const userId = session.user.id
+  window.location.href = `https://serenecare-backend-production.up.railway.app/api/integrations/google/auth?userId=${userId}`
+}
+
+window.desconectarGCal = async function() {
+  if (!confirm('¿Desconectar Google Calendar?')) return
+  const res = await fetch('https://serenecare-backend-production.up.railway.app/api/integrations/google/disconnect', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + session.access_token }
+  })
+  if (res.ok) renderGCalStatus(false)
 }
 </script>
 </body>
