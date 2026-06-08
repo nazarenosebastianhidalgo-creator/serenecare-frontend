@@ -658,12 +658,15 @@ function renderIcalStatus(token) {
 }
 
 window.generarIcalToken = async function() {
-  const res = await fetch(`${BACKEND}/api/calendar/token`, {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + session.access_token }
-  })
-  const { token } = await res.json()
-  renderIcalStatus(token)
+  try {
+    const res = await fetch(`${BACKEND}/api/calendar/token`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' }
+    })
+    const json = await res.json()
+    if (json.token) { renderIcalStatus(json.token) }
+    else { alert('Error: ' + (json.error || 'Respuesta inesperada')) }
+  } catch(e) { alert('Error de conexión: ' + e.message) }
 }
 
 window.revocarIcalToken = async function() {
