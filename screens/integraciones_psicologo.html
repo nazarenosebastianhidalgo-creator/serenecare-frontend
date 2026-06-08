@@ -510,8 +510,9 @@ window.cerrarConfigEmail = function() {
 }
 
 async function cargarConfigEmail() {
+  const email = usu?.email || session.user.email
   const { data } = await supabase.from('psicologos')
-    .select('config_emails').eq('usuario_id', session.user.id).single()
+    .select('config_emails').eq('email', email).single()
   const cfg = data?.config_emails || {}
   document.getElementById('tog-recordatorio').checked  = cfg.recordatorio_24h  !== false
   document.getElementById('tog-confirmacion').checked  = cfg.confirmacion_cita  !== false
@@ -524,8 +525,9 @@ window.guardarConfigEmail = async function() {
     confirmacion_cita: document.getElementById('tog-confirmacion').checked,
     resumen_semanal:   document.getElementById('tog-resumen').checked,
   }
+  const email = usu?.email || session.user.email
   const { error } = await supabase.from('psicologos')
-    .update({ config_emails: cfg }).eq('usuario_id', session.user.id)
+    .update({ config_emails: cfg }).eq('email', email)
   cerrarConfigEmail()
   const t = document.createElement('div')
   t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0d1b2e;border:1px solid rgba(167,139,250,0.35);border-radius:14px;padding:12px 20px;color:#a78bfa;font-weight:700;font-size:13px;z-index:9999;'
