@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SereneCare — Integraciones</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { background-color: #020617; font-family: 'Inter', sans-serif; }
+  .sidebar-dark { background-color: #0a1628; }
+  .nav-active { background: rgba(167,139,250,0.12); color: #a78bfa; }
+  .nav-item { color: #94a3b8; transition: all 0.2s; }
+  .nav-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+  .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); }
+  .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+  .font-headline { font-family: 'Manrope', sans-serif; }
+  .app-card { display:flex; flex-direction:column; align-items:center; gap:0.6rem; padding:1.25rem 0.75rem; border-radius:1.25rem; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); text-decoration:none; transition:all 0.2s; cursor:pointer; }
+  @keyframes dropIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body class="text-slate-200 antialiased min-h-screen">
+
+<!-- SIDEBAR -->
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark border-r border-slate-800/30 p-5 z-50">
+  <div class="flex items-center gap-3 mb-8">
+    <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.2);border:1px solid rgba(167,139,250,0.3);">
+      <span class="material-symbols-outlined text-lg" style="color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
+    </div>
+    <div class="overflow-hidden">
+      <p id="nombre-psicologo" class="text-sm font-bold text-white truncate font-headline">Psicólogo</p>
+      <p class="text-[10px] font-bold uppercase tracking-widest" style="color:#a78bfa;">Portal Psicólogo</p>
+    </div>
+  </div>
+  <nav class="flex-1 flex flex-col gap-1">
+    <a href="dashboard_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">dashboard</span><span>Dashboard</span>
+    </a>
+    <a href="pacientes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">group</span><span>Pacientes</span>
+    </a>
+    <a href="agenda_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">calendar_month</span><span>Agenda</span>
+    </a>
+    <a href="mensajes_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">chat</span><span>Mensajes</span>
+    </a>
+    <a href="notas_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">edit_note</span><span>Notas SOAP</span>
+    </a>
+    <a href="telemedicina_psicologo.html" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">video_call</span><span>Videollamada</span>
+    </a>
+    <a href="integraciones_psicologo.html" class="nav-active flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline">
+      <span class="material-symbols-outlined text-lg">cable</span><span>Integraciones</span>
+    </a>
+  </nav>
+  <div class="border-t border-slate-800/40 pt-3 relative">
+    <div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
+      <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
+        <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
+      </button>
+      <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
+      <a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
+        <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
+        <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
+      </a>
+    </div>
+    <button id="btn-user-card" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(139,92,246,0.2);color:#a78bfa;">PS</div>
+      <div class="flex-1 overflow-hidden text-left">
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">Psicólogo</p>
+        <p class="text-[10px] text-slate-500">Portal Psicólogo</p>
+      </div>
+      <span id="chevron-user" class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="pl-64 min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/30" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(16px);">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Integraciones</h2>
+      <p id="fecha-hoy" class="text-slate-500 text-xs capitalize"></p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
+      <button id="btn-notif-int" onclick="toggleNotifInt()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400">notifications</span>
+        <span id="notif-dot-int" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Notif panel -->
+  <div id="notif-panel-int" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:dropIn 0.2s ease forwards;">
+    <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
+      <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
+      <button class="text-xs font-bold" style="color:#a78bfa;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+    </div>
+    <div class="px-5 py-8 text-center">
+      <p class="text-slate-500 text-sm">No hay notificaciones nuevas</p>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="px-8 py-10 max-w-5xl">
+
+    <!-- Page header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+      <div>
+        <h1 class="text-3xl font-extrabold font-headline text-white tracking-tight mb-2">Integraciones</h1>
+        <p class="text-slate-400 max-w-lg text-sm leading-relaxed">Conecta tus herramientas para sincronizar tu agenda, comunicarte con pacientes y gestionar sesiones de telemedicina.</p>
+      </div>
+      <span class="px-4 py-1.5 rounded-full text-sm font-bold w-fit" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:#a78bfa;">1 de 4 conectadas</span>
+    </div>
+
+    <!-- Integrations Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+      <!-- Calendario -->
+      <div class="space-y-6">
+        <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">calendar_today</span> Calendario y Agenda
+        </h2>
+        <!-- Google Calendar -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5" id="gcal-card">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" class="w-7 h-7"><path fill="#4285F4" d="M21 6H3v14h18V6z"/><path fill="#fff" d="M3 6h18v2H3z"/><path fill="#EA4335" d="M16 2H8v4h8V2z"/><path fill="#FBBC05" d="M8 2H3v4h5V2z"/><path fill="#34A853" d="M21 2h-5v4h5V2z"/><text x="12" y="16" text-anchor="middle" fill="#4285F4" font-size="7" font-family="sans-serif" font-weight="bold">31</text></svg>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">Google Calendar</h3>
+                <p class="text-sm text-slate-400">Las citas creadas en SereneCare aparecen automáticamente en tu calendario.</p>
+              </div>
+            </div>
+            <span id="gcal-badge" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-500">Cargando...</span>
+          </div>
+
+          <!-- Estado: conectado -->
+          <div id="gcal-connected" class="hidden p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            <p class="text-xs text-slate-500 mb-1">Cuenta vinculada:</p>
+            <p class="text-sm font-mono" id="gcal-email" style="color:#a78bfa;">—</p>
+          </div>
+
+          <!-- Estado: no conectado -->
+          <div id="gcal-disconnected" class="hidden p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            Conecta tu cuenta de Google para que las citas se sincronicen automáticamente con tu calendario personal.
+          </div>
+
+          <div class="flex gap-2 pt-1">
+            <button id="gcal-btn-connect" onclick="conectarGCal()" class="hidden w-full py-2.5 rounded-xl font-headline font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#4285F4,#34A853);color:#fff;">
+              <span class="material-symbols-outlined text-sm align-middle mr-1">link</span>
+              Conectar Google Calendar
+            </button>
+            <button id="gcal-btn-disconnect" onclick="desconectarGCal()" class="hidden px-4 py-2 text-sm font-headline font-semibold text-red-400/80 hover:bg-red-400/10 rounded-xl transition-all">Desconectar</button>
+          </div>
+        </div>
+        <!-- iCal / Outlook -->
+        <div class="glass-card p-6 rounded-3xl opacity-50">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center grayscale">
+                <span class="material-symbols-outlined text-slate-500 text-3xl">event_repeat</span>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">iCal / Outlook</h3>
+                <p class="text-sm text-slate-400">Próximamente disponible.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">No disponible</span>
+          </div>
+          <div class="pt-4">
+            <button class="w-full py-2.5 bg-slate-800 text-slate-600 rounded-xl font-headline font-bold cursor-not-allowed" disabled>Conectar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comunicación -->
+      <div class="space-y-6">
+        <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">chat</span> Comunicación
+        </h2>
+        <!-- WhatsApp Business -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(37,211,102,0.1);">
+                <span class="material-symbols-outlined text-3xl" style="color:#25D366;">chat</span>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">WhatsApp Business</h3>
+                <p class="text-sm text-slate-400">Recordatorios automáticos a tus pacientes.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);">Conectado</span>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+              <span class="text-sm text-slate-300">Recordatorios Automáticos</span>
+              <div class="w-10 h-5 rounded-full relative flex items-center px-1 cursor-pointer" style="background:rgba(167,139,250,0.8);">
+                <div class="h-3.5 w-3.5 bg-white rounded-full ml-auto"></div>
+              </div>
+            </div>
+            <div class="p-3 bg-white/5 rounded-xl" style="border-left:2px solid rgba(167,139,250,0.4);">
+              <p class="text-[10px] text-slate-500 mb-1 uppercase font-bold tracking-tighter">Plantilla Activa</p>
+              <p class="text-xs text-slate-300 italic leading-relaxed">"Hola <span style="color:#a78bfa;">{nombre}</span>, te recordamos tu cita para el <span style="color:#a78bfa;">{fecha}</span> a las <span style="color:#a78bfa;">{hora}</span>. Responde CONFIRMAR..."</p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-[11px] text-slate-500 italic">Número: +34 612 ···· ·89</span>
+            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+          </div>
+        </div>
+        <!-- Email -->
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(26,130,226,0.1);">
+                <span class="material-symbols-outlined text-3xl" style="color:#1A82E2;">mail</span>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">Email (Brevo)</h3>
+                <p class="text-sm text-slate-400">Confirmaciones y recordatorios automáticos.</p>
+              </div>
+            </div>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);">Conectado</span>
+          </div>
+          <div class="flex items-center justify-between pt-2">
+            <span class="text-[11px] text-slate-500 italic">Tasa de entrega: 99.8%</span>
+            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemedicina -->
+      <div class="space-y-6 lg:col-span-2">
+        <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">video_call</span> Telemedicina
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Daily.co (activo) -->
+          <div class="glass-card p-6 rounded-3xl flex flex-col gap-4">
+            <div class="flex justify-between items-start">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(167,139,250,0.12);">
+                <span class="material-symbols-outlined text-3xl" style="color:#a78bfa;">videocam</span>
+              </div>
+              <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);">Activo</span>
+            </div>
+            <div>
+              <h3 class="text-base font-headline font-bold text-white">Daily.co</h3>
+              <p class="text-sm text-slate-400 mt-1">Videollamadas seguras HIPAA integradas en SereneCare.</p>
+            </div>
+            <a href="telemedicina_psicologo.html" class="w-full py-2.5 rounded-xl font-headline font-bold text-sm text-center transition-all hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#5b21b6,#a78bfa);color:#fff;text-decoration:none;">
+              Iniciar videollamada
+            </a>
+          </div>
+          <!-- Zoom (próximo) -->
+          <div class="glass-card p-6 rounded-3xl flex flex-col gap-4 opacity-50">
+            <div class="flex justify-between items-start">
+              <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center grayscale">
+                <span class="material-symbols-outlined text-slate-500 text-3xl">video_call</span>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">Próximamente</span>
+            </div>
+            <div>
+              <h3 class="text-base font-headline font-bold text-white">Zoom</h3>
+              <p class="text-sm text-slate-400 mt-1">Integración nativa con Zoom para pacientes ya acostumbrados.</p>
+            </div>
+            <button disabled class="w-full py-2.5 bg-slate-800 text-slate-600 rounded-xl font-headline font-bold cursor-not-allowed">Conectar Zoom</button>
+          </div>
+          <!-- Google Meet (próximo) -->
+          <div class="glass-card p-6 rounded-3xl flex flex-col gap-4 opacity-50">
+            <div class="flex justify-between items-start">
+              <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center grayscale">
+                <span class="material-symbols-outlined text-slate-500 text-3xl" style="color:#ea4335;">videocam</span>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">Próximamente</span>
+            </div>
+            <div>
+              <h3 class="text-base font-headline font-bold text-white">Google Meet</h3>
+              <p class="text-sm text-slate-400 mt-1">Genera enlaces de Meet automáticamente al crear citas.</p>
+            </div>
+            <button disabled class="w-full py-2.5 bg-slate-800 text-slate-600 rounded-xl font-headline font-bold cursor-not-allowed">Conectar Meet</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- Apps Overlay -->
+<div id="apps-overlay" onclick="cerrarApps(event)" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
+  <div id="apps-panel" onclick="event.stopPropagation()" style="background:rgba(10,22,40,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:2.5rem;width:100%;max-width:580px;padding:2.5rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+      <div>
+        <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
+        <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal del psicólogo</p>
+      </div>
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+      <a href="agenda_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(167,139,250,0.1)';this.style.borderColor='rgba(167,139,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">calendar_month</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Agenda</span>
+      </a>
+      <a href="pacientes_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(52,211,153,0.1)';this.style.borderColor='rgba(52,211,153,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:22px;font-variation-settings:'FILL' 1;">group</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Pacientes</span>
+      </a>
+      <a href="notas_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(251,191,36,0.1)';this.style.borderColor='rgba(251,191,36,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.25);">
+          <span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px;font-variation-settings:'FILL' 1;">edit_note</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Notas SOAP</span>
+      </a>
+      <a href="telemedicina_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(248,113,113,0.1)';this.style.borderColor='rgba(248,113,113,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.25);">
+          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">videocam</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Videollamada</span>
+      </a>
+      <a href="mensajes_psicologo.html" class="app-card" onmouseover="this.style.background='rgba(37,211,102,0.1)';this.style.borderColor='rgba(37,211,102,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.25);">
+          <span class="material-symbols-outlined" style="color:#4ade80;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mensajes</span>
+      </a>
+      <a href="integraciones_psicologo.html" class="app-card" style="outline:2px solid rgba(167,139,250,0.3);" onmouseover="this.style.background='rgba(167,139,250,0.1)';this.style.borderColor='rgba(167,139,250,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(167,139,250,0.2);border:1px solid rgba(167,139,250,0.4);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">cable</span>
+        </div>
+        <span style="font-size:0.7rem;font-weight:700;color:#a78bfa;text-align:center;font-family:Manrope,sans-serif;">Integraciones</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function init() {
+  var nombre = localStorage.getItem('tp_nombre') || 'Psicólogo';
+
+  var np = document.getElementById('nombre-psicologo');
+  if (np) np.textContent = nombre;
+  var av = document.getElementById('user-avatar');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
+  var un = document.getElementById('user-nombre');
+  if (un) un.textContent = nombre;
+
+  var fh = document.getElementById('fecha-hoy');
+  if (fh) {
+    var d = new Date();
+    fh.textContent = d.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
+  }
+
+  document.getElementById('btn-logout').addEventListener('click', function(e) {
+    e.preventDefault(); localStorage.clear(); window.location.href = 'acceso_psicologo.html';
+  });
+  actualizarLabelTema();
+})();
+
+window.toggleAppsPanel = function() {
+  var o = document.getElementById('apps-overlay');
+  o.style.display = (o.style.display === 'none' || o.style.display === '') ? 'flex' : 'none';
+};
+window.cerrarApps = function(e) {
+  if (e && e.target !== document.getElementById('apps-overlay')) return;
+  document.getElementById('apps-overlay').style.display = 'none';
+};
+window.toggleNotifInt = function() {
+  document.getElementById('notif-panel-int').classList.toggle('hidden');
+};
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.getElementById('apps-overlay').style.display = 'none';
+    document.getElementById('notif-panel-int').classList.add('hidden');
+  }
+});
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#btn-notif-int') && !e.target.closest('#notif-panel-int')) {
+    var p = document.getElementById('notif-panel-int');
+    if (p) p.classList.add('hidden');
+  }
+  if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu')) {
+    var um = document.getElementById('user-menu');
+    if (um && !um.classList.contains('hidden')) {
+      um.classList.add('hidden');
+      document.getElementById('chevron-user').textContent = 'expand_less';
+    }
+  }
+});
+
+window.toggleUserMenu = function() {
+  var um = document.getElementById('user-menu');
+  var open = um.classList.contains('hidden');
+  um.classList.toggle('hidden', !open);
+  document.getElementById('chevron-user').textContent = open ? 'expand_more' : 'expand_less';
+};
+window.toggleTema = function() {
+  var esClaro = localStorage.getItem('tp_tema') === 'claro';
+  if (esClaro) { localStorage.removeItem('tp_tema'); document.documentElement.style.filter = ''; }
+  else { localStorage.setItem('tp_tema', 'claro'); document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)'; }
+  actualizarLabelTema();
+  document.getElementById('user-menu').classList.add('hidden');
+  document.getElementById('chevron-user').textContent = 'expand_less';
+};
+function actualizarLabelTema() {
+  var esClaro = localStorage.getItem('tp_tema') === 'claro';
+  var icon = document.getElementById('icon-tema');
+  var label = document.getElementById('label-tema');
+  if (icon) icon.textContent = esClaro ? 'light_mode' : 'dark_mode';
+  if (label) label.textContent = esClaro ? 'Modo oscuro' : 'Modo claro';
+}
+</script>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { cerrarSesion } from '../js/auth.js'
+window._cerrarSesion = cerrarSesion
+
+const oldLogout = document.getElementById('btn-logout')
+if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.replaceChild(n, oldLogout) }
+
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { window.location.href = 'acceso_psicologo.html' }
+
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido, email, google_refresh_token').eq('id', session.user.id).single()
+if (usu) {
+  const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = usu.nombre + ' ' + (usu.apellido || '')
+  const elNP = document.getElementById('nombre-psicologo'); if (elNP) elNP.textContent = usu.nombre + ' ' + (usu.apellido || '')
+  const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = (usu.nombre?.[0] || '') + (usu.apellido?.[0] || '')
+}
+
+// ── Google Calendar status ─────────────────────────────────────
+const gcalConnected  = !!usu?.google_refresh_token
+const gcalBadge      = document.getElementById('gcal-badge')
+const gcalConnDiv    = document.getElementById('gcal-connected')
+const gcalDiscDiv    = document.getElementById('gcal-disconnected')
+const gcalBtnConnect = document.getElementById('gcal-btn-connect')
+const gcalBtnDisc    = document.getElementById('gcal-btn-disconnect')
+
+function renderGCalStatus(connected) {
+  if (connected) {
+    gcalBadge.textContent = 'Conectado'
+    gcalBadge.style.cssText = 'background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
+    gcalConnDiv.classList.remove('hidden')
+    gcalDiscDiv.classList.add('hidden')
+    gcalBtnConnect.classList.add('hidden')
+    gcalBtnDisc.classList.remove('hidden')
+    const emailEl = document.getElementById('gcal-email')
+    if (emailEl) emailEl.textContent = usu?.email || session.user.email
+  } else {
+    gcalBadge.textContent = 'No conectado'
+    gcalBadge.style.cssText = 'background:rgba(100,116,139,0.15);color:#64748b;border:1px solid rgba(100,116,139,0.2);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
+    gcalConnDiv.classList.add('hidden')
+    gcalDiscDiv.classList.remove('hidden')
+    gcalBtnConnect.classList.remove('hidden')
+    gcalBtnDisc.classList.add('hidden')
+  }
+}
+
+renderGCalStatus(gcalConnected)
+
+// Toast tras OAuth callback
+const urlParams = new URLSearchParams(window.location.search)
+if (urlParams.get('gcal') === 'ok') {
+  renderGCalStatus(true)
+  history.replaceState(null, '', window.location.pathname)
+  const t = document.createElement('div')
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0d1b2e;border:1px solid rgba(167,139,250,0.35);border-radius:14px;padding:12px 20px;color:#a78bfa;font-weight:700;font-size:13px;z-index:9999;'
+  t.textContent = '✓ Google Calendar conectado correctamente'
+  document.body.appendChild(t)
+  setTimeout(() => t.remove(), 4000)
+} else if (urlParams.get('gcal') === 'error') {
+  history.replaceState(null, '', window.location.pathname)
+  alert('Error al conectar Google Calendar. Inténtalo de nuevo.')
+}
+
+window.conectarGCal = function() {
+  const userId = session.user.id
+  window.location.href = `https://serenecare-backend-production.up.railway.app/api/integrations/google/auth?userId=${userId}&returnTo=screens/integraciones_psicologo.html`
+}
+
+window.desconectarGCal = async function() {
+  if (!confirm('¿Desconectar Google Calendar?')) return
+  const res = await fetch('https://serenecare-backend-production.up.railway.app/api/integrations/google/disconnect', {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + session.access_token }
+  })
+  if (res.ok) renderGCalStatus(false)
+}
+</script>
+</body>
+</html>
