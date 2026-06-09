@@ -259,6 +259,49 @@
         </div>
       </div>
 
+      <!-- Zapier / Make -->
+      <div class="space-y-6 lg:col-span-2">
+        <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm">webhook</span> Automatizaciones
+        </h2>
+        <div class="glass-card p-6 rounded-3xl flex flex-col gap-5" id="zapier-card">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(255,90,0,0.1);">
+                <svg viewBox="0 0 24 24" class="w-7 h-7" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#FF5A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <h3 class="text-base font-headline font-bold text-white">Zapier / Make</h3>
+                <p class="text-sm text-slate-400">Conecta SereneCare con cualquier herramienta — Google Sheets, Notion, CRM, Slack y más.</p>
+              </div>
+            </div>
+            <span id="zapier-badge" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-500">Cargando...</span>
+          </div>
+          <!-- Eventos que se disparan -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <div class="px-3 py-2 rounded-xl text-xs font-semibold text-center" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:#94a3b8;">📅 Cita creada</div>
+            <div class="px-3 py-2 rounded-xl text-xs font-semibold text-center" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:#94a3b8;">👤 Paciente registrado</div>
+            <div class="px-3 py-2 rounded-xl text-xs font-semibold text-center" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:#94a3b8;">✍️ Consentimiento firmado</div>
+            <div class="px-3 py-2 rounded-xl text-xs font-semibold text-center" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:#94a3b8;">📋 Nota SOAP guardada</div>
+          </div>
+          <!-- Input URL -->
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">URL del Webhook</label>
+            <div class="flex gap-2">
+              <input id="zapier-url-input" type="url" placeholder="https://hooks.zapier.com/hooks/catch/..." class="flex-1 px-4 py-2.5 rounded-xl text-sm text-slate-200 placeholder-slate-600" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);outline:none;" />
+              <button onclick="probarWebhook()" id="zapier-btn-test" class="hidden px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-80" style="background:rgba(255,90,0,0.1);color:#FF5A00;border:1px solid rgba(255,90,0,0.25);">Probar</button>
+            </div>
+            <p class="text-[10px] text-slate-600">Pega aquí la URL de tu Zap o Scenario de Make. SereneCare enviará un POST con los datos del evento.</p>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button id="zapier-btn-guardar" onclick="guardarWebhook()" class="flex-1 py-2.5 rounded-xl font-headline font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,rgba(255,90,0,0.7),rgba(255,140,0,0.8));color:#fff;">
+              <span class="material-symbols-outlined text-sm align-middle mr-1">save</span>Guardar
+            </button>
+            <button id="zapier-btn-eliminar" onclick="eliminarWebhook()" class="hidden px-4 py-2 text-sm font-headline font-semibold text-red-400/80 hover:bg-red-400/10 rounded-xl transition-all">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Telemedicina -->
       <div class="space-y-6 lg:col-span-2">
         <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
@@ -588,6 +631,88 @@ window.guardarConfigEmail = async function() {
   document.body.appendChild(t)
   setTimeout(() => t.remove(), 3000)
 }
+
+// ── Zapier / Make ─────────────────────────────────────────────
+const WAPI = 'https://serenecare-backend-production.up.railway.app/api/integrations/webhooks'
+
+async function cargarWebhookStatus() {
+  try {
+    const res = await fetch(`${WAPI}/config`, { headers: { Authorization: 'Bearer ' + session.access_token } })
+    const { webhook_url } = await res.json()
+    renderWebhookStatus(webhook_url)
+  } catch { renderWebhookStatus(null) }
+}
+
+function renderWebhookStatus(url) {
+  const badge   = document.getElementById('zapier-badge')
+  const input   = document.getElementById('zapier-url-input')
+  const btnTest = document.getElementById('zapier-btn-test')
+  const btnDel  = document.getElementById('zapier-btn-eliminar')
+  if (url) {
+    badge.textContent = 'Conectado'
+    badge.style.cssText = 'background:rgba(255,90,0,0.12);color:#FF5A00;border:1px solid rgba(255,90,0,0.25);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
+    input.value = url
+    btnTest.classList.remove('hidden')
+    btnDel.classList.remove('hidden')
+  } else {
+    badge.textContent = 'No conectado'
+    badge.style.cssText = 'background:rgba(100,116,139,0.15);color:#64748b;border:1px solid rgba(100,116,139,0.2);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
+    input.value = ''
+    btnTest.classList.add('hidden')
+    btnDel.classList.add('hidden')
+  }
+}
+
+window.guardarWebhook = async function() {
+  const url = document.getElementById('zapier-url-input').value.trim()
+  if (!url) return
+  try {
+    await fetch(`${WAPI}/config`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ webhook_url: url })
+    })
+    renderWebhookStatus(url)
+    mostrarToastZapier('✓ Webhook guardado correctamente')
+  } catch { mostrarToastZapier('✗ Error al guardar') }
+}
+
+window.eliminarWebhook = async function() {
+  if (!confirm('¿Eliminar el webhook?')) return
+  await fetch(`${WAPI}/config`, {
+    method: 'POST',
+    headers: { Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ webhook_url: null })
+  }).catch(() => {})
+  renderWebhookStatus(null)
+}
+
+window.probarWebhook = async function() {
+  const url = document.getElementById('zapier-url-input').value.trim()
+  if (!url) return
+  const btn = document.getElementById('zapier-btn-test')
+  btn.textContent = 'Enviando...'
+  try {
+    const res = await fetch(`${WAPI}/test`, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ webhook_url: url })
+    })
+    const data = await res.json()
+    mostrarToastZapier(data.ok ? '✓ Evento de prueba enviado' : '✗ Error: ' + data.error)
+  } catch { mostrarToastZapier('✗ Error de conexión') }
+  btn.textContent = 'Probar'
+}
+
+function mostrarToastZapier(msg) {
+  const t = document.createElement('div')
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0d1b2e;border:1px solid rgba(255,90,0,0.35);border-radius:14px;padding:12px 20px;color:#FF5A00;font-weight:700;font-size:13px;z-index:9999;'
+  t.textContent = msg
+  document.body.appendChild(t)
+  setTimeout(() => t.remove(), 3000)
+}
+
+cargarWebhookStatus()
 
 // ── iCal ───────────────────────────────────────────────────────
 const BACKEND = 'https://serenecare-backend-production.up.railway.app'
