@@ -263,7 +263,7 @@ document.getElementById('input-msg').addEventListener('keydown', function(e) {
   import { supabase } from '../js/supabase-client.js'
 
   const { data: { session } } = await supabase.auth.getSession()
-  const modoDemo = !session
+  const modoDemo = false  // demo deshabilitado: se exige login
   if (!modoDemo) await guardaPaciente()
 
   const chatContainer = document.getElementById('chat-messages')

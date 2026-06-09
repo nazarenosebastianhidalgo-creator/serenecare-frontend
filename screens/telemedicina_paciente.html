@@ -80,8 +80,14 @@
   </aside>
 
   <!-- VIDEO AREA -->
-  <div class="flex-1 relative rounded-3xl overflow-hidden shadow-2xl" style="background:#0d1117;">
-    <img alt="Video del terapeuta" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDkWTs_M3BE2zA8I0Z7nhgjXLJ2hum33acULwBHw3w9fsCWuFgwaLu-gATQ_Jjk6bjbIIb0fXwGmAE0SIM0zVNJLL6eoPMuSN52eL9JC8YfM5kMYkJs8imz7vilfBaN8tQ1FpbQajweXEcG8K6p7niZHS87NqXXbuzflQaJhyvxhLN1K5igXwNHJL44cmZ-nD2Pi44LjljjP0Q5-YvMmmyYRRohxs92xo2xOAV6YHnXCd31nUrBO8DUqOyhOp3U35FF5qyY9kD-ooieD"/>
+  <div id="video-area" class="flex-1 relative rounded-3xl overflow-hidden shadow-2xl" style="background:#0d1117;">
+    <img id="video-placeholder" alt="Video del terapeuta" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDkWTs_M3BE2zA8I0Z7nhgjXLJ2hum33acULwBHw3w9fsCWuFgwaLu-gATQ_Jjk6bjbIIb0fXwGmAE0SIM0zVNJLL6eoPMuSN52eL9JC8YfM5kMYkJs8imz7vilfBaN8tQ1FpbQajweXEcG8K6p7niZHS87NqXXbuzflQaJhyvxhLN1K5igXwNHJL44cmZ-nD2Pi44LjljjP0Q5-YvMmmyYRRohxs92xo2xOAV6YHnXCd31nUrBO8DUqOyhOp3U35FF5qyY9kD-ooieD"/>
+    <!-- Estado de conexión (se rellena por JS) -->
+    <div id="video-status" class="absolute inset-0 flex flex-col items-center justify-center text-center" style="display:none;background:rgba(2,6,23,0.82);backdrop-filter:blur(6px);z-index:5;">
+      <span id="video-status-icon" class="material-symbols-outlined" style="font-size:44px;color:#2dd4bf;">videocam</span>
+      <p id="video-status-text" class="mt-3 text-sm font-semibold text-slate-200" style="font-family:Manrope,sans-serif;"></p>
+      <p id="video-status-sub" class="mt-1 text-xs text-slate-500"></p>
+    </div>
     <!-- Safe space badge -->
     <div class="absolute top-5 left-5 flex items-center gap-2 px-4 py-2 rounded-full" style="background:rgba(2,6,23,0.5);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);">
       <span class="material-symbols-outlined text-sm" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">verified_user</span>
@@ -255,22 +261,85 @@ document.getElementById('btn-fin-sidebar').addEventListener('click', finalizarSe
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { verificarSesion } from '../js/auth.js'
+import { crearSalaVideo } from '../js/paciente.js'
+
 const perfil = await verificarSesion(['paciente'])
 if (!perfil) return
+
+function setEstado(texto, sub, icono) {
+  const box = document.getElementById('video-status')
+  if (!box) return
+  document.getElementById('video-status-text').textContent = texto || ''
+  document.getElementById('video-status-sub').textContent = sub || ''
+  if (icono) document.getElementById('video-status-icon').textContent = icono
+  box.style.display = texto ? 'flex' : 'none'
+}
+
+function montarSala(url) {
+  const area = document.getElementById('video-area')
+  const ph = document.getElementById('video-placeholder')
+  if (!area || !url) return
+  if (ph) ph.style.display = 'none'
+  setEstado(null)
+  let iframe = document.getElementById('daily-frame')
+  if (!iframe) {
+    iframe = document.createElement('iframe')
+    iframe.id = 'daily-frame'
+    iframe.allow = 'camera; microphone; fullscreen; speaker; display-capture; autoplay'
+    iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:4;'
+    area.appendChild(iframe)
+  }
+  iframe.src = url
+}
+
 const params = new URLSearchParams(window.location.search)
-const citaId = params.get('cita')
-if (citaId) {
-  const { data: cita } = await supabase.from('citas')
-    .select('id, fecha, hora_inicio, sala_video_url, usuarios(nombre, apellido)')
-    .eq('id', citaId).single()
-  if (cita) {
+let citaId = params.get('cita')
+
+try {
+  // Resolver la cita: la del query param, o la próxima cita online del paciente
+  const { data: pac } = await supabase.from('pacientes').select('id').eq('usuario_id', perfil.id).maybeSingle()
+  let cita = null
+
+  if (citaId) {
+    const { data } = await supabase.from('citas')
+      .select('id, fecha, hora_inicio, sala_video_url, tipo, usuarios(nombre, apellido)')
+      .eq('id', citaId).maybeSingle()
+    cita = data
+  } else if (pac) {
+    const hoy = new Date().toISOString().split('T')[0]
+    const { data } = await supabase.from('citas')
+      .select('id, fecha, hora_inicio, sala_video_url, tipo, usuarios(nombre, apellido)')
+      .eq('paciente_id', pac.id)
+      .in('tipo', ['online', 'telemedicina', 'videollamada'])
+      .gte('fecha', hoy)
+      .in('estado', ['pendiente', 'confirmada'])
+      .order('fecha').order('hora_inicio')
+      .limit(1).maybeSingle()
+    cita = data
+    if (cita) citaId = cita.id
+  }
+
+  if (!cita) {
+    setEstado('No tenés una sesión de video activa', 'Cuando tengas una sesión online programada, podrás unirte desde acá.', 'event_busy')
+  } else {
     const dn = document.getElementById('doctor-nombre')
     if (dn && cita.usuarios) dn.textContent = 'Dr/a. ' + (cita.usuarios.nombre || '') + ' ' + (cita.usuarios.apellido || '')
+
     if (cita.sala_video_url) {
-      const iframe = document.querySelector('iframe[id], iframe[src]')
-      if (iframe) iframe.src = cita.sala_video_url
+      montarSala(cita.sala_video_url)
+    } else {
+      // Sala aún no creada → la creamos al unirse
+      setEstado('Preparando la sala de video…', 'Esto puede tardar unos segundos.', 'hourglass_top')
+      try {
+        const url = await crearSalaVideo(cita.id)
+        montarSala(url)
+      } catch (e) {
+        setEstado('No se pudo iniciar la videollamada', 'Intentá de nuevo en un momento o contactá a tu clínica.', 'error')
+      }
     }
   }
+} catch (e) {
+  setEstado('No se pudo cargar la sesión', e.message || 'Error de conexión.', 'error')
 }
 </script>
 </body>

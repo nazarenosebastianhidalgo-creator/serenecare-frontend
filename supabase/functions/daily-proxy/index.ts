@@ -28,6 +28,19 @@ serve(async (req) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: CORS });
   }
 
+  // Rate limit: 10 peticiones / 60s por usuario (creación de salas, etc.)
+  const { data: allowed } = await supabase.rpc('check_rate_limit', {
+    p_bucket: `daily:${user.id}`,
+    p_max: 10,
+    p_window_seconds: 60,
+  });
+  if (allowed === false) {
+    return new Response(
+      JSON.stringify({ error: 'Demasiadas solicitudes. Esperá un momento e intentá de nuevo.' }),
+      { status: 429, headers: { ...CORS, 'Content-Type': 'application/json', 'Retry-After': '60' } },
+    );
+  }
+
   try {
     const { endpoint, method = 'POST', payload } = await req.json();
 

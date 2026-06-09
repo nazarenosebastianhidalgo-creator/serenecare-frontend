@@ -285,17 +285,23 @@ function enviarResultado() {
   import { supabase } from '../js/supabase-client.js'
 
   const { data: { session } } = await supabase.auth.getSession()
-  const modoDemo = !session
+  const modoDemo = false  // demo deshabilitado: se exige login
   if (!modoDemo) await guardaPaciente()
 
+  const solicitudId = new URLSearchParams(location.search).get('solicitud')
   const btnSig = document.getElementById('btn-siguiente')
 
   window.enviarResultado = async function() {
     if (window.respuestas.some(r => r === null)) { mostrarError('Por favor respondé todas las preguntas.'); return; }
     setBotonCargando(btnSig, true)
     try {
-      const { puntaje } = calcularPuntajePHQ9(window.respuestas)
-      if (!modoDemo) await guardarEvaluacion({ tipo: 'PHQ-9', respuestas: window.respuestas, puntaje })
+      const { puntaje, severidad } = calcularPuntajePHQ9(window.respuestas)
+      if (!modoDemo) {
+        await guardarEvaluacion({ tipo: 'PHQ-9', respuestas: window.respuestas, puntaje, severidad })
+        if (solicitudId) await supabase.from('solicitudes_escalas')
+          .update({ estado: 'completada', completada_at: new Date().toISOString() })
+          .eq('id', solicitudId)
+      }
       document.getElementById('pantalla-exito').classList.remove('hidden')
     } catch(e) {
       document.getElementById('pantalla-exito').classList.remove('hidden')

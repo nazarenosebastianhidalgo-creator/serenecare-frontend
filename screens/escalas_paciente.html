@@ -145,7 +145,7 @@ html.light .option-btn:hover{background:#f1f5f9!important;border-color:#cbd5e1!i
         <span class="material-symbols-outlined text-red-400 text-xl">priority_high</span>
         Pendientes de completar
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div id="pendientes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- GAD-7 urgente -->
         <div class="rounded-2xl p-6 flex justify-between items-center group transition-all hover:-translate-y-1" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);">
           <div>
@@ -258,7 +258,7 @@ html.light .option-btn:hover{background:#f1f5f9!important;border-color:#cbd5e1!i
               <th class="pb-4 px-2"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="historial-tbody">
             <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
               <td class="py-4 px-2 text-sm text-slate-400">28 Oct 2023</td>
               <td class="py-4 px-2 font-bold text-white">PHQ-9</td>
@@ -741,6 +741,85 @@ const hn = document.getElementById('header-nombre'); if (hn) hn.textContent = no
 if (perfil.clinica_id) {
   const { data: cl } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single()
   if (cl) { const nc = document.getElementById('nombre-clinica'); if (nc) nc.textContent = cl.nombre }
+}
+
+// ── Datos reales: escalas pendientes + historial ──────────────────
+const ESCALAS = {
+  phq9: { titulo: 'PHQ-9', desc: 'Cuestionario de salud del paciente (síntomas depresivos).', preguntas: 9, min: 5, screen: 'cuestionario_phq9.html', max: 27 },
+  gad7: { titulo: 'GAD-7', desc: 'Escala de ansiedad generalizada.',                          preguntas: 7, min: 5, screen: 'cuestionario_gad7.html', max: 21 },
+}
+const normTipo = (t) => (t || '').toLowerCase().replace(/[^a-z0-9]/g, '')
+
+const { data: pac } = await supabase.from('pacientes').select('id').eq('usuario_id', perfil.id).maybeSingle()
+
+if (pac) {
+  // Pendientes
+  const { data: pendientes } = await supabase.from('solicitudes_escalas')
+    .select('id, tipo, estado, created_at')
+    .eq('paciente_id', pac.id)
+    .neq('estado', 'completada')
+    .order('created_at', { ascending: false })
+
+  const grid = document.getElementById('pendientes-grid')
+  if (grid) {
+    grid.innerHTML = ''
+    if (!pendientes || pendientes.length === 0) {
+      grid.innerHTML = '<div class="rounded-2xl p-6 text-center" style="background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.18);grid-column:1/-1;"><span class="material-symbols-outlined" style="color:#34d399;font-size:30px;">task_alt</span><p class="text-sm font-bold text-white font-headline mt-2">No tenés escalas pendientes</p><p class="text-slate-500 text-xs mt-1">Cuando tu terapeuta te asigne una, aparecerá aquí.</p></div>'
+    } else {
+      pendientes.forEach(function(s) {
+        const meta = ESCALAS[normTipo(s.tipo)]
+        const titulo = meta ? meta.titulo : (s.tipo || 'Escala')
+        const subt   = meta ? meta.desc : 'Escala asignada por tu terapeuta.'
+        const card = document.createElement('div')
+        card.className = 'rounded-2xl p-6 flex justify-between items-center group transition-all hover:-translate-y-1'
+        card.style.cssText = 'background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);'
+        let cta
+        if (meta) {
+          cta = '<a href="' + meta.screen + '?solicitud=' + s.id + '" class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#059669,#047857);box-shadow:0 4px 12px rgba(5,150,105,0.3);text-decoration:none;">Completar</a>'
+        } else {
+          cta = '<span class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500" style="background:rgba(255,255,255,0.05);">Próximamente</span>'
+        }
+        const detalle = meta ? ('<div class="flex items-center gap-4 text-xs font-semibold text-amber-500/60"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> ' + meta.min + ' min</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">list_alt</span> ' + meta.preguntas + ' preguntas</span></div>') : ''
+        card.innerHTML = '<div><span class="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3" style="background:rgba(245,158,11,0.12);color:#fbbf24;">Pendiente</span><h3 class="font-extrabold text-2xl text-white font-headline mb-0.5">' + titulo + '</h3><p class="text-amber-400/80 text-sm font-medium mb-3">' + subt + '</p>' + detalle + '</div>' + cta
+        grid.appendChild(card)
+      })
+    }
+  }
+
+  // Historial de resultados
+  const { data: historial } = await supabase.from('evaluaciones')
+    .select('tipo, puntaje, puntuacion, severidad, created_at')
+    .eq('paciente_id', pac.id)
+    .order('created_at', { ascending: false })
+
+  const tbody = document.getElementById('historial-tbody')
+  if (tbody) {
+    tbody.innerHTML = ''
+    if (!historial || historial.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-sm text-slate-500">Aún no completaste ninguna escala.</td></tr>'
+    } else {
+      const SEV_COLOR = (sev) => {
+        const s = (sev || '').toLowerCase()
+        if (s.includes('sever') || s.includes('grave')) return 'background:rgba(239,68,68,0.12);color:#f87171;'
+        if (s.includes('moder')) return 'background:rgba(245,158,11,0.12);color:#fbbf24;'
+        return 'background:rgba(52,211,153,0.1);color:#34d399;'
+      }
+      historial.forEach(function(ev, i) {
+        const meta = ESCALAS[normTipo(ev.tipo)]
+        const fecha = ev.created_at ? new Date(ev.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
+        const punt = (ev.puntaje ?? ev.puntuacion)
+        const puntTxt = (punt != null ? punt : '—') + (meta ? '/' + meta.max : '')
+        const tr = document.createElement('tr')
+        if (i < historial.length - 1) tr.style.cssText = 'border-bottom:1px solid rgba(255,255,255,0.04);'
+        const sevBadge = ev.severidad ? '<span class="px-2.5 py-1 rounded-full text-xs font-bold" style="' + SEV_COLOR(ev.severidad) + '">' + ev.severidad + '</span>' : '<span class="text-slate-600 text-xs">—</span>'
+        tr.innerHTML = '<td class="py-4 px-2 text-sm text-slate-400">' + fecha + '</td>' +
+          '<td class="py-4 px-2 font-bold text-white">' + (meta ? meta.titulo : (ev.tipo || '—')) + '</td>' +
+          '<td class="py-4 px-2 text-center font-mono font-bold text-slate-300">' + puntTxt + '</td>' +
+          '<td class="py-4 px-2">' + sevBadge + '</td><td class="py-4 px-2"></td>'
+        tbody.appendChild(tr)
+      })
+    }
+  }
 }
 </script>
 </body>

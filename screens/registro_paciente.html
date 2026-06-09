@@ -480,18 +480,35 @@ if (session) {
   // Vincular auth user con el registro de paciente
   const pacienteId = meta.paciente_id
   const clinicaId  = meta.clinica_id
+
+  // Resolver la ficha del paciente para tomar nombre + apellido reales
+  let pac = null
+  if (pacienteId) {
+    const { data } = await supabase.from('pacientes').select('id, nombre, apellido, clinica_id').eq('id', pacienteId).maybeSingle()
+    pac = data
+  }
+  if (!pac) {
+    const { data } = await supabase.from('pacientes').select('id, nombre, apellido, clinica_id').eq('usuario_id', session.user.id).maybeSingle()
+    pac = data
+  }
+
+  const nombreFinal   = (pac?.nombre   || meta.nombre || meta.name || '').trim()
+  const apellidoFinal = (pac?.apellido || meta.apellido || '').trim()
+  const clinicaFinal  = clinicaId || pac?.clinica_id || null
+
   if (pacienteId) {
     await supabase.from('pacientes').update({ usuario_id: session.user.id, estado: 'activo' }).eq('id', pacienteId)
-    if (clinicaId) localStorage.setItem('tp_clinica_id', clinicaId)
   }
+  if (clinicaFinal) localStorage.setItem('tp_clinica_id', clinicaFinal)
 
   // Crear/actualizar registro en usuarios con rol paciente
   const { data: existing } = await supabase.from('usuarios').select('id').eq('id', session.user.id).single()
   if (!existing) {
     await supabase.from('usuarios').insert({
       id:         session.user.id,
-      clinica_id: clinicaId || null,
-      nombre:     meta.nombre || '',
+      clinica_id: clinicaFinal,
+      nombre:     nombreFinal,
+      apellido:   apellidoFinal,
       email:      session.user.email,
       rol:        'paciente',
       activo:     true,

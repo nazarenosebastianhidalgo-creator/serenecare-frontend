@@ -1,5 +1,8 @@
-import { supabase } from './supabase-client.js'
+import { supabase, callEdge } from './supabase-client.js'
 import { verificarSesion } from './auth.js'
+
+// Reutiliza la implementación central (proxy daily-proxy con JWT, sin key inline)
+export { crearSalaVideo } from './supabase-client.js'
 
 export async function guardaPaciente() {
   return await verificarSesion(['paciente'])
@@ -126,22 +129,21 @@ IMPORTANTE: No reemplazás la terapia profesional. Si detectás una crisis, indi
   ]
 
   try {
-    const { data: { session: _ses } } = await supabase.auth.getSession()
-    const res = await fetch('https://wnuwuxenzwfqmhxagryk.supabase.co/functions/v1/openai-proxy', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o',
-        'Authorization': `Bearer ${_ses?.access_token}`,
-      },
-      body: JSON.stringify({ model: configIA.modelo || 'gpt-4o', temperature: 0.75, max_tokens: 600, messages }),
+    const json = await callEdge('openai-proxy', {
+      model: configIA.modelo || 'gpt-4o',
+      temperature: 0.75,
+      max_tokens: 600,
+      messages,
     })
-    const json     = await res.json()
     const respuesta = json.choices?.[0]?.message?.content || 'No pude procesar tu mensaje.'
     const nuevo    = [...historial, { rol: 'user', texto }, { rol: 'assistant', texto: respuesta }]
     guardarHistorialChat(nuevo)
     return { rol: 'assistant', texto: respuesta }
-  } catch {
+  } catch (e) {
+    const msg = e?.message || ''
+    if (msg.includes('Demasiadas') || msg.includes('429')) {
+      return { rol: 'assistant', texto: 'Estás enviando mensajes muy rápido. Esperá un momento e intentá de nuevo. 🙏' }
+    }
     return { rol: 'assistant', texto: 'Hubo un error de conexión. Intentá nuevamente.' }
   }
 }
@@ -173,15 +175,18 @@ export function calcularPuntajePHQ9(respuestas) {
   return { puntaje, severidad }
 }
 
-export async function guardarEvaluacion({ tipo, respuestas, puntaje }) {
+export async function guardarEvaluacion({ tipo, respuestas, puntaje, severidad }) {
   const paciente = await pacienteActual()
-  const { error } = await supabase.from('evaluaciones').insert({
+  const fila = {
     clinica_id:  paciente.clinica_id,
     paciente_id: paciente.id,
     tipo,
     respuestas:  { answers: respuestas },
     puntaje,
-  })
+    puntuacion:  puntaje,   // la tabla tiene ambas columnas; las mantenemos en sync
+  }
+  if (severidad) fila.severidad = severidad
+  const { error } = await supabase.from('evaluaciones').insert(fila)
   if (error) throw new Error('No se pudo guardar la evaluación.')
 }
 
@@ -197,32 +202,7 @@ export async function obtenerSalaTelemedicina(citaId) {
   return data
 }
 
-export async function crearSalaVideo(citaId) {
-  try {
-    const { data: { session: _ses } } = await supabase.auth.getSession()
-    const res = await fetch('https://wnuwuxenzwfqmhxagryk.supabase.co/functions/v1/daily-proxy', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o',
-        'Authorization': `Bearer ${_ses?.access_token}`,
-      },
-      body: JSON.stringify({
-        endpoint: 'rooms',
-        method: 'POST',
-        payload: {
-          name: `sesion-${citaId.substring(0, 8)}`,
-          properties: { enable_chat: true, enable_knocking: true, max_participants: 2 },
-        },
-      }),
-    })
-    const room = await res.json()
-    await supabase.from('citas').update({ sala_video_url: room.url }).eq('id', citaId)
-    return room.url
-  } catch {
-    throw new Error('No se pudo crear la sala de video.')
-  }
-}
+// crearSalaVideo() se re-exporta desde supabase-client.js (ver arriba).
 
 // ══════════════════════════════════════════
 // NOTIFICACIONES Y MENSAJES

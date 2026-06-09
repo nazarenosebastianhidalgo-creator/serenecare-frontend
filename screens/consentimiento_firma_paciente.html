@@ -346,7 +346,18 @@ var firmaToken = new URLSearchParams(window.location.search).get('token');
 
 // Cargar datos del consentimiento
 (async function() {
-  if (!firmaToken) return;
+  if (!firmaToken) {
+    // Abierto sin token (no hay documento pendiente): mensaje amable en vez de form en blanco
+    if (mainContent) mainContent.classList.add('hidden');
+    var aviso = document.createElement('div');
+    aviso.style.cssText = 'max-width:520px;margin:80px auto;padding:32px;text-align:center;color:#94a3b8;font-family:Inter,sans-serif;';
+    aviso.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>' +
+      '<h2 style="color:#e2e8f0;font-family:Manrope,sans-serif;font-size:20px;margin:0 0 8px;">No tenés documentos pendientes</h2>' +
+      '<p style="font-size:14px;margin:0 0 24px;">No hay ningún consentimiento esperando tu firma en este momento.</p>' +
+      '<a href="portal_paciente_inicio.html" style="display:inline-block;padding:12px 24px;border-radius:12px;background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.3);font-weight:700;text-decoration:none;font-size:14px;">Volver al inicio</a>';
+    document.body.appendChild(aviso);
+    return;
+  }
   try {
     var res = await fetch(BACKEND + '/api/consents/sign/' + firmaToken);
     var data = await res.json();

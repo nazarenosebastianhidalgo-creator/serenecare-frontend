@@ -19,7 +19,11 @@ $$;
 DROP POLICY IF EXISTS "dev_all_clinicas"            ON clinicas;
 DROP POLICY IF EXISTS "dev_all_psicologos"          ON psicologos;
 DROP POLICY IF EXISTS "dev_all_pacientes"           ON pacientes;
-DROP POLICY IF EXISTS "dev_all_sesiones"            ON sesiones;
+DO $$ BEGIN
+  IF to_regclass('public.sesiones') IS NOT NULL THEN
+    DROP POLICY IF EXISTS "dev_all_sesiones" ON sesiones;
+  END IF;
+END $$;
 DROP POLICY IF EXISTS "dev_all_notas_soap"          ON notas_soap;
 DROP POLICY IF EXISTS "dev_all_evaluaciones"        ON evaluaciones;
 DROP POLICY IF EXISTS "dev_all_solicitudes_escalas" ON solicitudes_escalas;
@@ -89,14 +93,20 @@ CREATE POLICY "pacientes_all" ON pacientes FOR ALL USING (
   OR get_my_rol() = 'super_admin'
 );
 
--- ── sesiones ──────────────────────────────────────────────────
-CREATE POLICY "sesiones_all" ON sesiones FOR ALL USING (
-  clinica_id = get_my_clinica_id()
-  OR get_my_rol() = 'super_admin'
-) WITH CHECK (
-  clinica_id = get_my_clinica_id()
-  OR get_my_rol() = 'super_admin'
-);
+-- ── sesiones (tabla eliminada el 09/06 en la unificación citas/sesiones) ──
+-- Guardado con to_regclass para que esta migración siga siendo re-ejecutable.
+DO $$ BEGIN
+  IF to_regclass('public.sesiones') IS NOT NULL THEN
+    DROP POLICY IF EXISTS "sesiones_all" ON sesiones;
+    EXECUTE $p$
+      CREATE POLICY "sesiones_all" ON sesiones FOR ALL USING (
+        clinica_id = get_my_clinica_id() OR get_my_rol() = 'super_admin'
+      ) WITH CHECK (
+        clinica_id = get_my_clinica_id() OR get_my_rol() = 'super_admin'
+      )
+    $p$;
+  END IF;
+END $$;
 
 -- ── notas_soap (sin clinica_id — se verifica via psicologo) ───
 CREATE POLICY "notas_soap_read" ON notas_soap FOR SELECT USING (

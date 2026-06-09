@@ -28,6 +28,19 @@ serve(async (req) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: CORS });
   }
 
+  // Rate limit: 20 peticiones / 60s por usuario
+  const { data: allowed } = await supabase.rpc('check_rate_limit', {
+    p_bucket: `openai:${user.id}`,
+    p_max: 20,
+    p_window_seconds: 60,
+  });
+  if (allowed === false) {
+    return new Response(
+      JSON.stringify({ error: 'Demasiadas solicitudes. Esperá un momento e intentá de nuevo.' }),
+      { status: 429, headers: { ...CORS, 'Content-Type': 'application/json', 'Retry-After': '60' } },
+    );
+  }
+
   try {
     const body = await req.json();
 

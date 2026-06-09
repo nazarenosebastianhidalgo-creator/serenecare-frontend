@@ -443,8 +443,20 @@
     import { mostrarError }     from '../js/auth.js'
 
     const { data: { session } } = await supabase.auth.getSession()
-    const modoDemo = !session
+    const modoDemo = false  // demo deshabilitado: se exige login
     if (!modoDemo) await guardaPaciente()
+
+    // Aviso al volver de Stripe Checkout
+    const _p = new URLSearchParams(location.search).get('pago')
+    if (_p === 'ok')        { const s = document.getElementById('success-msg'); if (s) { s.textContent = '✅ Pago realizado correctamente. ¡Gracias!'; s.classList.remove('hidden'); setTimeout(() => s.classList.add('hidden'), 5000) } }
+    else if (_p === 'cancelado') mostrarError('Pago cancelado. No se ha realizado ningún cargo.')
+
+    const ESTADOS = {
+      pagada:      ['Pagada',      'bg-tertiary-container text-on-tertiary-container'],
+      pendiente:   ['Pendiente',   'bg-amber-500/10 text-amber-400'],
+      reembolsada: ['Reembolsada', 'bg-slate-700/40 text-slate-300'],
+      cancelada:   ['Cancelada',   'bg-error-container text-on-error-container'],
+    }
 
     try {
       if (modoDemo) { mostrarError('Conectá tu cuenta para ver tu historial de pagos.'); throw new Error() }
@@ -454,29 +466,37 @@
       // Mostrar nombre del paciente
       document.querySelectorAll('*').forEach(el => {
         if (el.children.length === 0 && el.textContent.trim() === 'Eleanor Vance')
-          el.textContent = `${paciente?.nombre} ${paciente?.apellido}`
+          el.textContent = `${paciente?.nombre} ${paciente?.apellido || ''}`.trim()
       })
 
-      // Cargar citas completadas como historial de "sesiones pagadas"
-      const { data: citas } = await supabase.from('citas')
-        .select('id, fecha, hora_inicio, tipo, usuarios(nombre, apellido), clinicas(nombre)')
+      // Cargar facturas reales del paciente
+      const { data: facturas } = await supabase.from('facturas')
+        .select('id, concepto, importe, estado, fecha_pago, created_at, psicologos(nombre)')
         .eq('paciente_id', paciente.id)
-        .eq('estado', 'completada')
-        .order('fecha', { ascending: false })
+        .order('created_at', { ascending: false })
 
       const tbody = document.querySelector('tbody')
-      if (tbody && citas?.length) {
-        tbody.innerHTML = citas.map(c => `
-          <tr class="border-b border-surface-container hover:bg-surface-container-low transition-colors">
-            <td class="px-4 py-3 text-sm">${new Date(c.fecha).toLocaleDateString('es-AR')}</td>
-            <td class="px-4 py-3 text-sm">Dr. ${c.usuarios?.nombre} ${c.usuarios?.apellido}</td>
-            <td class="px-4 py-3 text-sm">${c.tipo === 'telemedicina' ? '📹 Video' : '🏥 Presencial'}</td>
-            <td class="px-4 py-3">
-              <span class="px-3 py-1 rounded-full text-xs font-bold bg-tertiary-container text-on-tertiary-container">Completada</span>
-            </td>
-          </tr>`).join('')
+      if (tbody) {
+        if (facturas?.length) {
+          tbody.innerHTML = facturas.map(f => {
+            const [txt, cls] = ESTADOS[f.estado] || ['—', 'bg-slate-700/40 text-slate-300']
+            const fecha = new Date(f.fecha_pago || f.created_at).toLocaleDateString('es-ES')
+            return `
+            <tr class="hover:bg-slate-800/20 transition-colors">
+              <td class="px-6 py-4 text-slate-300 font-medium">${fecha}</td>
+              <td class="px-6 py-4 text-slate-300">${f.concepto || 'Sesión'}</td>
+              <td class="px-6 py-4 text-slate-500">${f.psicologos?.nombre || '—'}</td>
+              <td class="px-6 py-4 text-slate-200 font-semibold">${Number(f.importe).toFixed(2)} €</td>
+              <td class="px-6 py-4 text-slate-500">Tarjeta</td>
+              <td class="px-6 py-4"><span class="${cls} px-3 py-1 rounded-full text-xs font-bold">${txt}</span></td>
+              <td class="px-6 py-4 text-right text-slate-600">—</td>
+            </tr>`
+          }).join('')
+        } else {
+          tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-10 text-center text-slate-500">Todavía no tienes pagos registrados.</td></tr>`
+        }
       }
-    } catch(e) { mostrarError(e.message) }
+    } catch(e) { if (e.message) mostrarError(e.message) }
   </script>
 <script>
 (function(){

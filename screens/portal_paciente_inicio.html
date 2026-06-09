@@ -120,7 +120,7 @@ html.light .bg-slate-800\/50{background:rgba(0,0,0,0.05)!important;}
   <div class="p-8 max-w-6xl mx-auto">
 
     <!-- Banner: Documentos pendientes de firma -->
-    <div id="banner-consentimiento" class="fade-up" style="margin-bottom:1.5rem;border-radius:1.25rem;overflow:hidden;border:1px solid rgba(251,191,36,0.25);background:rgba(251,191,36,0.05);">
+    <div id="banner-consentimiento" class="fade-up" style="display:none;margin-bottom:1.5rem;border-radius:1.25rem;overflow:hidden;border:1px solid rgba(251,191,36,0.25);background:rgba(251,191,36,0.05);">
       <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;">
         <div style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.25);">
           <span class="material-symbols-outlined" style="color:#fbbf24;font-size:20px;font-variation-settings:'FILL' 1;">history_edu</span>
@@ -130,9 +130,9 @@ html.light .bg-slate-800\/50{background:rgba(0,0,0,0.05)!important;}
             <p style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:800;color:#fef3c7;margin:0;">Documento pendiente de firma</p>
             <span style="font-size:0.6rem;font-weight:700;letter-spacing:0.07em;padding:2px 7px;border-radius:20px;background:rgba(251,191,36,0.2);color:#fbbf24;text-transform:uppercase;white-space:nowrap;">Pendiente</span>
           </div>
-          <p style="font-size:0.78rem;color:#92400e;color:#a78b2e;margin:0;">Consentimiento informado de tratamiento · Enviado por Dra. Rivadavia</p>
+          <p id="texto-consentimiento" style="font-size:0.78rem;color:#92400e;color:#a78b2e;margin:0;">Consentimiento informado de tratamiento</p>
         </div>
-        <a href="consentimiento_firma_paciente.html" style="flex-shrink:0;padding:8px 16px;border-radius:10px;background:rgba(251,191,36,0.18);color:#fbbf24;border:1px solid rgba(251,191,36,0.35);font-size:0.78rem;font-weight:700;text-decoration:none;font-family:Manrope,sans-serif;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.background='rgba(251,191,36,0.28)'" onmouseout="this.style.background='rgba(251,191,36,0.18)'">
+        <a id="link-firmar-consentimiento" href="consentimiento_firma_paciente.html" style="flex-shrink:0;padding:8px 16px;border-radius:10px;background:rgba(251,191,36,0.18);color:#fbbf24;border:1px solid rgba(251,191,36,0.35);font-size:0.78rem;font-weight:700;text-decoration:none;font-family:Manrope,sans-serif;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.background='rgba(251,191,36,0.28)'" onmouseout="this.style.background='rgba(251,191,36,0.18)'">
           Firmar ahora
         </a>
         <button onclick="document.getElementById('banner-consentimiento').style.display='none'" style="flex-shrink:0;width:28px;height:28px;border-radius:8px;border:none;background:none;cursor:pointer;color:#64748b;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'">
@@ -1391,6 +1391,30 @@ try {
   if (datos.paciente) {
     const nombrePac = ((datos.paciente.nombre || '') + ' ' + (datos.paciente.apellido || '')).trim()
     if (nombrePac && sh) sh.textContent = 'Hola, ' + (datos.paciente.nombre || nombrePac.split(' ')[0])
+
+    // Consentimiento pendiente de firma → banner dinámico con su token
+    const TIPOS_CONSENT = {
+      terapeutico:  'Consentimiento informado de tratamiento',
+      videollamada: 'Autorización de videollamada',
+      datos:        'Manejo de datos sensibles (LOPD)',
+    }
+    const { data: consent } = await supabase.from('consentimientos')
+      .select('tipo, token_firma')
+      .eq('paciente_id', datos.paciente.id)
+      .eq('estado', 'pendiente')
+      .order('enviado_en', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+    const banner = document.getElementById('banner-consentimiento')
+    if (consent && consent.token_firma) {
+      // Inyectar el token en todos los enlaces al consentimiento (banner + dropdown notifs)
+      document.querySelectorAll('a[href^="consentimiento_firma_paciente.html"]').forEach(function(a){
+        a.href = 'consentimiento_firma_paciente.html?token=' + consent.token_firma
+      })
+      const txt = document.getElementById('texto-consentimiento')
+      if (txt) txt.textContent = TIPOS_CONSENT[consent.tipo] || 'Documento pendiente de firma'
+      if (banner) banner.style.display = ''
+    }
   }
 } catch(e) { console.error('Portal datos:', e.message) }
 </script>

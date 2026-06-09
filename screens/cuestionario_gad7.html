@@ -263,9 +263,10 @@ function toggleNotif() {}
   import { supabase } from '../js/supabase-client.js'
 
   const { data: { session } } = await supabase.auth.getSession()
-  const modoDemo = !session
+  const modoDemo = false  // demo deshabilitado: se exige login
   if (!modoDemo) await guardaPaciente()
 
+  const solicitudId = new URLSearchParams(location.search).get('solicitud')
   const btnSig = document.getElementById('btn-siguiente')
 
   function calcularPuntajeGAD7(respuestas) {
@@ -287,8 +288,13 @@ function toggleNotif() {}
     }
     setBotonCargando(btnSig, true)
     try {
-      const { puntaje } = calcularPuntajeGAD7(window.respuestas)
-      if (!modoDemo) await guardarEvaluacion({ tipo: 'GAD-7', respuestas: window.respuestas, puntaje })
+      const { puntaje, severidad } = calcularPuntajeGAD7(window.respuestas)
+      if (!modoDemo) {
+        await guardarEvaluacion({ tipo: 'GAD-7', respuestas: window.respuestas, puntaje, severidad })
+        if (solicitudId) await supabase.from('solicitudes_escalas')
+          .update({ estado: 'completada', completada_at: new Date().toISOString() })
+          .eq('id', solicitudId)
+      }
       document.getElementById('pantalla-exito').classList.remove('hidden')
     } catch(e) {
       document.getElementById('pantalla-exito').classList.remove('hidden')

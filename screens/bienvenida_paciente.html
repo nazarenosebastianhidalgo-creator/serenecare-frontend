@@ -102,7 +102,7 @@
     import { supabase } from '../js/supabase-client.js'
 
     const { data: { session } } = await supabase.auth.getSession()
-    const modoDemo = !session
+    const modoDemo = false  // demo deshabilitado: se exige login
     if (!modoDemo) {
       await guardaPaciente()
       const uid = (await supabase.auth.getUser()).data.user?.id

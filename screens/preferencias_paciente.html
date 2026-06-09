@@ -301,11 +301,25 @@ function togglePill(btn) {
     import { mostrarError, setBotonCargando } from '../js/auth.js'
 
     const { data: { session } } = await supabase.auth.getSession()
-    const modoDemo = !session
+    const modoDemo = false  // demo deshabilitado: se exige login
     if (!modoDemo) await guardaPaciente()
 
     const PREFS_KEY = 'tp_prefs_paciente'
-    const prefs     = JSON.parse(localStorage.getItem(PREFS_KEY) || '{"email":true,"recordatorios":true,"mensajes":true}')
+    let prefs = JSON.parse(localStorage.getItem(PREFS_KEY) || '{"email":true,"recordatorios":true,"mensajes":true}')
+
+    // Cargar desde DB (fuente de verdad) — cae al caché de localStorage si no hay sesión
+    let pacienteId = null
+    if (!modoDemo) {
+      const uid = session.user.id
+      const { data: pac } = await supabase.from('pacientes').select('id, preferencias').eq('usuario_id', uid).maybeSingle()
+      if (pac) {
+        pacienteId = pac.id
+        if (pac.preferencias && Object.keys(pac.preferencias).length) {
+          prefs = { ...prefs, ...pac.preferencias }
+          localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
+        }
+      }
+    }
 
     // Cargar estado actual de checkboxes
     document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
@@ -318,7 +332,7 @@ function togglePill(btn) {
     const btnGuardar = Array.from(document.querySelectorAll('button')).find(b =>
       b.textContent.toLowerCase().includes('guardar') || b.textContent.toLowerCase().includes('save'))
 
-    btnGuardar?.addEventListener('click', () => {
+    btnGuardar?.addEventListener('click', async () => {
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
         const label = (cb.closest('label') || cb.parentElement)?.textContent?.toLowerCase() || ''
         if (label.includes('email'))        prefs.email        = cb.checked
@@ -327,7 +341,15 @@ function togglePill(btn) {
       })
       localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
       const ok = document.getElementById('success-msg')
-      ok.textContent = 'Preferencias guardadas.'
+      try {
+        if (pacienteId) {
+          const { error } = await supabase.from('pacientes').update({ preferencias: prefs }).eq('id', pacienteId)
+          if (error) throw error
+        }
+        ok.textContent = 'Preferencias guardadas.'
+      } catch (e) {
+        ok.textContent = 'Guardado local (no se pudo sincronizar).'
+      }
       ok.classList.remove('hidden')
       setTimeout(() => ok.classList.add('hidden'), 2000)
     })
