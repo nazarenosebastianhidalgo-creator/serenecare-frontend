@@ -436,7 +436,7 @@ var CHART = {
   trimestre: { v:[120,140,165,155,180,200], l:['T1-E','T1-F','T1-M','T2-A','T2-M','T2-J'] },
 };
 function renderChart(k) {
-  var d = CHART[k], max = Math.max.apply(null,d.v), last = d.v.length-1;
+  var d = CHART[k], max = Math.max.apply(null,d.v)||1, last = d.v.length-1;
   document.getElementById('chart-bars').innerHTML = d.v.map(function(v,i) {
     var h = Math.round((v/max)*185), isLast = i===last;
     return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;position:relative;">'
@@ -515,6 +515,104 @@ if (usu) {
     }
   }
 }
+
+// ══════════════════════════════════════════════════════════════
+// DATOS REALES (sobrescribe la tabla y el gráfico mock)
+// Métricas: sesiones = citas completadas/total; riesgo = severidad del último
+// cuestionario; progreso = mejora del puntaje (1er→último) o según riesgo.
+// ══════════════════════════════════════════════════════════════
+const userId = session.user.id
+const COLORS = ['#2dd4bf','#a78bfa','#60a5fa','#fbbf24','#f472b6','#34d399','#fb923c']
+const inic = (n,a) => (((n||'?')[0]||'') + ((a||'')[0]||'')).toUpperCase()
+const ymd = (d) => d.toISOString().split('T')[0]
+
+const { data: misPacientes } = await supabase.from('pacientes')
+  .select('id, nombre, apellido').eq('psicologo_id', userId)
+const pids = (misPacientes || []).map(p => p.id)
+
+const { data: citasAll } = await supabase.from('citas')
+  .select('paciente_id, estado, fecha').eq('psicologo_id', userId)
+
+let evals = []
+if (pids.length) {
+  const { data } = await supabase.from('evaluaciones')
+    .select('paciente_id, puntaje, puntuacion, severidad, created_at')
+    .in('paciente_id', pids).order('created_at', { ascending: true })
+  evals = data || []
+}
+
+const agg = {}
+;(misPacientes || []).forEach(p => { agg[p.id] = { total:0, comp:0, ultima:null, ev:[] } })
+;(citasAll || []).forEach(c => {
+  const a = agg[c.paciente_id]; if (!a) return
+  a.total++; if (c.estado === 'completada') a.comp++
+  if (!a.ultima || c.fecha > a.ultima) a.ultima = c.fecha
+})
+evals.forEach(e => { if (agg[e.paciente_id]) agg[e.paciente_id].ev.push(e) })
+
+function riesgoDe(sev) {
+  const s = (sev || '').toLowerCase()
+  if (s.includes('sever') || s.includes('grave')) return { t:'Crítico', c:'#f87171', bg:'rgba(248,113,113,0.1)', bd:'rgba(248,113,113,0.2)' }
+  if (s.includes('moder'))                         return { t:'Medio',   c:'#fbbf24', bg:'rgba(245,158,11,0.1)', bd:'rgba(245,158,11,0.2)' }
+  if (s)                                            return { t:'Bajo',    c:'#34d399', bg:'rgba(52,211,153,0.1)', bd:'rgba(52,211,153,0.2)' }
+  return { t:'—', c:'#64748b', bg:'rgba(255,255,255,0.04)', bd:'rgba(255,255,255,0.08)' }
+}
+function fechaRel(f) {
+  if (!f) return '—'
+  const d = Math.floor((Date.now() - new Date(f+'T00:00:00')) / 86400000)
+  if (d <= 0) return 'Hoy'; if (d === 1) return 'Ayer'; if (d < 7) return 'Hace '+d+' días'
+  if (d < 30) return 'Hace '+Math.floor(d/7)+' sem'; return 'Hace '+Math.floor(d/30)+' meses'
+}
+
+const filas = (misPacientes || []).map((p, i) => {
+  const a = agg[p.id], ult = a.ev[a.ev.length-1], r = riesgoDe(ult?.severidad)
+  let prog = 0
+  if (a.ev.length >= 2) {
+    const p0 = a.ev[0].puntaje ?? a.ev[0].puntuacion ?? 0
+    const p1 = ult.puntaje ?? ult.puntuacion ?? 0
+    prog = p0 > 0 ? Math.max(0, Math.min(100, Math.round((p0 - p1) / p0 * 100))) : 0
+  } else if (ult) {
+    prog = r.t === 'Bajo' ? 80 : r.t === 'Medio' ? 50 : r.t === 'Crítico' ? 20 : 0
+  }
+  const color = COLORS[i % COLORS.length]
+  return { ini: inic(p.nombre, p.apellido), color, bg: color+'22',
+    nombre: ((p.nombre||'')+' '+(p.apellido||'')).trim(), sesiones: a.comp+' de '+a.total,
+    prog, progColor: prog>=66?'#2dd4bf':prog>=33?'#fbbf24':'#f87171',
+    risk: r.t, riskColor: r.c, riskBg: r.bg, riskBorder: r.bd, ultima: fechaRel(a.ultima) }
+})
+
+const _tbody = document.getElementById('tabla-pacientes')
+if (_tbody) {
+  if (!filas.length) {
+    _tbody.innerHTML = '<tr><td colspan="6" style="padding:40px;text-align:center;color:#64748b;font-size:13px;">Aún no tenés pacientes con datos para analizar.</td></tr>'
+  } else {
+    _tbody.innerHTML = filas.map(function(p) {
+      return '<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">'
+        + '<td style="padding:15px 28px;"><div style="display:flex;align-items:center;gap:12px;"><div style="width:34px;height:34px;border-radius:50%;background:'+p.bg+';display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:'+p.color+';font-family:Manrope,sans-serif;flex-shrink:0;">'+p.ini+'</div><span style="font-weight:600;color:#e2e8f0;font-size:13px;">'+p.nombre+'</span></div></td>'
+        + '<td style="padding:15px 28px;color:#64748b;font-size:13px;">'+p.sesiones+'</td>'
+        + '<td style="padding:15px 28px;"><div style="width:120px;height:6px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden;"><div style="height:100%;width:'+p.prog+'%;background:'+p.progColor+';border-radius:3px;transition:width 0.8s;"></div></div></td>'
+        + '<td style="padding:15px 28px;"><span style="padding:4px 12px;background:'+p.riskBg+';color:'+p.riskColor+';font-size:11px;font-weight:800;border-radius:99px;border:1px solid '+p.riskBorder+';text-transform:uppercase;letter-spacing:0.05em;">'+p.risk+'</span></td>'
+        + '<td style="padding:15px 28px;color:#64748b;font-size:13px;">'+p.ultima+'</td>'
+        + '<td style="padding:15px 28px;"><button style="padding:7px;background:transparent;border:none;cursor:pointer;color:#2dd4bf;border-radius:8px;"><span class="material-symbols-outlined" style="font-size:18px;">open_in_new</span></button></td>'
+        + '</tr>'
+    }).join('')
+  }
+}
+
+// Gráfico: sesiones completadas reales (día / mes / trimestre)
+function contarComp(desde, hasta) {
+  return (citasAll || []).filter(c => c.estado === 'completada' && c.fecha >= desde && c.fecha <= hasta).length
+}
+const diasNom = ['D','L','M','X','J','V','S'], mesNom = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+const semV = [], semL = []
+for (let i=6;i>=0;i--) { const d=new Date(); d.setDate(d.getDate()-i); const s=ymd(d); semV.push(contarComp(s,s)); semL.push(diasNom[d.getDay()]) }
+const _now = new Date()
+const mV = [], mL = []
+for (let i=5;i>=0;i--) { const d=new Date(_now.getFullYear(), _now.getMonth()-i, 1); const ini=ymd(new Date(d.getFullYear(),d.getMonth(),1)); const fin=ymd(new Date(d.getFullYear(),d.getMonth()+1,0)); mV.push(contarComp(ini,fin)); mL.push(mesNom[d.getMonth()]) }
+const tV = [], tL = []
+for (let i=3;i>=0;i--) { const d=new Date(_now.getFullYear(), _now.getMonth()-i*3, 1); const ini=ymd(new Date(d.getFullYear(),d.getMonth()-2,1)); const fin=ymd(new Date(d.getFullYear(),d.getMonth()+1,0)); tV.push(contarComp(ini,fin)); tL.push('T'+(Math.floor(d.getMonth()/3)+1)) }
+window.CHART = { semana:{v:semV,l:semL}, mes:{v:mV,l:mL}, trimestre:{v:tV,l:tL} }
+if (typeof window.renderChart === 'function') window.renderChart('mes')
 </script>
 </body>
 </html>
