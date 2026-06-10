@@ -607,6 +607,8 @@ import { cerrarSesion, verificarSesion } from '../js/auth.js';
 window._cerrarSesion = cerrarSesion;
 
 const BACKEND = 'https://serenecare-backend-production.up.railway.app';
+const _perfil = await verificarSesion(['psicologo', 'admin_clinica']);
+if (!_perfil) return;
 const { data: { session } } = await supabase.auth.getSession();
 if (!session) { window.location.href = 'acceso_psicologo.html'; }
 

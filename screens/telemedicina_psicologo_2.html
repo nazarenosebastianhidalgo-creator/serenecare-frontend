@@ -284,8 +284,9 @@ if (btnGuardar && textarea) {
     if (!textarea.value.trim()) return
     const { data: { user } } = await supabase.auth.getUser()
     await supabase.from('notas_soap').upsert({
-      cita_id: citaId || null,
+      sesion_id: citaId || null,
       psicologo_id: user.id,
+      clinica_id: localStorage.getItem('tp_clinica_id'),
       subjetivo: textarea.value,
     })
     btnGuardar.textContent = '✓ Guardado'

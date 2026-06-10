@@ -123,6 +123,50 @@
       <span class="px-4 py-1.5 rounded-full text-sm font-bold w-fit" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:#a78bfa;">1 de 4 conectadas</span>
     </div>
 
+    <!-- Cobros con tarjeta (Stripe Connect) -->
+    <div class="mb-8 space-y-3">
+      <h2 class="text-xs uppercase tracking-widest text-slate-500 font-headline font-bold flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">payments</span> Cobros y Pagos
+      </h2>
+      <div class="glass-card p-6 rounded-3xl flex flex-col gap-5" id="stripe-card">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(99,91,255,0.12);">
+              <span class="material-symbols-outlined text-3xl" style="color:#635bff;">credit_card</span>
+            </div>
+            <div>
+              <h3 class="text-base font-headline font-bold text-white">Stripe — Cobros a pacientes</h3>
+              <p class="text-sm text-slate-400">Cobra las sesiones con tarjeta. El dinero entra <b>directo en tu cuenta</b>; SereneCare solo retiene una comisión del 3%.</p>
+            </div>
+          </div>
+          <span id="stripe-badge" class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-500">Cargando...</span>
+        </div>
+
+        <!-- Estado: activo -->
+        <div id="stripe-connected" class="hidden p-3 rounded-xl text-sm" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+          <p class="font-semibold" style="color:#34d399;">✅ Cuenta verificada — ya puedes cobrar sesiones con tarjeta.</p>
+          <p class="text-xs text-slate-500 mt-1">Tú eres el titular de los cobros y emites el recibo al paciente. Recibes el importe menos la comisión (3%).</p>
+        </div>
+
+        <!-- Estado: pendiente de completar -->
+        <div id="stripe-pending" class="hidden p-3 rounded-xl text-sm text-amber-300/90" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+          Has empezado el alta pero faltan datos por completar. Continúa el proceso para poder cobrar.
+        </div>
+
+        <!-- Estado: no conectado -->
+        <div id="stripe-disconnected" class="hidden p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+          Da de alta tu cuenta de cobros (lo gestiona Stripe de forma segura: verifican tu identidad y tu cuenta bancaria). Tarda un par de minutos.
+        </div>
+
+        <div class="flex gap-2 pt-1">
+          <button id="stripe-btn-connect" onclick="conectarStripe()" class="hidden w-full py-2.5 rounded-xl font-headline font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#635bff,#8b85ff);color:#fff;">
+            <span class="material-symbols-outlined text-sm align-middle mr-1">link</span>
+            Activar cobros con Stripe
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Integrations Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
@@ -514,12 +558,15 @@ function actualizarLabelTema() {
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
-import { cerrarSesion } from '../js/auth.js'
+import { cerrarSesion, verificarSesion } from '../js/auth.js'
+import { iniciarOnboardingStripe, estadoStripe } from '../js/connect.js'
 window._cerrarSesion = cerrarSesion
 
 const oldLogout = document.getElementById('btn-logout')
 if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.replaceChild(n, oldLogout) }
 
+const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
+if (!_perfil) return
 const { data: { session } } = await supabase.auth.getSession()
 if (!session) { window.location.href = 'acceso_psicologo.html' }
 
@@ -529,6 +576,55 @@ if (usu) {
   const elNP = document.getElementById('nombre-psicologo'); if (elNP) elNP.textContent = usu.nombre + ' ' + (usu.apellido || '')
   const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = (usu.nombre?.[0] || '') + (usu.apellido?.[0] || '')
 }
+
+// ── Stripe Connect (cobros) ────────────────────────────────────
+function renderStripe({ conectado, charges_enabled, details_submitted }) {
+  const badge = document.getElementById('stripe-badge')
+  const conn  = document.getElementById('stripe-connected')
+  const pend  = document.getElementById('stripe-pending')
+  const disc  = document.getElementById('stripe-disconnected')
+  const btn   = document.getElementById('stripe-btn-connect')
+  conn.classList.add('hidden'); pend.classList.add('hidden'); disc.classList.add('hidden'); btn.classList.add('hidden')
+  const setBadge = (txt, color) => {
+    badge.textContent = txt
+    badge.style.cssText = `background:${color}1f;color:${color};border:1px solid ${color}40;padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;`
+  }
+  if (conectado && charges_enabled) {
+    setBadge('Activo', '#34d399'); conn.classList.remove('hidden')
+  } else if (conectado && details_submitted) {
+    setBadge('En revisión', '#fbbf24')
+    pend.textContent = 'Stripe está verificando tus datos. En cuanto te aprueben podrás cobrar (suele ser rápido).'
+    pend.classList.remove('hidden')
+  } else if (conectado) {
+    setBadge('Incompleto', '#fbbf24'); pend.classList.remove('hidden'); btn.classList.remove('hidden')
+    btn.innerHTML = '<span class="material-symbols-outlined text-sm align-middle mr-1">link</span> Completar alta de cobros'
+  } else {
+    setBadge('No conectado', '#64748b'); disc.classList.remove('hidden'); btn.classList.remove('hidden')
+  }
+}
+
+window.conectarStripe = async function () {
+  const btn = document.getElementById('stripe-btn-connect')
+  const prev = btn.innerHTML
+  btn.disabled = true; btn.textContent = 'Abriendo Stripe...'
+  try {
+    const url = await iniciarOnboardingStripe()
+    window.location.href = url
+  } catch (e) {
+    alert('No se pudo iniciar el alta en Stripe: ' + e.message)
+    btn.disabled = false; btn.innerHTML = prev
+  }
+}
+
+;(async () => {
+  try {
+    const est = await estadoStripe()
+    renderStripe(est)
+  } catch (e) {
+    console.error('estadoStripe', e)
+    renderStripe({ conectado: false })
+  }
+})()
 
 // ── Google Calendar status ─────────────────────────────────────
 const gcalConnected  = !!usu?.google_refresh_token

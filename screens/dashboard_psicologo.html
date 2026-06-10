@@ -785,10 +785,13 @@ function enviarFeedback() {
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js';
-import { cerrarSesion } from '../js/auth.js';
+import { cerrarSesion, verificarSesion } from '../js/auth.js';
 
 window._cerrarSesion = cerrarSesion;
 
+// Guard de rol (además del de sesión): redirige a quien no sea staff
+const _perfil = await verificarSesion(['psicologo', 'admin_clinica']);
+if (!_perfil) return;
 const { data: { session } } = await supabase.auth.getSession();
 if (!session) { window.location.href = '../login.html'; }
 
@@ -863,17 +866,21 @@ if (clinicaId) {
 
 // ── Notas SOAP pendientes ──────────────────────────────────────
 var { data: notasHechas } = await supabase
-  .from('notas_soap').select('cita_id').eq('psicologo_id', userId);
-var citasConNota = (notasHechas||[]).map(function(n){ return n.cita_id; });
+  .from('notas_soap').select('sesion_id').eq('psicologo_id', userId);
+var citasConNota = (notasHechas||[]).map(function(n){ return n.sesion_id; }).filter(Boolean);
 
-var { data: citasSinNota } = await supabase
+var _qSinNota = supabase
   .from('citas')
   .select('*, pacientes(nombre, apellido)')
   .eq('psicologo_id', userId)
   .in('estado', ['completada'])
-  .not('id', 'in', '(' + (citasConNota.length ? citasConNota.join(',') : 'null') + ')')
   .order('fecha', { ascending: false })
   .limit(5);
+// Solo excluir las que ya tienen nota si hay alguna (evita el bug "NOT IN (null)")
+if (citasConNota.length) {
+  _qSinNota = _qSinNota.not('id', 'in', '(' + citasConNota.join(',') + ')');
+}
+var { data: citasSinNota } = await _qSinNota;
 
 if (citasSinNota?.length) {
   SOAP_PENDIENTES = citasSinNota.map(function(c, i) {
@@ -893,16 +900,16 @@ if (citasSinNota?.length) {
 if (clinicaId) {
   var { data: pacRecientes } = await supabase
     .from('pacientes')
-    .select('id, nombre, apellido, updated_at')
+    .select('id, nombre, apellido, created_at')
     .eq('clinica_id', clinicaId)
-    .order('updated_at', { ascending: false })
+    .order('created_at', { ascending: false })
     .limit(5);
 
   if (pacRecientes?.length) {
     PACIENTES_RECIENTES = pacRecientes.map(function(p, i) {
       return {
         nombre: p.nombre + ' ' + p.apellido,
-        info: p.updated_at ? new Date(p.updated_at).toLocaleDateString('es-ES', {day:'numeric', month:'short'}) : '',
+        info: p.created_at ? new Date(p.created_at).toLocaleDateString('es-ES', {day:'numeric', month:'short'}) : '',
         av: initiales(p.nombre, p.apellido),
         color: colorFor(i),
         id: p.id,

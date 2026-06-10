@@ -472,6 +472,9 @@ window.cwEnviar=function(){
 </div>
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
+import { verificarSesion } from '../js/auth.js'
+const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
+if (!_perfil) return
 const { data: { session } } = await supabase.auth.getSession()
 if (!session) { window.location.href = '../login.html' }
 const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()

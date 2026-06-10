@@ -888,10 +888,12 @@ if (localStorage.getItem('gcal_conectado') === '1') {
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js';
-import { cerrarSesion, restablecerPassword } from '../js/auth.js';
+import { cerrarSesion, restablecerPassword, verificarSesion } from '../js/auth.js';
 
 window._cerrarSesion = cerrarSesion;
 
+const _perfil = await verificarSesion(['psicologo', 'admin_clinica']);
+if (!_perfil) return;
 const { data: { session } } = await supabase.auth.getSession();
 if (!session) { window.location.href = '../login.html'; }
 
