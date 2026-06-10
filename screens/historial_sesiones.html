@@ -319,6 +319,27 @@ function mostrarToast(msg) {
     if (modoDemo) { mostrarError('Conectá tu cuenta para ver tus sesiones y documentos.'); throw new Error() }
     const { notas, informes } = await obtenerDocumentosCompartidos()
 
+    // Recursos asignados por el terapeuta
+    const { data: _asig } = await supabase.from('recursos_asignados')
+      .select('id, recursos(id, titulo, tipo, descripcion, contenido_html)')
+      .order('created_at', { ascending: false })
+    const recursos = (_asig || []).map(a => a.recursos).filter(Boolean)
+    const _recCont = {}; recursos.forEach(r => { _recCont[r.id] = r.contenido_html || '' })
+    window.descargarRecurso = function(id) {
+      const html = _recCont[id], r = recursos.find(x => x.id === id)
+      if (!html || !r) return
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a')
+      a.href = url; a.download = r.titulo.replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'_') + '.html'
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000)
+    }
+    const renderRecursos = recursos.map(r => `
+      <div class="card rounded-2xl p-5 mb-3" style="border-color:rgba(167,139,250,0.18);">
+        <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold uppercase tracking-wider" style="color:#a78bfa;">Recurso · ${r.tipo || ''}</span></div>
+        <p class="text-sm text-white font-medium">${r.titulo}</p>
+        ${r.descripcion ? `<p class="text-xs text-slate-400 mt-1">${r.descripcion}</p>` : ''}
+        <button onclick="descargarRecurso('${r.id}')" class="mt-3 px-4 py-1 text-xs rounded-full font-semibold" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);">⬇ Descargar</button>
+      </div>`).join('')
+
     const renderNotas = notas.map(n => `
       <div class="card rounded-2xl p-5 mb-3">
         <div class="flex justify-between items-center mb-2">
@@ -339,11 +360,13 @@ function mostrarToast(msg) {
         <button onclick="alert('Informe: ${i.id}')" class="mt-3 px-4 py-1 text-xs rounded-full font-semibold" style="background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.2);">Ver completo</button>
       </div>`).join('')
 
-    if (notas.length || informes.length) {
+    if (notas.length || informes.length || recursos.length) {
       const docContainer = document.getElementById('lista-documentos')
       const seccion = document.createElement('div')
       seccion.className = 'col-span-2 space-y-2 mt-2'
-      seccion.innerHTML = (notas.length ? `<h3 class="font-bold text-white text-sm mb-3">Notas compartidas</h3>${renderNotas}` : '') +
+      seccion.innerHTML =
+        (recursos.length ? `<h3 class="font-bold text-white text-sm mb-3">Recursos de tu terapeuta</h3>${renderRecursos}` : '') +
+        (notas.length ? `<h3 class="font-bold text-white text-sm mt-6 mb-3">Notas compartidas</h3>${renderNotas}` : '') +
         (informes.length ? `<h3 class="font-bold text-white text-sm mt-6 mb-3">Informes IA</h3>${renderInformes}` : '')
       docContainer.parentElement.appendChild(seccion)
     } else {

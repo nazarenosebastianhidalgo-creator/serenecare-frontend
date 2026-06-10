@@ -733,8 +733,49 @@ window.toggleFav = function(id) {
   if (window.renderGrid && window.getFiltrados) renderGrid(getFiltrados())
 }
 
-// Asignar a paciente: feature próxima
-window.asignar = function() { if (window.mostrarToast) mostrarToast('Asignar a paciente — disponible próximamente') }
+// ── Asignar recurso a un paciente ──────────────────────────────
+const { data: _misPac } = await supabase.from('pacientes')
+  .select('id, nombre, apellido').eq('clinica_id', usu?.clinica_id || '').order('apellido')
+const _pacientes = _misPac || []
+
+let _recursoAsignarId = null
+const _modal = document.createElement('div')
+_modal.style.cssText = 'display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;'
+_modal.innerHTML = '<div style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;width:100%;max-width:420px;" onclick="event.stopPropagation()">'
+  + '<p style="font-family:Manrope,sans-serif;font-size:16px;font-weight:800;color:#f1f5f9;margin:0 0 4px;">Asignar recurso a un paciente</p>'
+  + '<p id="ma-recurso" style="font-size:12px;color:#64748b;margin:0 0 16px;"></p>'
+  + '<label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">Paciente</label>'
+  + '<select id="ma-paciente" style="width:100%;margin-top:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;color:#e2e8f0;font-size:14px;outline:none;"></select>'
+  + '<div style="display:flex;gap:8px;margin-top:18px;">'
+  + '<button id="ma-cancelar" style="flex:1;padding:10px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>'
+  + '<button id="ma-confirmar" style="flex:1;padding:10px;border-radius:12px;background:linear-gradient(135deg,#5b21b6,#a78bfa);border:none;color:#fff;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Asignar</button>'
+  + '</div></div>'
+_modal.addEventListener('click', () => { _modal.style.display = 'none' })
+document.body.appendChild(_modal)
+
+const _maSelect = _modal.querySelector('#ma-paciente')
+_maSelect.innerHTML = _pacientes.length
+  ? _pacientes.map(p => '<option value="'+p.id+'">'+(((p.nombre||'')+' '+(p.apellido||'')).trim())+'</option>').join('')
+  : '<option value="">No tenés pacientes cargados</option>'
+_modal.querySelector('#ma-cancelar').addEventListener('click', () => { _modal.style.display = 'none' })
+_modal.querySelector('#ma-confirmar').addEventListener('click', async () => {
+  const pacId = _maSelect.value
+  if (!pacId || !_recursoAsignarId) { _modal.style.display = 'none'; return }
+  const { error } = await supabase.from('recursos_asignados').upsert({
+    recurso_id: _recursoAsignarId, paciente_id: pacId,
+    psicologo_id: session.user.id, clinica_id: usu?.clinica_id,
+  }, { onConflict: 'recurso_id,paciente_id' })
+  _modal.style.display = 'none'
+  if (window.mostrarToast) mostrarToast(error ? 'No se pudo asignar' : 'Recurso asignado al paciente ✓')
+})
+
+window.asignar = function(id) {
+  const r = (window.RECURSOS || []).find(x => x.id === id)
+  if (!r) return
+  _recursoAsignarId = id
+  _modal.querySelector('#ma-recurso').textContent = r.titulo
+  _modal.style.display = 'flex'
+}
 
 if (window.renderGrid && window.getFiltrados) renderGrid(getFiltrados())
 else if (window.renderGrid) renderGrid(window.RECURSOS)
