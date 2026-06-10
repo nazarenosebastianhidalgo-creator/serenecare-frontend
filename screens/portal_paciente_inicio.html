@@ -683,11 +683,11 @@ html.light .bg-slate-800\/50{background:rgba(0,0,0,0.05)!important;}
       <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">hoy</span>
     </div>
     <!-- Cuestionario -->
-    <a href="cuestionario_phq9.html" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:flex-start;gap:0.75rem;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(45,212,191,0.05)'" onmouseout="this.style.background='none'">
+    <a id="notif-escala" href="cuestionario_phq9.html" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:none;align-items:flex-start;gap:0.75rem;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(45,212,191,0.05)'" onmouseout="this.style.background='none'">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(45,212,191,0.15);border:1px solid rgba(45,212,191,0.2);"><span class="material-symbols-outlined" style="color:#2dd4bf;font-size:18px;font-variation-settings:'FILL' 1;">quiz</span></div>
       <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
-          <p style="font-size:0.8rem;font-weight:700;color:#ccfbf1;margin:0;">PHQ-9 solicitado</p>
+          <p id="notif-escala-titulo" style="font-size:0.8rem;font-weight:700;color:#ccfbf1;margin:0;">PHQ-9 solicitado</p>
           <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(45,212,191,0.2);color:#2dd4bf;text-transform:uppercase;">Pendiente</span>
         </div>
         <p style="font-size:0.72rem;color:#64748b;margin:0;">Evaluación semanal · Dra. Rivadavia</p>
@@ -700,9 +700,9 @@ html.light .bg-slate-800\/50{background:rgba(0,0,0,0.05)!important;}
       <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Sesión mañana a las 10:00</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Dra. Marta Rivadavia — Online</p></div>
       <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">1h</span>
     </div>
-    <div style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:flex-start;gap:0.75rem;">
+    <div id="notif-escalas-count" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:none;align-items:flex-start;gap:0.75rem;">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(245,158,11,0.12);"><span class="material-symbols-outlined" style="color:#fbbf24;font-size:18px;">assignment</span></div>
-      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Tenés 2 escalas por completar</p></div>
+      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p id="notif-escalas-count-txt" style="font-size:0.72rem;color:#64748b;margin:0;">Tenés 2 escalas por completar</p></div>
       <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">ayer</span>
     </div>
     <a href="consentimiento_firma_paciente.html" style="padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:0.75rem;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(251,191,36,0.04)'" onmouseout="this.style.background='none'">
@@ -1416,22 +1416,38 @@ try {
       if (banner) banner.style.display = ''
     }
 
-    // Escala/cuestionario pendiente → banner dinámico con ?solicitud=<id>
-    const { data: solic } = await supabase.from('solicitudes_escalas')
+    // Escalas/cuestionarios pendientes → banner + notificaciones dinámicas
+    const { data: solics } = await supabase.from('solicitudes_escalas')
       .select('id, tipo')
       .eq('paciente_id', datos.paciente.id)
       .eq('estado', 'pendiente')
       .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+    const pend = solics || []
+    const solic = pend[0]
+    const archivoEscala = (t) => t === 'GAD-7' ? 'cuestionario_gad7.html' : 'cuestionario_phq9.html'
+    // Banner principal
     const bannerCuest = document.getElementById('banner-cuestionario')
     if (solic && bannerCuest) {
-      const archivo = solic.tipo === 'GAD-7' ? 'cuestionario_gad7.html' : 'cuestionario_phq9.html'
       const linkC = document.getElementById('banner-cuestionario-link')
-      if (linkC) linkC.href = archivo + '?solicitud=' + solic.id
+      if (linkC) linkC.href = archivoEscala(solic.tipo) + '?solicitud=' + solic.id
       const titC = document.getElementById('banner-cuestionario-titulo')
       if (titC) titC.textContent = 'Cuestionario ' + (solic.tipo || 'PHQ-9') + ' solicitado'
       bannerCuest.style.display = ''
+    }
+    // Notificación específica de la escala pendiente
+    const notifEsc = document.getElementById('notif-escala')
+    if (solic && notifEsc) {
+      notifEsc.href = archivoEscala(solic.tipo) + '?solicitud=' + solic.id
+      const tEsc = document.getElementById('notif-escala-titulo')
+      if (tEsc) tEsc.textContent = (solic.tipo || 'PHQ-9') + ' solicitado'
+      notifEsc.style.display = 'flex'
+    }
+    // Resumen de conteo (solo si hay 2 o más)
+    const notifCount = document.getElementById('notif-escalas-count')
+    if (notifCount && pend.length >= 2) {
+      const ct = document.getElementById('notif-escalas-count-txt')
+      if (ct) ct.textContent = 'Tenés ' + pend.length + ' escalas por completar'
+      notifCount.style.display = 'flex'
     }
   }
 } catch(e) { console.error('Portal datos:', e.message) }
