@@ -70,3 +70,67 @@ Para probar el flujo de pagos sin Stripe real:
 stripe listen --forward-to localhost:54321/functions/v1/stripe-webhook
 ```
 Y usar tarjeta de prueba: `4242 4242 4242 4242`
+
+---
+
+# Stripe Connect — Cobros paciente → psicólogo ("Forma B")
+
+Modelo: el **psicólogo es el comerciante de registro**. El dinero del paciente
+entra DIRECTO en la cuenta Stripe del psicólogo (direct charge); la plataforma
+solo cobra su comisión vía `application_fee_amount` (3% por defecto). En los
+reembolsos se devuelve también la comisión (`refund_application_fee: true`).
+
+## A. Activar Connect en Stripe
+1. **Stripe Dashboard → Connect → Empezar**. Elegir plataforma con cuentas
+   **Express**. Completar el perfil de la plataforma (nombre, soporte, etc.).
+
+## B. Migración de base de datos
+```bash
+supabase db push     # aplica supabase/migrations/20260609000001_stripe_connect.sql
+```
+(o pegar ese SQL en **Supabase → SQL Editor**). Crea la tabla `facturas` y las
+columnas `stripe_*` en `psicologos`.
+
+## C. Secrets adicionales
+```bash
+supabase secrets set PLATFORM_FEE_PERCENT=3
+supabase secrets set STRIPE_CONNECT_WEBHOOK_SECRET=whsec_...   # ver paso E
+```
+(`STRIPE_SECRET_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+`SUPABASE_ANON_KEY` y `SITE_URL` ya deberían estar configurados.)
+
+## D. Desplegar las Edge Functions de Connect
+```bash
+supabase functions deploy stripe-connect-onboard
+supabase functions deploy stripe-connect-status
+supabase functions deploy stripe-cobro-sesion
+supabase functions deploy stripe-reembolso
+supabase functions deploy stripe-connect-webhook
+```
+
+## E. Webhook DEDICADO de Connect
+1. **Stripe → Developers → Webhooks → Add endpoint**.
+2. URL: `https://TU_PROYECTO.supabase.co/functions/v1/stripe-connect-webhook`
+3. Marcar **"Listen to events on Connected accounts"** (eventos en cuentas conectadas).
+4. Eventos:
+   - `account.updated`
+   - `checkout.session.completed`
+   - `charge.refunded`
+5. Copiar su **Signing Secret** → `STRIPE_CONNECT_WEBHOOK_SECRET`
+   (¡es distinto del secreto del webhook de suscripciones!).
+
+## F. Flujo de uso
+- **Psicólogo**: *Integraciones → Stripe → "Activar cobros"* → completa el alta
+  (KYC + cuenta bancaria) en la página alojada por Stripe. Al volver, el webhook
+  `account.updated` marca `stripe_charges_enabled = true`.
+- **Cobrar una sesión** (psicólogo o admin_clinica): *Facturación → Nueva factura*
+  o desde la ficha del paciente. Se genera un enlace de **Stripe Checkout** que se
+  envía al paciente. Al pagar, la factura pasa a `pagada`.
+- **Reembolso**: botón *Reembolsar* en Facturación → devuelve importe + comisión.
+
+## G. Pruebas (modo test)
+```bash
+stripe listen --forward-connect-to localhost:54321/functions/v1/stripe-connect-webhook
+```
+Tarjeta de prueba: `4242 4242 4242 4242`. Para el onboarding Express de prueba,
+Stripe permite rellenar datos ficticios.

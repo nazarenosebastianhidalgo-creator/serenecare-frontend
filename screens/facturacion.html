@@ -801,6 +801,7 @@ renderNotifsFac();
 <script type="module">
 import { verificarSesion, cerrarSesion } from '../js/auth.js';
 import { supabase } from '../js/supabase-client.js';
+import { cobrarSesion, reembolsarFactura, estadoStripeClinica, calcularComision } from '../js/connect.js';
 window._cerrarSesion = cerrarSesion;
 (async () => {
   const perfil = await verificarSesion(['admin_clinica']);
@@ -809,10 +810,136 @@ window._cerrarSesion = cerrarSesion;
   const ini = ((n[0]||'')+(a[0]||'')).toUpperCase()||'AC';
   const el = document.getElementById('user-nombre'); if (el) el.textContent = (n+' '+a).trim();
   const av = document.getElementById('user-avatar'); if (av) av.textContent = ini;
-  if (perfil.clinica_id) {
-    const { data } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single();
+  const cid = perfil.clinica_id;
+  if (cid) {
+    const { data } = await supabase.from('clinicas').select('nombre').eq('id', cid).single();
     const nc = document.getElementById('nombre-clinica'); if (nc && data) nc.textContent = data.nombre;
   }
+  if (!cid) return; // modo demo → mantener datos de ejemplo
+
+  // ── Estado de cobros (Stripe) por psicólogo ──
+  const psicoById = {};
+  let statusPs = [];
+  try { statusPs = (await estadoStripeClinica()).psicologos || []; } catch (e) { console.error(e); }
+  statusPs.forEach(p => psicoById[p.id] = p);
+
+  const selT = document.getElementById('m-terapeuta');
+  if (selT) selT.innerHTML = '<option value="">Seleccionar…</option>' +
+    statusPs.map(p => `<option value="${p.id}">${p.nombre}${p.charges_enabled ? '' : ' — sin cobros'}</option>`).join('');
+
+  const activos = statusPs.filter(p => p.charges_enabled).length;
+  const sub = document.querySelector('p.text-xs.text-slate-500.mt-0\\.5') ||
+    [...document.querySelectorAll('p')].find(p => p.textContent.includes('Gestión de cobros'));
+  if (sub) sub.textContent = `Gestión de cobros y facturas · ${activos}/${statusPs.length} psicólogos con cobros activos`;
+
+  // ── Pacientes reales en el modal ──
+  const { data: pacs } = await supabase.from('pacientes')
+    .select('id, nombre, psicologo_id').eq('clinica_id', cid).order('nombre');
+  const selP = document.getElementById('m-paciente');
+  if (selP) selP.innerHTML = '<option value="">Seleccionar…</option>' +
+    (pacs||[]).map(p => `<option value="${p.id}" data-psico="${p.psicologo_id||''}">${p.nombre}</option>`).join('');
+  // Al elegir paciente, autoseleccionar su psicólogo
+  selP?.addEventListener('change', () => {
+    const psi = selP.selectedOptions[0]?.getAttribute('data-psico');
+    if (psi && selT) selT.value = psi;
+  });
+
+  // ── Facturas reales ──
+  async function recargarFacturas() {
+    const { data: fs } = await supabase.from('facturas')
+      .select('id, concepto, importe, comision, estado, fecha_pago, created_at, checkout_url, pacientes(nombre), psicologos(nombre)')
+      .eq('clinica_id', cid).order('created_at', { ascending: false });
+    window.FACTURAS = (fs||[]).map(f => ({
+      id: f.id,
+      ref: 'FAC-' + String(f.id).slice(0, 8).toUpperCase(),
+      paciente: f.pacientes?.nombre || '—',
+      terapeuta: f.psicologos?.nombre || '—',
+      fecha: new Date(f.fecha_pago || f.created_at).toLocaleDateString('es-ES'),
+      concepto: f.concepto || 'Sesión',
+      importe: Number(f.importe),
+      estado: f.estado,
+      checkout_url: f.checkout_url,
+    }));
+    window.filtrarFacturas();
+    window.actualizarKPIs();
+  }
+
+  // ── Override de render para soportar estados reales + acciones Stripe ──
+  function badge(e) {
+    const map = {
+      pagada:      ['Pagada',      'rgba(20,184,166'],
+      pendiente:   ['Pendiente',   'rgba(245,158,11'],
+      reembolsada: ['Reembolsada', 'rgba(148,163,184'],
+      cancelada:   ['Cancelada',   'rgba(239,68,68'],
+    };
+    const [txt, c] = map[e] || ['—', 'rgba(148,163,184'];
+    return `<span class="badge" style="background:${c},0.12);color:${c},1);border:1px solid ${c},0.25);">${txt}</span>`;
+  }
+  window.actualizarKPIs = function () {
+    const F = window.FACTURAS || [];
+    const suma = (arr) => arr.reduce((s, f) => s + Number(f.importe || 0), 0);
+    const pagadas = F.filter(f => f.estado === 'pagada');
+    const pend = F.filter(f => f.estado === 'pendiente');
+    const reemb = F.filter(f => f.estado === 'reembolsada');
+    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    set('kpi-ingreso', suma(pagadas).toLocaleString('es') + ' €');
+    set('kpi-total', F.length);
+    set('kpi-pendiente', suma(pend).toLocaleString('es') + ' €');
+    set('kpi-pendiente-sub', pend.length + ' factura' + (pend.length !== 1 ? 's' : '') + ' sin pagar');
+    set('kpi-anuladas', reemb.length);
+  };
+  window.renderTabla = function () {
+    const tbody = document.getElementById('tabla-body');
+    const filtradas = window.filtradas || [];
+    document.getElementById('contador').textContent = filtradas.length + ' facturas';
+    if (!filtradas.length) { tbody.innerHTML = '<tr><td colspan="8" class="text-center py-10 text-slate-600 text-sm">Sin resultados</td></tr>'; return; }
+    tbody.innerHTML = filtradas.map(f => {
+      let acc = '';
+      if (f.estado === 'pendiente' && f.checkout_url)
+        acc = `<button onclick="window.open('${f.checkout_url}','_blank')" class="text-xs font-bold px-3 py-1 rounded-lg hover:opacity-80" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.2);">Enlace de pago</button>`;
+      else if (f.estado === 'pagada')
+        acc = `<button onclick="reembolsarFac('${f.id}')" class="text-xs font-bold px-3 py-1 rounded-lg hover:opacity-80" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.18);">Reembolsar</button>`;
+      return '<tr class="border-b border-slate-800/40">' +
+        '<td class="px-5 py-3 text-xs font-mono text-slate-400">' + f.ref + '</td>' +
+        '<td class="px-5 py-3 text-sm font-medium text-slate-200">' + f.paciente + '</td>' +
+        '<td class="px-5 py-3 text-sm text-slate-400">' + f.terapeuta + '</td>' +
+        '<td class="px-5 py-3 text-xs text-slate-500">' + f.fecha + '</td>' +
+        '<td class="px-5 py-3 text-xs text-slate-400">' + f.concepto + '</td>' +
+        '<td class="px-5 py-3 text-sm font-bold text-white text-right">' + f.importe.toFixed(2) + ' €</td>' +
+        '<td class="px-5 py-3">' + badge(f.estado) + '</td>' +
+        '<td class="px-5 py-3">' + acc + '</td>' +
+      '</tr>';
+    }).join('');
+  };
+
+  // ── Crear cobro real (genera enlace de pago Stripe) ──
+  window.crearFactura = async function () {
+    const pacienteId = selP?.value, psicologoId = selT?.value;
+    const concepto = document.getElementById('m-concepto').value;
+    const importe = parseFloat(document.getElementById('m-importe').value);
+    if (!pacienteId || !psicologoId || !concepto || !importe || importe <= 0) { window.mostrarToast('⚠ Completa todos los campos'); return; }
+    if (psicoById[psicologoId] && !psicoById[psicologoId].charges_enabled) { window.mostrarToast('⚠ Ese psicólogo aún no tiene cobros activos en Stripe'); return; }
+    const { comision, neto } = calcularComision(importe);
+    if (!confirm(`Cobro al paciente: ${importe.toFixed(2)} €\nComisión plataforma (3%): ${comision.toFixed(2)} €\nRecibe el profesional: ${neto.toFixed(2)} €\n\n¿Generar el enlace de pago?`)) return;
+    try {
+      const { url } = await cobrarSesion({ pacienteId, psicologoId, importe, concepto });
+      try { await navigator.clipboard.writeText(url); } catch {}
+      window.open(url, '_blank');
+      window.cerrarModal();
+      window.mostrarToast('✓ Enlace de pago generado y copiado al portapapeles');
+      await recargarFacturas();
+    } catch (e) { window.mostrarToast('⚠ ' + (e.message || 'No se pudo generar el cobro')); }
+  };
+
+  window.reembolsarFac = async function (id) {
+    if (!confirm('¿Reembolsar esta factura? Se devuelve el importe al paciente y también tu comisión.')) return;
+    try { await reembolsarFactura(id); window.mostrarToast('✓ Reembolso realizado'); await recargarFacturas(); }
+    catch (e) { window.mostrarToast('⚠ ' + (e.message || 'No se pudo reembolsar')); }
+  };
+
+  if (new URLSearchParams(location.search).get('pago') === 'ok') window.mostrarToast('✓ Pago recibido');
+
+  await recargarFacturas();
 })();
 </script>
 </body>

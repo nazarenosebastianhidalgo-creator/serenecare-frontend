@@ -371,40 +371,75 @@
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { verificarSesion } from '../js/auth.js'
+import { cobrarSesion, calcularComision } from '../js/connect.js'
 
 await verificarSesion(['admin_clinica', 'psicologo'])
 const { data: { user } } = await supabase.auth.getUser()
-const { data: perfil } = await supabase.from('usuarios').select('clinica_id').eq('id', user.id).single()
-const cid = perfil?.clinica_id
+const { data: perfil } = await supabase.from('usuarios').select('rol, clinica_id').eq('id', user.id).single()
 const params = new URLSearchParams(location.search)
 const pacienteId = params.get('paciente_id')
 
-// Cargar paciente
+// Cargar paciente (incluye psicologo_id para que el admin cobre en su nombre)
+let paciente = null
 if (pacienteId) {
-  const { data: pac } = await supabase.from('pacientes').select('nombre, apellido, email').eq('id', pacienteId).single()
+  const { data: pac } = await supabase.from('pacientes')
+    .select('id, nombre, apellido, email, psicologo_id').eq('id', pacienteId).single()
+  paciente = pac
   if (pac) {
     document.querySelectorAll('[class*="font-bold"]').forEach(el => {
-      if (el.textContent.includes('Eleanor Vance')) el.textContent = `${pac.nombre} ${pac.apellido}`
+      if (el.textContent.includes('Eleanor Vance')) el.textContent = `${pac.nombre} ${pac.apellido || ''}`.trim()
     })
     document.querySelectorAll('p').forEach(el => {
       if (el.textContent.includes('@email.com') || el.textContent.includes('eleanor')) {
-        if (el.textContent.length < 80) el.textContent = pac.email
+        if (el.textContent.length < 80) el.textContent = pac.email || ''
       }
     })
   }
 }
 
-// Botón guardar/emitir factura
-const btnGuardar = document.querySelector('button[class*="bg-gradient"], button[class*="bg-primary"]')
-if (btnGuardar) btnGuardar.addEventListener('click', async () => {
-  const inputs = document.querySelectorAll('input[type="text"], input[type="number"]')
-  const monto = parseFloat(inputs[0]?.value || '0')
-  btnGuardar.disabled = true
-  btnGuardar.textContent = 'Guardando...'
-  // Solo registra en notas (sin tabla de facturas en el esquema actual)
-  alert(`Factura por $${monto} registrada correctamente`)
-  history.back()
-})
+const importeInput  = document.querySelectorAll('input[type="number"]')[0]
+const conceptoInput = document.querySelector('textarea')
+
+// Botón principal → genera el cobro real con Stripe (paciente paga, psicólogo recibe, plataforma 3%)
+const btnCobrar = [...document.querySelectorAll('button')].find(b => b.textContent.includes('Marcar como pagada'))
+if (btnCobrar) {
+  btnCobrar.innerHTML = '<span class="material-symbols-outlined text-sm">credit_card</span> Generar enlace de pago (Stripe)'
+  btnCobrar.addEventListener('click', async () => {
+    if (!pacienteId) { alert('Abre esta factura desde la ficha de un paciente.'); return }
+    const importe = parseFloat(importeInput?.value || '0')
+    if (!importe || importe <= 0) { alert('Indica un importe válido.'); return }
+    const { comision, neto } = calcularComision(importe)
+    const ok = confirm(
+      `Cobro al paciente: ${importe.toFixed(2)} €\n` +
+      `Comisión plataforma (3%): ${comision.toFixed(2)} €\n` +
+      `Recibe el profesional: ${neto.toFixed(2)} €\n\n` +
+      `¿Generar el enlace de pago?`
+    )
+    if (!ok) return
+    const original = btnCobrar.innerHTML
+    btnCobrar.disabled = true
+    btnCobrar.textContent = 'Generando enlace...'
+    try {
+      const { url } = await cobrarSesion({
+        pacienteId,
+        psicologoId: perfil?.rol === 'admin_clinica' ? paciente?.psicologo_id : undefined,
+        importe,
+        concepto: (conceptoInput?.value || 'Sesión de terapia').trim(),
+      })
+      try { await navigator.clipboard.writeText(url) } catch {}
+      window.open(url, '_blank')
+      alert('Enlace de pago generado y copiado al portapapeles.\nSe ha abierto en una pestaña nueva para que lo compartas con el paciente.')
+      location.href = 'historial_pagos.html'
+    } catch (e) {
+      const msg = e.message?.includes('STRIPE_NOT_READY') || /alta de cobros/.test(e.message || '')
+        ? 'El psicólogo todavía no ha completado el alta de cobros en Stripe (Integraciones → Stripe).'
+        : ('No se pudo generar el cobro: ' + e.message)
+      alert(msg)
+      btnCobrar.disabled = false
+      btnCobrar.innerHTML = original
+    }
+  })
+}
 
 // Descargar PDF simulado
 document.querySelectorAll('button').forEach(btn => {
