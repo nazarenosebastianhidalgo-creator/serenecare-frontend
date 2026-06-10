@@ -231,6 +231,28 @@ html.light .pill.active{background:rgba(5,150,105,0.1)!important;border-color:rg
           </div>
         </div>
 
+        <!-- Datos y privacidad (RGPD) -->
+        <div class="card rounded-2xl p-6">
+          <h2 class="text-white font-semibold font-headline mb-1">Tus datos y privacidad</h2>
+          <p class="text-xs text-slate-500 mb-5">Ejercé tus derechos sobre tus datos personales (RGPD).</p>
+          <div class="space-y-3">
+            <button onclick="solicitarDerecho('portabilidad', this)" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all hover:bg-white/5" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);cursor:pointer;">
+              <span class="material-symbols-outlined" style="color:#34d399;font-size:20px;">download</span>
+              <div class="flex-1"><p class="text-sm font-semibold text-white">Solicitar una copia de mis datos</p><p class="text-xs text-slate-500">Derecho de acceso y portabilidad</p></div>
+              <span class="material-symbols-outlined text-slate-600" style="font-size:18px;">chevron_right</span>
+            </button>
+            <button onclick="solicitarDerecho('supresion', this)" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all hover:bg-white/5" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);cursor:pointer;">
+              <span class="material-symbols-outlined" style="color:#f87171;font-size:20px;">delete</span>
+              <div class="flex-1"><p class="text-sm font-semibold text-white">Solicitar el borrado de mis datos</p><p class="text-xs text-slate-500">Derecho de supresión (olvido)</p></div>
+              <span class="material-symbols-outlined text-slate-600" style="font-size:18px;">chevron_right</span>
+            </button>
+          </div>
+          <p id="rgpd-status" class="hidden text-xs mt-3" style="color:#34d399;"></p>
+          <a href="politica_privacidad.html" class="inline-flex items-center gap-1 text-xs mt-4" style="color:#5eead4;text-decoration:none;">
+            <span class="material-symbols-outlined" style="font-size:14px;">shield</span> Ver Política de Privacidad
+          </a>
+        </div>
+
       </div>
     </div>
   </main>
@@ -308,12 +330,14 @@ function togglePill(btn) {
     let prefs = JSON.parse(localStorage.getItem(PREFS_KEY) || '{"email":true,"recordatorios":true,"mensajes":true}')
 
     // Cargar desde DB (fuente de verdad) — cae al caché de localStorage si no hay sesión
-    let pacienteId = null
+    let pacienteId = null, pacienteClinicaId = null, pacienteEmail = null
     if (!modoDemo) {
       const uid = session.user.id
-      const { data: pac } = await supabase.from('pacientes').select('id, preferencias').eq('usuario_id', uid).maybeSingle()
+      const { data: pac } = await supabase.from('pacientes').select('id, preferencias, clinica_id, email').eq('usuario_id', uid).maybeSingle()
       if (pac) {
         pacienteId = pac.id
+        pacienteClinicaId = pac.clinica_id
+        pacienteEmail = pac.email
         if (pac.preferencias && Object.keys(pac.preferencias).length) {
           prefs = { ...prefs, ...pac.preferencias }
           localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
@@ -353,6 +377,26 @@ function togglePill(btn) {
       ok.classList.remove('hidden')
       setTimeout(() => ok.classList.add('hidden'), 2000)
     })
+
+    // ── RGPD: el paciente solicita sus derechos (reusa solicitudes_rgpd) ──
+    window.solicitarDerecho = async function(tipo, btn) {
+      const labels = { portabilidad: 'una copia de tus datos', supresion: 'el borrado de tus datos' }
+      if (!confirm('¿Enviar a tu clínica la solicitud de ' + (labels[tipo] || tipo) + '? La clínica la gestionará y te responderá.')) return
+      const status = document.getElementById('rgpd-status')
+      if (!pacienteId) { if (status) { status.textContent = 'No se pudo identificar tu cuenta.'; status.style.color = '#f87171'; status.classList.remove('hidden') } return }
+      if (btn) btn.disabled = true
+      const { error } = await supabase.from('solicitudes_rgpd').insert({
+        paciente_id: pacienteId, clinica_id: pacienteClinicaId, tipo,
+        solicitante_email: pacienteEmail, estado: 'pendiente', creada_por: session.user.id,
+        notas: 'Solicitud enviada por el paciente desde su portal'
+      })
+      if (btn) btn.disabled = false
+      if (status) {
+        status.textContent = error ? ('No se pudo enviar: ' + error.message) : '✓ Solicitud enviada a tu clínica. Te responderán pronto.'
+        status.style.color = error ? '#f87171' : '#34d399'
+        status.classList.remove('hidden')
+      }
+    }
 
     document.querySelectorAll('button').forEach(b => {
       if (b.textContent.toLowerCase().includes('volver')) b.addEventListener('click', () => location.href = 'portal_paciente_inicio.html')
