@@ -521,9 +521,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
+import { guardaSuperAdmin } from '../js/admin.js'
 
-const { data: { session } } = await supabase.auth.getSession()
-if (!session) { window.location.href = 'acceso_super_admin.html' }
+const session = await guardaSuperAdmin()
+if (!session) { throw new Error('redirigiendo') }
 
 const [{ data: usuarios }, { data: clinicas }] = await Promise.all([
   supabase.from('usuarios').select('id, nombre, apellido, email, rol, clinica_id, activo, created_at').order('created_at'),

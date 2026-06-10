@@ -482,9 +482,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
+import { guardaSuperAdmin } from '../js/admin.js'
 
-const { data: { session } } = await supabase.auth.getSession()
-if (!session) { window.location.href = 'acceso_super_admin.html' }
+const session = await guardaSuperAdmin()
+if (!session) { throw new Error('redirigiendo') }
 
 const ahora = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
 

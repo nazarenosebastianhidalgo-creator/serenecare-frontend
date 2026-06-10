@@ -871,7 +871,8 @@ async function enviarInvite() {
     var sess = (await m.supabase.auth.getSession()).data.session;
     if (!sess) { window.location.href = 'acceso_clinica.html'; return; }
 
-    var clinicaId   = localStorage.getItem('tp_clinica_id') || 'e5a87f07-a1bf-4701-90d5-193cb65a1e89';
+    var clinicaId   = localStorage.getItem('tp_clinica_id');
+    if (!clinicaId) { alert('No se pudo determinar tu clínica. Volvé a iniciar sesión.'); window.location.href = 'acceso_clinica.html'; return; }
     var apellido    = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : '';
     var solo_nombre = nombre.split(' ')[0] || nombre;
 
@@ -910,16 +911,17 @@ document.addEventListener('keydown', function(e){ if(e.key === 'Escape') cerrarM
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
-import { cerrarSesion } from '../js/auth.js'
+import { cerrarSesion, verificarSesion } from '../js/auth.js'
 window._cerrarSesion = cerrarSesion
 
 const oldLogout = document.getElementById('btn-logout')
 if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.replaceChild(n, oldLogout) }
 
-const { data: { session } } = await supabase.auth.getSession()
-if (!session) { window.location.href = '../login.html' }
+const perfil = await verificarSesion(['admin_clinica'])
+if (!perfil) { throw new Error('redirigiendo') }
+const session = { user: { id: perfil.id } }
 
-const clinicaId = localStorage.getItem('tp_clinica_id')
+const clinicaId = perfil.clinica_id
 const hoy = new Date().toISOString().split('T')[0]
 const manana = new Date(Date.now()+86400000).toISOString().split('T')[0]
 

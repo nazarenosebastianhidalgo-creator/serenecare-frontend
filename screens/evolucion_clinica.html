@@ -651,13 +651,14 @@ function toggleNotif() { document.getElementById('notif-panel').classList.toggle
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
-import { cerrarSesion } from '../js/auth.js'
+import { cerrarSesion, verificarSesion } from '../js/auth.js'
 window._cerrarSesion = cerrarSesion
 
-const { data: { session } } = await supabase.auth.getSession()
-if (!session) { window.location.href = '../login.html' }
+const perfil = await verificarSesion(['admin_clinica'])
+if (!perfil) { throw new Error('redirigiendo') }
+const session = { user: { id: perfil.id } }
 
-const clinicaId = localStorage.getItem('tp_clinica_id')
+const clinicaId = perfil.clinica_id
 
 // Actualizar paciente si viene por URL param
 const params = new URLSearchParams(window.location.search)
