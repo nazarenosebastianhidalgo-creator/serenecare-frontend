@@ -683,6 +683,61 @@ if (usu) {
     if (cl) { const nc = document.getElementById('nombre-clinica'); if (nc) nc.textContent = cl.nombre }
   }
 }
+
+// ── Biblioteca de recursos: datos reales (global) ──────────────
+const FAVS_KEY = 'tp_recursos_favs'
+const getFavs = () => { try { return JSON.parse(localStorage.getItem(FAVS_KEY) || '[]') } catch { return [] } }
+const setFav = (id, val) => {
+  const f = new Set(getFavs()); val ? f.add(id) : f.delete(id)
+  localStorage.setItem(FAVS_KEY, JSON.stringify([...f]))
+}
+
+const { data: recursosDB } = await supabase.from('recursos')
+  .select('id, tipo, titulo, descripcion, tags, icono, color, formato, paginas, contenido_html')
+  .eq('activo', true).order('orden')
+
+const _contenido = {}
+const _favs = getFavs()
+window.RECURSOS = (recursosDB || []).map(function(r) {
+  _contenido[r.id] = r.contenido_html || ''
+  const color = r.color || '#a78bfa'
+  return {
+    id: r.id, tipo: r.tipo, titulo: r.titulo, desc: r.descripcion || '',
+    tags: r.tags || [], icono: r.icono || 'description',
+    color: color, bg: color + '1f', border: color + '33',
+    formato: r.formato || 'HTML', paginas: r.paginas || 1,
+    favorito: _favs.includes(r.id),
+  }
+})
+
+// Descargar: genera el archivo HTML imprimible en el navegador (sin Storage)
+window.descargar = function(id) {
+  const html = _contenido[id]
+  const r = (window.RECURSOS || []).find(x => x.id === id)
+  if (!html || !r) { if (window.mostrarToast) mostrarToast('Recurso no disponible'); return }
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = r.titulo.replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_') + '.html'
+  document.body.appendChild(a); a.click(); a.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
+  if (window.mostrarToast) mostrarToast('Descargando: ' + r.titulo)
+}
+
+// Favorito persistente en localStorage
+window.toggleFav = function(id) {
+  const r = (window.RECURSOS || []).find(x => x.id === id)
+  if (!r) return
+  r.favorito = !r.favorito; setFav(id, r.favorito)
+  if (window.renderGrid && window.getFiltrados) renderGrid(getFiltrados())
+}
+
+// Asignar a paciente: feature próxima
+window.asignar = function() { if (window.mostrarToast) mostrarToast('Asignar a paciente — disponible próximamente') }
+
+if (window.renderGrid && window.getFiltrados) renderGrid(getFiltrados())
+else if (window.renderGrid) renderGrid(window.RECURSOS)
 </script>
 </body>
 </html>
