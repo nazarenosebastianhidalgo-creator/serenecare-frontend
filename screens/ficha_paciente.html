@@ -1054,6 +1054,9 @@ else {
     ]);
 
     if (p) {
+      // RGPD: registrar el acceso a la ficha clínica (fire-and-forget)
+      supabase.rpc('registrar_lectura', { p_recurso: 'pacientes', p_recurso_id: pacienteId, p_paciente_id: pacienteId, p_clinica_id: p.clinica_id });
+
       const nombre    = (p.nombre || '') + ' ' + (p.apellido || '');
       const iniciales = ((p.nombre||'')[0]||'') + ((p.apellido||'')[0]||'');
       document.getElementById('pac-avatar').textContent    = iniciales.toUpperCase();
