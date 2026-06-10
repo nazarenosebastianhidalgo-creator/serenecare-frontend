@@ -350,34 +350,76 @@ async function cargarConsentimientos() {
   }
 }
 
-// Log de auditoría simulado (en producción vendría de una tabla audit_logs)
-function cargarLogs() {
-  const eventos = [
-    { tipo:'acceso', usuario:'Ana Martínez', accion:'Accedió a ficha de paciente #1042', ts:'hace 5 min', nivel:'ok' },
-    { tipo:'edicion', usuario:'Admin Clínica', accion:'Actualizó datos de contacto — Paciente #1038', ts:'hace 12 min', nivel:'ok' },
-    { tipo:'exportacion', usuario:'Admin Clínica', accion:'Exportó historial de sesiones', ts:'hace 1h', nivel:'warn' },
-    { tipo:'acceso', usuario:'Luis Herrera', accion:'Accedió a notas SOAP — Paciente #1021', ts:'hace 2h', nivel:'ok' },
-    { tipo:'login', usuario:'Admin Clínica', accion:'Inicio de sesión desde IP 89.x.x.x', ts:'hace 3h', nivel:'ok' },
-    { tipo:'borrado', usuario:'Sistema', accion:'Eliminó sesión expirada — Token revocado', ts:'hace 5h', nivel:'ok' },
-    { tipo:'login_fallo', usuario:'Desconocido', accion:'Intento de acceso fallido (3 intentos)', ts:'hace 8h', nivel:'err' },
-  ];
-  const iconos = { acceso:'visibility', edicion:'edit', exportacion:'download', login:'login', borrado:'delete', login_fallo:'warning' };
-  const colores = { ok:'#4ade80', warn:'#fbbf24', err:'#f87171' };
+// Log de auditoría REAL desde logs_acceso (RGPD)
+async function cargarLogs() {
   const container = document.getElementById('audit-log');
-  container.innerHTML = eventos.map(e => `
+  if (!cid) { container.innerHTML = '<div class="py-4 text-center text-slate-500 text-sm">Sin clínica</div>'; return; }
+  const { data } = await supabase.from('logs_acceso')
+    .select('accion, recurso, actor_rol, created_at')
+    .eq('clinica_id', cid).order('created_at', { ascending:false }).limit(20);
+  if (!data || !data.length) { container.innerHTML = '<div class="py-4 text-center text-slate-500 text-sm">Sin registros de acceso aún</div>'; return; }
+  const iconos = { lectura:'visibility', creacion:'add', modificacion:'edit', borrado:'delete', exportacion:'download', login:'login' };
+  const colores = { lectura:'#4ade80', creacion:'#60a5fa', modificacion:'#fbbf24', borrado:'#f87171', exportacion:'#fbbf24', login:'#4ade80' };
+  const recursos = { pacientes:'ficha de paciente', notas_soap:'nota SOAP', evaluaciones:'evaluación', citas:'cita', consentimientos:'consentimiento' };
+  const rel = (ts) => { const s=Math.floor((Date.now()-new Date(ts))/1000); if(s<60)return 'hace '+s+'s'; if(s<3600)return 'hace '+Math.floor(s/60)+' min'; if(s<86400)return 'hace '+Math.floor(s/3600)+'h'; return 'hace '+Math.floor(s/86400)+'d'; };
+  const cap = (t) => t ? t[0].toUpperCase()+t.slice(1) : '';
+  const container2 = document.getElementById('audit-log');
+  container2.innerHTML = data.map(e => `
     <div class="audit-row flex items-center gap-3 py-3">
       <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.04);">
-        <span class="material-symbols-outlined text-sm" style="color:${colores[e.nivel]};">${iconos[e.tipo]||'info'}</span>
+        <span class="material-symbols-outlined text-sm" style="color:${colores[e.accion]||'#94a3b8'};">${iconos[e.accion]||'info'}</span>
       </div>
       <div class="flex-1 min-w-0">
-        <p class="text-sm text-white truncate">${e.accion}</p>
-        <p class="text-xs text-slate-500">${e.usuario} · ${e.ts}</p>
+        <p class="text-sm text-white truncate">${cap(e.accion)} — ${recursos[e.recurso]||e.recurso}</p>
+        <p class="text-xs text-slate-500">${e.actor_rol||'—'} · ${rel(e.created_at)}</p>
       </div>
     </div>
   `).join('');
 }
 
+// ── Solicitudes de derechos RGPD (reales) ──
+const TIPOS_RGPD = { acceso:'Acceso', rectificacion:'Rectificación', supresion:'Supresión', portabilidad:'Portabilidad', oposicion:'Oposición' };
+async function cargarSolicitudes() {
+  if (!cid) return;
+  const { data } = await supabase.from('solicitudes_rgpd').select('*').eq('clinica_id', cid).order('created_at', { ascending:false });
+  const lista = document.getElementById('lista-solicitudes');
+  if (!data || !data.length) {
+    lista.innerHTML = '<div class="rounded-xl p-4 flex items-center justify-between" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-slate-500 text-lg">hourglass_empty</span><p class="text-slate-400 text-sm">No hay solicitudes pendientes</p></div></div>';
+    return;
+  }
+  lista.innerHTML = data.map(s => {
+    const ok = s.estado === 'resuelta';
+    return '<div class="rounded-xl p-4 flex items-center justify-between" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);">' +
+      '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-lg" style="color:' + (ok?'#4ade80':'#fbbf24') + ';">' + (ok?'check_circle':'pending') + '</span>' +
+      '<div><p class="text-sm font-semibold text-white">Derecho de ' + (TIPOS_RGPD[s.tipo]||s.tipo) + '</p>' +
+      '<p class="text-xs text-slate-500">' + (s.solicitante_email||'') + ' · ' + new Date(s.created_at).toLocaleDateString('es-ES') + '</p></div></div>' +
+      '<span class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:' + (ok?'rgba(74,222,128,0.12)':'rgba(251,191,36,0.12)') + ';color:' + (ok?'#4ade80':'#fbbf24') + ';">' + (s.estado||'pendiente') + '</span></div>';
+  }).join('');
+}
+window.guardarSolicitudRGPD = async function(tipo, email, notas) {
+  const { error } = await supabase.from('solicitudes_rgpd').insert({ clinica_id: cid, tipo, solicitante_email: email, notas: notas||null, creada_por: perfil.id, estado:'pendiente' });
+  if (!error) await cargarSolicitudes();
+  return { ok: !error, msg: error ? error.message : '' };
+};
+
+// ── Toggles RGPD persistidos en clinicas.config_rgpd ──
+window.guardarToggleRGPD = async function(key, val) {
+  if (!cid) return;
+  const { data } = await supabase.from('clinicas').select('config_rgpd').eq('id', cid).single();
+  const cfg = (data && data.config_rgpd) || {};
+  cfg[key] = val;
+  await supabase.from('clinicas').update({ config_rgpd: cfg }).eq('id', cid);
+};
+(async () => {
+  if (!cid) return;
+  const { data } = await supabase.from('clinicas').select('config_rgpd').eq('id', cid).single();
+  const cfg = (data && data.config_rgpd) || {};
+  const map = { rgpd_registro:'toggle-registro', rgpd_retencion:'toggle-retencion', rgpd_brechas:'toggle-brechas', rgpd_auditoria:'toggle-auditoria' };
+  Object.entries(map).forEach(function(pair){ const k=pair[0], id=pair[1]; if (cfg[k] !== undefined) { const el=document.getElementById(id); if(el){ el.classList.toggle('toggle-on', !!cfg[k]); el.classList.toggle('toggle-off', !cfg[k]); } } });
+})();
+
 cargarConsentimientos();
+cargarSolicitudes();
 cargarLogs();
 window.cargarLogs = cargarLogs;
 </script>
@@ -397,7 +439,7 @@ function toggleSwitch(id, key) {
   const isOn = el.classList.contains('toggle-on');
   el.classList.toggle('toggle-on', !isOn);
   el.classList.toggle('toggle-off', isOn);
-  localStorage.setItem(key, (!isOn).toString());
+  if (window.guardarToggleRGPD) window.guardarToggleRGPD(key, !isOn);
 }
 function verPacientesSinConsentimiento() {
   window.location.href = 'pacientes_clinica.html?filtro=sin_consentimiento';
@@ -409,25 +451,19 @@ function abrirNuevaSolicitud() {
 function cerrarModal() {
   document.getElementById('modal-solicitud').style.display = 'none';
 }
-function guardarSolicitud() {
+async function guardarSolicitud() {
   const tipo = document.getElementById('tipo-solicitud').value;
   const email = document.getElementById('email-solicitud').value;
+  const notas = document.getElementById('notas-solicitud').value;
   if (!email) { alert('Ingresa el email del paciente'); return; }
-  // En producción → INSERT en tabla solicitudes_rgpd
-  cerrarModal();
-  const lista = document.getElementById('lista-solicitudes');
-  const tipos = { acceso:'Acceso', rectificacion:'Rectificación', supresion:'Supresión', portabilidad:'Portabilidad', oposicion:'Oposición' };
-  lista.innerHTML = `
-    <div class="rounded-xl p-4 flex items-center justify-between" style="background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.15);">
-      <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined text-amber-400 text-lg">pending</span>
-        <div>
-          <p class="text-sm font-semibold text-white">Derecho de ${tipos[tipo]}</p>
-          <p class="text-xs text-slate-500">${email} · Recibida hoy</p>
-        </div>
-      </div>
-      <span class="badge-warn text-xs font-bold px-2.5 py-1 rounded-lg">Pendiente</span>
-    </div>` + lista.innerHTML.replace('<div class="rounded-xl p-4 flex items-center justify-between" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-slate-500 text-lg">hourglass_empty</span><p class="text-slate-400 text-sm">No hay solicitudes pendientes</p></div></div>','');
+  const res = window.guardarSolicitudRGPD ? await window.guardarSolicitudRGPD(tipo, email, notas) : { ok:false, msg:'No disponible' };
+  if (res.ok) {
+    document.getElementById('email-solicitud').value = '';
+    document.getElementById('notas-solicitud').value = '';
+    cerrarModal();
+  } else {
+    alert('No se pudo registrar la solicitud: ' + (res.msg||''));
+  }
 }
 function exportarInforme() {
   const lines = [
