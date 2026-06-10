@@ -81,8 +81,8 @@
   </aside>
 
   <!-- VIDEO AREA -->
-  <div class="ml-20 flex-1 relative rounded-3xl overflow-hidden shadow-2xl" style="background:#0d1117;">
-    <img alt="Video del paciente" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh8gB_Ra2d7zFCNQNYu0ykMcm7mlhkmH1YIJkPR5SdMSZK_YcG-zHHqaCljsxcvIKyEoo94bzsJoupLbWQTVSo1WsN-HXsjqh3bwO-PFiCJsBzWwHlXXKEZnlpS4GpSqebfLvhbJcYqGCDyIFKIDDkUQBK2Xmk9IClZjNJgH9NAewf255Izz6rNWenh0ZLaoDSgpKuk-9ZUlGcKXK3vQlnBAZOYPM2idyc5x_lwmWe-qakN5PZ5tb-ERBeh1COqTU2QdVazWvs-"/>
+  <div id="video-area" class="ml-20 flex-1 relative rounded-3xl overflow-hidden shadow-2xl" style="background:#0d1117;">
+    <img id="video-placeholder" alt="Video del paciente" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh8gB_Ra2d7zFCNQNYu0ykMcm7mlhkmH1YIJkPR5SdMSZK_YcG-zHHqaCljsxcvIKyEoo94bzsJoupLbWQTVSo1WsN-HXsjqh3bwO-PFiCJsBzWwHlXXKEZnlpS4GpSqebfLvhbJcYqGCDyIFKIDDkUQBK2Xmk9IClZjNJgH9NAewf255Izz6rNWenh0ZLaoDSgpKuk-9ZUlGcKXK3vQlnBAZOYPM2idyc5x_lwmWe-qakN5PZ5tb-ERBeh1COqTU2QdVazWvs-"/>
     <!-- Patient name badge -->
     <div class="absolute top-5 left-5 flex items-center gap-3 px-4 py-2 rounded-full" style="background:rgba(0,0,0,0.45);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);">
       <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
@@ -471,18 +471,106 @@ window.cwEnviar=function(){
   </div>
 </div>
 <script type="module">
-import { supabase } from '../js/supabase-client.js'
+import { supabase, crearSalaVideo } from '../js/supabase-client.js'
 import { verificarSesion } from '../js/auth.js'
+
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
 if (!_perfil) return
 const { data: { session } } = await supabase.auth.getSession()
-if (!session) { window.location.href = '../login.html' }
-const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()
+if (!session) { window.location.href = '../login.html'; }
+const userId = session.user.id
+
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', userId).single()
 if (usu) {
-  const nombre = ((usu.nombre || '') + ' ' + (usu.apellido || '')).trim()
-  const ini = nombre.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2)
+  const ini = (((usu.nombre || '')[0] || '') + ((usu.apellido || '')[0] || '')).toUpperCase()
   const a = document.getElementById('user-avatar-top'); if (a) a.textContent = ini
 }
+
+// ── Resolver la cita: ?cita_id= o la próxima sesión online del psicólogo ──
+const params = new URLSearchParams(location.search)
+let citaId = params.get('cita_id')
+let cita = null
+const hoy = new Date().toISOString().split('T')[0]
+const SELECT = 'id, fecha, hora_inicio, tipo, sala_video_url, clinica_id, pacientes(nombre, apellido), notas_soap(id, subjetivo)'
+
+if (citaId) {
+  const { data } = await supabase.from('citas').select(SELECT).eq('id', citaId).maybeSingle()
+  cita = data
+} else {
+  const { data } = await supabase.from('citas').select(SELECT)
+    .eq('psicologo_id', userId)
+    .in('tipo', ['telemedicina', 'online', 'videollamada'])
+    .gte('fecha', hoy)
+    .in('estado', ['pendiente', 'confirmada'])
+    .order('fecha').order('hora_inicio')
+    .limit(1).maybeSingle()
+  cita = data
+  if (cita) citaId = cita.id
+}
+
+let notaId = cita?.notas_soap?.[0]?.id || null
+
+if (cita) {
+  const pac = ((cita.pacientes?.nombre || '') + ' ' + (cita.pacientes?.apellido || '')).trim()
+  const tp = document.getElementById('top-paciente'); if (tp && pac) tp.textContent = pac
+  const vp = document.getElementById('video-paciente'); if (vp && pac) vp.textContent = 'Paciente: ' + pac
+
+  // Sala de video: usar la existente o crearla
+  let url = cita.sala_video_url
+  if (!url) { try { url = await crearSalaVideo(cita.id) } catch (e) { url = null } }
+  if (url) {
+    const area = document.getElementById('video-area')
+    const ph = document.getElementById('video-placeholder')
+    if (area) {
+      if (ph) ph.style.display = 'none'
+      const iframe = document.createElement('iframe')
+      iframe.src = url
+      iframe.allow = 'camera; microphone; fullscreen; speaker; display-capture; autoplay'
+      iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;z-index:1;'
+      area.appendChild(iframe)
+    }
+  }
+
+  // Prefill nota previa
+  const _taPrev = document.querySelector('textarea')
+  if (_taPrev && cita.notas_soap?.[0]?.subjetivo) _taPrev.value = cita.notas_soap[0].subjetivo
+}
+
+// ── Guardar nota SOAP (una por sesión: update si ya existe, si no insert) ──
+const _ta = document.querySelector('textarea')
+const _btnGuardar = Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Guardar Nota Clínica')
+if (_btnGuardar && _ta) {
+  _btnGuardar.addEventListener('click', async () => {
+    if (!_ta.value.trim() || !citaId) return
+    const _orig = _btnGuardar.textContent
+    const fila = {
+      sesion_id: citaId,
+      psicologo_id: userId,
+      clinica_id: cita?.clinica_id || localStorage.getItem('tp_clinica_id'),
+      subjetivo: _ta.value,
+    }
+    try {
+      if (notaId) {
+        await supabase.from('notas_soap').update(fila).eq('id', notaId)
+      } else {
+        const { data } = await supabase.from('notas_soap').insert(fila).select('id').single()
+        if (data) notaId = data.id
+      }
+      _btnGuardar.textContent = '✓ Guardado'
+    } catch (e) { _btnGuardar.textContent = 'Error al guardar' }
+    setTimeout(() => { _btnGuardar.textContent = _orig }, 2000)
+  })
+}
+
+// ── Finalizar sesión → marcar completada + volver al dashboard ──
+async function finalizarSesion() {
+  if (citaId) await supabase.from('citas').update({ estado: 'completada' }).eq('id', citaId)
+  window.location.href = '/screens/dashboard_psicologo.html'
+}
+;['btn-finalizar', 'btn-fin-sidebar'].forEach(function(id) {
+  const b = document.getElementById(id)
+  if (b) b.addEventListener('click', finalizarSesion)
+})
 </script>
 </body>
 </html>

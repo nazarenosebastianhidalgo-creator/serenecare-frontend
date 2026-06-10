@@ -518,7 +518,9 @@ function admitirPaciente() {
   clearInterval(timerInterval);
   mostrarToast('Iniciando sesión con ' + pacienteActual.nombre + '…');
   setTimeout(function(){
-    window.location.href = 'telemedicina_psicologo.html?paciente=' + encodeURIComponent(pacienteActual.nombre);
+    window.location.href = pacienteActual.citaId
+      ? 'telemedicina_psicologo.html?cita_id=' + pacienteActual.citaId
+      : 'telemedicina_psicologo.html?paciente=' + encodeURIComponent(pacienteActual.nombre);
   }, 1200);
 }
 
