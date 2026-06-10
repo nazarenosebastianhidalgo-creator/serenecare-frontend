@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SereneCare — Software para psicólogos y clínicas de salud mental</title>
+<meta name="description" content="Agenda, notas clínicas SOAP e informes IA en una sola plataforma. Diseñado para psicólogos y clínicas de salud mental en España y Latinoamérica."/>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  body { background-color:#020617; font-family:'Inter',sans-serif; }
+  .font-headline { font-family:'Manrope',sans-serif; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse-slow { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+  .fade-up { animation:fadeUp 0.7s ease forwards; }
+  .fade-up-2 { animation:fadeUp 0.7s 0.15s ease forwards; opacity:0; }
+  .fade-up-3 { animation:fadeUp 0.7s 0.3s ease forwards; opacity:0; }
+  .fade-up-4 { animation:fadeUp 0.7s 0.45s ease forwards; opacity:0; }
+  .glow { animation:pulse-slow 3s ease-in-out infinite; }
+  .feature-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); transition:all 0.25s; }
+  .feature-card:hover { background:rgba(255,255,255,0.06); border-color:rgba(20,184,166,0.2); transform:translateY(-2px); }
+  .form-input { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#e2e8f0; transition:all 0.2s; }
+  .form-input:focus { outline:none; border-color:rgba(20,184,166,0.5); background:rgba(20,184,166,0.05); }
+  .form-input::placeholder { color:#475569; }
+  .btn-primary { background:linear-gradient(135deg,#0f766e,#2dd4bf); box-shadow:0 8px 32px rgba(45,212,191,0.25); transition:all 0.2s; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 12px 40px rgba(45,212,191,0.35); }
+  .btn-primary:active { transform:translateY(0); }
+  .logo-orb { background:rgba(20,184,166,0.15); border:1px solid rgba(20,184,166,0.3); }
+</style>
+</head>
+<body class="text-slate-200 antialiased">
+
+<!-- NAV -->
+<nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05);">
+  <div class="max-w-5xl mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-xl logo-orb flex items-center justify-center">
+        <span class="material-symbols-outlined text-base" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+      </div>
+      <span class="font-headline font-bold text-white text-lg">SereneCare</span>
+    </div>
+    <a href="#waitlist" class="px-5 py-2 rounded-xl text-sm font-headline font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.3);color:#2dd4bf;">
+      Reservar demo gratuita
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="relative pt-32 pb-20 px-6 overflow-hidden">
+  <!-- Glow background -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] glow" style="background:radial-gradient(ellipse,rgba(20,184,166,0.08) 0%,transparent 70%);"></div>
+  <div class="absolute top-40 left-1/4 w-72 h-72 glow" style="background:radial-gradient(ellipse,rgba(139,92,246,0.05) 0%,transparent 70%);animation-delay:1s;"></div>
+
+  <div class="max-w-4xl mx-auto text-center relative z-10">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 fade-up" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.2);">
+      <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+      <span class="text-xs font-bold text-teal-400 uppercase tracking-widest">Acceso prioritario — plazas limitadas</span>
+    </div>
+
+    <h1 class="text-5xl md:text-6xl font-headline font-black text-white leading-tight tracking-tight mb-6 fade-up-2">
+      Gestiona tu consulta<br/>
+      <span style="background:linear-gradient(135deg,#2dd4bf,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">sin el papeleo de siempre</span>
+    </h1>
+
+    <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10 fade-up-3">
+      SereneCare automatiza la agenda, las notas clínicas SOAP y los informes para psicólogos y clínicas de salud mental. Recupera 2 horas al día desde el primer uso.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center fade-up-4">
+      <a href="#waitlist" class="btn-primary px-8 py-4 rounded-2xl font-headline font-bold text-base text-white text-center">
+        Quiero acceso anticipado →
+      </a>
+      <a href="screens/demo_clinica.html" class="px-8 py-4 rounded-2xl font-headline font-bold text-base text-slate-300 text-center hover:bg-white/5 transition-all" style="border:1px solid rgba(255,255,255,0.1);">
+        Ver demo en vivo
+      </a>
+    </div>
+
+    <!-- Social proof -->
+    <div class="flex items-center justify-center gap-6 mt-10 fade-up-4">
+      <div class="text-center">
+        <p class="text-2xl font-headline font-black text-white">900+</p>
+        <p class="text-xs text-slate-500">clínicas contactadas</p>
+      </div>
+      <div class="w-px h-10" style="background:rgba(255,255,255,0.08);"></div>
+      <div class="text-center">
+        <p class="text-2xl font-headline font-black text-white">2h/día</p>
+        <p class="text-xs text-slate-500">tiempo recuperado</p>
+      </div>
+      <div class="w-px h-10" style="background:rgba(255,255,255,0.08);"></div>
+      <div class="text-center">
+        <p class="text-2xl font-headline font-black text-white">RGPD</p>
+        <p class="text-xs text-slate-500">cumplimiento total</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="px-6 py-20">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl md:text-4xl font-headline font-black text-white mb-4">Todo lo que necesitas, nada de lo que no</h2>
+      <p class="text-slate-400 max-w-xl mx-auto">Diseñado específicamente para la realidad de una consulta de psicología. Sin complicaciones, sin formaciones eternas.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Feature 1 -->
+      <div class="feature-card rounded-3xl p-8">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.2);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">calendar_month</span>
+        </div>
+        <h3 class="font-headline font-bold text-white text-lg mb-3">Agenda inteligente</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Los pacientes reservan online, los recordatorios se envían solos por WhatsApp y email. Cero llamadas de confirmación.</p>
+        <div class="mt-5 space-y-2">
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-teal-500 text-sm">check_circle</span> Sincronización con Google Calendar
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-teal-500 text-sm">check_circle</span> Recordatorios automáticos WhatsApp
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-teal-500 text-sm">check_circle</span> Vista semanal por psicólogo
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card rounded-3xl p-8" style="border-color:rgba(139,92,246,0.15);">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-variation-settings:'FILL' 1;">edit_note</span>
+        </div>
+        <h3 class="font-headline font-bold text-white text-lg mb-3">Notas SOAP con IA</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Escribe los puntos clave de la sesión y la IA genera la nota clínica completa en formato SOAP. Listo en 30 segundos.</p>
+        <div class="mt-5 space-y-2">
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-purple-400 text-sm">check_circle</span> Generación automática SOAP
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-purple-400 text-sm">check_circle</span> Historial completo por paciente
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-purple-400 text-sm">check_circle</span> Escalas clínicas integradas (PHQ-9, GAD-7)
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card rounded-3xl p-8" style="border-color:rgba(59,130,246,0.15);">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.2);">
+          <span class="material-symbols-outlined" style="color:#60a5fa;font-variation-settings:'FILL' 1;">videocam</span>
+        </div>
+        <h3 class="font-headline font-bold text-white text-lg mb-3">Telemedicina integrada</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Videollamadas seguras directamente en la plataforma. Sin Zoom, sin códigos de acceso, sin fricción para el paciente.</p>
+        <div class="mt-5 space-y-2">
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-blue-400 text-sm">check_circle</span> Sala privada por sesión
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-blue-400 text-sm">check_circle</span> Enlace automático al crear cita
+          </div>
+          <div class="flex items-center gap-2 text-xs text-slate-400">
+            <span class="material-symbols-outlined text-blue-400 text-sm">check_circle</span> Cumple normativa sanitaria
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- More features row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">receipt_long</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Facturación</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">description</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Informes IA</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">group</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Multi-psicólogo</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">lock</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">RGPD</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST FORM -->
+<section id="waitlist" class="px-6 py-24">
+  <div class="max-w-xl mx-auto">
+    <div class="rounded-3xl p-10" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);">
+
+      <div id="form-state">
+        <div class="text-center mb-8">
+          <div class="w-14 h-14 rounded-2xl logo-orb flex items-center justify-center mx-auto mb-5">
+            <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">rocket_launch</span>
+          </div>
+          <h2 class="text-2xl font-headline font-black text-white mb-2">Reserva tu acceso prioritario</h2>
+          <p class="text-slate-400 text-sm leading-relaxed">Las primeras <strong class="text-teal-400">20 clínicas</strong> obtienen el precio de fundadores: 50% de descuento de por vida. Quedan pocas plazas.</p>
+        </div>
+
+        <form id="waitlist-form" class="space-y-4">
+          <div>
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Nombre completo</label>
+            <input id="wl-nombre" type="text" placeholder="Dr. María García" class="form-input w-full px-4 py-3 rounded-xl text-sm" required/>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Email profesional</label>
+            <input id="wl-email" type="email" placeholder="info@tuclinica.com" class="form-input w-full px-4 py-3 rounded-xl text-sm" required/>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Nombre de la clínica / consulta</label>
+            <input id="wl-clinica" type="text" placeholder="Clínica de Psicología García" class="form-input w-full px-4 py-3 rounded-xl text-sm"/>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Ciudad</label>
+            <input id="wl-ciudad" type="text" placeholder="Madrid" class="form-input w-full px-4 py-3 rounded-xl text-sm"/>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">¿Cuántos psicólogos sois? (opcional)</label>
+            <select id="wl-tamano" class="form-input w-full px-4 py-3 rounded-xl text-sm">
+              <option value="" style="background:#0a1628;">Solo yo</option>
+              <option value="2-5" style="background:#0a1628;">2-5 psicólogos</option>
+              <option value="6-15" style="background:#0a1628;">6-15 psicólogos</option>
+              <option value="15+" style="background:#0a1628;">Más de 15</option>
+            </select>
+          </div>
+
+          <button type="submit" id="btn-submit" class="btn-primary w-full py-4 rounded-2xl font-headline font-bold text-base text-white mt-2">
+            Quiero acceso prioritario →
+          </button>
+          <p class="text-center text-xs text-slate-600 mt-3">Sin compromiso. Sin tarjeta de crédito. Te contactamos esta semana.</p>
+        </form>
+      </div>
+
+      <!-- Success state -->
+      <div id="success-state" class="hidden text-center py-6">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5" style="background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.3);">
+          <span class="material-symbols-outlined text-3xl" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">check_circle</span>
+        </div>
+        <h3 class="text-xl font-headline font-black text-white mb-3">¡Ya estás en la lista!</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-6">Te contactaremos en las próximas 48 horas para mostrarte la plataforma y darte tu precio de fundador.</p>
+        <p class="text-xs text-slate-600">Mientras tanto, puedes explorar la demo en vivo:</p>
+        <a href="screens/demo_clinica.html" class="inline-block mt-3 px-6 py-2.5 rounded-xl text-sm font-headline font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">
+          Ver demo →
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Guarantee -->
+    <div class="flex items-center justify-center gap-6 mt-8 text-xs text-slate-600">
+      <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">lock</span> Datos protegidos RGPD</span>
+      <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">mail</span> Sin spam, prometido</span>
+      <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">close</span> Cancela cuando quieras</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-slate-800/30 px-6 py-10">
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-xl logo-orb flex items-center justify-center">
+        <span class="material-symbols-outlined text-sm" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+      </div>
+      <span class="font-headline font-bold text-slate-400">SereneCare</span>
+    </div>
+    <p class="text-xs text-slate-600">© 2026 SereneCare · Todos los derechos reservados · RGPD compliant</p>
+    <a href="mailto:hola@serenecare.es" class="text-xs text-slate-500 hover:text-teal-400 transition-colors">hola@serenecare.es</a>
+  </div>
+</footer>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+const supabase = createClient(
+  'https://wnuwuxenzwfqmhxagryk.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o'
+)
+
+document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
+  e.preventDefault()
+  const btn = document.getElementById('btn-submit')
+  btn.textContent = 'Enviando...'
+  btn.disabled = true
+
+  const nombre  = document.getElementById('wl-nombre').value.trim()
+  const email   = document.getElementById('wl-email').value.trim()
+  const clinica = document.getElementById('wl-clinica').value.trim()
+  const ciudad  = document.getElementById('wl-ciudad').value.trim()
+  const tamano  = document.getElementById('wl-tamano').value
+
+  try {
+    const { error } = await supabase.from('lista_espera').insert({
+      email, nombre, clinica, ciudad, tamano,
+      fuente: document.referrer || 'landing'
+    })
+
+    if (error) throw error
+
+    document.getElementById('form-state').classList.add('hidden')
+    document.getElementById('success-state').classList.remove('hidden')
+  } catch (err) {
+    console.error(err)
+    btn.textContent = 'Quiero acceso prioritario →'
+    btn.disabled = false
+    alert('Algo salió mal. Por favor escríbenos a hola@serenecare.es')
+  }
+})
+</script>
+</body>
+</html>
