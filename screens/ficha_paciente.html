@@ -937,13 +937,17 @@ function seleccionarEscala(tipo) {
   document.getElementById('check-gad7').textContent = !esPhq ? 'radio_button_checked' : 'radio_button_unchecked';
   document.getElementById('check-gad7').style.color = !esPhq ? '#60a5fa' : '#475569';
 }
-function confirmarSolicitud() {
+async function confirmarSolicitud() {
   cerrarModalSolicitar();
+  var res = { ok:false, msg:'No disponible' };
+  try { if (window.enviarSolicitudEscala) res = await window.enviarSolicitudEscala(escalaSeleccionada); }
+  catch(e) { res = { ok:false, msg: e.message }; }
+  var ok = res && res.ok;
   var toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);color:#34d399;padding:12px 20px;border-radius:14px;font-size:13px;font-weight:700;z-index:400;font-family:Manrope,sans-serif;';
-  toast.textContent = '✓ ' + escalaSeleccionada + ' enviada al paciente';
+  toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:' + (ok?'rgba(52,211,153,0.15)':'rgba(248,113,113,0.15)') + ';border:1px solid ' + (ok?'rgba(52,211,153,0.3)':'rgba(248,113,113,0.3)') + ';color:' + (ok?'#34d399':'#f87171') + ';padding:12px 20px;border-radius:14px;font-size:13px;font-weight:700;z-index:400;font-family:Manrope,sans-serif;';
+  toast.textContent = ok ? ('✓ ' + escalaSeleccionada + ' enviada al paciente') : ('No se pudo enviar: ' + (res.msg||''));
   document.body.appendChild(toast);
-  setTimeout(function(){ toast.remove(); }, 3000);
+  setTimeout(function(){ toast.remove(); }, 3500);
 }
 
 function severidadPHQ9(p) {
@@ -1021,6 +1025,21 @@ if (!session) { window.location.href = '../login.html'; }
 
 const params = new URLSearchParams(window.location.search);
 const pacienteId = params.get('id') || params.get('paciente');
+
+// Enviar solicitud de escala (PHQ-9/GAD-7) al paciente
+window.enviarSolicitudEscala = async function(tipo) {
+  if (!pacienteId || pacienteId === 'demo') return { ok:false, msg:'Sin paciente válido' };
+  const { data: pac } = await supabase.from('pacientes').select('clinica_id').eq('id', pacienteId).single();
+  const { error } = await supabase.from('solicitudes_escalas').insert({
+    paciente_id: pacienteId,
+    psicologo_id: session.user.id,
+    clinica_id: pac ? pac.clinica_id : null,
+    tipo,
+    estado: 'pendiente',
+  });
+  return { ok: !error, msg: error ? error.message : '' };
+};
+
 if (!pacienteId || pacienteId === 'demo') { window.renderEvaluaciones([]); }
 
 else {
