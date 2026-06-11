@@ -353,7 +353,30 @@ document.addEventListener('DOMContentLoaded', function() {
     var rol    = document.getElementById('inv-rol').value
     if (!nombre || !email) { alert('Nombre y email obligatorios'); return }
     var parts = nombre.split(' ')
-    staffData.push({ id: Date.now().toString(), nombre: parts[0], apellido: parts.slice(1).join(' ') || '—', email: email, rol: rol, activo: false, actividad: 'Invitado ahora' })
+    var nom = parts[0], ape = parts.slice(1).join(' ') || ''
+
+    // Psicólogo = seat de pago (29€/mes). Abre el checkout de Lemon Squeezy; al confirmar el
+    // pago, el webhook del backend (/webhook/lemonsqueezy, action=invite_psicologo) genera la
+    // invitación de Supabase y envía el email de alta al psicólogo.
+    if (rol === 'psicologo') {
+      var clinicaId = window.__clinicaId || localStorage.getItem('tp_clinica_id') || ''
+      if (!clinicaId) { alert('No se pudo identificar tu clínica. Recarga la página e inténtalo de nuevo.'); return }
+      var VARIANT_ID = '527d999a-b07f-4b35-8c13-22f8e5636466' // Plan Fundadores €29/mes
+      var params = new URLSearchParams({
+        'checkout[custom][action]': 'invite_psicologo',
+        'checkout[custom][email_psicologo]': email,
+        'checkout[custom][nombre]': nom,
+        'checkout[custom][apellido]': ape,
+        'checkout[custom][clinica_id]': clinicaId,
+      })
+      if (window.__perfilEmail) params.set('checkout[email]', window.__perfilEmail)
+      window.location.href = 'https://serenecare.lemonsqueezy.com/checkout/buy/' + VARIANT_ID + '?' + params.toString()
+      return
+    }
+
+    // Otros roles (secretario/a): no consumen seat de pago → alta directa local.
+    // (Pendiente: endpoint de invitación gratuita en backend para no-psicólogos.)
+    staffData.push({ id: Date.now().toString(), nombre: nom, apellido: ape || '—', email: email, rol: rol, activo: false, actividad: 'Invitado ahora' })
     renderStaff()
     document.getElementById('modal-invitar').classList.add('hidden')
     document.getElementById('inv-nombre').value = ''
@@ -397,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <option value="secretario">Secretario/a</option>
         </select>
       </div>
-      <p class="text-xs text-slate-500">Se enviará un email de invitación con instrucciones para crear su contraseña.</p>
+      <p class="text-xs text-slate-500">Invitar a un <strong class="text-slate-300">psicólogo</strong> añade una plaza de <strong class="text-slate-300">29&nbsp;€/mes</strong> (pago seguro con Lemon Squeezy). Tras el pago recibirá un email para activar su cuenta. Secretarios/as no consumen plaza.</p>
     </div>
     <div class="px-6 pb-6 flex gap-3">
       <button onclick="document.getElementById('modal-invitar').classList.add('hidden')" class="flex-1 py-3 rounded-xl text-sm font-bold text-slate-400 transition-all hover:bg-white/5" style="border:1px solid rgba(255,255,255,0.08);">Cancelar</button>
@@ -795,6 +818,8 @@ window._cerrarSesion = cerrarSesion;
 (async () => {
   const perfil = await verificarSesion(['admin_clinica']);
   if (!perfil) return;
+  window.__clinicaId   = perfil.clinica_id || '';
+  window.__perfilEmail = perfil.email || '';
   const n = perfil.nombre||'', a = perfil.apellido||'';
   const ini = ((n[0]||'')+(a[0]||'')).toUpperCase()||'AC';
   const el = document.getElementById('user-nombre'); if (el) el.textContent = (n+' '+a).trim();
