@@ -145,8 +145,8 @@ html.light .signature-canvas{background-color:#f8fafc!important;background-image
 
         <!-- Legal text scroller -->
         <div class="p-7 pb-0">
-          <h2 class="text-sm font-bold text-white font-headline mb-3">Consentimiento Informado para Tratamiento Psicológico</h2>
-          <div class="rounded-xl p-5 h-52 overflow-y-auto no-scrollbar text-slate-400 text-sm leading-relaxed"
+          <h2 class="text-sm font-bold text-white font-headline mb-3" id="doc-titulo">Consentimiento Informado para Tratamiento Psicológico</h2>
+          <div id="doc-texto" class="rounded-xl p-5 h-52 overflow-y-auto no-scrollbar text-slate-400 text-sm leading-relaxed"
             style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
             <p class="mb-4">Este documento establece los términos y condiciones bajo los cuales se llevará a cabo el proceso psicoterapéutico. El paciente reconoce que el tratamiento es un proceso colaborativo y que el éxito del mismo depende en gran medida del compromiso personal y la honestidad durante las sesiones.</p>
             <p class="mb-4"><strong class="text-slate-300">Confidencialidad:</strong> Toda la información compartida durante las sesiones está protegida por el secreto profesional. No obstante, se establecen excepciones legales en caso de riesgo inminente para la vida del paciente o de terceros, o ante requerimientos judiciales explícitos.</p>
@@ -373,6 +373,30 @@ var firmaToken = new URLSearchParams(window.location.search).get('token');
     if (data.clinica) {
       var nc = document.getElementById('nombre-clinica');
       if (nc) nc.textContent = data.clinica;
+    }
+    // Texto REAL del documento (plantilla vigente del backend) = exactamente lo que se firma y se hashea.
+    // Fallback: si el backend aún no devuelve `texto`, se conserva el texto por defecto del HTML.
+    if (data.texto) {
+      if (data.titulo) {
+        var ht = document.getElementById('doc-titulo');
+        if (ht) ht.textContent = data.titulo;
+      }
+      var dt = document.getElementById('doc-texto');
+      if (dt) {
+        dt.innerHTML = '';
+        data.texto.split(/\n\s*\n|\n/).map(function(s){return s.trim();}).filter(Boolean).forEach(function(par){
+          var p = document.createElement('p');
+          p.className = 'mb-4';
+          p.textContent = par;
+          dt.appendChild(p);
+        });
+        if (data.version) {
+          var v = document.createElement('p');
+          v.className = 'mt-4 text-slate-600';
+          v.textContent = 'Versión del documento: ' + data.version;
+          dt.appendChild(v);
+        }
+      }
     }
   } catch(e) {}
 })();
