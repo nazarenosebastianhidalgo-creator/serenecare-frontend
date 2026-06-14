@@ -7,13 +7,15 @@
     "dev": "vite --open",
     "build": "node scripts/bump-version.js && vite build",
     "preview": "vite preview",
-    "deploy": "node scripts/bump-version.js"
+    "deploy": "node scripts/bump-version.js",
+    "build:css": "tailwindcss -i src/input.css -o css/tailwind.css --minify"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "tailwindcss": "^3.4.19",
     "vite": "^8.0.10"
   }
 }
