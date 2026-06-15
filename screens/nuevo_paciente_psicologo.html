@@ -1139,7 +1139,7 @@ async function guardarPaciente() {
   if (!session) { window.location.href = 'acceso_clinica.html'; return; }
 
   const clinicaId   = localStorage.getItem('tp_clinica_id');
-  const psicologoId = session.user.id;
+  const psicologoId = session.user.id || localStorage.getItem('tp_user_id');
   const nacimiento  = (document.getElementById('f-nacimiento') || {}).value || null;
   const motivo      = (document.getElementById('f-como-llego') || {}).value || null;
   const apellidoEl  = document.getElementById('f-apellido');
@@ -1245,7 +1245,7 @@ window.guardarPaciente = async function() {
   try {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session) { window.location.href = 'acceso_clinica.html'; return }
-    const psicologoId = session.user.id
+    const psicologoId = session.user.id || localStorage.getItem('tp_user_id')
     const clinicaId   = (typeof usu !== 'undefined' && usu?.clinica_id) || localStorage.getItem('tp_clinica_id')
     const apellido    = nombre.includes(' ') ? nombre.split(' ').slice(1).join(' ') : ''
     const solo_nombre = nombre.split(' ')[0] || nombre
