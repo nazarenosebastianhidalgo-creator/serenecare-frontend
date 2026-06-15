@@ -758,7 +758,7 @@ window.cwEnviar = function() {
         <textarea id="np-motivo" rows="2" placeholder="Ej. Ansiedad generalizada, duelo…" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;font-family:Inter,sans-serif;resize:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(20,184,166,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"></textarea>
       </div>
       <div>
-        <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Psicólogo asignado <span style="color:#f87171;">*</span></label>
+        <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Asignar a <span style="color:#f87171;">*</span></label>
         <select id="np-psicologo" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;font-family:Inter,sans-serif;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(20,184,166,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
           <option value="">Selecciona un psicólogo…</option>
         </select>
@@ -854,20 +854,29 @@ document.getElementById('btn-nuevo-paciente').onclick = async function() {
   document.getElementById('np-email').value = '';
   document.getElementById('np-telefono').value = '';
   document.getElementById('np-motivo').value = '';
-  // Poblar el selector con los psicólogos de la clínica
+  // Poblar el selector: el propio admin (por defecto, puede tener pacientes
+  // propios) + los psicólogos de la clínica.
   try {
     var mod = await import('../js/supabase-client.js');
     var cId = localStorage.getItem('tp_clinica_id');
+    var myId = localStorage.getItem('tp_user_id');
+    var myName = localStorage.getItem('tp_nombre') || 'Yo';
     var sel = document.getElementById('np-psicologo');
-    sel.innerHTML = '<option value="">Selecciona un psicólogo…</option>';
+    sel.innerHTML = '';
+    if (myId) {
+      var me = document.createElement('option');
+      me.value = myId; me.textContent = 'Yo (' + myName + ')'; me.selected = true;
+      sel.appendChild(me);
+    }
     var res = await mod.supabase.from('usuarios').select('id, nombre, apellido').eq('clinica_id', cId).eq('rol', 'psicologo');
     (res.data || []).forEach(function(p) {
+      if (p.id === myId) return; // no duplicar si el admin también figura
       var o = document.createElement('option');
       o.value = p.id;
       o.textContent = ((p.nombre || '') + ' ' + (p.apellido || '')).trim() || 'Psicólogo';
       sel.appendChild(o);
     });
-  } catch(e) { console.warn('No se pudieron cargar psicólogos:', e.message); }
+  } catch(e) { console.warn('No se pudieron cargar profesionales:', e.message); }
   setTimeout(function(){ document.getElementById('np-nombre').focus(); }, 80);
 };
 
