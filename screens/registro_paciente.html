@@ -267,7 +267,7 @@
         <button onclick="irPaso(2)" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
           ← Atrás
         </button>
-        <button onclick="irPaso(4)" id="btn-activar" class="flex-[2] py-3.5 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#059669,#34d399);">
+        <button onclick="activarCuenta()" id="btn-activar" class="flex-[2] py-3.5 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#059669,#34d399);">
           <span class="material-symbols-outlined text-base">verified_user</span>
           Activar mi cuenta
         </button>
@@ -533,6 +533,41 @@ window.irPaso = async function(n) {
     setTimeout(() => { window.location.href = 'portal_paciente_inicio.html' }, 1500)
   }
   if (typeof _irPasoOrig === 'function') _irPasoOrig(n)
+}
+
+// Activar cuenta: valida consentimiento obligatorio + firma, los GUARDA en el
+// backend (snapshot legal) y avisa al psicólogo/clínica, y luego avanza.
+window.activarCuenta = async function() {
+  const chk1  = document.getElementById('chk1')
+  const firma = ((document.getElementById('d-firma') || {}).value || '').trim()
+  const err   = document.getElementById('err-consent')
+  if (!chk1 || !chk1.checked) {
+    if (err) { err.textContent = 'Debés aceptar el consentimiento informado para continuar.'; err.style.display = 'block' }
+    return
+  }
+  if (!firma) {
+    if (err) { err.textContent = 'Escribí tu nombre completo como firma para continuar.'; err.style.display = 'block' }
+    return
+  }
+  if (err) err.style.display = 'none'
+  const btn = document.getElementById('btn-activar')
+  if (btn) btn.disabled = true
+  try {
+    const { data: { session: s } } = await supabase.auth.getSession()
+    if (s) {
+      const BACKEND = 'https://serenecare-backend-production.up.railway.app'
+      const r = await fetch(BACKEND + '/api/consents/aceptar-registro', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + s.access_token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firma })
+      })
+      if (!r.ok) { const j = await r.json().catch(() => ({})); throw new Error(j.error || 'No se pudieron registrar los consentimientos') }
+    }
+    irPaso(4)
+  } catch (e) {
+    if (err) { err.textContent = 'Error al registrar el consentimiento: ' + e.message; err.style.display = 'block' }
+    if (btn) btn.disabled = false
+  }
 }
 </script>
 </body>
