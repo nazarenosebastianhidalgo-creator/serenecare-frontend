@@ -160,19 +160,13 @@ html.light .hover\:bg-white\/5:hover,html.light .hover\:bg-white\/8:hover{backgr
     <div class="flex-1 flex flex-col overflow-hidden">
       <div id="chat-messages" class="flex-1 overflow-y-auto px-8 py-6 space-y-5"></div>
 
-      <!-- Input -->
+      <!-- Input deshabilitado: acompañante IA en desarrollo -->
       <div class="px-8 pb-6 flex-shrink-0">
-        <div class="flex items-end gap-3 p-3 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
-          <textarea id="input-msg" placeholder="Escribe tu reflexión aquí..." rows="1"
-            class="flex-1 bg-transparent text-sm text-slate-200 placeholder-slate-500 resize-none focus:outline-none min-h-[36px] max-h-32"
-            style="font-family:'Inter',sans-serif;"></textarea>
-          <button id="btn-enviar" onclick="enviar()"
-            class="p-2.5 rounded-xl flex items-center justify-center transition-all hover:opacity-90 active:scale-95"
-            style="background:linear-gradient(135deg,rgba(52,211,153,0.8),rgba(16,185,129,0.8));">
-            <span class="material-symbols-outlined text-white text-lg">send</span>
-          </button>
+        <div class="flex items-center justify-center gap-3 p-4 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px dashed rgba(148,163,184,0.25);">
+          <span class="material-symbols-outlined text-slate-400 text-lg">schedule</span>
+          <p class="text-sm text-slate-300 font-semibold">Tu acompañante IA estará disponible <span style="color:#34d399;">próximamente</span></p>
         </div>
-        <p class="text-[10px] text-center text-slate-600 mt-2">La IA puede cometer errores. Para emergencias llama al 024.</p>
+        <p class="text-[10px] text-center text-slate-600 mt-2">Mientras tanto, habla con tu psicólogo. En emergencias: 024 (España) / 135 (Argentina).</p>
       </div>
     </div>
 
@@ -268,45 +262,22 @@ document.getElementById('input-msg').addEventListener('keydown', function(e) {
   if (!modoDemo) await guardaPaciente()
 
   const chatContainer = document.getElementById('chat-messages')
-  const inputMsg = document.getElementById('input-msg')
-  const btnEnviar = document.getElementById('btn-enviar')
 
-  const historial = obtenerHistorialChat()
-  if (historial.length > 0) {
-    chatContainer.innerHTML = historial.map(m =>
-      m.rol === 'assistant' ? bubbleIA(m.texto) : bubbleUsuario(m.texto)
-    ).join('')
-    chatContainer.scrollTop = chatContainer.scrollHeight
-  }
-
-  window.enviar = async function() {
-    const texto = inputMsg.value.trim()
-    if (!texto) return
-
-    chatContainer.innerHTML += bubbleUsuario(texto)
-    chatContainer.scrollTop = chatContainer.scrollHeight
-    inputMsg.value = ''
-    btnEnviar.disabled = true
-
-    const typingId = 'typing-' + Date.now()
-    chatContainer.innerHTML += `<div id="${typingId}" class="flex justify-start mb-4">
-      <div class="px-4 py-3 rounded-2xl text-sm text-slate-500 italic" style="background:rgba(255,255,255,0.04);">Escribiendo...</div>
+  // Acompañante IA EN DESARROLLO: se muestra "próximamente" y no se llama al
+  // backend de IA. Se reactivará endurecido (prompt de seguridad en servidor,
+  // protocolo de crisis, auth, modelo barato con límites).
+  chatContainer.innerHTML = `
+    <div class="flex flex-col items-center justify-center h-full text-center px-8 gap-4">
+      <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);">
+        <span class="material-symbols-outlined text-3xl" style="color:#34d399;">auto_awesome</span>
+      </div>
+      <h3 class="text-lg font-bold text-white font-headline">Tu acompañante IA llega pronto</h3>
+      <p class="text-sm text-slate-400" style="max-width:24rem;">Estamos preparando un acompañante de apoyo emocional seguro y supervisado. Estará disponible muy pronto.</p>
+      <p class="text-xs text-slate-600">Mientras tanto, habla con tu psicólogo. En emergencias: 024 (España) / 135 (Argentina).</p>
     </div>`
-    chatContainer.scrollTop = chatContainer.scrollHeight
 
-    const respuesta = await enviarMensajeAsistente(texto)
-    document.getElementById(typingId)?.remove()
-    chatContainer.innerHTML += bubbleIA(respuesta.texto)
-    chatContainer.scrollTop = chatContainer.scrollHeight
-    btnEnviar.disabled = false
-  }
-
-  document.querySelectorAll('[data-sugerencia]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      inputMsg.value = btn.textContent.trim()
-      window.enviar()
-    })
-  })
+  window.enviar = function() { /* desactivado: feature en desarrollo */ }
+  document.querySelectorAll('[data-sugerencia]').forEach(btn => { btn.style.display = 'none' })
 </script>
 
 <!-- APPS OVERLAY -->
