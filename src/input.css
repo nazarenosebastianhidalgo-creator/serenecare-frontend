@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Fix toggle: que .hidden gane sobre clases con display propio (modales, spinners, badges, iconos).
+   Por especificidad (.x.hidden) + !important. NO afecta al responsive (esas clases no se muestran por breakpoint). */
+.modal-overlay.hidden,
+.spinner.hidden,
+.unread-badge.hidden,
+.material-symbols-outlined.hidden { display: none !important; }
