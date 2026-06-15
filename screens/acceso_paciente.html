@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SereneCare — Acceso Paciente</title>
+  <link rel="stylesheet" href="/css/tailwind.css">
+  <script>window.tailwind=window.tailwind||{};</script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #020617 0%, #03100c 60%, #020617 100%); }
+    h1, h2 { font-family: 'Manrope', sans-serif; }
+    .teal-glow { box-shadow: 0 0 40px rgba(45,212,191,0.15); }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+  <div class="fixed top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none"
+       style="background:radial-gradient(circle,rgba(45,212,191,0.25) 0%,transparent 70%);"></div>
+  <div class="fixed bottom-0 left-0 w-80 h-80 rounded-full opacity-15 pointer-events-none"
+       style="background:radial-gradient(circle,rgba(16,185,129,0.2) 0%,transparent 70%);"></div>
+
+  <div class="w-full max-w-md relative z-10">
+
+    <div class="text-center mb-10">
+      <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 teal-glow"
+           style="background:rgba(45,212,191,0.15);border:1px solid rgba(45,212,191,0.35);">
+        <span class="material-symbols-outlined text-4xl" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">self_improvement</span>
+      </div>
+      <h1 class="text-3xl font-extrabold text-white">Portal del Paciente</h1>
+      <p class="text-slate-400 mt-1 text-sm">SereneCare — Tu espacio de bienestar</p>
+    </div>
+
+    <div class="rounded-3xl p-8 backdrop-blur-sm" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+      <form id="form-login" class="space-y-5" novalidate>
+
+        <div>
+          <label class="text-sm font-semibold text-slate-300 block mb-1.5">Correo electrónico</label>
+          <input id="email" type="email" placeholder="tu@email.com" required
+            class="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm transition-all focus:outline-none"
+            style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);"
+            onfocus="this.style.borderColor='rgba(45,212,191,0.5)';this.style.boxShadow='0 0 0 2px rgba(45,212,191,0.12)'"
+            onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.boxShadow='none'"/>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label class="text-sm font-semibold text-slate-300">Contraseña</label>
+            <a href="recuperar_password.html" class="text-xs font-medium transition-colors"
+               style="color:#2dd4bf;" onmouseover="this.style.color='#5eead4'" onmouseout="this.style.color='#2dd4bf'">
+              ¿Olvidaste la contraseña?
+            </a>
+          </div>
+          <div class="relative">
+            <input id="password" type="password" placeholder="••••••••" required
+              class="w-full px-4 py-3 pr-12 rounded-xl text-white placeholder-slate-500 text-sm transition-all focus:outline-none"
+              style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);"
+              onfocus="this.style.borderColor='rgba(45,212,191,0.5)';this.style.boxShadow='0 0 0 2px rgba(45,212,191,0.12)'"
+              onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.boxShadow='none'"/>
+            <button type="button" id="toggle-pwd"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors">
+              <span class="material-symbols-outlined text-xl">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-submit"
+          class="w-full py-3.5 font-bold rounded-xl transition-all active:scale-95 text-sm mt-2"
+          style="background:linear-gradient(135deg,#0d9488,#0f766e);box-shadow:0 4px 20px rgba(13,148,136,0.3);color:#fff;"
+          onmouseover="this.style.background='linear-gradient(135deg,#14b8a6,#0d9488)'"
+          onmouseout="this.style.background='linear-gradient(135deg,#0d9488,#0f766e)'">
+          Entrar a mi portal
+        </button>
+
+      </form>
+
+      <div id="error-msg" class="hidden mt-4 text-center py-3 px-4 rounded-xl text-sm font-medium"
+           style="background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.2);"></div>
+
+    </div>
+
+    <div class="mt-6 flex justify-center gap-6 text-xs text-slate-500">
+      <a href="../index.html" class="hover:text-slate-300 transition-colors">← Volver</a>
+      <span class="text-slate-700">·</span>
+      <a href="acceso_psicologo.html" class="hover:text-slate-300 transition-colors">Soy psicólogo</a>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { supabase } from '../js/supabase-client.js'
+
+    document.getElementById('toggle-pwd').addEventListener('click', () => {
+      const pwd  = document.getElementById('password')
+      const icon = document.querySelector('#toggle-pwd .material-symbols-outlined')
+      if (pwd.type === 'password') { pwd.type = 'text'; icon.textContent = 'visibility_off' }
+      else                        { pwd.type = 'password'; icon.textContent = 'visibility' }
+    })
+
+    function mostrarError(msg) {
+      const el = document.getElementById('error-msg')
+      el.textContent = msg; el.classList.remove('hidden')
+    }
+    function ocultarError() { document.getElementById('error-msg').classList.add('hidden') }
+
+    document.getElementById('form-login').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const email    = document.getElementById('email').value.trim()
+      const password = document.getElementById('password').value
+      const btn      = document.getElementById('btn-submit')
+
+      if (!email || !password) { mostrarError('Completá todos los campos.'); return }
+
+      btn.disabled = true; btn.textContent = 'Verificando...'; ocultarError()
+
+      try {
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })
+        if (authError) throw new Error('Correo o contraseña incorrectos.')
+
+        // El perfil del paciente vive en 'pacientes' (vinculado por usuario_id),
+        // no en 'usuarios'. Verificamos ahí.
+        const { data: pac } = await supabase
+          .from('pacientes').select('id, nombre, clinica_id')
+          .eq('usuario_id', authData.user.id).maybeSingle()
+
+        const metaRol = authData.user.user_metadata?.rol
+        if (!pac && metaRol !== 'paciente') {
+          await supabase.auth.signOut()
+          throw new Error('Esta cuenta no es de paciente. Usa el acceso correspondiente.')
+        }
+
+        localStorage.setItem('tp_rol',        'paciente')
+        localStorage.setItem('tp_user_id',    authData.user.id)
+        localStorage.setItem('tp_email',      email)
+        localStorage.setItem('pac_nombre',    pac?.nombre || '')
+        if (pac?.clinica_id) localStorage.setItem('tp_clinica_id', pac.clinica_id)
+
+        window.location.href = 'portal_paciente_inicio.html'
+      } catch (err) {
+        mostrarError(err.message)
+        btn.disabled = false; btn.textContent = 'Entrar a mi portal'
+      }
+    })
+  </script>
+</body>
+</html>
