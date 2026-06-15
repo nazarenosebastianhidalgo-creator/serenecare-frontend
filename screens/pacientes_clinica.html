@@ -757,6 +757,12 @@ window.cwEnviar = function() {
         <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Motivo de consulta <span style="color:#475569;font-weight:400;text-transform:none;">(opcional)</span></label>
         <textarea id="np-motivo" rows="2" placeholder="Ej. Ansiedad generalizada, duelo…" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;font-family:Inter,sans-serif;resize:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(20,184,166,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"></textarea>
       </div>
+      <div>
+        <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Psicólogo asignado <span style="color:#f87171;">*</span></label>
+        <select id="np-psicologo" style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;font-family:Inter,sans-serif;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(20,184,166,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+          <option value="">Selecciona un psicólogo…</option>
+        </select>
+      </div>
       <div style="background:rgba(20,184,166,0.07);border:1px solid rgba(20,184,166,0.2);border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;">
         <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:16px;margin-top:1px;flex-shrink:0;">info</span>
         <p style="font-size:12px;color:#94a3b8;line-height:1.5;margin:0;">El paciente recibirá un link seguro para crear su contraseña, completar su perfil y firmar el consentimiento informado.</p>
@@ -842,12 +848,26 @@ async function invitarPsicologo() {
   }
 }
 
-document.getElementById('btn-nuevo-paciente').onclick = function() {
+document.getElementById('btn-nuevo-paciente').onclick = async function() {
   document.getElementById('modal-nuevo-paciente').style.display = 'flex';
   document.getElementById('np-nombre').value = '';
   document.getElementById('np-email').value = '';
   document.getElementById('np-telefono').value = '';
   document.getElementById('np-motivo').value = '';
+  // Poblar el selector con los psicólogos de la clínica
+  try {
+    var mod = await import('../js/supabase-client.js');
+    var cId = localStorage.getItem('tp_clinica_id');
+    var sel = document.getElementById('np-psicologo');
+    sel.innerHTML = '<option value="">Selecciona un psicólogo…</option>';
+    var res = await mod.supabase.from('usuarios').select('id, nombre, apellido').eq('clinica_id', cId).eq('rol', 'psicologo');
+    (res.data || []).forEach(function(p) {
+      var o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = ((p.nombre || '') + ' ' + (p.apellido || '')).trim() || 'Psicólogo';
+      sel.appendChild(o);
+    });
+  } catch(e) { console.warn('No se pudieron cargar psicólogos:', e.message); }
   setTimeout(function(){ document.getElementById('np-nombre').focus(); }, 80);
 };
 
@@ -860,9 +880,11 @@ async function enviarInvite() {
   var email  = document.getElementById('np-email').value.trim();
   var tel    = document.getElementById('np-telefono').value.trim();
   var motivo = document.getElementById('np-motivo').value.trim();
+  var psicologoId = document.getElementById('np-psicologo').value;
 
   if (!nombre) { document.getElementById('np-nombre').style.borderColor = '#f87171'; document.getElementById('np-nombre').focus(); return; }
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('np-email').style.borderColor = '#f87171'; document.getElementById('np-email').focus(); return; }
+  if (!psicologoId) { document.getElementById('np-psicologo').style.borderColor = '#f87171'; document.getElementById('np-psicologo').focus(); return; }
 
   var btn = document.querySelector('#modal-nuevo-paciente button[onclick="enviarInvite()"]');
   if (btn) { btn.textContent = 'Guardando...'; btn.disabled = true; }
@@ -881,6 +903,7 @@ async function enviarInvite() {
       nombre: solo_nombre, apellido, email,
       telefono: tel || null,
       clinica_id: clinicaId,
+      psicologo_id: psicologoId,
       motivo_consulta: motivo || null,
       estado: 'activo',
     }).select('id').single();
