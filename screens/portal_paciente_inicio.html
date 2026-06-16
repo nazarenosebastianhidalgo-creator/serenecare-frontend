@@ -1374,6 +1374,31 @@ import { obtenerDatosPaciente } from '../js/paciente.js'
 window._cerrarSesion = cerrarSesion
 const perfil = await verificarSesion(['paciente'])
 if (!perfil) return
+
+// Cargar citas REALES del paciente en el calendario (reemplaza los demos)
+try {
+  const { data: pacRow } = await supabase.from('pacientes').select('id').eq('usuario_id', perfil.id).maybeSingle()
+  let citasP = []
+  if (pacRow) {
+    const r = await supabase.from('citas')
+      .select('fecha, hora_inicio, tipo, estado, psicologo:psicologo_id(nombre,apellido)')
+      .eq('paciente_id', pacRow.id).neq('estado','cancelada').order('fecha')
+    citasP = r.data || []
+  }
+  window.SESIONES = citasP.map(function(c){
+    const p = (c.fecha||'').split('-')
+    const online = (c.tipo==='online'||c.tipo==='telemedicina')
+    return {
+      y: parseInt(p[0],10), m: parseInt(p[1],10)-1, d: parseInt(p[2],10),
+      hora: (c.hora_inicio||'').slice(0,5),
+      tipo: c.tipo ? (c.tipo.charAt(0).toUpperCase()+c.tipo.slice(1)) : 'Sesión',
+      mod: online ? 'Online' : 'Presencial',
+      ps: c.psicologo ? (c.psicologo.nombre+' '+c.psicologo.apellido) : 'Tu psicólogo'
+    }
+  })
+  if (typeof window.renderCal === 'function') window.renderCal()
+} catch(e) { console.warn('Citas paciente:', e.message) }
+
 const nombre = ((perfil.nombre || '') + ' ' + (perfil.apellido || '')).trim()
 const ini = nombre.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2)
 const n = document.getElementById('user-nombre'); if (n) n.textContent = nombre
