@@ -315,7 +315,6 @@
           hora_inicio:  form.querySelectorAll('input[type="time"]')[0]?.value,
           hora_fin:     form.querySelectorAll('input[type="time"]')[1]?.value,
           tipo:         form.querySelector('select[name="tipo"]')?.value || 'presencial',
-          notas_previas: form.querySelector('textarea')?.value || '',
         }
         if (!datos.paciente_id || !datos.fecha || !datos.hora_inicio) {
           mostrarError('Completá los campos obligatorios.'); return
