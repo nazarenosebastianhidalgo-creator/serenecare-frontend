@@ -539,15 +539,10 @@ function buildBadge(ec) {
 
 /* ---- MODAL NUEVA CITA ---- */
 function abrirModalNueva(dia) {
-  var d = dia || selectedDay
-  var y = viewYear, m = viewMonth
-  var fecha = y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0')
-  document.getElementById('nf-fecha').value = fecha
-  document.getElementById('nf-paciente').value = ''
-  document.getElementById('nf-notas').value = ''
-  var meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']
-  document.getElementById('modal-fecha-label').textContent = d + ' de ' + meses[m] + ' · ' + y
-  document.getElementById('modal-nueva').classList.remove('hidden')
+  var d = dia || selectedDay || new Date().getDate()
+  var fecha = viewYear + '-' + String(viewMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0')
+  // Reutiliza la modal real que SÍ guarda en BD (la inline solo era visual)
+  window.location.href = 'modal_nueva_cita.html?fecha=' + fecha
 }
 
 function confirmarNuevaCita() {

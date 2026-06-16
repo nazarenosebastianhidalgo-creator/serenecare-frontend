@@ -118,8 +118,12 @@
       selPsi.innerHTML = '<option value="">— Selecciona un psicólogo —</option>' +
         psicologos.map(p => `<option value="${p.id}" ${p.id === miId ? 'selected' : ''}>${(p.nombre||'')} ${(p.apellido||'')}</option>`).join('')
 
-      // Fecha por defecto: hoy
-      document.getElementById('np-fecha').value = new Date().toISOString().split('T')[0]
+      // Fecha: la del parámetro (si viene del calendario del admin) o hoy
+      const fechaParam = new URLSearchParams(location.search).get('fecha')
+      document.getElementById('np-fecha').value = fechaParam || new Date().toISOString().split('T')[0]
+      // Destino de la agenda según rol (admin vuelve a su agenda)
+      const agendaUrl = (localStorage.getItem('tp_rol') === 'admin_clinica') ? 'agenda_clinica.html' : 'agenda_psicologo.html'
+      document.querySelectorAll('a[href="agenda_psicologo.html"]').forEach(function(a){ a.setAttribute('href', agendaUrl) })
 
       document.getElementById('form-cita').addEventListener('submit', async (e) => {
         e.preventDefault()
@@ -143,7 +147,7 @@
         try {
           await crearCita(datos)
           mostrar('success-msg', 'Cita creada correctamente. Volviendo a la agenda…')
-          setTimeout(() => { location.href = 'agenda_psicologo.html' }, 1200)
+          setTimeout(() => { location.href = agendaUrl }, 1200)
         } catch (err) {
           mostrar('error-msg', err.message || 'No se pudo crear la cita.')
           btn.disabled = false; btn.style.opacity = '1'
