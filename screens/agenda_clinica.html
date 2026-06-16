@@ -1098,19 +1098,18 @@ const { data: citasDB } = await supabase
   .gte('fecha', mesInicio).lte('fecha', mesFin)
   .order('fecha').order('hora_inicio')
 
-if (citasDB && citasDB.length) {
-  window.CITAS_BASE = citasDB.map(function(c) {
-    return {
-      dia: parseInt((c.fecha||'').split('-')[2], 10),
-      hora: (c.hora_inicio||'').slice(0,5),
-      paciente: c.pacientes ? c.pacientes.nombre+' '+c.pacientes.apellido : 'Paciente',
-      terapeuta: c.psicologo ? c.psicologo.nombre+' '+c.psicologo.apellido : 'Terapeuta',
-      tipo: c.tipo||'Sesión individual',
-      estado: c.estado||'pendiente',
-    }
-  })
-  if (typeof window.renderCalendar === 'function') window.renderCalendar()
-  if (typeof window.renderCitasDia === 'function') window.renderCitasDia()
-}
+// Siempre sobreescribimos (aunque no haya citas) para limpiar los demos hardcodeados
+window.CITAS_BASE = (citasDB || []).map(function(c) {
+  return {
+    dia: parseInt((c.fecha||'').split('-')[2], 10),
+    hora: (c.hora_inicio||'').slice(0,5),
+    paciente: c.pacientes ? c.pacientes.nombre+' '+c.pacientes.apellido : 'Paciente',
+    terapeuta: c.psicologo ? c.psicologo.nombre+' '+c.psicologo.apellido : 'Terapeuta',
+    tipo: c.tipo||'Sesión individual',
+    estado: c.estado||'pendiente',
+  }
+})
+if (typeof window.renderCalendar === 'function') window.renderCalendar()
+if (typeof window.renderCitasDia === 'function') window.renderCitasDia()
 </script>
 </body></html>
