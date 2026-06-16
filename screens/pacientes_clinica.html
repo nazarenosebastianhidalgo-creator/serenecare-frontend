@@ -963,7 +963,8 @@ const [{ data: pacientesDB }, { data: citasDB }] = await Promise.all([
   supabase.from('citas').select('paciente_id, psicologo_id, fecha, hora_inicio, estado, psicologo:psicologo_id(nombre,apellido)').eq('clinica_id', clinicaId).gte('fecha', hoy).order('fecha').order('hora_inicio'),
 ])
 
-if (pacientesDB && pacientesDB.length) {
+{
+  // Siempre sobreescribimos (aunque no haya pacientes) para limpiar los demos
   const nextByPac = {}, terByPac = {}, cntByPac = {}
   ;(citasDB||[]).forEach(function(c) {
     cntByPac[c.paciente_id] = (cntByPac[c.paciente_id]||0) + 1
@@ -975,7 +976,7 @@ if (pacientesDB && pacientesDB.length) {
     if (!terByPac[c.paciente_id] && c.psicologo) terByPac[c.paciente_id] = c.psicologo.nombre+' '+c.psicologo.apellido
   })
 
-  window.PACIENTES = pacientesDB.map(function(p) {
+  window.PACIENTES = (pacientesDB||[]).map(function(p) {
     return {
       nombre: p.nombre+' '+p.apellido,
       email: p.email||'—',
