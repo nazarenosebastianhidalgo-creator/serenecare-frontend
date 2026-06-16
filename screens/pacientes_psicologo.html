@@ -287,16 +287,7 @@
 </div>
 
 <script>
-var PACIENTES = [
-  { id:1, nombre:'Elena Rodríguez',  iniciales:'ER', color:'#a78bfa', bg:'rgba(139,92,246,0.2)',  diagnostico:'Ansiedad generalizada',    estado:'activo', proxima:'Hoy · 14:30', sesiones:12, soap:false, hoy:true  },
-  { id:2, nombre:'Marcos Vidal',     iniciales:'MV', color:'#2dd4bf', bg:'rgba(20,184,166,0.2)',  diagnostico:'Terapia cognitiva (TCC)',  estado:'activo', proxima:'Hoy · 16:00', sesiones:15, soap:false, hoy:true  },
-  { id:3, nombre:'Lucía Ferreyra',   iniciales:'LF', color:'#fbbf24', bg:'rgba(245,158,11,0.2)',  diagnostico:'Sesión de pareja',         estado:'activo', proxima:'Hoy · 17:30', sesiones:9,  soap:false, hoy:true  },
-  { id:4, nombre:'Mateo Sánchez',    iniciales:'MS', color:'#34d399', bg:'rgba(16,185,129,0.2)',  diagnostico:'TDAH — seguimiento',       estado:'activo', proxima:'Mar · 10:00', sesiones:8,  soap:true,  hoy:false },
-  { id:5, nombre:'Sofía Martínez',   iniciales:'SM', color:'#f472b6', bg:'rgba(244,114,182,0.2)', diagnostico:'Terapia de pareja',        estado:'activo', proxima:'Jue · 14:00', sesiones:6,  soap:true,  hoy:false },
-  { id:6, nombre:'Carlos Ruiz',      iniciales:'CR', color:'#60a5fa', bg:'rgba(96,165,250,0.2)',  diagnostico:'Evaluación inicial',       estado:'activo', proxima:'Mié · 11:00', sesiones:1,  soap:true,  hoy:false },
-  { id:7, nombre:'Roberto Díaz',     iniciales:'RD', color:'#94a3b8', bg:'rgba(148,163,184,0.15)',diagnostico:'Depresión mayor',          estado:'pausa',  proxima:'—',           sesiones:22, soap:false, hoy:false },
-  { id:8, nombre:'Isabella Vega',    iniciales:'IV', color:'#a78bfa', bg:'rgba(139,92,246,0.15)', diagnostico:'Trastorno ansiedad social',estado:'alta',   proxima:'—',           sesiones:34, soap:false, hoy:false },
-];
+var PACIENTES = []; // datos reales se cargan desde Supabase (window.PACIENTES)
 
 var tabActual = 'todos';
 
@@ -439,7 +430,7 @@ function formatProxima(cita) {
   const hoy = new Date().toISOString().split('T')[0];
 
   const [{ data: pacientesDB }, { data: citasDB }, { data: soapDB }] = await Promise.all([
-    supabase.from('pacientes').select('*').eq('clinica_id', clinicaId).order('apellido'),
+    supabase.from('pacientes').select('*').eq('clinica_id', clinicaId).eq('psicologo_id', userId).order('apellido'),
     supabase.from('citas').select('paciente_id, fecha, hora_inicio, estado')
       .eq('clinica_id', clinicaId).eq('psicologo_id', userId).gte('fecha', hoy).order('fecha').order('hora_inicio'),
     supabase.from('notas_soap').select('sesion_id').eq('clinica_id', clinicaId),
