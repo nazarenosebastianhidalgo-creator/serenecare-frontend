@@ -325,7 +325,7 @@ function renderPacientes() {
       +'<div style="display:flex;align-items:center;gap:6px;">'+hoyBadge+'</div>'
       +'<div style="font-size:12px;font-weight:600;color:#94a3b8;text-align:center;">'+p.sesiones+'</div>'
       +'<div style="display:flex;justify-content:flex-end;gap:6px;align-items:center;">'
-      +(p.estado !== 'invitado' ? '<button onclick="event.preventDefault();event.stopPropagation();invitarPaciente(''+p.id+'');" style="font-size:11px;font-weight:700;color:#34d399;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:8px;padding:4px 10px;cursor:pointer;">Invitar</button>' : '<span style="font-size:10px;color:#34d399;font-weight:600;">✓ Invitado</span>')
+      +(p.estado !== 'invitado' ? '<button onclick="event.preventDefault();event.stopPropagation();invitarPaciente(\'' + p.id + '\');" style="font-size:11px;font-weight:700;color:#34d399;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);border-radius:8px;padding:4px 10px;cursor:pointer;">Invitar</button>' : '<span style="font-size:10px;color:#34d399;font-weight:600;">✓ Invitado</span>')
       +'<span style="font-size:11px;font-weight:700;color:#a78bfa;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:4px 10px;">Ver ficha</span></div>'
       +'</a>';
   }).join('');
