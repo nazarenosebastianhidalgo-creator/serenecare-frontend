@@ -591,6 +591,8 @@ window.cwEnviar=function(){
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion, verificarSesion } from '../js/auth.js'
+
+(async () => {
 window._cerrarSesion = cerrarSesion
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
 if (!_perfil) return
@@ -607,6 +609,7 @@ if (usu) {
     if (cl) { const nc = document.getElementById('nombre-clinica'); if (nc) nc.textContent = cl.nombre }
   }
 }
-</script>
+
+})();</script>
 </body>
 </html>

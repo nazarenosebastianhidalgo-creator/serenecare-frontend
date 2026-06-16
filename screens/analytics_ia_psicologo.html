@@ -495,6 +495,8 @@ function toggleChatWidget(){
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion, verificarSesion } from '../js/auth.js'
+
+(async () => {
 window._cerrarSesion = cerrarSesion
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
 if (!_perfil) return
@@ -614,6 +616,7 @@ const tV = [], tL = []
 for (let i=3;i>=0;i--) { const d=new Date(_now.getFullYear(), _now.getMonth()-i*3, 1); const ini=ymd(new Date(d.getFullYear(),d.getMonth()-2,1)); const fin=ymd(new Date(d.getFullYear(),d.getMonth()+1,0)); tV.push(contarComp(ini,fin)); tL.push('T'+(Math.floor(d.getMonth()/3)+1)) }
 window.CHART = { semana:{v:semV,l:semL}, mes:{v:mV,l:mL}, trimestre:{v:tV,l:tL} }
 if (typeof window.renderChart === 'function') window.renderChart('mes')
-</script>
+
+})();</script>
 </body>
 </html>

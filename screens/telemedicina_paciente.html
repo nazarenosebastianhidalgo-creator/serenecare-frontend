@@ -264,6 +264,8 @@ import { supabase } from '../js/supabase-client.js'
 import { verificarSesion } from '../js/auth.js'
 import { crearSalaVideo } from '../js/paciente.js'
 
+(async () => {
+
 const perfil = await verificarSesion(['paciente'])
 if (!perfil) return
 
@@ -342,6 +344,7 @@ try {
 } catch (e) {
   setEstado('No se pudo cargar la sesión', e.message || 'Error de conexión.', 'error')
 }
-</script>
+
+})();</script>
 </body>
 </html>

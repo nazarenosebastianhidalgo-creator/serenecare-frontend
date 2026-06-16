@@ -668,6 +668,8 @@ window.cwEnviar=function(){
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion, verificarSesion } from '../js/auth.js'
+
+(async () => {
 window._cerrarSesion = cerrarSesion
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
 if (!_perfil) return
@@ -780,6 +782,7 @@ window.asignar = function(id) {
 
 if (window.renderGrid && window.getFiltrados) renderGrid(getFiltrados())
 else if (window.renderGrid) renderGrid(window.RECURSOS)
-</script>
+
+})();</script>
 </body>
 </html>

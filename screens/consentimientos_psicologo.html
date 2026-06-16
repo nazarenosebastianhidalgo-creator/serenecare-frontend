@@ -605,6 +605,8 @@ document.addEventListener('DOMContentLoaded', function() {
 import { supabase } from '../js/supabase-client.js';
 import { cerrarSesion, verificarSesion } from '../js/auth.js';
 
+(async () => {
+
 window._cerrarSesion = cerrarSesion;
 
 const BACKEND = 'https://serenecare-backend-production.up.railway.app';
@@ -697,6 +699,7 @@ window.enviarConsentimiento = async function() {
     toast('Error de conexión', 'error');
   }
 };
-</script>
+
+})();</script>
 </body>
 </html>

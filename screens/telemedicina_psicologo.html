@@ -475,6 +475,8 @@ window.cwEnviar=function(){
 import { supabase, crearSalaVideo } from '../js/supabase-client.js'
 import { verificarSesion } from '../js/auth.js'
 
+(async () => {
+
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
 if (!_perfil) return
 const { data: { session } } = await supabase.auth.getSession()
@@ -572,6 +574,7 @@ async function finalizarSesion() {
   const b = document.getElementById(id)
   if (b) b.addEventListener('click', finalizarSesion)
 })
-</script>
+
+})();</script>
 </body>
 </html>

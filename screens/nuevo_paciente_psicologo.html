@@ -1215,6 +1215,8 @@ function toggleCW() {
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion, verificarSesion } from '../js/auth.js'
 import { crearPaciente } from '../js/clinica.js'
+
+(async () => {
 window._cerrarSesion = cerrarSesion
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
 if (!_perfil) return
@@ -1288,7 +1290,8 @@ window.guardarPaciente = async function() {
     if (typeof mostrarToast === 'function') mostrarToast('Error al guardar: ' + (e.message || 'intente nuevamente'))
   }
 }
-</script>
+
+})();</script>
 
 
 <!-- TEST INVITE BTN - BORRAR DESPUES -->

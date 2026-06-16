@@ -561,6 +561,8 @@ function actualizarLabelTema() {
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion, verificarSesion } from '../js/auth.js'
 import { iniciarOnboardingStripe, estadoStripe } from '../js/connect.js'
+
+(async () => {
 window._cerrarSesion = cerrarSesion
 
 const oldLogout = document.getElementById('btn-logout')
@@ -887,7 +889,8 @@ window.desconectarGCal = async function() {
   })
   if (res.ok) { renderGCalStatus(false); renderGMeetStatus(false) }
 }
-</script>
+
+})();</script>
 <!-- Modal config email -->
 <div id="modal-email" onclick="if(event.target===this)cerrarConfigEmail()" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);align-items:center;justify-content:center;">
   <div onclick="event.stopPropagation()" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:2rem;width:100%;max-width:440px;padding:2rem;box-shadow:0 40px 120px rgba(0,0,0,0.6);">

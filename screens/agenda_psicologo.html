@@ -688,6 +688,8 @@ document.getElementById('btn-logout').addEventListener('click', function(e) {
 <script type="module">
 import { supabase } from '../js/supabase-client.js';
 import { cerrarSesion, verificarSesion } from '../js/auth.js';
+
+(async () => {
 window._cerrarSesion = cerrarSesion;
 
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica']);
@@ -753,7 +755,8 @@ if (citas?.length) {
     // actualización de spans de resumen semanal si existen
   }
 }
-</script>
+
+})();</script>
 <!-- MINI CHAT WIDGET -->
 <div id="cw-panel" style="position:fixed;bottom:160px;right:24px;z-index:9998;width:320px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
   <div id="cw-lista-wrap" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">

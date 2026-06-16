@@ -560,6 +560,8 @@
     import { guardaSuperAdmin } from '../js/admin.js'
     import { supabase } from '../js/supabase-client.js'
 
+(async () => {
+
     await guardaSuperAdmin()
 
     // ── Helpers ───────────────────────────────────────────────────────
@@ -730,7 +732,8 @@
       localStorage.removeItem('tp_email')
       window.location.href = 'acceso_super_admin.html'
     })
-  </script>
+  
+})();</script>
   <script src="../js/version-check.js"></script>
 
 <script>

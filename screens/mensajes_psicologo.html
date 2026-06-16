@@ -796,6 +796,8 @@ document.getElementById('demo-badge').classList.remove('hidden');
 import { supabase, getMensajes, enviarMensaje as sbEnviar, getPacientes, getPsicologos } from '../js/supabase-client.js';
 import { cerrarSesion, verificarSesion } from '../js/auth.js';
 
+(async () => {
+
 window._cerrarSesion = cerrarSesion;
 
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica']);
@@ -905,6 +907,7 @@ window.enviarMensaje = async function() {
     window.mostrarToast('Error enviando: ' + e.message);
   }
 };
-</script>
+
+})();</script>
 </body>
 </html>

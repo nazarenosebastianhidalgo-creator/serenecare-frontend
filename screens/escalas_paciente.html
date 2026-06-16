@@ -730,6 +730,8 @@ window.__toggleTheme=function(){window.__setTheme(document.documentElement.class
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion, verificarSesion } from '../js/auth.js'
+
+(async () => {
 window._cerrarSesion = cerrarSesion
 const perfil = await verificarSesion(['paciente'])
 if (!perfil) return
@@ -822,6 +824,7 @@ if (pac) {
     }
   }
 }
-</script>
+
+})();</script>
 </body>
 </html>
