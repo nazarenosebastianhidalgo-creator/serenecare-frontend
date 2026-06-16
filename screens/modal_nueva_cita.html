@@ -1,346 +1,155 @@
-﻿<!DOCTYPE html>
-
-<html class="light" lang="es"><head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Nueva Cita | Therapeutic Perspective</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SereneCare — Nueva cita</title>
 <link rel="stylesheet" href="/css/tailwind.css">
-  <script>window.tailwind=window.tailwind||{};</script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "outline-variant": "#acb3b6",
-              "on-error-container": "#6e0a12",
-              "inverse-on-surface": "#9a9d9e",
-              "tertiary-dim": "#395a48",
-              "secondary": "#2b6775",
-              "outline": "#747c7e",
-              "primary-container": "#a8e3f6",
-              "surface-container": "#eaeff0",
-              "on-tertiary-fixed": "#2f503f",
-              "inverse-surface": "#0b0f10",
-              "error-dim": "#67040d",
-              "on-secondary-container": "#195968",
-              "surface-container-high": "#e3e9eb",
-              "on-primary-container": "#0e5463",
-              "surface-bright": "#f8fafb",
-              "on-secondary": "#effbff",
-              "on-background": "#2c3436",
-              "inverse-primary": "#a8e3f6",
-              "error-container": "#fa746f",
-              "on-surface": "#2c3436",
-              "primary-dim": "#195a6a",
-              "surface-dim": "#d4dbde",
-              "secondary-container": "#b2ecfd",
-              "primary-fixed": "#a8e3f6",
-              "on-primary-fixed": "#00404d",
-              "on-secondary-fixed-variant": "#266372",
-              "on-tertiary-container": "#416350",
-              "error": "#a83836",
-              "on-primary-fixed-variant": "#1d5e6d",
-              "on-secondary-fixed": "#004653",
-              "primary-fixed-dim": "#9ad5e7",
-              "surface": "#f8fafb",
-              "background": "#f8fafb",
-              "surface-variant": "#dce4e6",
-              "surface-tint": "#296777",
-              "on-surface-variant": "#596063",
-              "primary": "#296777",
-              "tertiary-fixed": "#d7fde4",
-              "secondary-fixed-dim": "#a4ddef",
-              "on-tertiary": "#e6ffee",
-              "on-primary": "#f0fbff",
-              "surface-container-highest": "#dce4e6",
-              "surface-container-lowest": "#ffffff",
-              "tertiary-fixed-dim": "#c9eed6",
-              "secondary-dim": "#1b5a69",
-              "on-error": "#fff7f6",
-              "tertiary-container": "#d7fde4",
-              "surface-container-low": "#f0f4f6",
-              "secondary-fixed": "#b2ecfd",
-              "tertiary": "#456653",
-              "on-tertiary-fixed-variant": "#4c6d5a"
-            },
-            fontFamily: {
-              "headline": ["Manrope"],
-              "body": ["Inter"],
-              "label": ["Inter"]
-            },
-            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
-          },
-        },
-      }
-    </script>
+<script>window.tailwind=window.tailwind||{};</script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
-        body { font-family: 'Inter', sans-serif; }
-        .font-headline { font-family: 'Manrope', sans-serif; }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { font-family:'Inter',sans-serif; background:linear-gradient(135deg,#020617 0%,#0a0a1f 60%,#020617 100%); }
+  h1,h2 { font-family:'Manrope',sans-serif; }
+  .field { width:100%; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#e2e8f0; font-size:14px; outline:none; transition:border-color .15s, box-shadow .15s; box-sizing:border-box; }
+  .field:focus { border-color:rgba(139,92,246,0.5); box-shadow:0 0 0 2px rgba(139,92,246,0.12); }
+  .field option { background:#0d1b2e; color:#e2e8f0; }
+  .lbl { display:block; font-size:11px; font-weight:700; color:#94a3b8; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+</style>
 </head>
-<body class="bg-surface text-on-surface">
-<!-- TopNavBar Cluster -->
-<nav class="bg-slate-50/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-slate-200/50 dark:border-slate-800/50 flex justify-between items-center w-full px-8 py-3 sticky top-0 z-50 font-manrope tracking-tight text-slate-800 dark:text-slate-100 shadow-sm dark:shadow-none">
-<div class="flex items-center gap-8">
-<span class="text-xl font-bold text-cyan-900 dark:text-cyan-100 italic">Therapeutic Perspective</span>
-<div class="hidden md:flex gap-6 items-center">
-<a class="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-200 transition-colors" href="#">Dashboard</a>
-<a class="text-cyan-700 dark:text-cyan-300 font-semibold border-b-2 border-cyan-700 dark:border-cyan-300 pb-1" href="#">Calendar</a>
-<a class="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-200 transition-colors" href="#">Patients</a>
-<a class="text-slate-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-200 transition-colors" href="#">Messages</a>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<button class="p-2 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-lg transition-all scale-95 duration-200 ease-in-out">
-<span class="material-symbols-outlined text-cyan-800 dark:text-cyan-400">notifications</span>
-</button>
-<div id="user-avatar-header" class="h-8 w-8 rounded-full bg-surface-container flex items-center justify-center text-xs font-bold" style="background:rgba(41,103,119,0.1);color:#296777;">AM</div>
-</div>
-</nav>
-<!-- Main Content (Calendar Context Background) -->
-<main class="min-h-screen p-8 lg:ml-0">
-<div class="max-w-7xl mx-auto opacity-40 select-none pointer-events-none">
-<header class="mb-10">
-<h1 class="text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-2">Vista de Calendario</h1>
-<p class="text-on-surface-variant font-body">Visualización semanal de consultas programadas.</p>
-</header>
-<div class="grid grid-cols-7 gap-4">
-<!-- Mock Calendar Grid Items -->
-<div class="h-64 bg-surface-container-low rounded-xl"></div>
-<div class="h-64 bg-surface-container-low rounded-xl"></div>
-<div class="h-64 bg-surface-container-low rounded-xl"></div>
-<div class="h-64 bg-surface-container-low rounded-xl"></div>
-<div class="h-64 bg-surface-container-low rounded-xl"></div>
-<div class="h-64 bg-surface-container-low rounded-xl"></div>
-<div class="h-64 bg-surface-container-low rounded-xl"></div>
-</div>
-</div>
-</main>
-<!-- Modal Overlay (New Session Form) -->
-<div class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 lg:p-8">
-<!-- Backdrop -->
-<div class="absolute inset-0 bg-on-surface/10 backdrop-blur-sm"></div>
-<!-- Form Container -->
-<div class="relative w-full max-w-2xl bg-surface-container-lowest rounded-3xl overflow-hidden shadow-[0_20px_40px_rgba(44,52,54,0.06)] border border-outline-variant/15 flex flex-col md:flex-row">
-<!-- Sidebar Image/Visual -->
-<div class="hidden md:block w-1/3 relative overflow-hidden">
-<img class="absolute inset-0 w-full h-full object-cover" data-alt="Close-up of a calm spa-like environment with smooth stones and a green leaf on a wooden surface with soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyc7xX6_CMGwL07E0EwAM3Km8R5UW9ky6zA-ALq-8hB6sk0GKpwIsd9RmWfmVS2tIJ1lWG2YqN87beTbW2hrKr_bQoJdNz-P-8c7-ixTbOITOiZEOZgManFkP3HhY2hgeiUsy9IdRjPqXH_BaNa0FW_AI4KLx1_G5lX4E6gB0sLnAPbn44PJvAqWyeLYkkVIA5zX8-DCWs5R8_h5GLF7Td3uYgvI3EBnpN9FGCGNdRvK5PwsMbqJr6NcxMT6N2g3FIT06zwqWe2g-3"/>
-<div class="absolute inset-0 bg-primary-dim/20"></div>
-<div class="absolute bottom-6 left-6 right-6">
-<p class="text-on-primary font-headline font-bold text-lg leading-tight">Cuidando cada encuentro.</p>
-</div>
-</div>
-<!-- Form Content -->
-<div class="flex-1 p-8 lg:p-10">
-<div class="flex justify-between items-start mb-8">
-<div>
-<h2 class="text-2xl font-headline font-extrabold text-on-surface tracking-tight">Nueva Cita</h2>
-<p class="text-on-surface-variant text-sm mt-1">Completa los detalles para agendar la sesión.</p>
-</div>
-<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
-<span class="material-symbols-outlined">close</span>
-</button>
-</div>
-<form class="space-y-6">
-<!-- Patient Selection -->
-<div class="space-y-2">
-<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Buscar Paciente</label>
-<div class="relative group">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
-<input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-transparent rounded-xl focus:ring-2 focus:ring-primary/40 focus:bg-surface-container-lowest transition-all text-sm" placeholder="Nombre o ID del paciente..." type="text"/>
-</div>
-</div>
-<!-- Date & Time Row -->
-<div class="grid grid-cols-2 gap-4">
-<div class="space-y-2">
-<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Fecha</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">calendar_today</span>
-<input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-transparent rounded-xl focus:ring-2 focus:ring-primary/40 text-sm" type="date" value="2023-11-24"/>
-</div>
-</div>
-<div class="space-y-2">
-<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Hora</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">schedule</span>
-<input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-transparent rounded-xl focus:ring-2 focus:ring-primary/40 text-sm" type="time" value="10:00"/>
-</div>
-</div>
-</div>
-<!-- Session Type Chips -->
-<div class="space-y-3">
-<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Tipo de Sesión</label>
-<div class="flex gap-3">
-<label class="flex-1 cursor-pointer group">
-<input checked="" class="hidden peer" name="session_type" type="radio"/>
-<div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-surface-container-low text-on-surface-variant border border-transparent peer-checked:bg-secondary-container peer-checked:text-on-secondary-container transition-all">
-<span class="material-symbols-outlined mb-1">person</span>
-<span class="text-xs font-semibold">Presencial</span>
-</div>
-</label>
-<label class="flex-1 cursor-pointer group">
-<input class="hidden peer" name="session_type" type="radio"/>
-<div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-surface-container-low text-on-surface-variant border border-transparent peer-checked:bg-secondary-container peer-checked:text-on-secondary-container transition-all">
-<span class="material-symbols-outlined mb-1">videocam</span>
-<span class="text-xs font-semibold">Telemedicina</span>
-</div>
-</label>
-</div>
-</div>
-<!-- Reason/Notes -->
-<div class="space-y-2">
-<label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant ml-1">Motivo de consulta</label>
-<textarea class="w-full p-4 bg-surface-container-low border-transparent rounded-xl focus:ring-2 focus:ring-primary/40 text-sm resize-none" placeholder="Breve descripción del objetivo de la sesión..." rows="3"></textarea>
-</div>
-<!-- Actions -->
-<div class="flex items-center gap-4 pt-4">
-<button class="flex-1 py-4 text-sm font-semibold text-on-surface-variant hover:bg-surface-container rounded-2xl transition-all" type="button">
-                            Cancelar
-                        </button>
-<button class="flex-[2] py-4 px-8 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-2xl font-headline font-bold text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform" type="submit">
-                            Agendar Sesión
-                        </button>
-</div>
-</form>
-</div>
-</div>
-</div>
-<!-- SideNavBar (Hidden/Collapsible Logic Implied) -->
-<aside class="h-screen w-64 hidden lg:flex flex-col fixed left-0 top-0 bg-slate-100 dark:bg-slate-900 p-4 space-y-2 font-manrope text-sm font-medium z-40">
-<div class="mb-8 pt-4 px-2">
-<span class="text-lg font-black text-cyan-900 dark:text-cyan-50">Dr. Serene</span>
-<p class="text-xs text-slate-500">Clinical Director</p>
-</div>
-<nav class="space-y-1">
-<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
-<span class="material-symbols-outlined text-lg">grid_view</span>
-                Overview
-            </a>
-<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-cyan-800 dark:text-cyan-200 rounded-xl shadow-sm hover:translate-x-1 transition-transform duration-200" href="#">
-<span class="material-symbols-outlined text-lg">event_available</span>
-                Schedule
-            </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
-<span class="material-symbols-outlined text-lg">forum</span>
-                Consultations
-            </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
-<span class="material-symbols-outlined text-lg">folder_shared</span>
-                Patient Records
-            </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
-<span class="material-symbols-outlined text-lg">insights</span>
-                Analytics
-            </a>
-</nav>
-<div class="mt-auto space-y-1 pt-4 border-t border-slate-200/50">
-<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
-<span class="material-symbols-outlined text-lg">help_outline</span>
-                Support
-            </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
-<span class="material-symbols-outlined text-lg">logout</span>
-                Sign Out
-            </a>
-</div>
-</aside>
-<!-- BottomNavBar (Mobile Only) -->
-<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg lg:hidden shadow-[0_-4px_20px_rgba(0,0,0,0.05)] rounded-t-3xl">
-<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 scale-90 transition-all">
-<span class="material-symbols-outlined">home</span>
-<span class="text-[10px] font-manrope font-bold uppercase tracking-widest mt-1">Home</span>
-</div>
-<div class="flex flex-col items-center justify-center bg-cyan-100 dark:bg-cyan-900/30 text-cyan-800 dark:text-cyan-100 rounded-2xl px-5 py-2 scale-90 transition-all">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
-<span class="text-[10px] font-manrope font-bold uppercase tracking-widest mt-1">Calendar</span>
-</div>
-<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 scale-90 transition-all">
-<span class="material-symbols-outlined">chat_bubble</span>
-<span class="text-[10px] font-manrope font-bold uppercase tracking-widest mt-1">Chat</span>
-</div>
-<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 scale-90 transition-all">
-<span class="material-symbols-outlined">person</span>
-<span class="text-[10px] font-manrope font-bold uppercase tracking-widest mt-1">Profile</span>
-</div>
-</nav>
+<body class="min-h-screen flex items-center justify-center p-6">
 
-  <div id="error-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-error text-on-error px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
-  <div id="success-msg" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-tertiary text-on-tertiary px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50"></div>
+  <div class="fixed top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none" style="background:radial-gradient(circle,rgba(139,92,246,0.25) 0%,transparent 70%);"></div>
+  <div class="fixed bottom-0 left-0 w-80 h-80 rounded-full opacity-15 pointer-events-none" style="background:radial-gradient(circle,rgba(109,40,217,0.2) 0%,transparent 70%);"></div>
+
+  <div class="w-full max-w-lg relative z-10">
+
+    <div class="rounded-3xl p-8 backdrop-blur-sm" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+
+      <div class="flex items-start justify-between mb-7">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl flex items-center justify-center" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);">
+            <span class="material-symbols-outlined" style="color:#a78bfa;font-variation-settings:'FILL' 1;">event</span>
+          </div>
+          <div>
+            <h2 class="text-xl font-extrabold text-white">Nueva cita</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Agenda una sesión con tu paciente</p>
+          </div>
+        </div>
+        <a href="agenda_psicologo.html" class="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors" style="text-decoration:none;">
+          <span class="material-symbols-outlined text-slate-400 text-lg">close</span>
+        </a>
+      </div>
+
+      <form id="form-cita" class="space-y-4" novalidate>
+
+        <div>
+          <label class="lbl">Paciente <span style="color:#f87171;">*</span></label>
+          <select id="np-paciente" class="field"><option value="">Cargando…</option></select>
+        </div>
+
+        <div>
+          <label class="lbl">Psicólogo <span style="color:#f87171;">*</span></label>
+          <select id="np-psicologo" class="field"><option value="">Cargando…</option></select>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="lbl">Fecha <span style="color:#f87171;">*</span></label>
+            <input id="np-fecha" type="date" class="field"/>
+          </div>
+          <div>
+            <label class="lbl">Inicio <span style="color:#f87171;">*</span></label>
+            <input id="np-hora-inicio" type="time" class="field" value="10:00"/>
+          </div>
+          <div>
+            <label class="lbl">Fin</label>
+            <input id="np-hora-fin" type="time" class="field" value="10:50"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="lbl">Tipo de sesión</label>
+          <select id="np-tipo" name="tipo" class="field">
+            <option value="presencial">Presencial</option>
+            <option value="online">Telemedicina (online)</option>
+          </select>
+        </div>
+
+        <div id="error-msg" class="hidden py-3 px-4 rounded-xl text-sm font-medium" style="background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.2);"></div>
+        <div id="success-msg" class="hidden py-3 px-4 rounded-xl text-sm font-medium" style="background:rgba(52,211,153,0.12);color:#6ee7b7;border:1px solid rgba(52,211,153,0.25);"></div>
+
+        <div class="flex gap-3 pt-2">
+          <a href="agenda_psicologo.html" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-center text-slate-400 hover:bg-white/5 transition-all" style="border:1px solid rgba(255,255,255,0.08);text-decoration:none;">Cancelar</a>
+          <button type="submit" id="btn-guardar" class="flex-[2] py-3.5 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);box-shadow:0 4px 20px rgba(124,58,237,0.35);">
+            <span class="material-symbols-outlined text-base">check_circle</span>
+            Agendar cita
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
   <script type="module">
     import { guardaClinica, crearCita, obtenerPacientes, obtenerStaff } from '../js/clinica.js'
-    import { mostrarError, setBotonCargando } from '../js/auth.js'
 
-    await guardaClinica()
-
-    // Poblar selects de paciente y psicólogo
-    const [pacientes, staff] = await Promise.all([obtenerPacientes(), obtenerStaff()])
-
-    const selPaciente  = document.querySelector('select[name="paciente"], #paciente, select')
-    const selPsicologo = document.querySelectorAll('select')[1]
-
-    if (selPaciente) {
-      selPaciente.innerHTML = '<option value="">— Seleccionar paciente —</option>' +
-        pacientes.map(p => `<option value="${p.id}">${p.apellido}, ${p.nombre}</option>`).join('')
-    }
-    if (selPsicologo) {
-      const psicologos = staff.filter(s => s.rol === 'psicologo')
-      selPsicologo.innerHTML = '<option value="">— Seleccionar psicólogo —</option>' +
-        psicologos.map(p => `<option value="${p.id}">${p.nombre} ${p.apellido}</option>`).join('')
+    function mostrar(id, msg) {
+      const el = document.getElementById(id)
+      el.textContent = msg; el.classList.remove('hidden')
+      document.getElementById(id === 'error-msg' ? 'success-msg' : 'error-msg').classList.add('hidden')
     }
 
-    // Submit
-    const form = document.querySelector('form')
-    const btn  = form?.querySelector('button[type="submit"]') || document.querySelector('button.primary-gradient, button[class*="primary"]')
+    ;(async () => {
+      await guardaClinica()
 
-    if (form && btn) {
-      form.addEventListener('submit', async e => {
+      const selPac = document.getElementById('np-paciente')
+      const selPsi = document.getElementById('np-psicologo')
+
+      // Poblar pacientes y psicólogos de la clínica
+      const [pacientes, staff] = await Promise.all([obtenerPacientes(), obtenerStaff()])
+
+      selPac.innerHTML = '<option value="">— Selecciona un paciente —</option>' +
+        (pacientes || []).map(p => `<option value="${p.id}">${(p.apellido||'')}, ${(p.nombre||'')}</option>`).join('')
+
+      const psicologos = (staff || []).filter(s => s.rol === 'psicologo')
+      const miId = localStorage.getItem('tp_user_id')
+      selPsi.innerHTML = '<option value="">— Selecciona un psicólogo —</option>' +
+        psicologos.map(p => `<option value="${p.id}" ${p.id === miId ? 'selected' : ''}>${(p.nombre||'')} ${(p.apellido||'')}</option>`).join('')
+
+      // Fecha por defecto: hoy
+      document.getElementById('np-fecha').value = new Date().toISOString().split('T')[0]
+
+      document.getElementById('form-cita').addEventListener('submit', async (e) => {
         e.preventDefault()
-        const fd = new FormData(form)
         const datos = {
-          paciente_id:  selPaciente?.value,
-          psicologo_id: selPsicologo?.value,
-          fecha:        form.querySelector('input[type="date"]')?.value,
-          hora_inicio:  form.querySelectorAll('input[type="time"]')[0]?.value,
-          hora_fin:     form.querySelectorAll('input[type="time"]')[1]?.value,
-          tipo:         form.querySelector('select[name="tipo"]')?.value || 'presencial',
+          paciente_id:  selPac.value,
+          psicologo_id: selPsi.value,
+          fecha:        document.getElementById('np-fecha').value,
+          hora_inicio:  document.getElementById('np-hora-inicio').value,
+          tipo:         document.getElementById('np-tipo').value,
+          estado:       'programada',
         }
-        if (!datos.paciente_id || !datos.fecha || !datos.hora_inicio) {
-          mostrarError('Completá los campos obligatorios.'); return
+        const fin = document.getElementById('np-hora-fin').value
+        if (fin) datos.hora_fin = fin
+
+        if (!datos.paciente_id || !datos.psicologo_id || !datos.fecha || !datos.hora_inicio) {
+          mostrar('error-msg', 'Completa paciente, psicólogo, fecha y hora.'); return
         }
-        setBotonCargando(btn, true)
+
+        const btn = document.getElementById('btn-guardar')
+        btn.disabled = true; btn.style.opacity = '0.6'
         try {
           await crearCita(datos)
-          const ok = document.getElementById('success-msg')
-          ok.textContent = 'Cita creada correctamente.'
-          ok.classList.remove('hidden')
-          setTimeout(() => location.href = 'gestion_citas.html', 1200)
-        } catch(e) { mostrarError(e.message) }
-        finally { setBotonCargando(btn, false) }
+          mostrar('success-msg', 'Cita creada correctamente. Volviendo a la agenda…')
+          setTimeout(() => { location.href = 'agenda_psicologo.html' }, 1200)
+        } catch (err) {
+          mostrar('error-msg', err.message || 'No se pudo crear la cita.')
+          btn.disabled = false; btn.style.opacity = '1'
+        }
       })
-    }
-
-    // Botón cancelar
-    document.querySelectorAll('button').forEach(b => {
-      if (b.textContent.toLowerCase().includes('cancelar') || b.textContent.toLowerCase().includes('volver'))
-        b.addEventListener('click', () => location.href = 'gestion_citas.html')
-    })
+    })()
   </script>
-<script>
-(function(){
-  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
-  var av = document.getElementById('user-avatar-header');
-  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
-})();
-</script></body></html>
+</body>
+</html>
