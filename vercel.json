@@ -33,7 +33,8 @@
     }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
+    { "source": "/", "destination": "/landing.html" },
+    { "source": "/acceso", "destination": "/index.html" },
     { "source": "/screens/:path*", "destination": "/screens/:path*" }
   ]
 }

@@ -172,9 +172,9 @@
             <span class="material-symbols-outlined" style="font-size:18px;">chevron_right</span>
           </button>
           <div class="flex rounded-xl overflow-hidden" style="border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);">
-            <button onclick="mostrarToast('Vista diaria — próximamente')" class="px-3 py-1.5 text-xs font-semibold hover:bg-white/5 transition-colors" style="color:#64748b;border:none;background:none;cursor:pointer;">Día</button>
-            <button class="px-3 py-1.5 text-xs font-bold" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:none;cursor:pointer;">Semana</button>
-            <button onclick="mostrarToast('Vista mensual — próximamente')" class="px-3 py-1.5 text-xs font-semibold hover:bg-white/5 transition-colors" style="color:#64748b;border:none;background:none;cursor:pointer;">Mes</button>
+            <button id="btn-vista-dia" onclick="setVista('dia')" class="px-3 py-1.5 text-xs font-semibold transition-colors" style="color:#64748b;border:none;background:none;cursor:pointer;">Día</button>
+            <button id="btn-vista-semana" onclick="setVista('semana')" class="px-3 py-1.5 text-xs font-bold transition-colors" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:none;cursor:pointer;">Semana</button>
+            <button id="btn-vista-mes" onclick="setVista('mes')" class="px-3 py-1.5 text-xs font-semibold transition-colors" style="color:#64748b;border:none;background:none;cursor:pointer;">Mes</button>
           </div>
         </div>
       </div>
@@ -225,7 +225,7 @@
         </div>
 
         <!-- Scrollable grid body -->
-        <div class="hide-scrollbar" style="flex:1;overflow-y:auto;">
+        <div id="grid-horas" class="hide-scrollbar" style="flex:1;overflow-y:auto;">
           <div style="display:grid;grid-template-columns:72px 1fr;">
             <!-- Hour labels -->
             <div style="display:flex;flex-direction:column;">
@@ -413,6 +413,8 @@
             </div>
           </div>
         </div>
+        <!-- Vista MES (oculta hasta seleccionarla) -->
+        <div id="cal-mes" class="hide-scrollbar" style="display:none;flex:1;overflow-y:auto;padding:14px;"></div>
       </div>
     </div>
 
@@ -700,68 +702,88 @@ if (!session) { window.location.href = '../login.html'; }
 const hoy = new Date().toISOString().split('T')[0];
 const COLORS = ['#a78bfa','#2dd4bf','#fbbf24','#60a5fa','#f472b6','#34d399'];
 
-// ─── Calendario semanal con citas REALES ───
+// ─── Calendario: vistas Día / Semana / Mes con citas REALES ───
 const DIAS_CAL = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+const DIAS_FULL = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const MESES_CAL = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 function lunesDe(d){ const x=new Date(d); const off=(x.getDay()+6)%7; x.setDate(x.getDate()-off); x.setHours(0,0,0,0); return x; }
 function isoDe(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-let semanaIni = lunesDe(new Date());
-
-async function renderSemana(){
-  const finSem = new Date(semanaIni); finSem.setDate(finSem.getDate()+6);
-  const hoyISO = isoDe(new Date());
-  const t = document.getElementById('cal-titulo');
-  if (t) t.textContent = semanaIni.getDate()+' — '+finSem.getDate()+' de '+MESES_CAL[finSem.getMonth()]+', '+finSem.getFullYear();
-  const hdr = document.getElementById('cal-headers');
-  if (hdr){
-    let h='<div style="height:44px;"></div>';
-    for(let i=0;i<7;i++){
-      const d=new Date(semanaIni); d.setDate(d.getDate()+i);
-      const esHoy=isoDe(d)===hoyISO;
-      h+='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:44px;'+(esHoy?'background:rgba(139,92,246,0.06);':'')+'">'
-       +'<span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:'+(esHoy?'#a78bfa':'#475569')+';">'+DIAS_CAL[i]+'</span>'
-       +(esHoy ? '<div style="width:24px;height:24px;border-radius:50%;background:rgba(139,92,246,0.7);display:flex;align-items:center;justify-content:center;"><span style="font-size:12px;font-weight:800;color:#fff;">'+d.getDate()+'</span></div>'
-               : '<span style="font-size:13px;font-weight:700;color:#94a3b8;">'+d.getDate()+'</span>')
-       +'</div>';
-    }
-    hdr.innerHTML=h;
-  }
-  const grid=document.getElementById('cal-grid');
-  if (!grid) return;
-  grid.querySelectorAll('.appt-block').forEach(function(e){ e.remove(); });
-  const res = await supabase.from('citas')
-    .select('*, pacientes(nombre, apellido)')
-    .eq('psicologo_id', session.user.id)
-    .gte('fecha', isoDe(semanaIni)).lte('fecha', isoDe(finSem))
-    .neq('estado','cancelada')
-    .order('fecha').order('hora_inicio');
-  (res.data||[]).forEach(function(c){
-    const d=new Date(c.fecha+'T00:00:00');
-    const col=(d.getDay()+6)%7;
-    const hi=(c.hora_inicio||'00:00').split(':').map(Number);
-    const top=((hi[0]+(hi[1]||0)/60)-8)*80;
-    let durH=1;
-    if(c.hora_fin){ const hf=c.hora_fin.split(':').map(Number); durH=Math.max(0.5,(hf[0]+(hf[1]||0)/60)-(hi[0]+(hi[1]||0)/60)); }
-    const online=(c.tipo==='online'||c.tipo==='telemedicina');
-    const ac=online?'#a78bfa':'#2dd4bf';
-    const bg=online?'rgba(139,92,246,0.15)':'rgba(20,184,166,0.12)';
-    const nombre=((c.pacientes&&c.pacientes.nombre||'')+' '+(c.pacientes&&c.pacientes.apellido||'')).trim()||'Paciente';
-    const el=document.createElement('div');
-    el.className='appt-block';
-    el.style.cssText='top:'+top+'px;left:'+(col*14.2857)+'%;width:14.28%;height:'+(durH*80)+'px;';
-    el.onclick=function(){ if(online) location.href='telemedicina_psicologo.html'; else if(typeof mostrarToast==='function') mostrarToast(nombre+' · '+(c.hora_inicio||'').slice(0,5)); };
-    el.innerHTML='<div class="appt-inner" style="background:'+bg+';border-left:3px solid '+ac+';">'
-      +'<div><p style="font-size:9px;font-weight:700;color:'+ac+';opacity:0.8;text-transform:uppercase;margin-bottom:2px;">'+(c.hora_inicio||'').slice(0,5)+'</p>'
-      +'<p style="font-family:Manrope,sans-serif;font-size:11px;font-weight:700;color:#e2e8f0;line-height:1.3;">'+nombre+'</p></div>'
-      +'<div style="display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:11px;color:'+ac+';font-variation-settings:\'FILL\' 1;">'+(online?'videocam':'person')+'</span><span style="font-size:9px;font-weight:600;color:'+ac+';">'+(online?'Online':'Presencial')+'</span></div>'
-      +'</div>';
-    grid.appendChild(el);
-  });
+let vistaActual='semana';
+let vistaRef=new Date();
+function esOnline(c){ return (c.tipo==='online'||c.tipo==='telemedicina'); }
+async function cargarCitas(desde, hasta){
+  const r = await supabase.from('citas').select('*, pacientes(nombre, apellido)')
+    .eq('psicologo_id', session.user.id).gte('fecha', isoDe(desde)).lte('fecha', isoDe(hasta))
+    .neq('estado','cancelada').order('fecha').order('hora_inicio');
+  return r.data||[];
 }
-window.semanaPrev=function(){ semanaIni.setDate(semanaIni.getDate()-7); renderSemana(); };
-window.semanaNext=function(){ semanaIni.setDate(semanaIni.getDate()+7); renderSemana(); };
-window.semanaHoy =function(){ semanaIni=lunesDe(new Date()); renderSemana(); };
-renderSemana();
+function addApptBlock(grid, c, leftPct, widthPct){
+  const hi=(c.hora_inicio||'00:00').split(':').map(Number);
+  const top=((hi[0]+(hi[1]||0)/60)-8)*80;
+  let durH=1; if(c.hora_fin){ const hf=c.hora_fin.split(':').map(Number); durH=Math.max(0.5,(hf[0]+(hf[1]||0)/60)-(hi[0]+(hi[1]||0)/60)); }
+  const on=esOnline(c), ac=on?'#a78bfa':'#2dd4bf', bg=on?'rgba(139,92,246,0.15)':'rgba(20,184,166,0.12)';
+  const nom=((c.pacientes&&c.pacientes.nombre||'')+' '+(c.pacientes&&c.pacientes.apellido||'')).trim()||'Paciente';
+  const el=document.createElement('div'); el.className='appt-block';
+  el.style.cssText='top:'+top+'px;left:'+leftPct+'%;width:'+widthPct+'%;height:'+(durH*80)+'px;';
+  el.onclick=function(){ if(on) location.href='telemedicina_psicologo.html'; else if(typeof mostrarToast==='function') mostrarToast(nom+' · '+(c.hora_inicio||'').slice(0,5)); };
+  el.innerHTML='<div class="appt-inner" style="background:'+bg+';border-left:3px solid '+ac+';"><div><p style="font-size:9px;font-weight:700;color:'+ac+';opacity:0.8;text-transform:uppercase;margin-bottom:2px;">'+(c.hora_inicio||'').slice(0,5)+'</p><p style="font-family:Manrope,sans-serif;font-size:11px;font-weight:700;color:#e2e8f0;line-height:1.3;">'+nom+'</p></div><div style="display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:11px;color:'+ac+';font-variation-settings:&#39;FILL&#39; 1;">'+(on?'videocam':'person')+'</span><span style="font-size:9px;font-weight:600;color:'+ac+';">'+(on?'Online':'Presencial')+'</span></div></div>';
+  grid.appendChild(el);
+}
+async function renderSemana(){
+  const ini=lunesDe(vistaRef), fin=new Date(ini); fin.setDate(fin.getDate()+6);
+  const hoyISO=isoDe(new Date());
+  document.getElementById('cal-titulo').textContent=ini.getDate()+' — '+fin.getDate()+' de '+MESES_CAL[fin.getMonth()]+', '+fin.getFullYear();
+  let h='<div style="height:44px;"></div>';
+  for(let i=0;i<7;i++){ const d=new Date(ini); d.setDate(d.getDate()+i); const eh=isoDe(d)===hoyISO;
+    h+='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:44px;'+(eh?'background:rgba(139,92,246,0.06);':'')+'"><span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:'+(eh?'#a78bfa':'#475569')+';">'+DIAS_CAL[i]+'</span>'+(eh?'<div style="width:24px;height:24px;border-radius:50%;background:rgba(139,92,246,0.7);display:flex;align-items:center;justify-content:center;"><span style="font-size:12px;font-weight:800;color:#fff;">'+d.getDate()+'</span></div>':'<span style="font-size:13px;font-weight:700;color:#94a3b8;">'+d.getDate()+'</span>')+'</div>';
+  }
+  document.getElementById('cal-headers').innerHTML=h;
+  const grid=document.getElementById('cal-grid'); grid.querySelectorAll('.appt-block').forEach(function(e){e.remove();});
+  (await cargarCitas(ini, fin)).forEach(function(c){ const d=new Date(c.fecha+'T00:00:00'); addApptBlock(grid, c, ((d.getDay()+6)%7)*14.2857, 14.28); });
+}
+async function renderDia(){
+  const cont=document.getElementById('cal-mes');
+  document.getElementById('cal-titulo').textContent=DIAS_FULL[vistaRef.getDay()]+' '+vistaRef.getDate()+' de '+MESES_CAL[vistaRef.getMonth()];
+  const cs=await cargarCitas(vistaRef, vistaRef);
+  if(!cs.length){ cont.innerHTML='<div style="text-align:center;padding:48px 0;color:#475569;"><span class="material-symbols-outlined" style="font-size:34px;">event_busy</span><p style="margin-top:8px;font-size:13px;">Sin citas este día</p></div>'; return; }
+  cont.innerHTML=cs.map(function(c){ const on=esOnline(c), ac=on?'#a78bfa':'#2dd4bf', bg=on?'rgba(139,92,246,0.1)':'rgba(20,184,166,0.08)';
+    const nom=((c.pacientes&&c.pacientes.nombre||'')+' '+(c.pacientes&&c.pacientes.apellido||'')).trim()||'Paciente';
+    return '<div style="display:flex;align-items:center;gap:14px;padding:14px 16px;margin-bottom:8px;border-radius:14px;background:'+bg+';border:1px solid '+ac+'33;">'+'<div style="text-align:center;min-width:54px;"><p style="font-family:Manrope,sans-serif;font-size:15px;font-weight:800;color:'+ac+';margin:0;">'+(c.hora_inicio||'').slice(0,5)+'</p>'+(c.hora_fin?'<p style="font-size:10px;color:#64748b;margin:0;">'+c.hora_fin.slice(0,5)+'</p>':'')+'</div><div style="flex:1;"><p style="font-family:Manrope,sans-serif;font-size:14px;font-weight:700;color:#e2e8f0;margin:0;">'+nom+'</p><p style="font-size:11px;color:#64748b;margin:2px 0 0;">'+(on?'Telemedicina':'Presencial')+'</p></div><span class="material-symbols-outlined" style="color:'+ac+';font-size:18px;font-variation-settings:&#39;FILL&#39; 1;">'+(on?'videocam':'person')+'</span></div>';
+  }).join('');
+}
+async function renderMes(){
+  const cont=document.getElementById('cal-mes'); const y=vistaRef.getFullYear(), m=vistaRef.getMonth();
+  document.getElementById('cal-titulo').textContent=MESES_CAL[m].charAt(0).toUpperCase()+MESES_CAL[m].slice(1)+' '+y;
+  const offset=(new Date(y,m,1).getDay()+6)%7, diasMes=new Date(y,m+1,0).getDate();
+  const cs=await cargarCitas(new Date(y,m,1), new Date(y,m,diasMes)); const porDia={};
+  cs.forEach(function(c){ const dd=parseInt(c.fecha.split('-')[2],10); (porDia[dd]=porDia[dd]||[]).push(c); });
+  const hoyISO=isoDe(new Date());
+  let html='<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px;">';
+  DIAS_CAL.forEach(function(dn){ html+='<div style="text-align:center;font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;">'+dn+'</div>'; });
+  html+='</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;">';
+  for(let i=0;i<offset;i++) html+='<div></div>';
+  for(let dd=1;dd<=diasMes;dd++){ const eh=isoDe(new Date(y,m,dd))===hoyISO, t=porDia[dd];
+    html+='<div onclick="irADia('+y+','+m+','+dd+')" style="min-height:64px;border-radius:12px;padding:6px;cursor:pointer;display:flex;flex-direction:column;background:'+(eh?'rgba(139,92,246,0.12)':'rgba(255,255,255,0.02)')+';border:1px solid '+(eh?'rgba(139,92,246,0.3)':'rgba(255,255,255,0.05)')+';"><span style="font-size:12px;font-weight:700;color:'+(eh?'#a78bfa':'#94a3b8')+';">'+dd+'</span>';
+    if(t){ html+='<div style="margin-top:auto;display:flex;flex-direction:column;gap:2px;">';
+      t.slice(0,2).forEach(function(c){ const on=esOnline(c); html+='<div style="font-size:8px;font-weight:600;color:'+(on?'#a78bfa':'#2dd4bf')+';background:'+(on?'rgba(139,92,246,0.15)':'rgba(20,184,166,0.12)')+';border-radius:4px;padding:1px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(c.hora_inicio||'').slice(0,5)+'</div>'; });
+      if(t.length>2) html+='<span style="font-size:8px;color:#64748b;">+'+(t.length-2)+' más</span>'; html+='</div>'; }
+    html+='</div>';
+  }
+  html+='</div>'; cont.innerHTML=html;
+}
+window.irADia=function(y,m,d){ vistaRef=new Date(y,m,d); window.setVista('dia'); };
+function pintarBotonesVista(){ [['dia','btn-vista-dia'],['semana','btn-vista-semana'],['mes','btn-vista-mes']].forEach(function(p){ const b=document.getElementById(p[1]); if(!b) return; if(p[0]===vistaActual){ b.style.background='rgba(139,92,246,0.15)'; b.style.color='#a78bfa'; b.style.fontWeight='700'; } else { b.style.background='none'; b.style.color='#64748b'; b.style.fontWeight='600'; } }); }
+async function renderVista(){
+  pintarBotonesVista();
+  const horas=document.getElementById('grid-horas'), hdr=document.getElementById('cal-headers'), mes=document.getElementById('cal-mes');
+  if(vistaActual==='semana'){ horas.style.display=''; hdr.style.display='grid'; mes.style.display='none'; await renderSemana(); }
+  else { horas.style.display='none'; hdr.style.display='none'; mes.style.display='block'; if(vistaActual==='dia') await renderDia(); else await renderMes(); }
+}
+window.setVista=function(v){ vistaActual=v; renderVista(); };
+window.semanaPrev=function(){ if(vistaActual==='dia') vistaRef.setDate(vistaRef.getDate()-1); else if(vistaActual==='semana') vistaRef.setDate(vistaRef.getDate()-7); else vistaRef=new Date(vistaRef.getFullYear(),vistaRef.getMonth()-1,1); renderVista(); };
+window.semanaNext=function(){ if(vistaActual==='dia') vistaRef.setDate(vistaRef.getDate()+1); else if(vistaActual==='semana') vistaRef.setDate(vistaRef.getDate()+7); else vistaRef=new Date(vistaRef.getFullYear(),vistaRef.getMonth()+1,1); renderVista(); };
+window.semanaHoy=function(){ vistaRef=new Date(); renderVista(); };
+renderVista();
 
 const { data: citas } = await supabase
   .from('citas')
