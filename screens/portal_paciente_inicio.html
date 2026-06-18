@@ -1381,9 +1381,16 @@ try {
   let citasP = []
   if (pacRow) {
     const r = await supabase.from('citas')
-      .select('fecha, hora_inicio, tipo, estado, psicologo:psicologo_id(nombre,apellido)')
+      .select('fecha, hora_inicio, tipo, estado, psicologo_id')
       .eq('paciente_id', pacRow.id).neq('estado','cancelada').order('fecha')
     citasP = r.data || []
+  }
+  // Resolver el nombre del psicólogo aparte (no hay FK citas→psicologos para embeber)
+  const psMap = {}
+  const psIds = Array.from(new Set(citasP.map(function(c){ return c.psicologo_id }).filter(Boolean)))
+  if (psIds.length) {
+    const { data: psicos } = await supabase.from('psicologos').select('id, nombre').in('id', psIds)
+    ;(psicos || []).forEach(function(p){ psMap[p.id] = p.nombre })
   }
   window.SESIONES = citasP.map(function(c){
     const p = (c.fecha||'').split('-')
@@ -1393,7 +1400,7 @@ try {
       hora: (c.hora_inicio||'').slice(0,5),
       tipo: c.tipo ? (c.tipo.charAt(0).toUpperCase()+c.tipo.slice(1)) : 'Sesión',
       mod: online ? 'Online' : 'Presencial',
-      ps: c.psicologo ? (c.psicologo.nombre+' '+c.psicologo.apellido) : 'Tu psicólogo'
+      ps: psMap[c.psicologo_id] || 'Tu psicólogo'
     }
   })
   if (typeof window.renderCal === 'function') window.renderCal()
