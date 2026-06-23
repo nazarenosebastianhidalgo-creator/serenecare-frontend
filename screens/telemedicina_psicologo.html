@@ -494,7 +494,7 @@ const params = new URLSearchParams(location.search)
 let citaId = params.get('cita_id')
 let cita = null
 const hoy = new Date().toISOString().split('T')[0]
-const SELECT = 'id, fecha, hora_inicio, tipo, sala_video_url, clinica_id, pacientes(nombre, apellido), notas_soap(id, subjetivo)'
+const SELECT = 'id, fecha, hora_inicio, tipo, sala_video_url, clinica_id, paciente:paciente_id(nombre, apellido)'
 
 if (citaId) {
   const { data } = await supabase.from('citas').select(SELECT).eq('id', citaId).maybeSingle()

@@ -305,13 +305,13 @@ try {
 
   if (citaId) {
     const { data } = await supabase.from('citas')
-      .select('id, fecha, hora_inicio, sala_video_url, tipo, usuarios(nombre, apellido)')
+      .select('id, fecha, hora_inicio, sala_video_url, tipo, psicologo:psicologo_id(nombre, apellido)')
       .eq('id', citaId).maybeSingle()
     cita = data
   } else if (pac) {
     const hoy = new Date().toISOString().split('T')[0]
     const { data } = await supabase.from('citas')
-      .select('id, fecha, hora_inicio, sala_video_url, tipo, usuarios(nombre, apellido)')
+      .select('id, fecha, hora_inicio, sala_video_url, tipo, psicologo:psicologo_id(nombre, apellido)')
       .eq('paciente_id', pac.id)
       .in('tipo', ['online', 'telemedicina', 'videollamada'])
       .gte('fecha', hoy)
@@ -326,7 +326,7 @@ try {
     setEstado('No tenés una sesión de video activa', 'Cuando tengas una sesión online programada, podrás unirte desde acá.', 'event_busy')
   } else {
     const dn = document.getElementById('doctor-nombre')
-    if (dn && cita.usuarios) dn.textContent = 'Dr/a. ' + (cita.usuarios.nombre || '') + ' ' + (cita.usuarios.apellido || '')
+    if (dn && cita.psicologo) dn.textContent = 'Dr/a. ' + (cita.psicologo.nombre || '') + ' ' + (cita.psicologo.apellido || '')
 
     if (cita.sala_video_url) {
       montarSala(cita.sala_video_url)

@@ -534,16 +534,13 @@ function cerrarDictado() {
 async function procesarDictadoConIA() {
   var texto = document.getElementById('dictation-text').value.trim();
   if (!texto) { mostrarToast('No hay texto dictado para procesar.'); return; }
-  var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o';
   var btn = document.getElementById('btn-procesar-dictado');
   btn.disabled = true;
   btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;animation:spin 1s linear infinite;">progress_activity</span> Procesando...';
 
   try {
-    var { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
-    var _sb = createClient('https://wnuwuxenzwfqmhxagryk.supabase.co', ANON_KEY);
-    var { data: { session: _sess } } = await _sb.auth.getSession();
-    var _authHeaders = { 'Content-Type': 'application/json', 'apikey': ANON_KEY };
+    var { data: { session: _sess } } = await supabase.auth.getSession();
+    var _authHeaders = { 'Content-Type': 'application/json' };
     if (_sess?.access_token) _authHeaders['Authorization'] = 'Bearer ' + _sess.access_token;
     var res = await fetch('https://wnuwuxenzwfqmhxagryk.supabase.co/functions/v1/openai-proxy', {
       method: 'POST',

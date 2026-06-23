@@ -221,17 +221,13 @@
 </div>
 
 <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { supabase } from '../js/supabase-client.js';
 
-const SUPABASE_URL  = 'https://wnuwuxenzwfqmhxagryk.supabase.co';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o';
 const LS_STORE      = 'https://serenecare.lemonsqueezy.com/checkout/buy/';
-
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── Cargar plazas disponibles ─────────────────────────────────
 async function cargarPlazas() {
-  const { data } = await sb
+  const { data } = await supabase
     .from('codigos_invitacion')
     .select('id, usado')
     .eq('batch', 1);
@@ -298,7 +294,7 @@ window.registrar = async function(e) {
   btn.innerHTML = '<span class="material-symbols-outlined text-base spin">progress_activity</span> Validando código...';
 
   // 1. Validar código de invitación
-  const { data: codigoData, error: codigoErr } = await sb
+  const { data: codigoData, error: codigoErr } = await supabase
     .from('codigos_invitacion')
     .select('id, variant_id, precio, batch, usado')
     .eq('codigo', codigo)
@@ -342,7 +338,7 @@ window.registrar = async function(e) {
   }));
 
   // 3. Marcar código como en uso (optimistic — el webhook confirma)
-  await sb.from('codigos_invitacion')
+  await supabase.from('codigos_invitacion')
     .update({ usado: true, usado_por: email, usado_at: new Date().toISOString() })
     .eq('id', codigoData.id);
 

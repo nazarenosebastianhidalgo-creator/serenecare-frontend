@@ -573,7 +573,7 @@ if (!_perfil) return
 const { data: { session } } = await supabase.auth.getSession()
 if (!session) { window.location.href = 'acceso_psicologo.html' }
 
-const { data: usu } = await supabase.from('usuarios').select('nombre, apellido, email, google_refresh_token').eq('id', session.user.id).single()
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido, email').eq('id', session.user.id).single()
 if (usu) {
   const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = usu.nombre + ' ' + (usu.apellido || '')
   const elNP = document.getElementById('nombre-psicologo'); if (elNP) elNP.textContent = usu.nombre + ' ' + (usu.apellido || '')
@@ -630,7 +630,18 @@ window.conectarStripe = async function () {
 })()
 
 // ── Google Calendar status ─────────────────────────────────────
-const gcalConnected  = !!usu?.google_refresh_token
+// google_refresh_token no se trae al frontend por seguridad.
+// El estado de conexión se obtiene desde el backend de integraciones.
+let gcalConnected = false
+try {
+  const gcalCheck = await fetch('https://serenecare-backend-production.up.railway.app/api/integrations/google/status', {
+    headers: { Authorization: 'Bearer ' + session.access_token }
+  })
+  if (gcalCheck.ok) {
+    const gcalData = await gcalCheck.json()
+    gcalConnected = !!gcalData.connected
+  }
+} catch(e) { console.warn('GCal status check:', e.message) }
 const gcalBadge      = document.getElementById('gcal-badge')
 const gcalConnDiv    = document.getElementById('gcal-connected')
 const gcalDiscDiv    = document.getElementById('gcal-disconnected')
