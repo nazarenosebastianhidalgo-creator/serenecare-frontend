@@ -1505,5 +1505,66 @@ try {
 } catch(e) { console.error('Portal datos:', e.message) }
 
 })();</script>
-</body>
-</html>
+
+<script>
+// Cargar recursos compartidos reales desde la API
+(async function() {
+  var session = null;
+  try {
+    var supabase = window.supabase || null;
+    if (supabase) {
+      var { data: { session: s } } = await supabase.auth.getSession();
+      session = s;
+    }
+  } catch(e) { /* supabase no disponible */ }
+
+  if (!session) {
+    // Modo demo - mostrar los recursos estáticos
+    return;
+  }
+
+  try {
+    var resp = await fetch('/api/recursos/mis-recursos', {
+      headers: { 'Authorization': 'Bearer ' + session.access_token }
+    });
+    if (!resp.ok) throw new Error('Error ' + resp.status);
+    var recursos = await resp.json();
+
+    var contenedor = document.querySelector('.space-y-3');
+    if (!contenedor || recursos.length === 0) return;
+
+    // Reemplazar contenido con datos reales
+    contenedor.innerHTML = recursos.map(function(r) {
+      var icono, color, bg, accion;
+      if (r.tipo === 'pdf') {
+        icono = 'description'; color = '#34d399'; bg = 'rgba(52,211,153,0.15)';
+        accion = '<span class="material-symbols-outlined text-slate-600 text-base">download</span>';
+      } else if (r.tipo === 'audio') {
+        icono = 'audio_file'; color = '#34d399'; bg = 'rgba(52,211,153,0.15)';
+        accion = '<span class="material-symbols-outlined text-slate-600 text-base">play_circle</span>';
+      } else {
+        icono = 'menu_book'; color = '#818cf8'; bg = 'rgba(129,140,248,0.15)';
+        accion = '<span class="material-symbols-outlined text-slate-600 text-base">open_in_new</span>';
+      }
+      var fecha = r.created_at ? new Date(r.created_at).toLocaleDateString('es-ES', {day:'numeric',month:'short'}) : '';
+      return '<div class="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-colors" style="background:rgba(255,255,255,0.02);" onclick="abrirRecurso(\'' + r.titulo.replace(/'/g, "\\'") + '\',\'' + r.tipo + '\',\'' + r.url.replace(/'/g, "\\'") + '\')">'
+        + '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + bg + ';">'
+        + '<span class="material-symbols-outlined text-base" style="color:' + color + ';">' + icono + '</span></div>'
+        + '<div class="flex-1 min-w-0"><p class="text-sm font-bold text-white truncate">' + r.titulo + '</p>'
+        + '<p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">' + r.tipo.toUpperCase() + (fecha ? ' · ' + fecha : '') + '</p></div>'
+        + accion + '</div>';
+    }).join('');
+
+    // Actualizar badge de nuevo si hay recursos recientes (< 7 días)
+    var nuevos = recursos.filter(function(r) {
+      var d = new Date(r.created_at);
+      return (Date.now() - d.getTime()) < 7 * 24 * 60 * 60 * 1000;
+    });
+    var badge = document.querySelector('.space-y-3').previousElementSibling;
+    if (badge) {
+      var span = badge.querySelector('span[style*="rgba(52,211,153")');
+      if (span) span.textContent = nuevos.length + ' nuevo' + (nuevos.length !== 1 ? 's' : '');
+    }
+  } catch(e) { console.error('Error cargando recursos:', e); }
+})();
+</script>
