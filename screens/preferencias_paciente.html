@@ -229,6 +229,16 @@ html.light .pill.active{background:rgba(5,150,105,0.1)!important;border-color:rg
                 <div class="toggle-thumb"></div>
               </div>
             </div>
+            <div class="border-t border-slate-800/50"></div>
+            <div class="flex items-center justify-between gap-6">
+              <div>
+                <p class="font-semibold text-white text-sm font-headline">Avísame si se libera un hueco antes</p>
+                <p class="text-xs text-slate-500 mt-0.5">Te escribimos si tu psicólogo tiene una cancelación disponible — el primero que confirma se la queda</p>
+              </div>
+              <div id="toggle-huecos" class="toggle-track flex-shrink-0" onclick="window.toggleHuecos && window.toggleHuecos(this)">
+                <div class="toggle-thumb"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -331,14 +341,15 @@ function togglePill(btn) {
     let prefs = JSON.parse(localStorage.getItem(PREFS_KEY) || '{"email":true,"recordatorios":true,"mensajes":true}')
 
     // Cargar desde DB (fuente de verdad) — cae al caché de localStorage si no hay sesión
-    let pacienteId = null, pacienteClinicaId = null, pacienteEmail = null
+    let pacienteId = null, pacienteClinicaId = null, pacienteEmail = null, pacientePsicologoId = null
     if (!modoDemo) {
       const uid = session.user.id
-      const { data: pac } = await supabase.from('pacientes').select('id, preferencias, clinica_id, email').eq('usuario_id', uid).maybeSingle()
+      const { data: pac } = await supabase.from('pacientes').select('id, preferencias, clinica_id, email, psicologo_id').eq('usuario_id', uid).maybeSingle()
       if (pac) {
         pacienteId = pac.id
         pacienteClinicaId = pac.clinica_id
         pacienteEmail = pac.email
+        pacientePsicologoId = pac.psicologo_id
         if (pac.preferencias && Object.keys(pac.preferencias).length) {
           prefs = { ...prefs, ...pac.preferencias }
           localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
@@ -353,6 +364,33 @@ function togglePill(btn) {
       if (label.includes('recordatorio')) cb.checked = prefs.recordatorios
       if (label.includes('mensaje'))      cb.checked = prefs.mensajes
     })
+
+    // ── Opt-in: avisos de huecos liberados (auto-relleno) ──
+    const OFERTAS_API = ''  // relativo: usa el rewrite /api -> backend (mismo origen, sin CORS)
+    const trackHuecos = document.getElementById('toggle-huecos')
+    async function cargarEstadoHuecos() {
+      if (!pacienteId || !pacientePsicologoId || !session) return
+      try {
+        const r = await fetch(`${OFERTAS_API}/api/ofertas/opt-in/status?paciente_id=${pacienteId}&psicologo_id=${pacientePsicologoId}`, {
+          headers: { 'Authorization': 'Bearer ' + session.access_token }
+        })
+        if (r.ok) { const d = await r.json(); trackHuecos?.classList.toggle('on', !!d.activo) }
+      } catch (e) { /* silencioso */ }
+    }
+    window.toggleHuecos = async function(el) {
+      if (!pacienteId || !pacientePsicologoId) { alert('Aún no tienes un psicólogo asignado.'); return }
+      const activo = !el.classList.contains('on')
+      el.classList.toggle('on', activo)
+      try {
+        const r = await fetch(`${OFERTAS_API}/api/ofertas/opt-in`, {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ paciente_id: pacienteId, psicologo_id: pacientePsicologoId, clinica_id: pacienteClinicaId, activo })
+        })
+        if (!r.ok) throw new Error('err')
+      } catch (e) { el.classList.toggle('on', !activo); alert('No se pudo guardar el aviso de huecos. Inténtalo de nuevo.') }
+    }
+    cargarEstadoHuecos()
 
     const btnGuardar = Array.from(document.querySelectorAll('button')).find(b =>
       b.textContent.toLowerCase().includes('guardar') || b.textContent.toLowerCase().includes('save'))
