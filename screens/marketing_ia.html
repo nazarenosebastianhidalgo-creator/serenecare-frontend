@@ -66,8 +66,8 @@
       <div id="anuncios"></div>
       <h2>🎥 Guion de video (30-45s)</h2>
       <div id="guion"></div>
-      <div class="video-cta">
-        <p>🎬 <b>Generar el video con IA</b> — próximamente (conecta tu cuenta de video)</p>
+      <div class="video-cta" id="video-cta" style="cursor:pointer">
+        <p>🎬 <b>Crear el video con este guion</b> →</p>
       </div>
       <h2>📱 Posts para redes</h2>
       <div id="posts"></div>
@@ -117,6 +117,7 @@
       $('posts').innerHTML = (d.posts || []).map(p => itemHTML('', p.texto, '', p.red)).join('') || '<p class="sub">—</p>'
       $('ideas').innerHTML = (d.ideas || []).map(i => `<li>${esc(i)}</li>`).join('') || '<li>—</li>'
       $('resultado').classList.remove('hidden'); $('msg').textContent = ''
+      $('video-cta').onclick = () => { sessionStorage.setItem('sc_guion_video', d.guion_video || ''); location.href = 'crear_video.html' }
     } catch (e) {
       $('msg').textContent = 'No se pudo generar. Inténtalo de nuevo.'
     } finally { $('btn-generar').disabled = false }

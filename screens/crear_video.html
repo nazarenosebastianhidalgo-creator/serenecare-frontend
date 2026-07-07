@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Crear video</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#020617; font-family:'Inter',sans-serif; color:#e2e8f0; padding:28px 16px 80px; }
+  .wrap { max-width:680px; margin:0 auto; }
+  h1 { font-family:'Manrope',sans-serif; font-size:22px; font-weight:800; margin:0 0 4px; color:#f1f5f9; }
+  .sub { color:#94a3b8; font-size:14px; margin:0 0 20px; }
+  .card { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:18px; margin-bottom:14px; }
+  h2 { font-family:'Manrope',sans-serif; font-size:13px; font-weight:800; color:#a78bfa; margin:0 0 12px; text-transform:uppercase; letter-spacing:.04em; }
+  textarea { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:12px; color:#e2e8f0; font-family:inherit; font-size:14px; min-height:120px; resize:vertical; outline:none; }
+  textarea:focus { border-color:#2dd4bf; }
+  .galeria { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:10px; }
+  .avatar { border:2px solid transparent; border-radius:12px; overflow:hidden; cursor:pointer; background:rgba(255,255,255,0.04); aspect-ratio:3/4; }
+  .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+  .avatar.sel { border-color:#2dd4bf; }
+  .avatar .ph { display:flex; align-items:center; justify-content:center; height:100%; font-size:26px; color:#334155; }
+  .empty { text-align:center; padding:28px 18px; color:#94a3b8; border:1px dashed rgba(124,58,237,0.3); border-radius:12px; background:rgba(124,58,237,0.05); }
+  .empty b { color:#c4b5fd; }
+  .opts { display:flex; gap:10px; flex-wrap:wrap; }
+  .pill { padding:8px 14px; border-radius:100px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:#cbd5e1; font-size:13px; font-weight:600; cursor:pointer; }
+  .pill.on { background:rgba(45,212,191,0.2); border-color:rgba(45,212,191,0.4); color:#5eead4; }
+  .gen { width:100%; background:linear-gradient(135deg,#7c3aed,#6d28d9); color:#fff; border:none; border-radius:12px; padding:15px; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; cursor:pointer; }
+  .gen:disabled { opacity:.5; cursor:default; }
+  #msg { text-align:center; font-size:13px; color:#94a3b8; margin:14px 0; min-height:16px; }
+  video { width:100%; border-radius:12px; margin-top:10px; }
+  a.back { color:#5eead4; font-size:13px; text-decoration:none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="marketing_ia.html">← Volver a marketing</a>
+    <h1 style="margin-top:10px">🎬 Crear video con IA</h1>
+    <p class="sub">Elige un avatar y del guion sale un video listo para tus anuncios y redes.</p>
+
+    <div class="card">
+      <h2>1 · Guion</h2>
+      <textarea id="guion" placeholder="El guion de tu campaña aparecerá aquí…"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>2 · Elige avatar</h2>
+      <div id="galeria" class="galeria"></div>
+      <div id="empty" class="empty hidden">
+        🎭 <b>Conecta tu cuenta de video</b> para elegir avatar.<br>
+        <span style="font-size:12px">Muy pronto: crea <b>tu propio avatar</b> (grabas 30s una vez → sales tú en todos los videos).</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>3 · Formato</h2>
+      <div class="opts">
+        <div class="pill on" id="p-vertical" onclick="setFmt(true)">📱 Vertical (Reels/TikTok)</div>
+        <div class="pill" id="p-horizontal" onclick="setFmt(false)">🖥️ Horizontal</div>
+      </div>
+    </div>
+
+    <button class="gen" id="btn-generar">🎬 Generar video</button>
+    <div id="msg"></div>
+    <video id="preview" class="hidden" controls></video>
+  </div>
+
+<script type="module">
+  import { supabase } from '../js/supabase-client.js'
+  const API = ''
+  const $ = id => document.getElementById(id)
+  const { data: { session } } = await supabase.auth.getSession()
+  const auth = { 'Authorization': 'Bearer ' + (session?.access_token || ''), 'Content-Type': 'application/json' }
+
+  // Guion desde el estudio de marketing
+  $('guion').value = sessionStorage.getItem('sc_guion_video') || ''
+
+  let avatarSel = null, vertical = true
+  window.setFmt = v => { vertical = v; $('p-vertical').classList.toggle('on', v); $('p-horizontal').classList.toggle('on', !v) }
+
+  // Cargar galería de avatares (de HeyGen, vía nuestro backend)
+  try {
+    const r = await fetch(API + '/api/creador-video/avatares', { headers: auth })
+    const d = await r.json()
+    if (d.conectado && d.avatares.length) {
+      $('galeria').innerHTML = d.avatares.map(a =>
+        `<div class="avatar" data-id="${a.id}" title="${(a.nombre||'').replace(/"/g,'')}">
+           ${a.preview ? `<img src="${a.preview}" loading="lazy"/>` : '<div class="ph">🎭</div>'}
+         </div>`).join('')
+      $('galeria').querySelectorAll('.avatar').forEach(el => el.addEventListener('click', () => {
+        $('galeria').querySelectorAll('.avatar').forEach(x => x.classList.remove('sel'))
+        el.classList.add('sel'); avatarSel = el.getAttribute('data-id')
+      }))
+    } else {
+      $('galeria').classList.add('hidden'); $('empty').classList.remove('hidden')
+    }
+  } catch (e) { $('galeria').classList.add('hidden'); $('empty').classList.remove('hidden') }
+
+  $('btn-generar').addEventListener('click', async () => {
+    const guion = $('guion').value.trim()
+    if (!guion) { $('msg').textContent = 'Falta el guion.'; return }
+    if (!avatarSel) { $('msg').textContent = 'Elige un avatar (o conecta tu cuenta de video).'; return }
+    $('btn-generar').disabled = true; $('msg').textContent = '🎬 Generando tu video… (puede tardar 1-2 min)'
+    try {
+      const r = await fetch(API + '/api/creador-video/generar', { method:'POST', headers: auth, body: JSON.stringify({ guion, avatar_id: avatarSel, vertical }) })
+      const d = await r.json()
+      if (!r.ok || !d.video_id) throw new Error(d.error || 'error')
+      // Poll estado
+      let intentos = 0
+      const poll = setInterval(async () => {
+        intentos++
+        const s = await (await fetch(API + '/api/creador-video/estado/' + d.video_id, { headers: auth })).json()
+        if (s.estado === 'completed' && s.video_url) {
+          clearInterval(poll); $('msg').textContent = '✓ ¡Video listo!'; $('preview').src = s.video_url; $('preview').classList.remove('hidden'); $('btn-generar').disabled = false
+        } else if (s.estado === 'failed' || intentos > 40) {
+          clearInterval(poll); $('msg').textContent = 'No se pudo generar el video.'; $('btn-generar').disabled = false
+        }
+      }, 4000)
+    } catch (e) { $('msg').textContent = 'Error: ' + e.message; $('btn-generar').disabled = false }
+  })
+</script>
+</body>
+</html>
