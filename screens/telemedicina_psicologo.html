@@ -55,23 +55,23 @@
       <span class="text-[9px] font-bold uppercase tracking-widest" style="color:#a78bfa;">En Vivo</span>
     </div>
     <nav class="flex flex-col gap-3">
-      <button class="rounded-xl p-2.5 flex flex-col items-center gap-1 transition-all" style="background:rgba(139,92,246,0.2);color:#a78bfa;" title="Video">
+      <button id="sb-video" onclick="switchPanel('video')" class="rounded-xl p-2.5 flex flex-col items-center gap-1 transition-all" style="background:rgba(139,92,246,0.2);color:#a78bfa;" title="Video">
         <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">videocam</span>
         <span class="text-[9px] font-bold">Video</span>
       </button>
-      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all" title="Notas">
+      <button id="sb-notas" onclick="switchPanel('notas')" class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all" title="Notas">
         <span class="material-symbols-outlined text-lg">description</span>
         <span class="text-[9px]">Notas</span>
       </button>
-      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all" title="Historial">
+      <button id="sb-historial" onclick="switchPanel('historial')" class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all" title="Historial">
         <span class="material-symbols-outlined text-lg">history</span>
         <span class="text-[9px]">Historial</span>
       </button>
-      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all" title="Calma">
+      <button id="sb-calma" onclick="switchPanel('calma')" class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all" title="Calma">
         <span class="material-symbols-outlined text-lg">self_care</span>
         <span class="text-[9px]">Calma</span>
       </button>
-      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all" title="Chat">
+      <button id="sb-chat" onclick="switchPanel('chat')" class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all" title="Chat">
         <span class="material-symbols-outlined text-lg">forum</span>
         <span class="text-[9px]">Chat</span>
       </button>
@@ -106,61 +106,153 @@
     </div>
   </div>
 
-  <!-- RIGHT PANEL: Session Notes -->
+  <!-- RIGHT PANELS -->
   <aside class="w-88 flex flex-col gap-3" style="width:22rem;">
-    <div class="flex-1 rounded-3xl flex flex-col overflow-hidden" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+
+    <!-- PANEL: NOTAS (default) -->
+    <div id="panel-notas" class="flex-1 rounded-3xl flex flex-col overflow-hidden" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
       <div class="p-5 flex justify-between items-center" style="border-bottom:1px solid rgba(255,255,255,0.05);">
         <div>
           <h2 class="font-headline font-bold text-base" style="color:#a78bfa;">Notas de la Sesión</h2>
-          <p class="text-xs text-slate-500">Sesión #12 Â· Terapia Cognitiva</p>
+          <p class="text-xs text-slate-500" id="notas-subtitulo">Sesión en curso</p>
         </div>
-        <button class="p-2 hover:bg-white/5 rounded-xl transition-colors text-slate-500">
+        <button onclick="expandNotas()" class="p-2 hover:bg-white/5 rounded-xl transition-colors text-slate-500" title="Expandir">
           <span class="material-symbols-outlined">fullscreen</span>
         </button>
       </div>
       <div class="flex-1 p-5 overflow-y-auto space-y-5" style="scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;">
         <div>
           <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Observaciones Generales</label>
-          <textarea class="w-full rounded-2xl p-4 text-sm text-slate-300 placeholder-slate-600 focus:outline-none focus:ring-1 min-h-[110px] resize-none" style="background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.06);focus:ring-color:rgba(139,92,246,0.4);" placeholder="Escribe aquí los puntos clave..."></textarea>
+          <textarea id="nota-textarea" class="w-full rounded-2xl p-4 text-sm text-slate-300 placeholder-slate-600 focus:outline-none min-h-[110px] resize-none" style="background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.06);" placeholder="Escribe aquí los puntos clave..."></textarea>
         </div>
         <div>
           <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Temas Tratados</label>
-          <div class="flex flex-wrap gap-2">
-            <span class="text-[10px] font-bold px-3 py-1.5 rounded-full" style="background:rgba(139,92,246,0.1);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);">Ansiedad Laboral</span>
-            <span class="text-[10px] font-bold px-3 py-1.5 rounded-full" style="background:rgba(139,92,246,0.1);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);">Gestión del Sueño</span>
-            <span class="text-[10px] font-bold px-3 py-1.5 rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 cursor-pointer transition-colors">+ Añadir</span>
+          <div id="temas-container" class="flex flex-wrap gap-2">
+            <span class="tema-tag text-[10px] font-bold px-3 py-1.5 rounded-full" style="background:rgba(139,92,246,0.1);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);">Ansiedad Laboral</span>
+            <span class="tema-tag text-[10px] font-bold px-3 py-1.5 rounded-full" style="background:rgba(139,92,246,0.1);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);">Gestión del Sueño</span>
+            <span id="btn-anadir-tema" onclick="anadirTema()" class="text-[10px] font-bold px-3 py-1.5 rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 cursor-pointer transition-colors">+ Añadir</span>
+          </div>
+          <div id="tema-input-wrap" class="hidden mt-2 flex gap-2">
+            <input id="tema-input" type="text" placeholder="Nuevo tema..." maxlength="30" class="flex-1 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none" style="background:rgba(2,6,23,0.7);border:1px solid rgba(139,92,246,0.3);" onkeydown="if(event.key==='Enter')confirmarTema();if(event.key==='Escape')cancelarTema()"/>
+            <button onclick="confirmarTema()" class="px-3 py-1.5 rounded-xl text-xs font-bold text-white" style="background:rgba(139,92,246,0.5);">OK</button>
+            <button onclick="cancelarTema()" class="px-2 py-1.5 rounded-xl text-xs text-slate-400 hover:bg-slate-700">✕</button>
           </div>
         </div>
         <div class="p-4 rounded-2xl" style="background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.12);">
           <div class="flex items-center gap-2 mb-2" style="color:#a78bfa;">
             <span class="material-symbols-outlined text-sm">lightbulb</span>
-            <span class="text-xs font-bold uppercase tracking-wide">Insight Detectado</span>
+            <span class="text-xs font-bold uppercase tracking-wide">Insight</span>
           </div>
-          <p class="text-xs leading-relaxed italic" style="color:rgba(167,139,250,0.7);">"El paciente identifica un patrón de evitación recurrente en situaciones de conflicto jerárquico."</p>
+          <textarea id="insight-input" class="w-full bg-transparent text-xs leading-relaxed italic resize-none focus:outline-none" style="color:rgba(167,139,250,0.7);min-height:48px;" placeholder="Anota un insight clave de la sesión..."></textarea>
         </div>
       </div>
       <div class="p-4" style="border-top:1px solid rgba(255,255,255,0.05);">
-        <button class="w-full py-3 rounded-2xl font-bold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98]" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(109,40,217,0.4));border:1px solid rgba(139,92,246,0.4);box-shadow:0 4px 20px rgba(139,92,246,0.15);">
+        <button id="btn-guardar-nota" class="w-full py-3 rounded-2xl font-bold text-sm text-white transition-all hover:opacity-90 active:scale-[0.98]" style="background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(109,40,217,0.4));border:1px solid rgba(139,92,246,0.4);box-shadow:0 4px 20px rgba(139,92,246,0.15);">
           Guardar Nota Clínica
         </button>
       </div>
     </div>
-    <!-- Herramientas de Calma -->
-    <div class="rounded-3xl p-4 flex-shrink-0" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+
+    <!-- PANEL: HISTORIAL -->
+    <div id="panel-historial" class="hidden flex-1 rounded-3xl flex flex-col overflow-hidden" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+      <div class="p-5" style="border-bottom:1px solid rgba(255,255,255,0.05);">
+        <h2 class="font-headline font-bold text-base" style="color:#a78bfa;">Historial de Sesiones</h2>
+        <p class="text-xs text-slate-500" id="hist-subtitulo">Sesiones anteriores</p>
+      </div>
+      <div id="hist-lista" class="flex-1 p-4 overflow-y-auto space-y-3" style="scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;">
+        <div class="text-xs text-slate-500 text-center py-8">Cargando historial...</div>
+      </div>
+    </div>
+
+    <!-- PANEL: CALMA (expandido) -->
+    <div id="panel-calma" class="hidden flex-1 rounded-3xl flex flex-col overflow-hidden" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+      <div class="p-5" style="border-bottom:1px solid rgba(255,255,255,0.05);">
+        <h2 class="font-headline font-bold text-base" style="color:#a78bfa;">Herramientas de Calma</h2>
+        <p class="text-xs text-slate-500">Envía un ejercicio al paciente durante la sesión</p>
+      </div>
+      <div class="flex-1 p-4 overflow-y-auto space-y-3" style="scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;">
+        <div id="calma-confirmacion" class="hidden mb-3 p-3 rounded-xl text-xs font-bold text-center" style="background:rgba(74,222,128,0.1);color:#4ade80;border:1px solid rgba(74,222,128,0.2);">✓ Ejercicio enviado al paciente</div>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Respiración</p>
+        <button onclick="enviarCalma('Respiración 4-7-8','Inhala 4s, sostén 7s, exhala 8s. Repite 3 veces.')" class="w-full p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.15);">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-2xl" style="color:#a78bfa;">air</span>
+            <div><p class="text-sm font-bold text-slate-200">Respiración 4-7-8</p><p class="text-[10px] text-slate-500">Inhala 4s · Sostén 7s · Exhala 8s</p></div>
+          </div>
+        </button>
+        <button onclick="enviarCalma('Respiración Cuadrada','Inhala 4s, sostén 4s, exhala 4s, sostén 4s. Repite.')" class="w-full p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style="background:rgba(139,92,246,0.07);border:1px solid rgba(139,92,246,0.15);">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-2xl" style="color:#a78bfa;">crop_square</span>
+            <div><p class="text-sm font-bold text-slate-200">Respiración Cuadrada</p><p class="text-[10px] text-slate-500">4s · 4s · 4s · 4s (box breathing)</p></div>
+          </div>
+        </button>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-4 mb-2">Grounding</p>
+        <button onclick="enviarCalma('Técnica 5-4-3-2-1','Nombra 5 cosas que ves, 4 que tocas, 3 que oyes, 2 que hueles, 1 que saboreas.')" class="w-full p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style="background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.15);">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-2xl" style="color:#38bdf8;">sensors</span>
+            <div><p class="text-sm font-bold text-slate-200">Técnica 5-4-3-2-1</p><p class="text-[10px] text-slate-500">Anclaje sensorial para el presente</p></div>
+          </div>
+        </button>
+        <button onclick="enviarCalma('Escaneo Corporal','Cierra los ojos y recorre tu cuerpo de los pies a la cabeza, notando tensiones sin juzgar.')" class="w-full p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style="background:rgba(56,189,248,0.07);border:1px solid rgba(56,189,248,0.15);">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-2xl" style="color:#38bdf8;">accessibility_new</span>
+            <div><p class="text-sm font-bold text-slate-200">Escaneo Corporal</p><p class="text-[10px] text-slate-500">Observación consciente del cuerpo</p></div>
+          </div>
+        </button>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-4 mb-2">Relajación</p>
+        <button onclick="enviarCalma('Lugar Seguro','Cierra los ojos. Imagina un lugar donde te sientes completamente seguro y en paz. Descríbelo mentalmente con detalle.')" class="w-full p-4 rounded-2xl text-left transition-all hover:scale-[1.01]" style="background:rgba(52,211,153,0.07);border:1px solid rgba(52,211,153,0.15);">
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-2xl" style="color:#34d399;">landscape</span>
+            <div><p class="text-sm font-bold text-slate-200">Lugar Seguro</p><p class="text-[10px] text-slate-500">Visualización de calma profunda</p></div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- PANEL: CHAT (enlaza al módulo de mensajes) -->
+    <div id="panel-chat" class="hidden flex-1 rounded-3xl flex flex-col overflow-hidden" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+      <div class="p-5" style="border-bottom:1px solid rgba(255,255,255,0.05);">
+        <h2 class="font-headline font-bold text-base" style="color:#a78bfa;">Mensajes</h2>
+      </div>
+      <div class="flex-1 p-4 flex flex-col items-center justify-center gap-4 text-center">
+        <span class="material-symbols-outlined text-5xl text-slate-600">forum</span>
+        <p class="text-sm text-slate-400">Abre la bandeja de mensajes<br>para chatear con el paciente.</p>
+        <a href="mensajes_psicologo.html" target="_blank" class="px-5 py-2.5 rounded-2xl font-bold text-sm text-white" style="background:rgba(139,92,246,0.4);border:1px solid rgba(139,92,246,0.4);">Abrir mensajes</a>
+        <button onclick="toggleChatWidget()" class="px-5 py-2 rounded-2xl text-sm text-slate-300 hover:bg-white/5 transition-colors" style="border:1px solid rgba(255,255,255,0.08);">Chat rápido aquí</button>
+      </div>
+    </div>
+
+    <!-- Herramientas de Calma mini (solo visible en panel notas) -->
+    <div id="calma-mini" class="rounded-3xl p-4 flex-shrink-0" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,0.15);">
           <span class="material-symbols-outlined" style="color:#a78bfa;">self_care</span>
         </div>
         <div class="flex-1">
           <h4 class="text-xs font-bold text-slate-200">Herramientas de Calma</h4>
-          <p class="text-[10px] text-slate-500">Enviar ejercicio de respiración</p>
+          <p class="text-[10px] text-slate-500">Enviar ejercicio al paciente</p>
         </div>
-        <button class="p-2 rounded-xl hover:bg-slate-700 transition-colors bg-slate-800">
-          <span class="material-symbols-outlined text-sm text-slate-300">send</span>
+        <button onclick="switchPanel('calma')" class="p-2 rounded-xl hover:bg-slate-700 transition-colors bg-slate-800" title="Ver ejercicios">
+          <span class="material-symbols-outlined text-sm text-slate-300">chevron_right</span>
         </button>
       </div>
     </div>
   </aside>
+
+  <!-- MODAL INVITADOS -->
+  <div id="modal-invitados" class="hidden fixed inset-0 z-[9999] flex items-center justify-center" style="background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);">
+    <div class="rounded-3xl p-6 w-80" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-headline font-bold text-base text-white">Invitar a la sesión</h3>
+        <button onclick="cerrarModalInvitados()" class="text-slate-500 hover:text-white"><span class="material-symbols-outlined">close</span></button>
+      </div>
+      <p class="text-xs text-slate-400 mb-4">Comparte este enlace con el paciente para unirse a la videollamada.</p>
+      <div class="flex gap-2 mb-4">
+        <input id="invitados-link" readonly class="flex-1 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);" value="Generando enlace..."/>
+        <button onclick="copiarEnlace()" id="btn-copiar" class="px-4 py-2 rounded-xl text-xs font-bold text-white transition-all" style="background:rgba(139,92,246,0.5);border:1px solid rgba(139,92,246,0.4);">Copiar</button>
+      </div>
+      <p class="text-[10px] text-slate-600 text-center">El enlace da acceso directo a esta sala</p>
+    </div>
+  </div>
 </main>
 
 <!-- BOTTOM CONTROL BAR -->
@@ -177,19 +269,19 @@
     </div>
     <!-- Tools -->
     <div class="flex items-center gap-3">
-      <button class="flex flex-col items-center gap-1 group" title="Compartir pantalla">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-all group-hover:scale-105" style="background:rgba(255,255,255,0.05);">
-          <span class="material-symbols-outlined text-slate-400 group-hover:text-white">screen_share</span>
+      <button id="btn-screen" onclick="compartirPantalla()" class="flex flex-col items-center gap-1 group" title="Compartir pantalla">
+        <div id="screen-btn-bg" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all group-hover:scale-105" style="background:rgba(255,255,255,0.05);">
+          <span id="screen-icon" class="material-symbols-outlined text-slate-400 group-hover:text-white">screen_share</span>
         </div>
         <span class="text-[9px] text-slate-500">Compartir</span>
       </button>
-      <button class="flex flex-col items-center gap-1 group" title="Recursos">
+      <button onclick="abrirRecursos()" class="flex flex-col items-center gap-1 group" title="Recursos compartidos">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-all group-hover:scale-105" style="background:rgba(255,255,255,0.05);">
           <span class="material-symbols-outlined text-slate-400 group-hover:text-white">library_books</span>
         </div>
         <span class="text-[9px] text-slate-500">Recursos</span>
       </button>
-      <button class="flex flex-col items-center gap-1 group" title="Invitados">
+      <button onclick="abrirModalInvitados()" class="flex flex-col items-center gap-1 group" title="Invitar paciente">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-all group-hover:scale-105" style="background:rgba(255,255,255,0.05);">
           <span class="material-symbols-outlined text-slate-400 group-hover:text-white">group</span>
         </div>
@@ -471,6 +563,167 @@ window.cwEnviar=function(){
     <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
   </div>
 </div>
+<script>
+// ── PANEL SWITCHER ──────────────────────────────────────────────
+var PANELES = ['notas','historial','calma','chat'];
+var panelActivo = 'notas';
+
+window.switchPanel = function(panel) {
+  PANELES.forEach(function(p) {
+    var el = document.getElementById('panel-' + p);
+    if (el) { el.classList.add('hidden'); el.classList.remove('flex-1'); }
+  });
+  var target = document.getElementById('panel-' + panel);
+  if (target) { target.classList.remove('hidden'); target.classList.add('flex-1'); }
+
+  var miniCalma = document.getElementById('calma-mini');
+  if (miniCalma) miniCalma.style.display = (panel === 'notas') ? '' : 'none';
+
+  // highlight sidebar
+  ['video','notas','historial','calma','chat'].forEach(function(id) {
+    var btn = document.getElementById('sb-' + id);
+    if (!btn) return;
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.classList.remove('text-white');
+    btn.classList.add('text-slate-500');
+  });
+  var activeBtn = document.getElementById('sb-' + (panel === 'notas' ? 'notas' : panel));
+  if (activeBtn) {
+    activeBtn.style.background = 'rgba(139,92,246,0.2)';
+    activeBtn.style.color = '#a78bfa';
+    activeBtn.classList.remove('text-slate-500');
+  }
+
+  panelActivo = panel;
+  if (panel === 'historial') cargarHistorial();
+};
+// inicializar estado sidebar video btn
+document.getElementById('sb-video') && (document.getElementById('sb-video').onclick = function(){ switchPanel('notas'); });
+
+// ── TEMAS TRATADOS ──────────────────────────────────────────────
+window.anadirTema = function() {
+  document.getElementById('tema-input-wrap').classList.remove('hidden');
+  document.getElementById('btn-anadir-tema').classList.add('hidden');
+  setTimeout(function(){ document.getElementById('tema-input').focus(); }, 50);
+};
+window.confirmarTema = function() {
+  var val = (document.getElementById('tema-input').value || '').trim();
+  if (!val) { cancelarTema(); return; }
+  var tag = document.createElement('span');
+  tag.className = 'tema-tag text-[10px] font-bold px-3 py-1.5 rounded-full';
+  tag.style.cssText = 'background:rgba(139,92,246,0.1);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);cursor:pointer;';
+  tag.title = 'Clic para eliminar';
+  tag.textContent = val;
+  tag.onclick = function(){ if(confirm('¿Eliminar "'+val+'"?')) tag.remove(); };
+  var container = document.getElementById('temas-container');
+  var btnAdd = document.getElementById('btn-anadir-tema');
+  container.insertBefore(tag, btnAdd);
+  cancelarTema();
+};
+window.cancelarTema = function() {
+  document.getElementById('tema-input').value = '';
+  document.getElementById('tema-input-wrap').classList.add('hidden');
+  document.getElementById('btn-anadir-tema').classList.remove('hidden');
+};
+
+// ── HERRAMIENTAS DE CALMA ───────────────────────────────────────
+window.enviarCalma = function(nombre, instruccion) {
+  // Guardar en Supabase mensajes si hay cita activa (lo hace el módulo)
+  if (window._enviarCalmaSupabase) {
+    window._enviarCalmaSupabase(nombre, instruccion);
+  }
+  var conf = document.getElementById('calma-confirmacion');
+  conf.textContent = '✓ "' + nombre + '" enviado al paciente';
+  conf.classList.remove('hidden');
+  setTimeout(function(){ conf.classList.add('hidden'); }, 3000);
+};
+
+// ── HISTORIAL ───────────────────────────────────────────────────
+window._historialData = null;
+function cargarHistorial() {
+  if (window._cargarHistorialSupabase) { window._cargarHistorialSupabase(); return; }
+  // fallback visual mientras no haya datos
+  var lista = document.getElementById('hist-lista');
+  if (lista.querySelector('.hist-item')) return;
+  lista.innerHTML = '<div class="text-xs text-slate-500 text-center py-8">No hay sesiones anteriores registradas.</div>';
+}
+window._renderHistorial = function(sesiones) {
+  var lista = document.getElementById('hist-lista');
+  if (!sesiones || !sesiones.length) {
+    lista.innerHTML = '<div class="text-xs text-slate-500 text-center py-8">No hay sesiones anteriores.</div>';
+    return;
+  }
+  lista.innerHTML = sesiones.map(function(s) {
+    var nota = s.notas_soap && s.notas_soap[0];
+    return '<div class="hist-item p-4 rounded-2xl mb-2" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">' +
+      '<div class="flex items-center justify-between mb-2">' +
+        '<span class="text-xs font-bold text-slate-300">' + (s.fecha || '') + '</span>' +
+        '<span class="text-[10px] px-2 py-0.5 rounded-full font-bold" style="background:rgba(139,92,246,0.1);color:#a78bfa;">' + (s.estado || '') + '</span>' +
+      '</div>' +
+      (nota ? '<p class="text-[11px] text-slate-400 leading-relaxed line-clamp-3">' + (nota.subjetivo || 'Sin notas') + '</p>' : '<p class="text-[11px] text-slate-500 italic">Sin notas registradas</p>') +
+    '</div>';
+  }).join('');
+};
+
+// ── COMPARTIR PANTALLA ──────────────────────────────────────────
+var _screenStream = null;
+window.compartirPantalla = async function() {
+  if (_screenStream) {
+    _screenStream.getTracks().forEach(function(t){ t.stop(); });
+    _screenStream = null;
+    document.getElementById('screen-btn-bg').style.background = 'rgba(255,255,255,0.05)';
+    document.getElementById('screen-icon').style.color = '';
+    document.getElementById('screen-icon').textContent = 'screen_share';
+    return;
+  }
+  try {
+    _screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+    document.getElementById('screen-btn-bg').style.background = 'rgba(139,92,246,0.25)';
+    document.getElementById('screen-icon').style.color = '#a78bfa';
+    document.getElementById('screen-icon').textContent = 'stop_screen_share';
+    _screenStream.getVideoTracks()[0].onended = function() {
+      _screenStream = null;
+      document.getElementById('screen-btn-bg').style.background = 'rgba(255,255,255,0.05)';
+      document.getElementById('screen-icon').style.color = '';
+      document.getElementById('screen-icon').textContent = 'screen_share';
+    };
+  } catch(e) { /* usuario canceló */ }
+};
+
+// ── RECURSOS ────────────────────────────────────────────────────
+window.abrirRecursos = function() {
+  window.open('recursos_psicologo.html', '_blank');
+};
+
+// ── MODAL INVITADOS ─────────────────────────────────────────────
+window.abrirModalInvitados = function() {
+  document.getElementById('modal-invitados').classList.remove('hidden');
+  var link = window._salaUrl || window.location.href;
+  document.getElementById('invitados-link').value = link;
+};
+window.cerrarModalInvitados = function() {
+  document.getElementById('modal-invitados').classList.add('hidden');
+};
+window.copiarEnlace = function() {
+  var input = document.getElementById('invitados-link');
+  navigator.clipboard.writeText(input.value).then(function() {
+    var btn = document.getElementById('btn-copiar');
+    btn.textContent = '✓ Copiado';
+    setTimeout(function(){ btn.textContent = 'Copiar'; }, 2000);
+  });
+};
+document.getElementById('modal-invitados').addEventListener('click', function(e){
+  if (e.target === this) cerrarModalInvitados();
+});
+
+// ── EXPANDIR NOTAS ──────────────────────────────────────────────
+window.expandNotas = function() {
+  var ta = document.getElementById('nota-textarea');
+  if (ta) { ta.style.minHeight = ta.style.minHeight === '260px' ? '110px' : '260px'; }
+};
+</script>
+
 <script type="module">
 import { supabase, crearSalaVideo } from '../js/supabase-client.js'
 import { verificarSesion } from '../js/auth.js'
@@ -539,9 +792,9 @@ if (cita) {
   if (_taPrev && cita.notas_soap?.[0]?.subjetivo) _taPrev.value = cita.notas_soap[0].subjetivo
 }
 
-// ── Guardar nota SOAP (una por sesión: update si ya existe, si no insert) ──
-const _ta = document.querySelector('textarea')
-const _btnGuardar = Array.from(document.querySelectorAll('button')).find(b => b.textContent.trim() === 'Guardar Nota Clínica')
+// ── Guardar nota SOAP ──
+const _ta = document.getElementById('nota-textarea')
+const _btnGuardar = document.getElementById('btn-guardar-nota')
 if (_btnGuardar && _ta) {
   _btnGuardar.addEventListener('click', async () => {
     if (!_ta.value.trim() || !citaId) return
@@ -565,7 +818,40 @@ if (_btnGuardar && _ta) {
   })
 }
 
-// ── Finalizar sesión → marcar completada + volver al dashboard ──
+// ── Historial desde Supabase ──
+window._cargarHistorialSupabase = async function() {
+  const lista = document.getElementById('hist-lista')
+  if (!lista) return
+  const pacienteId = cita?.paciente_id || null
+  if (!pacienteId) { lista.innerHTML = '<div class="text-xs text-slate-500 text-center py-8">No hay sesiones anteriores.</div>'; return; }
+  const { data } = await supabase.from('citas')
+    .select('id, fecha, hora_inicio, estado, notas_soap(subjetivo)')
+    .eq('paciente_id', pacienteId)
+    .eq('estado', 'completada')
+    .order('fecha', { ascending: false })
+    .limit(10)
+  window._renderHistorial(data || [])
+}
+
+// ── Calma: enviar como mensaje al paciente ──
+window._enviarCalmaSupabase = async function(nombre, instruccion) {
+  if (!citaId || !cita) return
+  const pacienteId = cita.paciente_id
+  if (!pacienteId) return
+  try {
+    await supabase.from('mensajes').insert({
+      remitente_id: userId,
+      destinatario_id: pacienteId,
+      clinica_id: cita.clinica_id,
+      contenido: '🧘 Ejercicio de calma — ' + nombre + ': ' + instruccion,
+    })
+  } catch(e) { /* silencioso */ }
+}
+
+// ── URL sala para modal invitados ──
+if (window._salaUrl === undefined) window._salaUrl = null
+
+// ── Finalizar sesión ──
 async function finalizarSesion() {
   if (citaId) await supabase.from('citas').update({ estado: 'completada' }).eq('id', citaId)
   window.location.href = '/screens/dashboard_psicologo.html'

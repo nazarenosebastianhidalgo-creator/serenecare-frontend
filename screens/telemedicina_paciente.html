@@ -58,19 +58,19 @@
       <span class="text-[9px] font-bold uppercase tracking-widest" style="color:#2dd4bf;">Live</span>
     </div>
     <nav class="flex flex-col gap-3">
-      <button class="rounded-xl p-2.5 flex flex-col items-center gap-1 transition-all" style="background:rgba(20,184,166,0.15);color:#2dd4bf;">
+      <button id="psb-video" onclick="switchPanelP('calma')" class="rounded-xl p-2.5 flex flex-col items-center gap-1 transition-all" style="background:rgba(20,184,166,0.15);color:#2dd4bf;">
         <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1;">videocam</span>
         <span class="text-[9px] font-bold">Video</span>
       </button>
-      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
+      <button id="psb-notas" onclick="switchPanelP('notas')" class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
         <span class="material-symbols-outlined text-lg">description</span>
         <span class="text-[9px]">Notas</span>
       </button>
-      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
+      <button id="psb-calma" onclick="switchPanelP('calma')" class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
         <span class="material-symbols-outlined text-lg">self_care</span>
         <span class="text-[9px]">Calma</span>
       </button>
-      <button class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
+      <button id="psb-chat" onclick="switchPanelP('chat')" class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
         <span class="material-symbols-outlined text-lg">forum</span>
         <span class="text-[9px]">Chat</span>
       </button>
@@ -111,21 +111,22 @@
     </div>
   </div>
 
-  <!-- RIGHT PANEL: Asistente de Calma -->
+  <!-- RIGHT PANELS PACIENTE -->
   <section class="w-72 flex flex-col gap-3 flex-shrink-0">
-    <!-- Breathing Assistant -->
-    <div class="flex-1 rounded-3xl p-5 flex flex-col" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
-      <div class="flex items-center justify-between mb-6">
+
+    <!-- PANEL CALMA (default) -->
+    <div id="pp-calma" class="flex-1 rounded-3xl p-5 flex flex-col" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+      <div class="flex items-center justify-between mb-4">
         <h3 class="font-headline font-bold text-white flex items-center gap-2 text-sm">
           <span class="material-symbols-outlined" style="color:#2dd4bf;">psychology</span>
           Asistente de Calma
         </h3>
-        <button class="text-slate-500 hover:text-white transition-colors">
+        <button onclick="ocultarPanelDerecho()" class="text-slate-500 hover:text-white transition-colors" title="Ocultar panel">
           <span class="material-symbols-outlined text-sm">close</span>
         </button>
       </div>
       <!-- Breathing visualizer -->
-      <div class="flex-1 flex flex-col items-center justify-center relative">
+      <div id="respiracion-wrap" class="flex-1 flex flex-col items-center justify-center relative">
         <div class="absolute breathing-circle w-32 h-32 bg-teal-500 rounded-full blur-3xl"></div>
         <div class="w-40 h-40 rounded-full flex items-center justify-center relative z-10" style="border:1px solid rgba(20,184,166,0.2);">
           <div class="w-28 h-28 rounded-full flex items-center justify-center" style="border:3px solid rgba(20,184,166,0.35);">
@@ -139,29 +140,63 @@
           <p class="text-slate-500 text-xs mt-1">Sigue el ritmo del círculo</p>
         </div>
       </div>
+      <!-- Ejercicio enviado por psicólogo -->
+      <div id="ejercicio-psi" class="hidden mb-3 p-3 rounded-xl" style="background:rgba(20,184,166,0.07);border:1px solid rgba(20,184,166,0.18);">
+        <p class="text-[10px] font-bold uppercase tracking-widest mb-1" style="color:#2dd4bf;">Tu psicólogo/a envió:</p>
+        <p id="ejercicio-psi-texto" class="text-xs text-slate-200 leading-relaxed"></p>
+      </div>
       <!-- Calma tools -->
-      <div class="mt-4 space-y-2">
-        <div class="p-3.5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer group" style="background:rgba(255,255,255,0.03);">
+      <div class="mt-3 space-y-2">
+        <button id="btn-relajacion" onclick="iniciarRelajacion()" class="w-full p-3.5 rounded-2xl hover:bg-white/5 transition-colors text-left group" style="background:rgba(255,255,255,0.03);">
           <div class="flex items-center gap-3">
             <span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="color:#2dd4bf;">spa</span>
-            <div>
+            <div class="flex-1">
               <p class="text-xs font-bold text-slate-200">Relajación Progresiva</p>
-              <p class="text-[10px] text-slate-500">4 minutos</p>
+              <p id="relajacion-sub" class="text-[10px] text-slate-500">4 minutos · Toca para iniciar</p>
             </div>
+            <span id="relajacion-icon" class="material-symbols-outlined text-sm text-slate-500">play_arrow</span>
           </div>
-        </div>
-        <div class="p-3.5 rounded-2xl hover:bg-white/5 transition-colors cursor-pointer group" style="background:rgba(255,255,255,0.03);">
+        </button>
+        <button id="btn-ruido" onclick="toggleRuido()" class="w-full p-3.5 rounded-2xl hover:bg-white/5 transition-colors text-left group" style="background:rgba(255,255,255,0.03);">
           <div class="flex items-center gap-3">
             <span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="color:#2dd4bf;">water</span>
-            <div>
+            <div class="flex-1">
               <p class="text-xs font-bold text-slate-200">Ruido Blanco / Lluvia</p>
-              <p class="text-[10px] text-slate-500">Ajustar volumen</p>
+              <p id="ruido-sub" class="text-[10px] text-slate-500">Toca para activar</p>
             </div>
+            <span id="ruido-icon" class="material-symbols-outlined text-sm text-slate-500">play_arrow</span>
           </div>
-        </div>
+        </button>
       </div>
     </div>
-    <!-- Session stats -->
+
+    <!-- PANEL NOTAS PACIENTE -->
+    <div id="pp-notas" class="hidden flex-1 rounded-3xl p-5 flex flex-col" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-headline font-bold text-white text-sm">Mis Notas</h3>
+        <button onclick="switchPanelP('calma')" class="text-slate-500 hover:text-white"><span class="material-symbols-outlined text-sm">close</span></button>
+      </div>
+      <p class="text-[10px] text-slate-500 mb-3">Notas privadas durante la sesión. Solo tú las ves.</p>
+      <textarea id="notas-paciente" class="flex-1 w-full rounded-2xl p-4 text-sm text-slate-300 placeholder-slate-600 focus:outline-none resize-none" style="background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.06);" placeholder="Escribe lo que quieres recordar de esta sesión..."></textarea>
+      <button onclick="guardarNotasPaciente()" class="mt-3 w-full py-2.5 rounded-2xl font-bold text-sm text-white" style="background:rgba(20,184,166,0.25);border:1px solid rgba(20,184,166,0.3);">Guardar</button>
+      <p id="notas-paciente-ok" class="hidden text-center text-xs mt-2 font-bold" style="color:#2dd4bf;">✓ Guardado</p>
+    </div>
+
+    <!-- PANEL CHAT PACIENTE -->
+    <div id="pp-chat" class="hidden flex-1 rounded-3xl flex flex-col overflow-hidden" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
+      <div class="p-4" style="border-bottom:1px solid rgba(255,255,255,0.05);">
+        <h3 class="font-headline font-bold text-white text-sm">Mensajes</h3>
+      </div>
+      <div id="pac-msgs" class="flex-1 p-4 overflow-y-auto flex flex-col gap-2" style="scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+      <div class="p-3 flex gap-2" style="border-top:1px solid rgba(255,255,255,0.05);">
+        <input id="pac-msg-input" type="text" placeholder="Escribe un mensaje..." class="flex-1 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);" onkeydown="if(event.key==='Enter')enviarMsgPaciente()"/>
+        <button onclick="enviarMsgPaciente()" class="w-8 h-8 rounded-full flex items-center justify-center" style="background:rgba(20,184,166,0.8);">
+          <span class="material-symbols-outlined text-white" style="font-size:14px;font-variation-settings:'FILL' 1;">send</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats siempre visible abajo -->
     <div class="rounded-3xl p-4 flex items-center justify-around flex-shrink-0" style="background:rgba(20,184,166,0.05);border:1px solid rgba(20,184,166,0.1);">
       <div class="text-center">
         <p class="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Tiempo</p>
@@ -170,10 +205,30 @@
       <div class="w-px h-8 bg-slate-800"></div>
       <div class="text-center">
         <p class="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Sesión</p>
-        <p class="text-xl font-headline font-bold" style="color:#2dd4bf;">#12</p>
+        <p id="num-sesion" class="text-xl font-headline font-bold" style="color:#2dd4bf;">#1</p>
       </div>
     </div>
   </section>
+
+  <!-- REACCIONES -->
+  <div id="emoji-popup" style="position:fixed;bottom:96px;left:50%;transform:translateX(-50%);z-index:200;display:none;gap:8px;background:rgba(2,6,23,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:99px;padding:8px 16px;">
+    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('👍')">👍</span>
+    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('❤️')">❤️</span>
+    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('😊')">😊</span>
+    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('🙏')">🙏</span>
+    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('👋')">👋</span>
+  </div>
+  <div id="reaccion-float" style="position:fixed;bottom:160px;left:50%;transform:translateX(-50%);font-size:52px;display:none;pointer-events:none;z-index:300;animation:floatUp 1.8s forwards;"></div>
+  <style>@keyframes floatUp{0%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-80px)}}</style>
+
+  <!-- MÁS OPCIONES dropdown -->
+  <div id="mas-opciones" style="position:fixed;bottom:96px;right:24px;z-index:200;display:none;background:rgba(10,15,28,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;min-width:190px;box-shadow:0 12px 40px rgba(0,0,0,0.5);">
+    <button onclick="compartirPantallaP()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">screen_share</span>Compartir pantalla</button>
+    <button onclick="switchPanelP('notas');cerrarMasOpciones()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">description</span>Mis notas</button>
+    <button onclick="switchPanelP('chat');cerrarMasOpciones()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">forum</span>Mensajes</button>
+    <div style="border-top:1px solid rgba(255,255,255,0.06);"></div>
+    <button onclick="reportarProblema()" class="w-full px-4 py-3 text-left text-sm text-slate-400 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-500">flag</span>Reportar problema</button>
+  </div>
 </main>
 
 <!-- BOTTOM CONTROL BAR -->
@@ -185,14 +240,14 @@
     <button id="btn-cam" class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Cámara">
       <span class="material-symbols-outlined text-slate-300">videocam</span>
     </button>
-    <button class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Compartir pantalla">
-      <span class="material-symbols-outlined text-slate-300">screen_share</span>
+    <button id="btn-screen-p" onclick="compartirPantallaP()" class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Compartir pantalla">
+      <span id="screen-icon-p" class="material-symbols-outlined text-slate-300">screen_share</span>
     </button>
     <div class="w-px h-6 bg-slate-800 mx-1"></div>
-    <button class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Reacción">
+    <button onclick="toggleEmojis()" class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Reacción">
       <span class="material-symbols-outlined text-slate-300">mood</span>
     </button>
-    <button class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Más opciones">
+    <button onclick="toggleMasOpciones()" class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Más opciones">
       <span class="material-symbols-outlined text-slate-300">more_horiz</span>
     </button>
     <button id="btn-finalizar" class="h-11 px-6 rounded-full font-bold text-sm flex items-center gap-2 transition-all ml-2" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);" onmouseover="this.style.background='rgba(239,68,68,0.7)';this.style.color='white'" onmouseout="this.style.background='rgba(239,68,68,0.15)';this.style.color='#f87171'">
@@ -203,37 +258,31 @@
 </footer>
 
 <script>
-// Timer
+// ── Timer ──
 var seconds = 0;
 var timerInterval = setInterval(function() {
   seconds++;
   var m = String(Math.floor(seconds / 60)).padStart(2, '0');
   var s = String(seconds % 60).padStart(2, '0');
   var t = m + ':' + s;
-  var d1 = document.getElementById('timer-display');
-  var d2 = document.getElementById('stats-timer');
-  if (d1) d1.textContent = t;
-  if (d2) d2.textContent = t;
+  var d1 = document.getElementById('timer-display'); if (d1) d1.textContent = t;
+  var d2 = document.getElementById('stats-timer');   if (d2) d2.textContent = t;
 }, 1000);
 
-// Breathing text alternation
-var breathPhases = ['Inhala suavemente', 'Retén el aire...', 'Exhala lentamente', 'Descansa...'];
+// ── Breathing ──
+var breathPhases = ['Inhala suavemente','Retén el aire...','Exhala lentamente','Descansa...'];
 var phaseIdx = 0;
 setInterval(function() {
   phaseIdx = (phaseIdx + 1) % breathPhases.length;
-  var el = document.getElementById('breath-text');
-  if (el) el.textContent = breathPhases[phaseIdx];
+  var el = document.getElementById('breath-text'); if (el) el.textContent = breathPhases[phaseIdx];
 }, 4000);
 
-// Doctor name from URL params
-var params = new URLSearchParams(window.location.search);
-var doc = params.get('psicologo');
-if (doc) {
-  var el = document.getElementById('doctor-nombre');
-  if (el) el.textContent = 'Dr/a. ' + doc;
-}
+// ── Doctor name ──
+var _params = new URLSearchParams(window.location.search);
+var _doc = _params.get('psicologo');
+if (_doc) { var _dn = document.getElementById('doctor-nombre'); if (_dn) _dn.textContent = 'Dr/a. ' + _doc; }
 
-// Mic / Cam toggle
+// ── Mic / Cam ──
 document.getElementById('btn-mic').addEventListener('click', function() {
   var icon = this.querySelector('.material-symbols-outlined');
   var muted = icon.textContent === 'mic_off';
@@ -249,10 +298,136 @@ document.getElementById('btn-cam').addEventListener('click', function() {
   icon.style.color = off ? '' : '#f87171';
 });
 
-// Finalizar
+// ── PANEL SWITCHER ──
+var PPANELES = ['calma','notas','chat'];
+window.switchPanelP = function(p) {
+  PPANELES.forEach(function(id){ var el=document.getElementById('pp-'+id); if(el){el.classList.add('hidden');el.classList.remove('flex-1');} });
+  var t = document.getElementById('pp-'+p); if(t){t.classList.remove('hidden');t.classList.add('flex-1');}
+  ['video','notas','calma','chat'].forEach(function(id){ var b=document.getElementById('psb-'+id); if(b){b.style.background='';b.style.color='';} });
+  var ab = document.getElementById('psb-'+(p==='calma'?'calma':p)); if(ab){ab.style.background='rgba(20,184,166,0.15)';ab.style.color='#2dd4bf';}
+};
+window.ocultarPanelDerecho = function() {
+  PPANELES.forEach(function(id){ var el=document.getElementById('pp-'+id); if(el){el.classList.add('hidden');el.classList.remove('flex-1');} });
+};
+
+// ── NOTAS PACIENTE ──
+window.guardarNotasPaciente = function() {
+  var ta = document.getElementById('notas-paciente');
+  if (ta) localStorage.setItem('pac_notas_sesion', ta.value);
+  var ok = document.getElementById('notas-paciente-ok'); if(ok){ok.classList.remove('hidden');setTimeout(function(){ok.classList.add('hidden');},2000);}
+};
+(function(){ var v=localStorage.getItem('pac_notas_sesion'); if(v){ var ta=document.getElementById('notas-paciente'); if(ta) ta.value=v; } })();
+
+// ── CHAT PACIENTE ──
+var _pacMsgs = [];
+window.enviarMsgPaciente = function() {
+  var input = document.getElementById('pac-msg-input');
+  var text = (input.value||'').trim(); if(!text) return;
+  _pacMsgs.push({from:'me',text:text,time:new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})});
+  input.value=''; renderMsgsPaciente();
+  if(window._enviarMsgPacienteSupabase) window._enviarMsgPacienteSupabase(text);
+};
+function renderMsgsPaciente(){
+  var box=document.getElementById('pac-msgs'); if(!box) return;
+  box.innerHTML=_pacMsgs.map(function(m){
+    var me=m.from==='me';
+    return '<div style="display:flex;justify-content:'+(me?'flex-end':'flex-start')+';"><div style="max-width:85%;padding:7px 10px;border-radius:12px;'+(me?'background:rgba(20,184,166,0.18);border:1px solid rgba(20,184,166,0.25);border-bottom-right-radius:3px;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:3px;')+'"><p style="font-size:12px;color:#e2e8f0;margin:0;word-break:break-word;">'+m.text+'</p><p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:'+(me?'right':'left')+';">'+m.time+'</p></div></div>';
+  }).join('');
+  setTimeout(function(){box.scrollTop=box.scrollHeight;},30);
+}
+
+// ── RELAJACIÓN PROGRESIVA ──
+var _relajTimer=null, _relajSecs=240, _relajRunning=false;
+window.iniciarRelajacion = function() {
+  if(_relajRunning){ clearInterval(_relajTimer); _relajRunning=false; document.getElementById('relajacion-sub').textContent='4 minutos · Toca para iniciar'; document.getElementById('relajacion-icon').textContent='play_arrow'; return; }
+  _relajRunning=true; _relajSecs=240;
+  document.getElementById('relajacion-icon').textContent='stop';
+  _relajTimer=setInterval(function(){
+    _relajSecs--;
+    var m=Math.floor(_relajSecs/60), s=_relajSecs%60;
+    document.getElementById('relajacion-sub').textContent=m+':'+String(s).padStart(2,'0')+' restantes';
+    if(_relajSecs<=0){clearInterval(_relajTimer);_relajRunning=false;document.getElementById('relajacion-sub').textContent='✓ Completado';document.getElementById('relajacion-icon').textContent='check';}
+  },1000);
+};
+
+// ── RUIDO BLANCO ──
+var _ruidoCtx=null, _ruidoNode=null, _ruidoOn=false;
+window.toggleRuido = function() {
+  if(_ruidoOn){
+    if(_ruidoNode){_ruidoNode.stop();_ruidoNode=null;}
+    _ruidoOn=false;
+    document.getElementById('ruido-sub').textContent='Toca para activar';
+    document.getElementById('ruido-icon').textContent='play_arrow';
+    return;
+  }
+  try {
+    if(!_ruidoCtx) _ruidoCtx=new(window.AudioContext||window.webkitAudioContext)();
+    var bufferSize=4096, buf=_ruidoCtx.createBuffer(1,bufferSize,_ruidoCtx.sampleRate), data=buf.getChannelData(0);
+    for(var i=0;i<bufferSize;i++) data[i]=Math.random()*2-1;
+    _ruidoNode=_ruidoCtx.createBufferSource(); _ruidoNode.buffer=buf; _ruidoNode.loop=true;
+    var gain=_ruidoCtx.createGain(); gain.gain.value=0.04;
+    _ruidoNode.connect(gain); gain.connect(_ruidoCtx.destination); _ruidoNode.start();
+    _ruidoOn=true;
+    document.getElementById('ruido-sub').textContent='Sonando · Toca para detener';
+    document.getElementById('ruido-icon').textContent='stop';
+  } catch(e){ alert('Tu navegador no soporta audio en este contexto.'); }
+};
+
+// ── COMPARTIR PANTALLA ──
+var _screenStreamP=null;
+window.compartirPantallaP = async function() {
+  cerrarMasOpciones();
+  if(_screenStreamP){
+    _screenStreamP.getTracks().forEach(function(t){t.stop();}); _screenStreamP=null;
+    document.getElementById('btn-screen-p').style.background='rgba(255,255,255,0.06)';
+    document.getElementById('screen-icon-p').style.color='';
+    document.getElementById('screen-icon-p').textContent='screen_share'; return;
+  }
+  try {
+    _screenStreamP=await navigator.mediaDevices.getDisplayMedia({video:true});
+    document.getElementById('btn-screen-p').style.background='rgba(20,184,166,0.2)';
+    document.getElementById('screen-icon-p').style.color='#2dd4bf';
+    document.getElementById('screen-icon-p').textContent='stop_screen_share';
+    _screenStreamP.getVideoTracks()[0].onended=function(){
+      _screenStreamP=null;
+      document.getElementById('btn-screen-p').style.background='rgba(255,255,255,0.06)';
+      document.getElementById('screen-icon-p').style.color='';
+      document.getElementById('screen-icon-p').textContent='screen_share';
+    };
+  } catch(e){}
+};
+
+// ── REACCIONES ──
+var _emojisOpen=false;
+window.toggleEmojis=function(){
+  _emojisOpen=!_emojisOpen;
+  document.getElementById('emoji-popup').style.display=_emojisOpen?'flex':'none';
+  cerrarMasOpciones();
+};
+window.reaccionar=function(emoji){
+  _emojisOpen=false; document.getElementById('emoji-popup').style.display='none';
+  var el=document.getElementById('reaccion-float');
+  el.textContent=emoji; el.style.display='block';
+  el.style.animation='none'; void el.offsetWidth; el.style.animation='floatUp 1.8s forwards';
+  setTimeout(function(){el.style.display='none';},1800);
+};
+
+// ── MÁS OPCIONES ──
+var _masOpen=false;
+window.toggleMasOpciones=function(){_masOpen=!_masOpen;document.getElementById('mas-opciones').style.display=_masOpen?'block':'none';if(_masOpen&&_emojisOpen){_emojisOpen=false;document.getElementById('emoji-popup').style.display='none';}};
+window.cerrarMasOpciones=function(){_masOpen=false;document.getElementById('mas-opciones').style.display='none';};
+window.reportarProblema=function(){cerrarMasOpciones();alert('Problema reportado. Tu clínica ha sido notificada.');};
+document.addEventListener('click',function(e){
+  if(_masOpen&&!document.getElementById('mas-opciones').contains(e.target)&&e.target.title!=='Más opciones') cerrarMasOpciones();
+  if(_emojisOpen&&!document.getElementById('emoji-popup').contains(e.target)&&e.target.title!=='Reacción') {_emojisOpen=false;document.getElementById('emoji-popup').style.display='none';}
+});
+
+// ── FINALIZAR ──
 function finalizarSesion() {
   if (confirm('¿Terminar la sesión de video?')) {
     clearInterval(timerInterval);
+    if(_ruidoOn) toggleRuido();
+    if(_relajRunning){clearInterval(_relajTimer);}
     window.location.href = 'feedback_sesion.html';
   }
 }
@@ -268,6 +443,7 @@ import { crearSalaVideo } from '../js/paciente.js'
 
 const perfil = await verificarSesion(['paciente'])
 if (!perfil) return
+const userId = perfil.id
 
 function setEstado(texto, sub, icono) {
   const box = document.getElementById('video-status')
@@ -341,6 +517,39 @@ try {
       }
     }
   }
+  // Número de sesión del paciente
+  if (pac) {
+    const { count } = await supabase.from('citas').select('id', { count: 'exact', head: true }).eq('paciente_id', pac.id).eq('estado', 'completada')
+    const numEl = document.getElementById('num-sesion'); if (numEl) numEl.textContent = '#' + ((count || 0) + 1);
+  }
+
+  // Suscripción a mensajes nuevos (ejercicios de calma + chat)
+  if (pac) {
+    window._enviarMsgPacienteSupabase = async function(texto) {
+      if (!cita) return;
+      const psicId = cita.psicologo_id || null;
+      if (!psicId) return;
+      await supabase.from('mensajes').insert({ remitente_id: userId, destinatario_id: psicId, clinica_id: cita.clinica_id, contenido: texto });
+    };
+
+    // Escuchar mensajes del psicólogo en tiempo real
+    supabase.channel('pac-msgs-' + userId).on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'mensajes', filter: 'destinatario_id=eq.' + userId
+    }, function(payload) {
+      var msg = payload.new;
+      if (!msg) return;
+      if (msg.contenido && msg.contenido.startsWith('🧘')) {
+        // Es un ejercicio de calma
+        var el = document.getElementById('ejercicio-psi');
+        var txt = document.getElementById('ejercicio-psi-texto');
+        if (el && txt) { txt.textContent = msg.contenido.replace('🧘 Ejercicio de calma — ',''); el.classList.remove('hidden'); switchPanelP('calma'); }
+      } else {
+        _pacMsgs.push({ from: 'them', text: msg.contenido, time: new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}) });
+        renderMsgsPaciente();
+      }
+    }).subscribe();
+  }
+
 } catch (e) {
   setEstado('No se pudo cargar la sesión', e.message || 'Error de conexión.', 'error')
 }
