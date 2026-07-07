@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Formulario de ingreso</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#020617; font-family:'Inter',sans-serif; color:#e2e8f0; padding:28px 16px 110px; }
+  .wrap { max-width:600px; margin:0 auto; }
+  h1 { font-family:'Manrope',sans-serif; font-size:22px; font-weight:800; margin:0 0 4px; color:#f1f5f9; }
+  .sub { color:#94a3b8; font-size:14px; margin:0 0 22px; }
+  .card { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:18px; padding:20px; margin-bottom:16px; }
+  .card h2 { font-family:'Manrope',sans-serif; font-size:15px; font-weight:700; color:#5eead4; margin:0 0 14px; }
+  label { display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin:12px 0 5px; }
+  input[type=text], input[type=date], input[type=email], input[type=tel], textarea, select {
+    width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px;
+    padding:10px 12px; color:#e2e8f0; font-family:inherit; font-size:14px; outline:none; }
+  input:focus, textarea:focus, select:focus { border-color:#2dd4bf; }
+  textarea { resize:vertical; min-height:58px; }
+  .chk { display:flex; align-items:center; gap:10px; padding:8px 0; font-size:14px; color:#e2e8f0; cursor:pointer; }
+  .chk input { width:18px; height:18px; accent-color:#2dd4bf; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media(max-width:480px){ .two{ grid-template-columns:1fr; } }
+  .foot { position:fixed; bottom:0; left:0; right:0; padding:14px 16px; background:rgba(2,6,23,0.92); backdrop-filter:blur(12px); border-top:1px solid rgba(255,255,255,0.06); }
+  .foot .wrap { display:flex; gap:10px; }
+  button { font-family:'Manrope',sans-serif; font-weight:700; font-size:14px; border:none; border-radius:12px; cursor:pointer; padding:13px 16px; }
+  .save { background:rgba(255,255,255,0.08); color:#cbd5e1; }
+  .send { flex:1; background:linear-gradient(135deg,#059669,#047857); color:#fff; }
+  button:disabled { opacity:.5; cursor:default; }
+  #msg { text-align:center; font-size:13px; margin-top:8px; min-height:16px; }
+  .center { text-align:center; padding:60px 24px; color:#94a3b8; }
+  .big { font-size:48px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="cargando" class="center">Cargando tu formulario…</div>
+
+    <div id="form" style="display:none">
+      <h1 id="titulo">Formulario de ingreso</h1>
+      <p class="sub">Rellena tus datos antes de la primera sesión. Solo lo verá tu psicólogo. Puedes guardar y seguir luego.</p>
+
+      <div class="card">
+        <h2>Datos personales</h2>
+        <label>Nombre completo</label><input type="text" data-path="datos_personales.nombre_completo" />
+        <div class="two">
+          <div><label>Fecha de nacimiento</label><input type="date" data-path="datos_personales.fecha_nacimiento" /></div>
+          <div><label>Teléfono</label><input type="tel" data-path="datos_personales.telefono" /></div>
+        </div>
+        <div class="two">
+          <div><label>Email</label><input type="email" data-path="datos_personales.email" /></div>
+          <div><label>Ocupación</label><input type="text" data-path="datos_personales.ocupacion" /></div>
+        </div>
+        <label>Dirección</label><input type="text" data-path="datos_personales.direccion" />
+      </div>
+
+      <div class="card">
+        <h2>Contacto de emergencia</h2>
+        <div class="two">
+          <div><label>Nombre</label><input type="text" data-path="contacto_emergencia.nombre" /></div>
+          <div><label>Parentesco</label><input type="text" data-path="contacto_emergencia.parentesco" /></div>
+        </div>
+        <label>Teléfono</label><input type="tel" data-path="contacto_emergencia.telefono" />
+      </div>
+
+      <div class="card">
+        <h2>Motivo e historia</h2>
+        <label>¿Qué te trae a terapia? (motivo de consulta)</label>
+        <textarea data-path="historia_psicologica.motivo_consulta"></textarea>
+        <label>¿Desde cuándo?</label><input type="text" data-path="historia_psicologica.duracion_sintomas" />
+        <label class="chk"><input type="checkbox" data-path="historia_psicologica.terapia_previa" /> He ido a terapia antes</label>
+      </div>
+
+      <div class="card">
+        <h2>Salud (básico)</h2>
+        <label>Alergias</label><input type="text" data-path="historia_medica.cirugias_previas" placeholder="Si tienes, indícalas" />
+        <label>Medicación actual</label><textarea data-path="historia_medica.hospitalizaciones_previas" placeholder="Medicamentos que tomas ahora"></textarea>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:6px">
+          <label class="chk"><input type="checkbox" data-path="habitos.tabaco" /> Tabaco</label>
+          <label class="chk"><input type="checkbox" data-path="habitos.alcohol" /> Alcohol</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Consentimientos</h2>
+        <label class="chk"><input type="checkbox" data-path="consentimientos.tratamiento" /> Acepto iniciar el tratamiento psicológico</label>
+        <label class="chk"><input type="checkbox" data-path="consentimientos.confidencialidad" /> Entiendo la política de confidencialidad</label>
+        <label class="chk"><input type="checkbox" data-path="consentimientos.teleterapia" /> Acepto la modalidad online (si aplica)</label>
+      </div>
+      <div id="msg"></div>
+    </div>
+
+    <div id="hecho" style="display:none" class="center">
+      <div class="big">✅</div>
+      <h1>¡Formulario completado!</h1>
+      <p class="sub">Gracias. Tu psicólogo ya tiene tus datos. Nos vemos en la sesión.</p>
+    </div>
+
+    <div id="invalido" style="display:none" class="center">
+      <div class="big">🔗</div>
+      <h1>Enlace no válido</h1>
+      <p class="sub">Este enlace ha caducado o no es correcto.</p>
+    </div>
+  </div>
+
+  <div class="foot" id="barra" style="display:none"><div class="wrap">
+    <button class="save" id="btn-guardar">Guardar</button>
+    <button class="send" id="btn-enviar">Enviar y firmar</button>
+  </div></div>
+
+<script>
+var BK = 'https://serenecare-backend-production.up.railway.app';
+var token = new URLSearchParams(location.search).get('token');
+var datos = {};  // datos_json completo (se fusiona para no perder campos)
+
+function show(id){ ['cargando','form','hecho','invalido'].forEach(function(s){ document.getElementById(s).style.display = (s===id)?'':'none'; }); document.getElementById('barra').style.display = (id==='form')?'flex':'none'; }
+function getPath(obj,path){ return path.split('.').reduce(function(o,k){ return (o||{})[k]; }, obj); }
+function setPath(obj,path,val){ var ks=path.split('.'); var o=obj; for(var i=0;i<ks.length-1;i++){ if(typeof o[ks[i]]!=='object'||o[ks[i]]===null) o[ks[i]]={}; o=o[ks[i]]; } o[ks[ks.length-1]]=val; }
+
+async function cargar(){
+  if(!token){ show('invalido'); return; }
+  try{
+    var r = await fetch(BK+'/api/intake-forms/public/'+token);
+    if(!r.ok){ show('invalido'); return; }
+    var d = (await r.json()).data;
+    if(d.firmada){ show('hecho'); return; }
+    datos = d.datos_json || {};
+    if(d.clinica && d.clinica.nombre) document.getElementById('titulo').textContent = 'Formulario de ingreso · '+d.clinica.nombre;
+    // Pre-rellenar inputs desde datos
+    document.querySelectorAll('[data-path]').forEach(function(el){
+      var v = getPath(datos, el.getAttribute('data-path'));
+      if(el.type==='checkbox') el.checked = !!v; else if(v!=null) el.value = v;
+    });
+    show('form');
+  }catch(e){ show('invalido'); }
+}
+
+function recoger(){
+  document.querySelectorAll('[data-path]').forEach(function(el){
+    setPath(datos, el.getAttribute('data-path'), el.type==='checkbox'?el.checked:el.value);
+  });
+  return datos;
+}
+
+async function guardar(silencioso){
+  recoger();
+  var r = await fetch(BK+'/api/intake-forms/public/'+token, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ datos_json: datos }) });
+  if(!silencioso){ var m=document.getElementById('msg'); if(r.ok){ m.textContent='✓ Guardado'; m.style.color='#34d399'; } else { m.textContent='No se pudo guardar'; m.style.color='#f87171'; } }
+  return r.ok;
+}
+
+document.getElementById('btn-guardar').addEventListener('click', async function(){ this.disabled=true; await guardar(false); this.disabled=false; });
+document.getElementById('btn-enviar').addEventListener('click', async function(){
+  this.disabled=true; document.getElementById('btn-guardar').disabled=true;
+  var m=document.getElementById('msg'); m.textContent='Enviando…'; m.style.color='#94a3b8';
+  var ok = await guardar(true);
+  if(ok){ var r = await fetch(BK+'/api/intake-forms/public/'+token+'/sign', {method:'POST'}); if(r.ok){ show('hecho'); return; } }
+  m.textContent='No se pudo enviar. Inténtalo de nuevo.'; m.style.color='#f87171';
+  this.disabled=false; document.getElementById('btn-guardar').disabled=false;
+});
+
+cargar();
+</script>
+</body>
+</html>

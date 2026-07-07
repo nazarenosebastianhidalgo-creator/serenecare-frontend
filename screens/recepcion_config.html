@@ -74,6 +74,20 @@
       <label>Idiomas <span class="hint">(separados por comas)</span></label>
       <input type="text" id="f-idiomas" placeholder="Español, inglés" />
     </div>
+
+    <div class="card">
+      <div class="row" style="padding-top:0"><div><p>⚡ Automatizaciones</p><span class="hint">Que no se te caiga nada</span></div></div>
+      <div class="row" style="border-top:1px solid rgba(255,255,255,0.05)">
+        <div><p>Ficha de ingreso al reservar</p><span class="hint">El paciente recibe la anamnesis solo</span></div>
+        <div class="toggle" id="t-anamnesis"><div class="th"></div></div>
+      </div>
+      <div class="row" style="border-top:1px solid rgba(255,255,255,0.05)">
+        <div><p>Seguimiento tras cada sesión</p><span class="hint">Email automático al completar la cita</span></div>
+        <div class="toggle" id="t-seguimiento"><div class="th"></div></div>
+      </div>
+      <label>Texto del seguimiento</label>
+      <textarea id="f-seguimiento" placeholder="Gracias por tu sesión de hoy. Si necesitas algo antes de la próxima, aquí estamos."></textarea>
+    </div>
     <div id="msg"></div>
   </div>
 
@@ -109,6 +123,9 @@
         $('f-trata').value = c.que_trata || ''
         $('f-duracion').value = c.duracion_min || ''
         $('f-idiomas').value = (c.idiomas || []).join(', ')
+        $('t-anamnesis').classList.toggle('on', !!c.auto_anamnesis)
+        $('t-seguimiento').classList.toggle('on', !!c.auto_seguimiento)
+        $('f-seguimiento').value = c.texto_seguimiento || ''
       }
     }
   } catch (e) { /* primera vez, sin config */ }
@@ -125,6 +142,9 @@
       que_trata: $('f-trata').value.trim() || null,
       duracion_min: $('f-duracion').value ? Number($('f-duracion').value) : null,
       idiomas: arr($('f-idiomas').value),
+      auto_anamnesis: $('t-anamnesis').classList.contains('on'),
+      auto_seguimiento: $('t-seguimiento').classList.contains('on'),
+      texto_seguimiento: $('f-seguimiento').value.trim() || null,
     }
     try {
       const r = await fetch(API + '/api/recepcion/config', { method: 'PUT', headers: auth, body: JSON.stringify(body) })
