@@ -542,22 +542,14 @@ async function procesarDictadoConIA() {
     var { data: { session: _sess } } = await supabase.auth.getSession();
     var _authHeaders = { 'Content-Type': 'application/json' };
     if (_sess?.access_token) _authHeaders['Authorization'] = 'Bearer ' + _sess.access_token;
-    var res = await fetch('https://wnuwuxenzwfqmhxagryk.supabase.co/functions/v1/openai-proxy', {
+    var res = await fetch('/api/transcripcion/soap-texto', {
       method: 'POST',
       headers: _authHeaders,
-      body: JSON.stringify({
-        model: 'gpt-4o', temperature: 0.35,
-        messages: [
-          { role: 'system', content: 'Eres un psicólogo clínico experto en notas SOAP. Recibirás una transcripción de sesión terapéutica y debes estructurarla en formato SOAP. Responde ÚNICAMENTE con JSON válido con las claves: subjetivo, objetivo, evaluacion, plan. Sin texto extra.' },
-          { role: 'user', content: 'Transcripción:\n\n' + texto + '\n\nEstructura en SOAP. Solo JSON: {"subjetivo":"...","objetivo":"...","evaluacion":"...","plan":"..."}' }
-        ]
-      })
+      body: JSON.stringify({ texto: texto })
     });
+    if (!res.ok) throw new Error('Error ' + res.status);
     var json = await res.json();
-    var content = (json.choices && json.choices[0] && json.choices[0].message && json.choices[0].message.content) || '';
-    var match = content.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('Respuesta inesperada');
-    var soap = JSON.parse(match[0]);
+    var soap = json.soap || {};
     if (soap.subjetivo)  document.getElementById('textarea-s').value = soap.subjetivo;
     if (soap.objetivo)   document.getElementById('textarea-o').value = soap.objetivo;
     if (soap.evaluacion) document.getElementById('textarea-a').value = soap.evaluacion;
