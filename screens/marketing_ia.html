@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Marketing IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#020617; font-family:'Inter',sans-serif; color:#e2e8f0; padding:32px 16px 60px; }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-family:'Manrope',sans-serif; font-size:24px; font-weight:800; margin:0 0 4px; color:#f1f5f9; }
+  .sub { color:#94a3b8; font-size:14px; margin:0 0 22px; }
+  .sub b { color:#5eead4; }
+  .card { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:18px; margin-bottom:14px; }
+  label { display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin:10px 0 5px; }
+  input[type=text], select, textarea { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:11px 13px; color:#e2e8f0; font-family:inherit; font-size:14px; outline:none; }
+  input:focus, select:focus { border-color:#2dd4bf; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media(max-width:480px){ .two{ grid-template-columns:1fr; } }
+  .gen { width:100%; margin-top:16px; background:linear-gradient(135deg,#7c3aed,#6d28d9); color:#fff; border:none; border-radius:12px; padding:14px; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; cursor:pointer; }
+  .gen:disabled { opacity:.6; cursor:default; }
+  h2 { font-family:'Manrope',sans-serif; font-size:14px; font-weight:800; color:#a78bfa; margin:22px 0 10px; text-transform:uppercase; letter-spacing:.04em; }
+  .item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:14px; margin-bottom:10px; position:relative; }
+  .item .tit { font-family:'Manrope',sans-serif; font-weight:700; color:#f1f5f9; font-size:14px; margin:0 0 4px; }
+  .item .txt { font-size:13.5px; color:#cbd5e1; margin:0; white-space:pre-line; line-height:1.5; }
+  .item .cta { display:inline-block; margin-top:8px; font-size:12px; font-weight:700; color:#022c22; background:#2dd4bf; padding:4px 10px; border-radius:8px; }
+  .badge { font-size:10px; font-weight:700; text-transform:uppercase; color:#a78bfa; background:rgba(124,58,237,0.15); padding:2px 8px; border-radius:8px; }
+  .copy { position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.06); border:none; color:#94a3b8; font-size:11px; font-weight:700; padding:5px 9px; border-radius:8px; cursor:pointer; }
+  .copy:hover { color:#5eead4; }
+  ul { margin:0; padding-left:18px; } li { font-size:13.5px; color:#cbd5e1; margin-bottom:6px; }
+  .video-cta { background:rgba(124,58,237,0.08); border:1px dashed rgba(124,58,237,0.35); border-radius:12px; padding:14px; margin-top:6px; text-align:center; }
+  .video-cta p { margin:0; font-size:13px; color:#c4b5fd; }
+  #msg { text-align:center; font-size:13px; color:#94a3b8; margin:14px 0; min-height:16px; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🎬 Marketing IA</h1>
+    <p class="sub">Escribe qué quieres promocionar y la IA te crea la campaña con TUS datos: anuncios, guion de video, posts e ideas. <b>Despide a tu agencia.</b></p>
+
+    <div class="card">
+      <label>¿Qué quieres promocionar / lograr?</label>
+      <input type="text" id="objetivo" placeholder="Ej: captar pacientes con ansiedad para terapia online" />
+      <div class="two">
+        <div>
+          <label>Tono</label>
+          <select id="tono">
+            <option>cercano y profesional</option><option>cálido y empático</option>
+            <option>directo y claro</option><option>inspirador</option>
+          </select>
+        </div>
+        <div>
+          <label>Canal principal</label>
+          <select id="canal"><option>Instagram</option><option>TikTok</option><option>Facebook</option><option>LinkedIn</option></select>
+        </div>
+      </div>
+      <button class="gen" id="btn-generar">✨ Generar campaña</button>
+    </div>
+
+    <div id="msg"></div>
+
+    <div id="resultado" class="hidden">
+      <h2>📢 Anuncios (Meta / Instagram)</h2>
+      <div id="anuncios"></div>
+      <h2>🎥 Guion de video (30-45s)</h2>
+      <div id="guion"></div>
+      <div class="video-cta">
+        <p>🎬 <b>Generar el video con IA</b> — próximamente (conecta tu cuenta de video)</p>
+      </div>
+      <h2>📱 Posts para redes</h2>
+      <div id="posts"></div>
+      <h2>💡 Ideas para esta semana</h2>
+      <ul id="ideas"></ul>
+    </div>
+  </div>
+
+<script type="module">
+  import { supabase } from '../js/supabase-client.js'
+  const API = ''
+  const $ = id => document.getElementById(id)
+  const esc = s => (s || '').replace(/</g, '&lt;')
+
+  const { data: { session } } = await supabase.auth.getSession()
+  const auth = { 'Authorization': 'Bearer ' + (session?.access_token || ''), 'Content-Type': 'application/json' }
+
+  function copiar(texto, btn) {
+    navigator.clipboard.writeText(texto).then(() => { const o = btn.textContent; btn.textContent = '✓ Copiado'; setTimeout(() => btn.textContent = o, 1500); })
+  }
+  window.__copiar = copiar
+
+  function itemHTML(tit, txt, cta, badge) {
+    const raw = (tit ? tit + '\n\n' : '') + txt + (cta ? '\n\n' + cta : '')
+    return `<div class="item">
+      <button class="copy" onclick="__copiar(${JSON.stringify(raw)}, this)">copiar</button>
+      ${badge ? `<span class="badge">${esc(badge)}</span>` : ''}
+      ${tit ? `<p class="tit" style="margin-top:${badge ? '8px' : '0'}">${esc(tit)}</p>` : ''}
+      <p class="txt">${esc(txt)}</p>
+      ${cta ? `<span class="cta">${esc(cta)}</span>` : ''}
+    </div>`
+  }
+
+  $('btn-generar').addEventListener('click', async () => {
+    const objetivo = $('objetivo').value.trim()
+    if (!objetivo) { $('msg').textContent = 'Escribe qué quieres promocionar.'; return }
+    $('btn-generar').disabled = true; $('msg').textContent = '✨ Creando tu campaña…'; $('resultado').classList.add('hidden')
+    try {
+      const r = await fetch(API + '/api/marketing/generar', {
+        method: 'POST', headers: auth,
+        body: JSON.stringify({ objetivo, tono: $('tono').value, canal: $('canal').value })
+      })
+      if (!r.ok) throw new Error('Error ' + r.status)
+      const d = await r.json()
+      $('anuncios').innerHTML = (d.anuncios || []).map(a => itemHTML(a.titular, a.texto, a.cta)).join('') || '<p class="sub">—</p>'
+      $('guion').innerHTML = d.guion_video ? itemHTML('', d.guion_video, '') : '<p class="sub">—</p>'
+      $('posts').innerHTML = (d.posts || []).map(p => itemHTML('', p.texto, '', p.red)).join('') || '<p class="sub">—</p>'
+      $('ideas').innerHTML = (d.ideas || []).map(i => `<li>${esc(i)}</li>`).join('') || '<li>—</li>'
+      $('resultado').classList.remove('hidden'); $('msg').textContent = ''
+    } catch (e) {
+      $('msg').textContent = 'No se pudo generar. Inténtalo de nuevo.'
+    } finally { $('btn-generar').disabled = false }
+  })
+</script>
+</body>
+</html>
