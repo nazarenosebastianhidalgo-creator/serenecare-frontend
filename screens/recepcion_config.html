@@ -88,6 +88,24 @@
       <label>Texto del seguimiento</label>
       <textarea id="f-seguimiento" placeholder="Gracias por tu sesión de hoy. Si necesitas algo antes de la próxima, aquí estamos."></textarea>
     </div>
+
+    <div class="card">
+      <div class="row" style="padding-top:0">
+        <div><p>📅 Reservas online 24/7</p><span class="hint">Los pacientes reservan solos desde tu enlace</span></div>
+        <div class="toggle" id="t-reservas"><div class="th"></div></div>
+      </div>
+      <div id="link-reservas" style="display:none;margin:12px 0">
+        <label>Tu enlace de reservas (compártelo en tu web, IG, bio…)</label>
+        <div style="display:flex;gap:8px">
+          <input id="enlace-reservas" readonly style="flex:1" />
+          <button type="button" onclick="copiarReservas()" style="background:rgba(45,212,191,0.15);color:#5eead4;border:1px solid rgba(45,212,191,0.3);border-radius:10px;padding:0 14px;font-weight:700;cursor:pointer">Copiar</button>
+        </div>
+      </div>
+      <label>Días de antelación reservables</label>
+      <input type="number" id="f-antelacion" value="30" min="1" max="120" />
+      <label style="margin-top:12px">Horario disponible (marca los días y su franja)</label>
+      <div id="dias-horario"></div>
+    </div>
     <div id="msg"></div>
   </div>
 
@@ -105,6 +123,15 @@
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) { $('msg').textContent = 'Inicia sesión para configurar tu recepción.'; }
   const auth = { 'Authorization': 'Bearer ' + (session?.access_token || ''), 'Content-Type': 'application/json' }
+
+  // Filas de horario (Lun-Dom, 1-7)
+  const DIAS = [['1','Lun'],['2','Mar'],['3','Mié'],['4','Jue'],['5','Vie'],['6','Sáb'],['7','Dom']]
+  $('dias-horario').innerHTML = DIAS.map(([wd,nom]) => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px" data-wd="${wd}">
+      <label style="display:flex;align-items:center;gap:6px;width:64px;margin:0;font-size:13px"><input type="checkbox" class="d-on" style="width:16px;height:16px;accent-color:#2dd4bf"/> ${nom}</label>
+      <input type="time" class="d-from" value="09:00" style="flex:1"/>
+      <input type="time" class="d-to" value="20:00" style="flex:1"/>
+    </div>`).join('')
 
   // Cargar config actual
   try {
@@ -126,12 +153,24 @@
         $('t-anamnesis').classList.toggle('on', !!c.auto_anamnesis)
         $('t-seguimiento').classList.toggle('on', !!c.auto_seguimiento)
         $('f-seguimiento').value = c.texto_seguimiento || ''
+        $('t-reservas').classList.toggle('on', !!c.reservas_activas)
+        $('f-antelacion').value = c.dias_antelacion || 30
+        const disp = c.disponibilidad || {}
+        document.querySelectorAll('#dias-horario [data-wd]').forEach(row => {
+          const rango = (disp[row.getAttribute('data-wd')] || [])[0]
+          if (rango) { row.querySelector('.d-on').checked = true; row.querySelector('.d-from').value = rango[0]; row.querySelector('.d-to').value = rango[1] }
+        })
+        if (c.psicologo_id) { $('enlace-reservas').value = location.origin + '/screens/reservar.html?psi=' + c.psicologo_id; $('link-reservas').style.display = 'block' }
       }
     }
   } catch (e) { /* primera vez, sin config */ }
 
   $('guardar').addEventListener('click', async () => {
     $('guardar').disabled = true; $('msg').textContent = 'Guardando…'; $('msg').style.color = '#94a3b8'
+    const disponibilidad = {}
+    document.querySelectorAll('#dias-horario [data-wd]').forEach(row => {
+      if (row.querySelector('.d-on').checked) disponibilidad[row.getAttribute('data-wd')] = [[row.querySelector('.d-from').value, row.querySelector('.d-to').value]]
+    })
     const body = {
       activo: $('t-activo').classList.contains('on'),
       acepta_nuevos: $('t-nuevos').classList.contains('on'),
@@ -145,6 +184,9 @@
       auto_anamnesis: $('t-anamnesis').classList.contains('on'),
       auto_seguimiento: $('t-seguimiento').classList.contains('on'),
       texto_seguimiento: $('f-seguimiento').value.trim() || null,
+      reservas_activas: $('t-reservas').classList.contains('on'),
+      dias_antelacion: Number($('f-antelacion').value) || 30,
+      disponibilidad,
     }
     try {
       const r = await fetch(API + '/api/recepcion/config', { method: 'PUT', headers: auth, body: JSON.stringify(body) })
@@ -158,6 +200,7 @@
   })
 
   window.copiar = () => { $('enlace').select(); document.execCommand('copy'); $('msg').textContent = '✓ Enlace copiado'; $('msg').style.color = '#34d399' }
+  window.copiarReservas = () => { $('enlace-reservas').select(); document.execCommand('copy'); $('msg').textContent = '✓ Enlace de reservas copiado'; $('msg').style.color = '#34d399' }
 </script>
 </body>
 </html>

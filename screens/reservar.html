@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Reservar cita</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#020617; font-family:'Inter',sans-serif; color:#e2e8f0; padding:28px 16px 60px; }
+  .wrap { max-width:460px; margin:0 auto; }
+  h1 { font-family:'Manrope',sans-serif; font-size:22px; font-weight:800; margin:0 0 4px; color:#f1f5f9; }
+  .sub { color:#94a3b8; font-size:14px; margin:0 0 20px; }
+  .sub b { color:#5eead4; }
+  .card { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:18px; margin-bottom:14px; }
+  .dia h3 { font-family:'Manrope',sans-serif; font-size:14px; font-weight:700; color:#f1f5f9; margin:14px 0 8px; text-transform:capitalize; }
+  .huecos { display:flex; flex-wrap:wrap; gap:8px; }
+  .hueco { padding:9px 14px; border-radius:10px; border:1px solid rgba(45,212,191,0.25); background:rgba(45,212,191,0.06); color:#5eead4; font-weight:700; font-size:14px; cursor:pointer; font-variant-numeric:tabular-nums; }
+  .hueco:hover { background:rgba(45,212,191,0.15); }
+  .hueco.sel { background:#2dd4bf; color:#022c22; }
+  label { display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin:12px 0 5px; }
+  input, textarea { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:11px 13px; color:#e2e8f0; font-family:inherit; font-size:14px; outline:none; }
+  input:focus, textarea:focus { border-color:#2dd4bf; }
+  .btn { width:100%; margin-top:16px; background:linear-gradient(135deg,#059669,#047857); color:#fff; border:none; border-radius:12px; padding:14px; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; cursor:pointer; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  .center { text-align:center; padding:50px 20px; color:#94a3b8; }
+  .big { font-size:48px; }
+  #msg { text-align:center; font-size:13px; color:#f87171; margin-top:8px; min-height:16px; }
+  .hidden { display:none; }
+  .seleccion { background:rgba(45,212,191,0.06); border:1px solid rgba(45,212,191,0.2); border-radius:10px; padding:10px 14px; font-size:13px; color:#5eead4; margin-bottom:6px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="cargando" class="center">Cargando huecos disponibles…</div>
+
+    <div id="app" class="hidden">
+      <h1 id="titulo">Reservar cita</h1>
+      <p class="sub" id="info"></p>
+      <div class="card">
+        <div id="dias"></div>
+        <p id="sin-huecos" class="sub hidden" style="margin:8px 0 0">No hay huecos disponibles ahora mismo. Vuelve a intentarlo pronto.</p>
+      </div>
+
+      <div id="form" class="card hidden">
+        <div class="seleccion" id="seleccion"></div>
+        <label>Tu nombre</label><input type="text" id="f-nombre" />
+        <label>Email</label><input type="email" id="f-email" />
+        <label>Teléfono (opcional)</label><input type="tel" id="f-telefono" />
+        <label>¿Qué te trae a terapia? (opcional)</label><textarea id="f-motivo"></textarea>
+        <button class="btn" id="btn-reservar">Confirmar reserva</button>
+        <div id="msg"></div>
+      </div>
+    </div>
+
+    <div id="hecho" class="hidden center">
+      <div class="big">✅</div>
+      <h1>¡Cita reservada!</h1>
+      <p class="sub center" id="hecho-txt"></p>
+    </div>
+
+    <div id="nodisp" class="hidden center">
+      <div class="big">📅</div>
+      <h1>Reservas no disponibles</h1>
+      <p class="sub center">Este profesional no tiene reservas online activas ahora mismo.</p>
+    </div>
+  </div>
+
+<script>
+var API = '';
+var psi = new URLSearchParams(location.search).get('psi');
+var sel = null; // {fecha, hora}
+var dur = 50;
+
+function show(id){ ['cargando','app','hecho','nodisp'].forEach(function(s){ document.getElementById(s).classList.toggle('hidden', s!==id); }); }
+function fechaBonita(iso){ try { return new Date(iso+'T00:00:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}); } catch(e){ return iso; } }
+
+async function init(){
+  if(!psi){ show('nodisp'); return; }
+  try {
+    var info = await fetch(API+'/api/reservas/'+psi+'/info');
+    if(!info.ok){ show('nodisp'); return; }
+    var i = await info.json();
+    document.getElementById('titulo').textContent = 'Reservar con '+(i.psicologo||'tu psicólogo');
+    var det = []; if(i.modalidad) det.push(i.modalidad); if(i.tarifa) det.push(i.tarifa); if(i.duracion_min) det.push(i.duracion_min+' min');
+    document.getElementById('info').innerHTML = det.length ? det.join(' · ') : 'Elige un hueco que te venga bien.';
+
+    var hr = await (await fetch(API+'/api/reservas/'+psi+'/huecos')).json();
+    dur = hr.duracion_min || 50;
+    var cont = document.getElementById('dias');
+    if(!hr.dias || !hr.dias.length){ document.getElementById('sin-huecos').classList.remove('hidden'); }
+    else {
+      cont.innerHTML = hr.dias.map(function(d){
+        return '<div class="dia"><h3>'+fechaBonita(d.fecha)+'</h3><div class="huecos">'+
+          d.huecos.map(function(h){ return '<div class="hueco" data-f="'+d.fecha+'" data-h="'+h+'">'+h+'</div>'; }).join('')+
+          '</div></div>';
+      }).join('');
+      cont.querySelectorAll('.hueco').forEach(function(el){ el.addEventListener('click', function(){
+        cont.querySelectorAll('.hueco').forEach(function(x){ x.classList.remove('sel'); });
+        el.classList.add('sel'); sel = { fecha: el.getAttribute('data-f'), hora: el.getAttribute('data-h') };
+        document.getElementById('seleccion').textContent = '🗓️ '+fechaBonita(sel.fecha)+' a las '+sel.hora;
+        document.getElementById('form').classList.remove('hidden');
+        document.getElementById('form').scrollIntoView({behavior:'smooth'});
+      }); });
+    }
+    show('app');
+  } catch(e){ show('nodisp'); }
+}
+
+document.getElementById('btn-reservar').addEventListener('click', async function(){
+  var nombre = document.getElementById('f-nombre').value.trim();
+  var email = document.getElementById('f-email').value.trim();
+  var msg = document.getElementById('msg');
+  if(!sel){ msg.textContent='Elige un hueco.'; return; }
+  if(!nombre || !email){ msg.textContent='Pon tu nombre y email.'; return; }
+  this.disabled = true; msg.textContent='';
+  try {
+    var r = await fetch(API+'/api/reservas/'+psi, { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ nombre:nombre, email:email, telefono:document.getElementById('f-telefono').value.trim(), motivo:document.getElementById('f-motivo').value.trim(), fecha:sel.fecha, hora:sel.hora }) });
+    var d = await r.json();
+    if(r.status===409){ msg.textContent='Vaya, ese hueco se acaba de ocupar. Elige otro.'; this.disabled=false; return; }
+    if(!r.ok) throw new Error(d.error||'error');
+    document.getElementById('hecho-txt').textContent = 'Te esperamos el '+fechaBonita(sel.fecha)+' a las '+sel.hora+'. Te enviaremos la confirmación por email.';
+    show('hecho');
+  } catch(e){ msg.textContent='No se pudo reservar. Inténtalo de nuevo.'; this.disabled=false; }
+});
+
+init();
+</script>
+</body>
+</html>
