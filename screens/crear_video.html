@@ -60,6 +60,7 @@
       </div>
     </div>
 
+    <div id="creditos" style="text-align:center;font-size:13px;color:#5eead4;margin-bottom:8px;font-weight:600"></div>
     <button class="gen" id="btn-generar">🎬 Generar video</button>
     <div id="msg"></div>
     <video id="preview" class="hidden" controls></video>
@@ -74,6 +75,14 @@
 
   // Guion desde el estudio de marketing
   $('guion').value = sessionStorage.getItem('sc_guion_video') || ''
+
+  async function cargarCreditos() {
+    try {
+      const d = await (await fetch(API + '/api/creador-video/creditos', { headers: auth })).json()
+      $('creditos').textContent = d.sin_perfil ? '' : `🎬 Te quedan ${d.creditos} vídeos este mes`
+    } catch {}
+  }
+  cargarCreditos()
 
   let avatarSel = null, vertical = true
   window.setFmt = v => { vertical = v; $('p-vertical').classList.toggle('on', v); $('p-horizontal').classList.toggle('on', !v) }
@@ -105,6 +114,7 @@
       const r = await fetch(API + '/api/creador-video/generar', { method:'POST', headers: auth, body: JSON.stringify({ guion, avatar_id: avatarSel, vertical }) })
       const d = await r.json()
       if (!r.ok || !d.video_id) throw new Error(d.error || 'error')
+      cargarCreditos()
       // Poll estado
       let intentos = 0
       const poll = setInterval(async () => {
