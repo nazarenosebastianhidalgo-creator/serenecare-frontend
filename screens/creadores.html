@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Programa de Creadores</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#020617; color:#e2e8f0; font-family:'Inter',sans-serif; line-height:1.55; }
+  .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
+  a.cta { display:inline-block; background:linear-gradient(135deg,#2dd4bf,#0d9488); color:#022c22; font-family:'Manrope',sans-serif; font-weight:800; font-size:16px; text-decoration:none; padding:15px 30px; border-radius:14px; }
+  a.cta:hover { filter:brightness(1.08); }
+
+  /* Hero */
+  .hero { text-align:center; padding:76px 0 60px; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-160px; left:50%; transform:translateX(-50%); width:640px; height:340px; background:radial-gradient(circle, rgba(45,212,191,0.16), transparent 70%); pointer-events:none; }
+  .eyebrow { display:inline-block; font-family:'Manrope',sans-serif; font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#5eead4; background:rgba(45,212,191,0.1); border:1px solid rgba(45,212,191,0.25); padding:6px 14px; border-radius:100px; margin-bottom:22px; }
+  h1 { font-family:'Manrope',sans-serif; font-weight:800; font-size:44px; line-height:1.08; letter-spacing:-0.02em; margin:0 auto 16px; max-width:640px; color:#f8fafc; text-wrap:balance; }
+  h1 .g { background:linear-gradient(120deg,#5eead4,#2dd4bf); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p { font-size:18px; color:#94a3b8; max-width:560px; margin:0 auto 30px; }
+  @media(max-width:600px){ h1{font-size:32px;} .hero p{font-size:16px;} }
+
+  section { padding:44px 0; }
+  h2 { font-family:'Manrope',sans-serif; font-weight:800; font-size:26px; text-align:center; margin:0 0 8px; color:#f1f5f9; }
+  .lead { text-align:center; color:#94a3b8; max-width:560px; margin:0 auto 34px; }
+
+  .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media(max-width:720px){ .grid{grid-template-columns:1fr;} }
+  .card { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:18px; padding:26px 22px; }
+  .card .ic { font-size:30px; margin-bottom:12px; }
+  .card h3 { font-family:'Manrope',sans-serif; font-weight:800; font-size:18px; margin:0 0 6px; color:#f1f5f9; }
+  .card p { margin:0; font-size:14.5px; color:#94a3b8; }
+  .card .big { font-family:'Manrope',sans-serif; font-weight:800; font-size:30px; color:#5eead4; }
+
+  .steps { counter-reset:s; display:flex; flex-direction:column; gap:14px; max-width:640px; margin:0 auto; }
+  .step { display:flex; gap:16px; align-items:flex-start; background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:20px 22px; }
+  .step::before { counter-increment:s; content:counter(s); flex:none; width:36px; height:36px; border-radius:10px; background:rgba(45,212,191,0.15); color:#5eead4; font-family:'Manrope',sans-serif; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .step h3 { font-family:'Manrope',sans-serif; margin:0 0 3px; font-size:16px; color:#f1f5f9; }
+  .step p { margin:0; font-size:14px; color:#94a3b8; }
+
+  .latam { background:linear-gradient(135deg,rgba(45,212,191,0.08),rgba(13,148,136,0.04)); border:1px solid rgba(45,212,191,0.2); border-radius:22px; padding:38px 30px; text-align:center; }
+  .latam h2 { margin-bottom:10px; }
+  .latam .pill { display:inline-block; margin-top:14px; font-family:'Manrope',sans-serif; font-weight:800; font-size:20px; color:#f8fafc; background:rgba(2,6,23,0.5); border:1px solid rgba(45,212,191,0.3); padding:12px 22px; border-radius:14px; }
+
+  .porque { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:22px; padding:34px 28px; }
+  .porque ul { list-style:none; padding:0; margin:16px 0 0; display:grid; grid-template-columns:1fr 1fr; gap:10px 22px; }
+  @media(max-width:600px){ .porque ul{grid-template-columns:1fr;} }
+  .porque li { font-size:14.5px; color:#cbd5e1; padding-left:26px; position:relative; }
+  .porque li::before { content:'✓'; position:absolute; left:0; color:#2dd4bf; font-weight:800; }
+
+  .faq details { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:4px 18px; margin-bottom:10px; }
+  .faq summary { cursor:pointer; font-family:'Manrope',sans-serif; font-weight:700; font-size:15px; color:#f1f5f9; padding:14px 0; list-style:none; }
+  .faq summary::-webkit-details-marker { display:none; }
+  .faq p { margin:0 0 14px; font-size:14px; color:#94a3b8; }
+
+  .final { text-align:center; padding:60px 0 80px; }
+  .final h2 { font-size:30px; }
+  footer { text-align:center; color:#475569; font-size:13px; padding:30px 0; border-top:1px solid rgba(255,255,255,0.05); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div class="hero">
+      <span class="eyebrow">Programa de Creadores · SereneCare</span>
+      <h1>Convierte tu audiencia en <span class="g">ingresos recurrentes</span></h1>
+      <p>Gana una comisión <b>cada mes</b> por cada psicólogo o clínica que traigas a SereneCare — la plataforma que no solo gestiona la consulta, <b>la llena</b>.</p>
+      <a class="cta" href="mailto:sebastian@serenecare.es?subject=Quiero%20ser%20partner%20de%20SereneCare&body=Hola,%20quiero%20unirme%20al%20programa%20de%20creadores.%20Mi%20perfil%20es:">Quiero ser partner →</a>
+    </div>
+
+    <section>
+      <div class="grid">
+        <div class="card">
+          <div class="ic">💸</div>
+          <div class="big">~10€/mes</div>
+          <h3>Recurrente</h3>
+          <p>Por cada psicólogo que traigas, cobras <b>todos los meses</b> mientras siga con nosotros. No es un pago único.</p>
+        </div>
+        <div class="card">
+          <div class="ic">🌎</div>
+          <div class="big">En euros</div>
+          <h3>Ideal si estás en LATAM</h3>
+          <p>Cobras en euros con pagos mensuales. Con la moneda devaluada, cada referido te renta muchísimo más.</p>
+        </div>
+        <div class="card">
+          <div class="ic">📊</div>
+          <div class="big">100%</div>
+          <h3>Transparente</h3>
+          <p>Ves tus referidos y tus ingresos <b>en tiempo real</b> en tu propio panel. Sin cuentas raras.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="latam">
+      <h2>La cuenta es simple</h2>
+      <p class="lead" style="margin-bottom:0">Ingreso pasivo que crece contigo. Cuantos más traigas, más cobras — cada mes.</p>
+      <div class="pill">Trae 10 psicólogos → ~100€/mes pasivos 💚</div>
+    </section>
+
+    <section>
+      <h2>Cómo funciona</h2>
+      <p class="lead">Tres pasos. Cero complicación.</p>
+      <div class="steps">
+        <div class="step"><div><h3>Regístrate</h3><p>Te damos tu enlace y código únicos en segundos.</p></div></div>
+        <div class="step"><div><h3>Comparte</h3><p>Un vídeo, un post, una story… las veces que quieras. Tú decides el formato.</p></div></div>
+        <div class="step"><div><h3>Cobra cada mes</h3><p>Por cada suscripción que venga de ti, ingresas comisión de forma recurrente.</p></div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="porque">
+        <h2 style="text-align:left">Por qué se vende solo</h2>
+        <p style="color:#94a3b8;margin:6px 0 0">No promocionas "un software más de gestión". Promocionas la <b>máquina de crecimiento</b> de una consulta:</p>
+        <ul>
+          <li>Recepcionista IA que capta pacientes</li>
+          <li>Marketing IA (anuncios y contenido)</li>
+          <li>Reservas online 24/7</li>
+          <li>Auto-relleno de huecos libres</li>
+          <li>Recordatorios que bajan los no-shows</li>
+          <li>Notas de sesión con IA</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="faq">
+      <h2>Preguntas rápidas</h2>
+      <div style="max-width:640px;margin:26px auto 0">
+        <details><summary>¿Cuándo cobro?</summary><p>Se activa cuando tu referido paga de verdad (tras su prueba gratuita). A partir de ahí, cobras cada mes mientras siga suscrito, con pagos mensuales.</p></details>
+        <details><summary>¿Cuánto puedo ganar?</summary><p>No hay tope. Es recurrente: cada referido suma a tu ingreso mensual. 10 referidos ≈ 100€/mes pasivos, y sigue creciendo.</p></details>
+        <details><summary>¿Para quién es?</summary><p>Creadores de contenido de psicología, salud mental, bienestar o emprendimiento para terapeutas. Si tu audiencia son psicólogos o clínicas, encajas.</p></details>
+        <details><summary>¿Tengo que vender yo?</summary><p>No. Compartes tu enlace y el producto convence solo. Nosotros nos encargamos de la venta y el soporte.</p></details>
+      </div>
+    </section>
+
+    <div class="final">
+      <h2>¿List@ para empezar a ingresar?</h2>
+      <p class="lead">Súmate hoy y consigue tu enlace de partner.</p>
+      <a class="cta" href="mailto:sebastian@serenecare.es?subject=Quiero%20ser%20partner%20de%20SereneCare&body=Hola,%20quiero%20unirme%20al%20programa%20de%20creadores.%20Mi%20perfil%20es:">Quiero ser partner →</a>
+    </div>
+
+    <footer>SereneCare · Programa de Creadores · Comisiones recurrentes y transparentes</footer>
+  </div>
+</body>
+</html>
