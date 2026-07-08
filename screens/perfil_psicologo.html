@@ -903,7 +903,7 @@ if (!session) { window.location.href = '../login.html'; }
 try {
   const { data: perfil } = await supabase
     .from('usuarios')
-    .select('nombre, apellido, email, clinica_id, clinicas(nombre)')
+    .select('nombre, apellido, email, clinica_id, clinicas!usuarios_clinica_id_fkey(nombre)')
     .eq('id', session.user.id)
     .single();
 

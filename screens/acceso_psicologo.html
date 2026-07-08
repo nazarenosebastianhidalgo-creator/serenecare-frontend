@@ -135,7 +135,7 @@
 
         const { data: perfil, error: perfilError } = await supabase
           .from('usuarios')
-          .select('rol, nombre, clinica_id, clinicas(nombre)')
+          .select('rol, nombre, clinica_id, clinicas!usuarios_clinica_id_fkey(nombre)')
           .eq('id', authData.user.id)
           .single()
 

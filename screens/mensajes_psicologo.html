@@ -810,7 +810,7 @@ const clinicaId = localStorage.getItem('tp_clinica_id');
 
 // Update user info
 try {
-  const { data: perfil } = await supabase.from('usuarios').select('nombre,apellido,clinica_id,clinicas(nombre)').eq('id', userId).single();
+  const { data: perfil } = await supabase.from('usuarios').select('nombre,apellido,clinica_id,clinicas!usuarios_clinica_id_fkey(nombre)').eq('id', userId).single();
   if (perfil) {
     const nombre = (perfil.nombre || '') + ' ' + (perfil.apellido || '');
     document.getElementById('user-nombre').textContent = nombre.trim();

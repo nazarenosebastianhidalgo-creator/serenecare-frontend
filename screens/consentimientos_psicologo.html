@@ -618,7 +618,7 @@ if (!session) { window.location.href = 'acceso_psicologo.html'; }
 // ── Perfil ──────────────────────────────────────────────────────
 try {
   const { data: perfil } = await supabase
-    .from('usuarios').select('nombre, apellido, clinica_id, clinicas(nombre)').eq('id', session.user.id).single();
+    .from('usuarios').select('nombre, apellido, clinica_id, clinicas!usuarios_clinica_id_fkey(nombre)').eq('id', session.user.id).single();
   if (perfil) {
     const nombre = ((perfil.nombre||'') + ' ' + (perfil.apellido||'')).trim();
     const init   = ((perfil.nombre||'')[0]||'') + ((perfil.apellido||'')[0]||'');
