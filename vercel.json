@@ -33,6 +33,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/api/:path*", "destination": "https://serenecare-backend-production.up.railway.app/api/:path*" },
     { "source": "/", "destination": "/landing.html" },
     { "source": "/acceso", "destination": "/index.html" },
     { "source": "/screens/:path*", "destination": "/screens/:path*" }
