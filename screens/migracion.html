@@ -41,7 +41,14 @@
     <!-- Paso 1 -->
     <div id="p1" class="card">
       <label>¿Qué vas a importar?</label>
-      <select id="tipo"><option value="pacientes">Pacientes</option></select>
+      <select id="tipo">
+        <option value="pacientes">Pacientes</option>
+        <option value="citas">Citas</option>
+        <option value="historia">Historia clínica</option>
+        <option value="facturacion">Facturación</option>
+        <option value="consentimientos">Consentimientos</option>
+      </select>
+      <p class="sub" style="margin:6px 0 0;font-size:12px">Importa primero <b>Pacientes</b>; el resto se enlaza a ellos por email o nombre.</p>
       <label>Archivo CSV exportado de tu software</label>
       <input type="file" id="archivo" accept=".csv,text/csv" />
       <button class="btn" id="btn-analizar">✨ Analizar con IA</button>
@@ -53,7 +60,7 @@
       <p class="sub" style="margin-bottom:14px">La IA ha detectado <b id="nfilas">0</b> filas. Ajusta si algo no cuadra:</p>
       <div id="mapeo"></div>
       <div class="prev"><table id="preview"></table></div>
-      <button class="btn" id="btn-importar">📥 Importar pacientes</button>
+      <button class="btn" id="btn-importar">📥 Importar</button>
     </div>
 
     <div id="msg"></div>
@@ -108,7 +115,7 @@
       const r = await fetch(BK + '/api/migracion/importar', { method: 'POST', headers: authH, body: fd })
       const d = await r.json()
       if (!r.ok) throw new Error(d.error || 'error')
-      $('r-importados').textContent = `${d.importados} pacientes importados`
+      $('r-importados').textContent = `${d.importados} registros importados`
       $('r-detalle').textContent = `${d.saltados} saltados (duplicados)${d.errores ? ` · ${d.errores} errores` : ''} · de ${d.total} filas`
       $('p2').classList.add('hidden'); $('msg').textContent = ''; $('p3').classList.remove('hidden')
     } catch (e) { $('msg').textContent = 'No se pudo importar: ' + e.message; $('btn-importar').disabled = false }
