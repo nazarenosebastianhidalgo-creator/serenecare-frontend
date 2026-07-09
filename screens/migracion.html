@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Migrar mis datos</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#020617; font-family:'Inter',sans-serif; color:#e2e8f0; padding:30px 16px 70px; }
+  .wrap { max-width:640px; margin:0 auto; }
+  h1 { font-family:'Manrope',sans-serif; font-size:23px; font-weight:800; margin:0 0 4px; color:#f1f5f9; }
+  .sub { color:#94a3b8; font-size:14px; margin:0 0 22px; }
+  .sub b { color:#5eead4; }
+  .card { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:20px; margin-bottom:14px; }
+  label { display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin:12px 0 5px; }
+  select, input[type=file] { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 12px; color:#e2e8f0; font-family:inherit; font-size:14px; outline:none; }
+  select:focus { border-color:#2dd4bf; }
+  .btn { width:100%; margin-top:16px; background:linear-gradient(135deg,#2dd4bf,#0d9488); color:#022c22; border:none; border-radius:12px; padding:14px; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; cursor:pointer; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  .map-row { display:grid; grid-template-columns:130px 1fr; gap:10px; align-items:center; margin-bottom:8px; }
+  .map-row .campo { font-size:13px; font-weight:700; color:#5eead4; font-family:'Manrope',sans-serif; }
+  .prev { overflow-x:auto; margin-top:14px; }
+  table { border-collapse:collapse; font-size:12px; white-space:nowrap; }
+  th, td { border:1px solid rgba(255,255,255,0.08); padding:5px 8px; color:#94a3b8; text-align:left; }
+  th { color:#cbd5e1; background:rgba(255,255,255,0.03); }
+  #msg { text-align:center; font-size:13px; margin-top:12px; min-height:16px; color:#94a3b8; }
+  .hidden { display:none; }
+  .ok { text-align:center; padding:40px 20px; }
+  .big { font-size:44px; }
+  .stat { font-family:'Manrope',sans-serif; font-weight:800; font-size:28px; color:#5eead4; }
+  .badge { display:inline-block; background:rgba(45,212,191,0.12); border:1px solid rgba(45,212,191,0.25); color:#5eead4; font-size:11px; font-weight:700; padding:3px 10px; border-radius:100px; margin-bottom:14px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="badge">MIGRACIÓN CON IA</span>
+    <h1>Trae tus datos de tu software actual</h1>
+    <p class="sub">Exporta tus pacientes a CSV desde tu programa, súbelos, y <b>la IA coloca cada columna en su sitio</b>. De horas a un rato.</p>
+
+    <!-- Paso 1 -->
+    <div id="p1" class="card">
+      <label>¿Qué vas a importar?</label>
+      <select id="tipo"><option value="pacientes">Pacientes</option></select>
+      <label>Archivo CSV exportado de tu software</label>
+      <input type="file" id="archivo" accept=".csv,text/csv" />
+      <button class="btn" id="btn-analizar">✨ Analizar con IA</button>
+    </div>
+
+    <!-- Paso 2 -->
+    <div id="p2" class="card hidden">
+      <h1 style="font-size:16px;margin:0 0 4px">Revisa el mapeo de la IA</h1>
+      <p class="sub" style="margin-bottom:14px">La IA ha detectado <b id="nfilas">0</b> filas. Ajusta si algo no cuadra:</p>
+      <div id="mapeo"></div>
+      <div class="prev"><table id="preview"></table></div>
+      <button class="btn" id="btn-importar">📥 Importar pacientes</button>
+    </div>
+
+    <div id="msg"></div>
+
+    <!-- Paso 3 -->
+    <div id="p3" class="ok hidden">
+      <div class="big">✅</div>
+      <div class="stat" id="r-importados">0</div>
+      <p class="sub" style="text-align:center" id="r-detalle"></p>
+      <button class="btn" style="max-width:220px;margin:10px auto 0" onclick="location.reload()">Importar otro archivo</button>
+    </div>
+  </div>
+
+<script type="module">
+  import { supabase } from '../js/supabase-client.js'
+  const BK = 'https://serenecare-backend-production.up.railway.app'
+  const $ = id => document.getElementById(id)
+  const { data: { session } } = await supabase.auth.getSession()
+  const authH = { 'Authorization': 'Bearer ' + (session?.access_token || '') }
+
+  let archivo = null, datos = null
+  $('archivo').addEventListener('change', e => { archivo = e.target.files[0] || null })
+
+  $('btn-analizar').addEventListener('click', async () => {
+    if (!archivo) { $('msg').textContent = 'Elige un archivo CSV.'; return }
+    $('btn-analizar').disabled = true; $('msg').textContent = '✨ La IA está leyendo tu archivo…'
+    try {
+      const fd = new FormData(); fd.append('archivo', archivo); fd.append('tipo', $('tipo').value)
+      const r = await fetch(BK + '/api/migracion/analizar', { method: 'POST', headers: authH, body: fd })
+      datos = await r.json()
+      if (!r.ok) throw new Error(datos.error || 'error')
+      $('nfilas').textContent = datos.total_filas
+      // mapeo editable
+      const opts = ['<option value="">— no importar —</option>'].concat(datos.columnas.map(c => `<option>${c.replace(/</g,'&lt;')}</option>`)).join('')
+      $('mapeo').innerHTML = datos.campos.map(campo =>
+        `<div class="map-row"><span class="campo">${campo}</span><select data-campo="${campo}">${opts}</select></div>`).join('')
+      datos.campos.forEach(c => { const sel = document.querySelector(`select[data-campo="${c}"]`); if (datos.mapeo[c]) sel.value = datos.mapeo[c] })
+      // preview
+      const cols = datos.columnas
+      $('preview').innerHTML = '<tr>' + cols.map(c => `<th>${c.replace(/</g,'&lt;')}</th>`).join('') + '</tr>' +
+        datos.muestra.map(row => '<tr>' + cols.map((_, i) => `<td>${(row[i] || '').replace(/</g,'&lt;').slice(0,30)}</td>`).join('') + '</tr>').join('')
+      $('p1').classList.add('hidden'); $('p2').classList.remove('hidden'); $('msg').textContent = ''
+    } catch (e) { $('msg').textContent = 'No se pudo analizar: ' + e.message }
+    finally { $('btn-analizar').disabled = false }
+  })
+
+  $('btn-importar').addEventListener('click', async () => {
+    $('btn-importar').disabled = true; $('msg').textContent = '📥 Importando… no cierres la página.'
+    const mapeo = {}; document.querySelectorAll('#mapeo select').forEach(s => { mapeo[s.dataset.campo] = s.value || null })
+    try {
+      const fd = new FormData(); fd.append('archivo', archivo); fd.append('tipo', $('tipo').value); fd.append('mapeo', JSON.stringify(mapeo))
+      const r = await fetch(BK + '/api/migracion/importar', { method: 'POST', headers: authH, body: fd })
+      const d = await r.json()
+      if (!r.ok) throw new Error(d.error || 'error')
+      $('r-importados').textContent = `${d.importados} pacientes importados`
+      $('r-detalle').textContent = `${d.saltados} saltados (duplicados)${d.errores ? ` · ${d.errores} errores` : ''} · de ${d.total} filas`
+      $('p2').classList.add('hidden'); $('msg').textContent = ''; $('p3').classList.remove('hidden')
+    } catch (e) { $('msg').textContent = 'No se pudo importar: ' + e.message; $('btn-importar').disabled = false }
+  })
+</script>
+</body>
+</html>
