@@ -109,23 +109,31 @@
     const guion = $('guion').value.trim()
     if (!guion) { $('msg').textContent = 'Falta el guion.'; return }
     if (!avatarSel) { $('msg').textContent = 'Elige un avatar (o conecta tu cuenta de video).'; return }
-    $('btn-generar').disabled = true; $('msg').textContent = '🎬 Generando tu video… (puede tardar 1-2 min)'
+    $('btn-generar').disabled = true; $('msg').textContent = '🎬 Generando tu vídeo… puede tardar varios minutos. No cierres esta página.'
     try {
       const r = await fetch(API + '/api/creador-video/generar', { method:'POST', headers: auth, body: JSON.stringify({ guion, avatar_id: avatarSel, vertical }) })
       const d = await r.json()
       if (!r.ok || !d.video_id) throw new Error(d.error || 'error')
       cargarCreditos()
-      // Poll estado
+      // Poll (HeyGen puede tardar 5-15 min según la duración del guion)
+      const inicio = Date.now()
       let intentos = 0
       const poll = setInterval(async () => {
         intentos++
-        const s = await (await fetch(API + '/api/creador-video/estado/' + d.video_id, { headers: auth })).json()
-        if (s.estado === 'completed' && s.video_url) {
-          clearInterval(poll); $('msg').textContent = '✓ ¡Video listo!'; $('preview').src = s.video_url; $('preview').classList.remove('hidden'); $('btn-generar').disabled = false
-        } else if (s.estado === 'failed' || intentos > 40) {
-          clearInterval(poll); $('msg').textContent = 'No se pudo generar el video.'; $('btn-generar').disabled = false
-        }
-      }, 4000)
+        const ms = Date.now() - inicio, min = Math.floor(ms/60000), seg = Math.floor((ms%60000)/1000)
+        try {
+          const s = await (await fetch(API + '/api/creador-video/estado/' + d.video_id, { headers: auth })).json()
+          if (s.estado === 'completed' && s.video_url) {
+            clearInterval(poll); $('msg').textContent = '✓ ¡Vídeo listo!'; $('preview').src = s.video_url; $('preview').classList.remove('hidden'); $('btn-generar').disabled = false
+          } else if (s.estado === 'failed') {
+            clearInterval(poll); $('msg').textContent = 'No se pudo generar el vídeo. Se te ha devuelto el crédito.'; cargarCreditos(); $('btn-generar').disabled = false
+          } else if (intentos > 200) {
+            clearInterval(poll); $('msg').textContent = 'Está tardando más de lo normal. Sigue generándose — vuelve en unos minutos, no se ha perdido.'; $('btn-generar').disabled = false
+          } else {
+            $('msg').textContent = `🎬 Generando tu vídeo… ${min}:${String(seg).padStart(2,'0')} (puede tardar varios minutos)`
+          }
+        } catch {}
+      }, 5000)
     } catch (e) { $('msg').textContent = 'Error: ' + e.message; $('btn-generar').disabled = false }
   })
 </script>
