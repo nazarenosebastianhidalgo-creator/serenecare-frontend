@@ -29,6 +29,16 @@
   .gen:disabled { opacity:.5; cursor:default; }
   #msg { text-align:center; font-size:13px; color:#94a3b8; margin:14px 0; min-height:16px; }
   video { width:100%; border-radius:12px; margin-top:10px; }
+  .galeria-v { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; }
+  .vcard { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:14px; overflow:hidden; }
+  .vcard video { width:100%; aspect-ratio:9/16; object-fit:cover; background:#020617; display:block; margin:0; border-radius:0; }
+  .vcard .procesando { width:100%; aspect-ratio:9/16; background:#020617; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:12px; }
+  .vinfo { padding:8px 10px; }
+  .vtit { font-size:11px; color:#94a3b8; margin:0 0 8px; height:26px; overflow:hidden; line-height:1.2; }
+  .vacts { display:flex; gap:6px; }
+  .vacts button { flex:1; background:rgba(255,255,255,0.06); border:none; color:#cbd5e1; font-size:15px; padding:6px 0; border-radius:8px; cursor:pointer; }
+  .vacts button:hover { color:#5eead4; background:rgba(45,212,191,0.12); }
+  .prox { text-align:center; font-size:11px; color:#64748b; margin-top:14px; }
   a.back { color:#5eead4; font-size:13px; text-decoration:none; }
 </style>
 </head>
@@ -64,6 +74,12 @@
     <button class="gen" id="btn-generar">🎬 Generar video</button>
     <div id="msg"></div>
     <video id="preview" class="hidden" controls></video>
+
+    <div style="margin-top:28px">
+      <h2 style="font-family:'Manrope',sans-serif;font-size:15px;font-weight:800;color:#5eead4;margin:0 0 12px">🎬 Mis vídeos</h2>
+      <div id="galeria-videos" class="galeria-v"></div>
+      <p class="prox">📣 Publicar directo en anuncios de Meta/Instagram — próximamente</p>
+    </div>
   </div>
 
 <script type="module">
@@ -83,6 +99,41 @@
     } catch {}
   }
   cargarCreditos()
+
+  async function cargarMisVideos() {
+    try {
+      const d = await (await fetch(API + '/api/creador-video/mis-videos', { headers: auth })).json()
+      const g = $('galeria-videos')
+      if (!d.videos || !d.videos.length) { g.innerHTML = '<p style="color:#475569;font-size:13px">Aún no tienes vídeos. Genera el primero arriba 👆</p>'; return }
+      g.innerHTML = d.videos.map(v => {
+        const fecha = new Date(v.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+        const tit = (v.guion || '').slice(0, 45).replace(/</g, '&lt;')
+        if (v.estado !== 'completed' || !v.url) {
+          return `<div class="vcard"><div class="procesando">${v.estado === 'failed' ? '⚠️ falló' : '⏳ generando…'}</div><div class="vinfo"><p class="vtit">${fecha} · ${tit}</p></div></div>`
+        }
+        return `<div class="vcard">
+          <video src="${v.url}#t=0.1" preload="metadata" controls></video>
+          <div class="vinfo"><p class="vtit">${fecha} · ${tit}</p>
+          <div class="vacts">
+            <button title="Descargar" onclick="__descargar('${v.url}')">⬇️</button>
+            <button title="Copiar enlace" onclick="__copiarV('${v.url}',this)">🔗</button>
+            <button title="Compartir" onclick="__compartir('${v.url}',this)">📤</button>
+          </div></div></div>`
+      }).join('')
+    } catch {}
+  }
+  window.__descargar = (url) => { const a = document.createElement('a'); a.href = url; a.download = 'serenecare-video.mp4'; a.target = '_blank'; a.click() }
+  window.__copiarV = (url, btn) => { navigator.clipboard.writeText(url).then(() => { const o = btn.textContent; btn.textContent = '✓'; setTimeout(() => btn.textContent = o, 1200) }) }
+  window.__compartir = async (url, btn) => {
+    try {
+      const blob = await (await fetch(url)).blob()
+      const file = new File([blob], 'serenecare-video.mp4', { type: 'video/mp4' })
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: 'Mi vídeo' }); return }
+      if (navigator.share) { await navigator.share({ title: 'Mi vídeo', url }); return }
+      throw new Error('no share')
+    } catch { navigator.clipboard.writeText(url).then(() => { const o = btn.textContent; btn.textContent = '✓ copiado'; setTimeout(() => btn.textContent = o, 1500) }) }
+  }
+  cargarMisVideos()
 
   let avatarSel = null, vertical = true
   window.setFmt = v => { vertical = v; $('p-vertical').classList.toggle('on', v); $('p-horizontal').classList.toggle('on', !v) }
@@ -115,6 +166,7 @@
       const d = await r.json()
       if (!r.ok || !d.video_id) throw new Error(d.error || 'error')
       cargarCreditos()
+      cargarMisVideos()
       // Poll (HeyGen puede tardar 5-15 min según la duración del guion)
       const inicio = Date.now()
       let intentos = 0
@@ -124,7 +176,7 @@
         try {
           const s = await (await fetch(API + '/api/creador-video/estado/' + d.video_id, { headers: auth })).json()
           if (s.estado === 'completed' && s.video_url) {
-            clearInterval(poll); $('msg').textContent = '✓ ¡Vídeo listo!'; $('preview').src = s.video_url; $('preview').classList.remove('hidden'); $('btn-generar').disabled = false
+            clearInterval(poll); $('msg').textContent = '✓ ¡Vídeo listo!'; $('preview').src = s.video_url; $('preview').classList.remove('hidden'); $('btn-generar').disabled = false; cargarMisVideos()
           } else if (s.estado === 'failed') {
             clearInterval(poll); $('msg').textContent = 'No se pudo generar el vídeo. Se te ha devuelto el crédito.'; cargarCreditos(); $('btn-generar').disabled = false
           } else if (intentos > 200) {
