@@ -100,6 +100,10 @@
         <div><p>📅 Reservas online 24/7</p><span class="hint">Los pacientes reservan solos desde tu enlace</span></div>
         <div class="toggle" id="t-reservas"><div class="th"></div></div>
       </div>
+      <div class="row" style="border-top:1px solid rgba(255,255,255,0.05)">
+        <div><p>Confirmar yo las reservas</p><span class="hint">Recibes un aviso para aprobar cada reserva antes de cobrar (recomendado)</span></div>
+        <div class="toggle" id="t-confirmar"><div class="th"></div></div>
+      </div>
       <div id="link-reservas" style="display:none;margin:12px 0">
         <label>Tu enlace de reservas (compártelo en tu web, IG, bio…)</label>
         <div style="display:flex;gap:8px">
@@ -169,6 +173,7 @@
         if (c.psicologo_id) { $('enlace-reservas').value = location.origin + '/screens/reservar.html?psi=' + c.psicologo_id; $('link-reservas').style.display = 'block' }
         $('t-recordatorios').classList.toggle('on', c.recordatorios_activos !== false)
         $('f-recordatorio-horas').value = c.recordatorio_horas || 24
+        $('t-confirmar').classList.toggle('on', c.confirmar_reservas !== false)
       }
     }
   } catch (e) { /* primera vez, sin config */ }
@@ -197,6 +202,7 @@
       disponibilidad,
       recordatorios_activos: $('t-recordatorios').classList.contains('on'),
       recordatorio_horas: Number($('f-recordatorio-horas').value) || 24,
+      confirmar_reservas: $('t-confirmar').classList.contains('on'),
     }
     try {
       const r = await fetch(API + '/api/recepcion/config', { method: 'PUT', headers: auth, body: JSON.stringify(body) })
