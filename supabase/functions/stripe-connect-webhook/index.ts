@@ -62,6 +62,23 @@ Deno.serve(async (req) => {
           updated_at:               new Date().toISOString(),
         }).eq('id', facturaId)
         console.log(`[connect-webhook] factura ${facturaId} pagada`)
+
+        // Si es una cita de recepción: crear la sala Daily (el poller del backend manda el email).
+        const citaId = session.metadata?.cita_id
+        if (citaId) {
+          try {
+            const dk = Deno.env.get('DAILY_KEY')
+            if (dk) {
+              const rr = await fetch('https://api.daily.co/v1/rooms', {
+                method: 'POST', headers: { Authorization: `Bearer ${dk}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ properties: { exp: Math.floor(Date.now() / 1000) + 30 * 864e2 } }),
+              })
+              const rd = await rr.json()
+              if (rd.url) await supabase.from('citas').update({ sala_video_url: rd.url }).eq('id', citaId)
+              console.log(`[connect-webhook] sala Daily para cita ${citaId}: ${rd.url || rd.error}`)
+            }
+          } catch (e) { console.error('[connect-webhook] daily room:', e) }
+        }
         break
       }
 
