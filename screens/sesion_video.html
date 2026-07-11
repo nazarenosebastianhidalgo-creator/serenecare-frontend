@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tu sesión — SereneCare</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif; background: #020617; color: #e2e8f0; display: flex; flex-direction: column; }
+  header { display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: #0a1628; border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0; }
+  .logo { font-family: 'Manrope', sans-serif; font-weight: 800; color: #5eead4; font-size: 17px; }
+  .meta { margin-left: auto; text-align: right; font-size: 13px; color: #94a3b8; line-height: 1.35; }
+  .meta b { color: #e2e8f0; }
+  #area { position: relative; flex: 1; background: #000; overflow: hidden; }
+  iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .estado { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px; gap: 10px; }
+  .estado .ico { font-size: 48px; }
+  .estado h2 { font-size: 20px; color: #5eead4; }
+  .estado p { color: #94a3b8; font-size: 15px; max-width: 380px; }
+  .spin { width: 34px; height: 34px; border: 3px solid rgba(94,234,212,.25); border-top-color: #5eead4; border-radius: 50%; animation: g 1s linear infinite; }
+  @keyframes g { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+  <header>
+    <span class="logo">SereneCare</span>
+    <div class="meta" id="meta"></div>
+  </header>
+  <div id="area">
+    <div class="estado" id="estado">
+      <div class="spin"></div>
+      <p>Preparando tu sesión…</p>
+    </div>
+  </div>
+<script>
+  var BK = 'https://serenecare-backend-production.up.railway.app';
+  var token = new URLSearchParams(location.search).get('token');
+  var area = document.getElementById('area');
+
+  function estado(ico, titulo, texto) {
+    document.getElementById('estado').innerHTML =
+      '<div class="ico">' + ico + '</div><h2>' + titulo + '</h2><p>' + texto + '</p>';
+  }
+  function montar(url) {
+    var f = document.createElement('iframe');
+    f.allow = 'camera; microphone; fullscreen; speaker; display-capture; autoplay';
+    f.src = url;
+    area.innerHTML = '';
+    area.appendChild(f);
+  }
+
+  (async function () {
+    if (!token) { estado('🔗', 'Enlace no válido', 'Falta el identificador de la sesión. Abre el enlace desde tu email de confirmación.'); return; }
+    try {
+      var r = await fetch(BK + '/api/recepcion/sala/' + encodeURIComponent(token));
+      if (!r.ok) { estado('🔍', 'Sesión no encontrada', 'Este enlace no corresponde a ninguna sesión. Revisa el email que te enviamos.'); return; }
+      var d = await r.json();
+
+      var m = document.getElementById('meta');
+      m.innerHTML = (d.psicologo ? '<b>Dr/a. ' + d.psicologo + '</b><br>' : '') + (d.fecha ? d.fecha + ' · ' + (d.hora || '') : '');
+
+      if (d.estado === 'cancelada') { estado('❌', 'Cita cancelada', 'Esta sesión fue cancelada. Si crees que es un error, contacta con tu profesional.'); return; }
+      if (!d.sala_video_url) { estado('⏳', 'Tu sesión aún no está lista', 'En cuanto se confirme tu cita recibirás aquí el acceso a la videollamada.'); return; }
+
+      montar(d.sala_video_url);
+    } catch (e) {
+      estado('⚠️', 'No se pudo cargar la sesión', 'Revisa tu conexión e inténtalo de nuevo en un momento.');
+    }
+  })();
+</script>
+</body>
+</html>
