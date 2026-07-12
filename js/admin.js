@@ -103,7 +103,7 @@ export async function obtenerConfigIA() {
   // o en una tabla de configuración separada. Usamos localStorage como fallback.
   const local = localStorage.getItem('tp_config_ia')
   return local ? JSON.parse(local) : {
-    modelo: 'gpt-4o',
+    modelo: 'gpt-4o-mini',
     temperatura: 0.7,
     max_tokens: 2000,
     prompt_sistema: 'Eres un asistente clínico especializado en psicología.',

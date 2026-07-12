@@ -210,7 +210,7 @@ export async function generarInformeIA({ pacienteId, tipo, contexto }) {
         'Authorization': `Bearer ${_ses?.access_token}`,
       },
       body: JSON.stringify({
-        model: configIA.modelo || 'gpt-4o',
+        model: configIA.modelo || 'gpt-4o-mini',
         temperature: configIA.temperatura || 0.7,
         messages: [
           { role: 'system', content: configIA.prompt_sistema || 'Eres un asistente clínico especializado en psicología.' },

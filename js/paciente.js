@@ -130,7 +130,7 @@ IMPORTANTE: No reemplazás la terapia profesional. Si detectás una crisis, indi
 
   try {
     const json = await callEdge('openai-proxy', {
-      model: configIA.modelo || 'gpt-4o',
+      model: configIA.modelo || 'gpt-4o-mini',
       temperature: 0.75,
       max_tokens: 600,
       messages,

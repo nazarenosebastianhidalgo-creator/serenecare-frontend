@@ -286,7 +286,7 @@ export async function getListaEspera() {
 // ── OpenAI (vía proxy) ─────────────────────────────────────────
 export async function llamarOpenAI(messages, opts = {}) {
   return callEdge('openai-proxy', {
-    model: opts.model || 'gpt-4o',
+    model: opts.model || 'gpt-4o-mini',
     temperature: opts.temperature ?? 0.7,
     max_tokens: opts.max_tokens,
     messages,

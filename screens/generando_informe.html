@@ -266,7 +266,7 @@ if (pacienteId) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${_ses?.access_token}`,
           },
-          body: JSON.stringify({ model: 'gpt-4o', messages: [{ role: 'user', content: prompt }], max_tokens: 1000 })
+          body: JSON.stringify({ model: 'gpt-4o-mini', messages: [{ role: 'user', content: prompt }], max_tokens: 1000 })
         })
         const json = await res.json()
         const contenido = json.choices?.[0]?.message?.content || 'Error al generar informe'
