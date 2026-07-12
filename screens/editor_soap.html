@@ -620,7 +620,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- SUPABASE + IA logic (ES module) -->
 <script type="module">
 import { supabase, getNotasSOAP, upsertNotaSOAP, llamarOpenAI } from '../js/supabase-client.js';
-import { cerrarSesion } from '../js/auth.js';
+import { cerrarSesion, verificarSesion } from '../js/auth.js';
+if (!(await verificarSesion(['psicologo', 'admin_clinica']))) throw new Error('acceso no autorizado');
 
 window._cerrarSesion = cerrarSesion;
 
