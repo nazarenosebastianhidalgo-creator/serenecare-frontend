@@ -272,15 +272,7 @@
 </div>
 
 <script>
-var NOTIFS = [
-  { tipo:'ia',       icono:'psychology',      color:'#34d399',  titulo:'Informe IA listo para revisión',        desc:'El análisis de la sesión de ayer con <b>Elena Rodríguez</b> ya está procesado. Revisa los insights y patrones detectados.', hora:'Hace 15 min', leida:false, accion:'Ver informe', accionUrl:'resultado_informe_ia.html' },
-  { tipo:'mensajes', icono:'chat',             color:'#60a5fa',  titulo:'Nuevo mensaje: Carlos Ruiz',             desc:'"Hola doctora, ¿podría adelantar la cita del miércoles? Me ha surgido un conflicto de horario..."', hora:'Hace 1h', leida:false, accion:'Responder', accionUrl:'mensajes_psicologo.html' },
-  { tipo:'citas',    icono:'event_available',  color:'#34d399',  titulo:'Cita confirmada',                       desc:'Sofía Martínez ha confirmado su asistencia para mañana a las 11:00 AM.', hora:'Hace 2h', leida:true, accion:null },
-  { tipo:'soap',     icono:'pending_actions',  color:'#fbbf24',  titulo:'Nota SOAP pendiente — Mateo Sánchez',   desc:'La sesión del martes con <b>Mateo Sánchez</b> (TDAH, TCC) no tiene nota SOAP completada.', hora:'Hace 3h', leida:false, accion:'Completar nota', accionUrl:'notas_soap.html' },
-  { tipo:'mensajes', icono:'mark_chat_unread', color:'#60a5fa',  titulo:'Nuevo mensaje: Lucía Ferreyra',         desc:'"Buenos días, quería comentarle que esta semana he estado practicando los ejercicios que..."', hora:'Ayer', leida:false, accion:'Responder', accionUrl:'mensajes_psicologo.html' },
-  { tipo:'soap',     icono:'assignment_late',  color:'#fbbf24',  titulo:'2 notas SOAP sin completar esta semana', desc:'Las sesiones del lunes y martes tienen notas clínicas pendientes de redactar.', hora:'Ayer', leida:true, accion:'Ver pendientes', accionUrl:'notas_soap.html' },
-  { tipo:'citas',    icono:'event_busy',       color:'#94a3b8',  titulo:'Cita cancelada — Marcos Vidal',         desc:'Marcos Vidal ha cancelado su sesión de esta tarde (viernes, 16:00). Se ha liberado el espacio en agenda.', hora:'Hace 2 días', leida:true, accion:null },
-];
+var NOTIFS = []; // se llena con el feed real del backend (ver más abajo)
 
 var tabActual = 'todos';
 
@@ -609,6 +601,22 @@ if (usu) {
     if (cl) { const nc = document.getElementById('nombre-clinica'); if (nc) nc.textContent = cl.nombre }
   }
 }
+
+// Notificaciones reales (feed derivado: mensajes no leídos + citas recientes + consultas)
+const _BKN = 'https://serenecare-backend-production.up.railway.app'
+try {
+  const _r = await fetch(_BKN + '/api/notificaciones', { headers: { Authorization: 'Bearer ' + session.access_token } })
+  const _d = await _r.json()
+  if (Array.isArray(_d.notificaciones)) {
+    NOTIFS = _d.notificaciones
+    if (typeof renderFeed === 'function') renderFeed()
+    const _dot = document.getElementById('notif-bell-dot'); if (_dot) _dot.style.display = _d.no_leidas > 0 ? '' : 'none'
+  }
+} catch (_) {}
+document.getElementById('btn-marcar-todas')?.addEventListener('click', async function() {
+  try { await fetch(_BKN + '/api/notificaciones/marcar-leidas', { method: 'POST', headers: { Authorization: 'Bearer ' + session.access_token } }) } catch (_) {}
+  const _dot = document.getElementById('notif-bell-dot'); if (_dot) _dot.style.display = 'none'
+})
 
 })();</script>
 </body>
