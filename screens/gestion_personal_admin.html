@@ -829,6 +829,17 @@ window._cerrarSesion = cerrarSesion;
     const { data } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single();
     const nc = document.getElementById('nombre-clinica'); if (nc && data) nc.textContent = data.nombre;
   }
+
+  // Cargar el equipo REAL de la clínica (antes era STAFF_DEMO hardcodeado)
+  try {
+    const { data: _team } = await supabase.from('usuarios')
+      .select('id, nombre, apellido, email, rol, activo')
+      .eq('clinica_id', perfil.clinica_id).in('rol', ['psicologo', 'admin_clinica', 'secretario'])
+    if (Array.isArray(_team)) {
+      staffData = _team.map(u => ({ id: u.id, nombre: u.nombre || '', apellido: u.apellido || '', email: u.email || '', rol: u.rol, activo: u.activo !== false, actividad: '—' }))
+      if (typeof renderStaff === 'function') renderStaff()
+    }
+  } catch (_) {}
 })();
 </script>
 </body></html>
