@@ -1045,6 +1045,19 @@ if (clinica) {
   set('cfg-direccion', clinica.direccion)
   set('cfg-web',       clinica.website)
 }
+
+// Cablear el guardado real (antes era un stub que solo mostraba el toast)
+window.guardarConfig = async function() {
+  const g = id => (document.getElementById(id)?.value || '').trim()
+  try {
+    const { error } = await supabase.from('clinicas').update({
+      nombre: g('cfg-nombre'), email: g('cfg-email'), telefono: g('cfg-tel'),
+      direccion: g('cfg-direccion'), website: g('cfg-web'), updated_at: new Date().toISOString(),
+    }).eq('id', clinicaId)
+    if (error) throw error
+    if (typeof mostrarToast === 'function') mostrarToast('Configuración guardada')
+  } catch (e) { if (typeof mostrarToast === 'function') mostrarToast('No se pudo guardar: ' + (e.message || '')) }
+}
 </script>
 </body>
 </html>
