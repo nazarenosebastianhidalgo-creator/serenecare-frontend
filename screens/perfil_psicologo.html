@@ -215,8 +215,17 @@
                 <input id="input-email" class="field-input" type="email" value="s.palacios@clinicasol.com"/>
               </div>
               <div>
-                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Teléfono</label>
-                <input class="field-input" type="tel" value="+34 612 345 678"/>
+                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Teléfono / WhatsApp (obligatorio)</label>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                  <input id="input-telefono" class="field-input" style="flex:1;min-width:160px" type="tel" placeholder="+34 600 000 000"/>
+                  <span id="tel-badge" style="display:none;font-size:11px;padding:3px 10px;border-radius:999px"></span>
+                  <button id="btn-verificar-tel" type="button" style="padding:8px 14px;border:1px solid rgba(45,212,191,.4);color:#5eead4;background:transparent;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer">Verificar</button>
+                </div>
+                <div id="tel-codigo-wrap" style="display:none;gap:8px;align-items:center;margin-top:8px">
+                  <input id="verif-codigo" style="width:120px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#f1f5f9;border-radius:10px;padding:8px 12px;font-size:13px;outline:none" placeholder="Código" inputmode="numeric"/>
+                  <button id="btn-confirmar-tel" type="button" style="padding:8px 14px;background:#0d9488;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer">Confirmar</button>
+                  <span style="font-size:11px;color:#94a3b8">Te llega un código por WhatsApp</span>
+                </div>
               </div>
               <div class="col-span-2">
                 <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Dirección</label>
@@ -903,7 +912,7 @@ if (!session) { window.location.href = '../login.html'; }
 try {
   const { data: perfil } = await supabase
     .from('usuarios')
-    .select('nombre, apellido, email, clinica_id, clinicas!usuarios_clinica_id_fkey(nombre)')
+    .select('nombre, apellido, email, telefono, clinica_id, clinicas!usuarios_clinica_id_fkey(nombre)')
     .eq('id', session.user.id)
     .single();
 
@@ -911,6 +920,7 @@ try {
     document.getElementById('input-nombre').value   = perfil.nombre   || '';
     document.getElementById('input-apellido').value = perfil.apellido || '';
     document.getElementById('input-email').value    = perfil.email    || session.user.email || '';
+    document.getElementById('input-telefono').value = perfil.telefono || '';
     actualizarDisplay();
     if (perfil.clinicas?.nombre) document.getElementById('nombre-clinica').textContent = perfil.clinicas.nombre;
     document.getElementById('demo-badge').classList.add('hidden');
@@ -922,11 +932,46 @@ try {
   window.guardarCambios = async function() {
     const nombre   = document.getElementById('input-nombre').value.trim();
     const apellido = document.getElementById('input-apellido').value.trim();
+    const telefono = document.getElementById('input-telefono').value.trim();
+    if (telefono.replace(/\D/g, '').length < 6) { alert('El teléfono es obligatorio — lo usamos para avisarte de tus citas por WhatsApp.'); return; }
     try {
-      await supabase.from('usuarios').update({ nombre, apellido }).eq('id', session.user.id);
+      await supabase.from('usuarios').update({ nombre, apellido, telefono }).eq('id', session.user.id);
     } catch(_) {}
     _origGuardar();
   };
+
+  // ── Verificación del teléfono por código (Capa 2) ──
+  const BK_PERFIL = 'https://serenecare-backend-production.up.railway.app';
+  const _authH = async () => ({ 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' });
+  function _telBadge(v) {
+    const b = document.getElementById('tel-badge'); if (!b) return;
+    b.style.display = 'inline-block';
+    b.textContent = v ? '✓ Verificado' : 'Sin verificar';
+    b.style.background = v ? 'rgba(52,211,153,.15)' : 'rgba(251,191,36,.15)';
+    b.style.color = v ? '#34d399' : '#fbbf24';
+    const bv = document.getElementById('btn-verificar-tel'); if (bv) bv.style.display = v ? 'none' : '';
+  }
+  try {
+    const est = await (await fetch(BK_PERFIL + '/api/perfil/telefono/estado', { headers: await _authH() })).json();
+    _telBadge(!!est.verificado);
+  } catch (_) {}
+  document.getElementById('btn-verificar-tel')?.addEventListener('click', async () => {
+    try {
+      const r = await fetch(BK_PERFIL + '/api/perfil/telefono/enviar-codigo', { method: 'POST', headers: await _authH(), body: '{}' });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'No se pudo enviar el código'); return; }
+      document.getElementById('tel-codigo-wrap').style.display = 'flex';
+      if (d.canal === 'pendiente_whatsapp') alert('WhatsApp aún no está activo — el código se enviará en cuanto lo esté.');
+    } catch (e) { alert(e.message); }
+  });
+  document.getElementById('btn-confirmar-tel')?.addEventListener('click', async () => {
+    try {
+      const r = await fetch(BK_PERFIL + '/api/perfil/telefono/verificar', { method: 'POST', headers: await _authH(), body: JSON.stringify({ codigo: document.getElementById('verif-codigo').value }) });
+      const d = await r.json();
+      if (!r.ok) { alert(d.error || 'Código incorrecto'); return; }
+      _telBadge(true); document.getElementById('tel-codigo-wrap').style.display = 'none';
+    } catch (e) { alert(e.message); }
+  });
 
   // Override cambiarPassword to use Supabase
   window.cambiarPassword = async function() {
