@@ -480,13 +480,12 @@
       </div>
       <div>
         <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Paciente</label>
-        <input type="text" id="nf-pac" placeholder="Nombre completo" class="w-full rounded-xl px-3 py-2.5 text-sm text-slate-200 placeholder-slate-600" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);"/>
+        <select id="nf-pac" class="w-full rounded-xl px-3 py-2.5 text-sm text-slate-200" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);"><option value="">Elige paciente…</option></select>
       </div>
       <div>
         <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Terapeuta</label>
         <select id="nf-ter" class="w-full rounded-xl px-3 py-2.5 text-sm text-slate-200" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);">
-          <option>Ana Martínez</option><option>Pedro Sánchez</option>
-          <option>Sofía Ruiz</option><option>Isabel López</option>
+          <option value="">Elige profesional…</option>
         </select>
       </div>
       <div>
@@ -1556,6 +1555,34 @@ const hoy = new Date().toISOString().split('T')[0]
 
 // Actualizar info de usuario en sidebar
 const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()
+
+// Nueva cita: cargar selectores reales (pacientes + psicólogos) + guardado real (antes solo memoria)
+try {
+  const [{ data: _pacs }, { data: _psis }] = await Promise.all([
+    supabase.from('pacientes').select('id, nombre, apellido').eq('clinica_id', clinicaId).order('nombre'),
+    supabase.from('psicologos').select('id, nombre').eq('clinica_id', clinicaId).order('nombre'),
+  ])
+  const _sp = document.getElementById('nf-pac'), _st = document.getElementById('nf-ter')
+  if (_sp) _sp.innerHTML = '<option value="">Elige paciente…</option>' + (_pacs || []).map(p => `<option value="${p.id}">${((p.nombre || '') + ' ' + (p.apellido || '')).trim()}</option>`).join('')
+  if (_st) _st.innerHTML = '<option value="">Elige profesional…</option>' + (_psis || []).map(p => `<option value="${p.id}">${p.nombre || ''}</option>`).join('')
+} catch (_) {}
+window.guardarCitaNueva = async function() {
+  const pacId = document.getElementById('nf-pac').value
+  const psiId = document.getElementById('nf-ter').value
+  const fecha = document.getElementById('nf-fecha').value
+  const hora  = document.getElementById('nf-hora').value
+  const tipo  = document.getElementById('nf-tipo').value
+  if (!pacId || !psiId || !fecha || !hora) { mostrarToast('Completa paciente, profesional, fecha y hora'); return }
+  const [h, m] = hora.split(':').map(Number); const mins = h * 60 + m + 50
+  const hFin = String(Math.floor(mins / 60)).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0')
+  try {
+    const { error } = await supabase.from('citas').insert({ clinica_id: clinicaId, paciente_id: pacId, psicologo_id: psiId, fecha, hora_inicio: hora, hora_fin: hFin, tipo: tipo || 'individual', estado: 'confirmada' })
+    if (error) throw error
+    document.getElementById('modal-nueva').classList.add('hidden')
+    mostrarToast('Cita agendada')
+    setTimeout(function () { location.reload() }, 700)
+  } catch (e) { mostrarToast('No se pudo agendar: ' + (e.message || '')) }
+}
 if (usu) {
   const nombre = usu.nombre + ' ' + usu.apellido
   const ini = ((usu.nombre||'')[0]||'') + ((usu.apellido||'')[0]||'')
