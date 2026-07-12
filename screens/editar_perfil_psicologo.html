@@ -315,6 +315,20 @@
 <input class="w-full bg-slate-900/50 border border-white/5 rounded-xl text-sm py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Universidad de..." type="text" value="Universidad Autónoma de Madrid"/>
 </div>
 </div>
+<!-- Teléfono + verificación (avisos / asistente WhatsApp) -->
+<div class="space-y-2 mb-8">
+<label class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Teléfono / WhatsApp (obligatorio)</label>
+<div class="flex gap-2 items-center flex-wrap">
+<input id="perfil-telefono" class="flex-1 min-w-[180px] bg-slate-900/50 border border-white/5 rounded-xl text-sm py-3 px-4 focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="+34 600 000 000" type="text"/>
+<span id="tel-badge" class="text-xs px-3 py-1 rounded-full hidden"></span>
+<button id="btn-verificar-tel" type="button" class="px-4 py-2 border border-primary/40 text-primary rounded-xl text-xs font-semibold hover:bg-primary/10 transition-colors">Verificar</button>
+</div>
+<div id="tel-codigo-wrap" class="hidden flex-wrap gap-2 items-center pt-1" style="display:none">
+<input id="verif-codigo" class="w-32 bg-slate-900/50 border border-white/5 rounded-xl text-sm py-2 px-3 outline-none" placeholder="Código" type="text" inputmode="numeric"/>
+<button id="btn-confirmar-tel" type="button" class="px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold">Confirmar</button>
+<span class="text-xs text-slate-500">Te llega un código por WhatsApp</span>
+</div>
+</div>
 <div class="space-y-6">
 <div class="space-y-3">
 <label class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Especialidades (Máx 5)</label>
@@ -504,6 +518,42 @@
         setTimeout(() => ok.classList.add('hidden'), 2000)
       } catch(e) { mostrarError(e.message) }
       finally { setBotonCargando(btnGuardar, false) }
+    })
+
+    // ── Verificación del teléfono por código (Capa 2) ──
+    const BK_PERFIL = 'https://serenecare-backend-production.up.railway.app'
+    async function _authH() {
+      const { data: { session } } = await supabase.auth.getSession()
+      return { 'Authorization': 'Bearer ' + (session?.access_token || ''), 'Content-Type': 'application/json' }
+    }
+    function _telBadge(verif) {
+      const b = document.getElementById('tel-badge'); if (!b) return
+      b.classList.remove('hidden')
+      b.textContent = verif ? '✓ Verificado' : 'Sin verificar'
+      b.className = 'text-xs px-3 py-1 rounded-full ' + (verif ? 'bg-green-500/15 text-green-400' : 'bg-amber-500/15 text-amber-400')
+      const bv = document.getElementById('btn-verificar-tel'); if (bv) bv.style.display = verif ? 'none' : ''
+    }
+    try {
+      const est = await (await fetch(BK_PERFIL + '/api/perfil/telefono/estado', { headers: await _authH() })).json()
+      const ti = document.getElementById('perfil-telefono'); if (ti && est.telefono) ti.value = est.telefono
+      _telBadge(!!est.verificado)
+    } catch {}
+    document.getElementById('btn-verificar-tel')?.addEventListener('click', async () => {
+      try {
+        const r = await fetch(BK_PERFIL + '/api/perfil/telefono/enviar-codigo', { method: 'POST', headers: await _authH(), body: '{}' })
+        const d = await r.json()
+        if (!r.ok) return mostrarError(d.error || 'No se pudo enviar el código')
+        document.getElementById('tel-codigo-wrap').style.display = 'flex'
+        if (d.canal === 'pendiente_whatsapp') mostrarError('WhatsApp aún no está activo — el código se enviará en cuanto lo esté.')
+      } catch (e) { mostrarError(e.message) }
+    })
+    document.getElementById('btn-confirmar-tel')?.addEventListener('click', async () => {
+      try {
+        const r = await fetch(BK_PERFIL + '/api/perfil/telefono/verificar', { method: 'POST', headers: await _authH(), body: JSON.stringify({ codigo: document.getElementById('verif-codigo').value }) })
+        const d = await r.json()
+        if (!r.ok) return mostrarError(d.error || 'Código incorrecto')
+        _telBadge(true); document.getElementById('tel-codigo-wrap').style.display = 'none'
+      } catch (e) { mostrarError(e.message) }
     })
   </script>
 <!-- MINI CHAT WIDGET -->
