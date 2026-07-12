@@ -792,16 +792,21 @@ const { data: citas } = await supabase
   .eq('fecha', hoy)
   .order('hora_inicio');
 
-if (citas?.length) {
+{
+  const _citas = citas || [];
   const contenedor = document.querySelector('.cita-hoy-row')?.parentElement;
   if (contenedor) {
-    // Eliminar citas hardcodeadas
+    // Eliminar citas hardcodeadas SIEMPRE (aunque hoy no haya citas)
     contenedor.querySelectorAll('.cita-hoy-row').forEach(function(el){ el.remove(); });
-    // Badge count
     var badge = contenedor.querySelector('span[style*="3 sesiones"]');
-    if (badge) badge.textContent = citas.length + ' sesión' + (citas.length !== 1 ? 'es' : '');
-
-    citas.forEach(function(c, i) {
+    if (badge) badge.textContent = _citas.length + ' sesión' + (_citas.length !== 1 ? 'es' : '');
+    if (!_citas.length) {
+      var vacio = document.createElement('div'); vacio.className = 'cita-hoy-row';
+      vacio.style.cssText = 'padding:10px 12px;color:#64748b;font-size:12px;';
+      vacio.textContent = 'No tienes citas hoy.';
+      contenedor.insertBefore(vacio, contenedor.querySelector('div[style*="border-top"]'));
+    }
+    _citas.forEach(function(c, i) {
       var nombre = (c.pacientes?.nombre || '') + ' ' + (c.pacientes?.apellido || '');
       var ini = ((c.pacientes?.nombre||'?')[0] + ((c.pacientes?.apellido||'?')[0]||'')).toUpperCase();
       var color = COLORS[i % COLORS.length];
