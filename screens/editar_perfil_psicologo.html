@@ -474,7 +474,7 @@
       if (n.includes('nombre') || n.includes('name'))   inp.value = perfil?.nombre    || ''
       if (n.includes('apellido') || n.includes('last'))  inp.value = perfil?.apellido  || ''
       if (n.includes('email'))                           inp.value = perfil?.email     || ''
-      if (n.includes('tel') || n.includes('phone'))      inp.value = perfil?.telefono  || ''
+      if (n.includes('tel') || n.includes('phone'))    { inp.value = perfil?.telefono || ''; inp.required = true; inp.placeholder = 'Teléfono / WhatsApp (obligatorio)' }
     })
 
     const btnGuardar = Array.from(document.querySelectorAll('button')).find(b =>
@@ -490,6 +490,12 @@
         if (n.includes('apellido')) datos.apellido = inp.value
         if (n.includes('tel'))    datos.telefono = inp.value
       })
+      // Teléfono obligatorio: lo usamos para avisos de citas por WhatsApp.
+      const tel = (datos.telefono || '').trim()
+      if (tel.replace(/\D/g, '').length < 6) {
+        mostrarError('El teléfono es obligatorio — lo usamos para avisarte de tus citas por WhatsApp.')
+        setBotonCargando(btnGuardar, false); return
+      }
       try {
         await supabase.from('usuarios').update({ ...datos, updated_at: new Date().toISOString() }).eq('id', uid)
         const ok = document.getElementById('success-msg')
