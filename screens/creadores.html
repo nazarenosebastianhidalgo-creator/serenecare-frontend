@@ -9,8 +9,26 @@
   * { box-sizing:border-box; }
   body { margin:0; background:#020617; color:#e2e8f0; font-family:'Inter',sans-serif; line-height:1.55; }
   .wrap { max-width:900px; margin:0 auto; padding:0 20px; }
-  a.cta { display:inline-block; background:linear-gradient(135deg,#2dd4bf,#0d9488); color:#022c22; font-family:'Manrope',sans-serif; font-weight:800; font-size:16px; text-decoration:none; padding:15px 30px; border-radius:14px; }
-  a.cta:hover { filter:brightness(1.08); }
+  .cta { display:inline-block; background:linear-gradient(135deg,#2dd4bf,#0d9488); color:#022c22; font-family:'Manrope',sans-serif; font-weight:800; font-size:16px; text-decoration:none; padding:15px 30px; border-radius:14px; border:none; cursor:pointer; }
+  .cta:hover { filter:brightness(1.08); }
+
+  /* Modal de registro */
+  .modal-bg { position:fixed; inset:0; background:rgba(2,6,23,0.82); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:20px; z-index:100; }
+  .modal-bg.open { display:flex; }
+  .modal { background:#0a1628; border:1px solid rgba(45,212,191,0.2); border-radius:20px; padding:28px 26px; max-width:440px; width:100%; max-height:92vh; overflow-y:auto; }
+  .modal h3 { font-family:'Manrope',sans-serif; font-weight:800; font-size:22px; margin:0 0 4px; color:#f1f5f9; }
+  .modal .msub { color:#94a3b8; font-size:14px; margin:0 0 18px; }
+  .modal label { display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin:12px 0 5px; }
+  .modal input, .modal select, .modal textarea { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:11px 13px; color:#e2e8f0; font-family:inherit; font-size:14px; outline:none; }
+  .modal input:focus, .modal select:focus, .modal textarea:focus { border-color:#2dd4bf; }
+  .modal select option { background:#0a1628; }
+  .modal .row { display:flex; gap:12px; margin-top:18px; }
+  .modal .row .cta { flex:1; text-align:center; }
+  .modal .ghost { background:none; border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; border-radius:14px; font-family:'Manrope',sans-serif; font-weight:700; font-size:15px; padding:15px 20px; cursor:pointer; }
+  #cr-msg { text-align:center; font-size:13px; color:#f87171; margin-top:10px; min-height:16px; }
+  .exito { text-align:center; padding:10px 0; }
+  .exito .big { font-size:46px; }
+  .exito .codigo { display:inline-block; font-family:'Manrope',sans-serif; font-weight:800; font-size:22px; letter-spacing:.08em; color:#5eead4; background:rgba(2,6,23,0.5); border:1px solid rgba(45,212,191,0.3); padding:10px 20px; border-radius:12px; margin:12px 0; }
 
   /* Hero */
   .hero { text-align:center; padding:76px 0 60px; position:relative; overflow:hidden; }
@@ -66,7 +84,7 @@
       <span class="eyebrow">Programa de Creadores · SereneCare</span>
       <h1>Convierte tu audiencia en <span class="g">ingresos recurrentes</span></h1>
       <p>Gana una comisión <b>cada mes</b> por cada psicólogo o clínica que traigas a SereneCare — la plataforma que no solo gestiona la consulta, <b>la llena</b>.</p>
-      <a class="cta" href="mailto:sebastian@serenecare.es?subject=Quiero%20ser%20partner%20de%20SereneCare&body=Hola,%20quiero%20unirme%20al%20programa%20de%20creadores.%20Mi%20perfil%20es:">Quiero ser partner →</a>
+      <button class="cta" type="button" onclick="abrirRegistro()">Quiero ser partner →</button>
     </div>
 
     <section>
@@ -135,11 +153,95 @@
 
     <div class="final">
       <h2>¿List@ para empezar a ingresar?</h2>
-      <p class="lead">Súmate hoy y consigue tu enlace de partner.</p>
-      <a class="cta" href="mailto:sebastian@serenecare.es?subject=Quiero%20ser%20partner%20de%20SereneCare&body=Hola,%20quiero%20unirme%20al%20programa%20de%20creadores.%20Mi%20perfil%20es:">Quiero ser partner →</a>
+      <p class="lead">Súmate hoy y consigue tu código de partner.</p>
+      <button class="cta" type="button" onclick="abrirRegistro()">Quiero ser partner →</button>
     </div>
 
     <footer>SereneCare · Programa de Creadores · Comisiones recurrentes y transparentes</footer>
   </div>
+
+  <!-- Modal de registro self-serve -->
+  <div class="modal-bg" id="modal-registro">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div id="cr-form">
+        <h3>Únete al programa</h3>
+        <p class="msub">Rellena esto y te damos tu código de partner al instante. Te enviaremos tu enlace por email.</p>
+        <label>Tu nombre *</label>
+        <input type="text" id="cr-nombre" autocomplete="name" />
+        <label>Email *</label>
+        <input type="email" id="cr-email" autocomplete="email" />
+        <label>Tus redes (@usuario o enlace)</label>
+        <input type="text" id="cr-redes" placeholder="@tucanal, youtube.com/..." />
+        <label>¿Quién es tu audiencia?</label>
+        <select id="cr-audiencia">
+          <option value="psicologos">Psicólogos / terapeutas</option>
+          <option value="clinicas">Clínicas de salud</option>
+          <option value="publico">Público general / pacientes</option>
+          <option value="otro">Otro</option>
+        </select>
+        <label>¿Algo que quieras contarnos? (opcional)</label>
+        <textarea id="cr-mensaje" rows="2"></textarea>
+        <div class="row">
+          <button class="ghost" type="button" onclick="cerrarRegistro()">Cancelar</button>
+          <button class="cta" type="button" id="cr-enviar" onclick="enviarRegistro()">Enviar</button>
+        </div>
+        <div id="cr-msg"></div>
+      </div>
+      <div id="cr-exito" class="exito" style="display:none">
+        <div class="big">🎉</div>
+        <h3>¡Ya estás dentro!</h3>
+        <p class="msub">Tu código de partner:</p>
+        <div class="codigo" id="cr-codigo">—</div>
+        <p class="msub">Te enviaremos tu enlace de referido y los siguientes pasos por email muy pronto.</p>
+        <div class="row"><button class="cta" type="button" onclick="cerrarRegistro()" style="flex:1;text-align:center">Cerrar</button></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  var SB_URL = 'https://wnuwuxenzwfqmhxagryk.supabase.co';
+  var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o';
+
+  function abrirRegistro(){ document.getElementById('modal-registro').classList.add('open'); }
+  function cerrarRegistro(){
+    document.getElementById('modal-registro').classList.remove('open');
+    document.getElementById('cr-form').style.display = '';
+    document.getElementById('cr-exito').style.display = 'none';
+    document.getElementById('cr-msg').textContent = '';
+  }
+  document.getElementById('modal-registro').addEventListener('click', function(e){
+    if(e.target === this) cerrarRegistro();
+  });
+
+  async function enviarRegistro(){
+    var nombre = document.getElementById('cr-nombre').value.trim();
+    var email  = document.getElementById('cr-email').value.trim();
+    var msg    = document.getElementById('cr-msg');
+    var btn    = document.getElementById('cr-enviar');
+    if(!nombre || !email){ msg.textContent = 'Pon al menos tu nombre y email.'; return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.textContent = 'Revisa el email, no parece válido.'; return; }
+    btn.disabled = true; msg.textContent = '';
+    try {
+      var r = await fetch(SB_URL + '/rest/v1/rpc/registrar_creador', {
+        method: 'POST',
+        headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          p_nombre: nombre, p_email: email,
+          p_redes: document.getElementById('cr-redes').value.trim() || null,
+          p_audiencia: document.getElementById('cr-audiencia').value,
+          p_mensaje: document.getElementById('cr-mensaje').value.trim() || null
+        })
+      });
+      var codigo = await r.json();
+      if(!r.ok || !codigo){ throw new Error('sin codigo'); }
+      document.getElementById('cr-codigo').textContent = codigo;
+      document.getElementById('cr-form').style.display = 'none';
+      document.getElementById('cr-exito').style.display = '';
+    } catch(e){
+      msg.textContent = 'No se pudo completar el registro. Inténtalo de nuevo en un momento.';
+      btn.disabled = false;
+    }
+  }
+</script>
 </body>
 </html>

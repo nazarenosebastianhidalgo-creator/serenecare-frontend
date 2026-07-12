@@ -113,6 +113,7 @@ document.getElementById('btn-reservar').addEventListener('click', async function
   var msg = document.getElementById('msg');
   if(!sel){ msg.textContent='Elige un hueco.'; return; }
   if(!nombre || !email){ msg.textContent='Pon tu nombre y email.'; return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.textContent='Revisa el email, no parece válido.'; return; }
   this.disabled = true; msg.textContent='';
   try {
     var r = await fetch(API+'/api/reservas/'+psi, { method:'POST', headers:{'Content-Type':'application/json'},

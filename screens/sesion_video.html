@@ -34,10 +34,17 @@
     </div>
   </div>
 <script>
-  var BK = 'https://serenecare-backend-production.up.railway.app';
+  // Proxy relativo /api (mismo origen, vía rewrite de Vercel) → sin dependencia de CORS,
+  // coherente con reservar.html. Antes usaba la URL absoluta de Railway.
+  var BK = '';
   var token = new URLSearchParams(location.search).get('token');
   var area = document.getElementById('area');
 
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
   function estado(ico, titulo, texto) {
     document.getElementById('estado').innerHTML =
       '<div class="ico">' + ico + '</div><h2>' + titulo + '</h2><p>' + texto + '</p>';
@@ -58,7 +65,7 @@
       var d = await r.json();
 
       var m = document.getElementById('meta');
-      m.innerHTML = (d.psicologo ? '<b>Dr/a. ' + d.psicologo + '</b><br>' : '') + (d.fecha ? d.fecha + ' · ' + (d.hora || '') : '');
+      m.innerHTML = (d.psicologo ? '<b>Dr/a. ' + esc(d.psicologo) + '</b><br>' : '') + (d.fecha ? esc(d.fecha) + ' · ' + esc(d.hora || '') : '');
 
       if (d.estado === 'cancelada') { estado('❌', 'Cita cancelada', 'Esta sesión fue cancelada. Si crees que es un error, contacta con tu profesional.'); return; }
       if (!d.sala_video_url) { estado('⏳', 'Tu sesión aún no está lista', 'En cuanto se confirme tu cita recibirás aquí el acceso a la videollamada.'); return; }
