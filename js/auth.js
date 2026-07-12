@@ -1,5 +1,33 @@
 import { supabase } from './supabase-client.js'
 
+// ─── TRACKING DE INTENTOS DE LOGIN ───────────────────────────────
+// Registra intentos fallidos para el panel "Seguridad & Accesos" del
+// super admin. Nunca rompe el login (todo va en try/catch). Requiere el
+// RPC registrar_intento_login (migración 20260712000001_intentos_login).
+async function obtenerIP() {
+  try {
+    const ctrl = new AbortController()
+    const t = setTimeout(() => ctrl.abort(), 1500)
+    const res = await fetch('https://api.ipify.org?format=json', { signal: ctrl.signal })
+    clearTimeout(t)
+    const json = await res.json()
+    return json.ip || null
+  } catch { return null }
+}
+
+async function registrarIntentoLogin(email, exito, motivo) {
+  try {
+    const ip = exito ? null : await obtenerIP()  // solo gastamos la llamada IP en fallos
+    await supabase.rpc('registrar_intento_login', {
+      p_email: email || null,
+      p_exito: !!exito,
+      p_motivo: motivo || null,
+      p_ip: ip,
+      p_ua: (navigator && navigator.userAgent) || null,
+    })
+  } catch { /* el logging nunca rompe el login */ }
+}
+
 // ─── RUTAS POR ROL ───────────────────────────────────────────────
 const RUTAS = {
   super_admin:   '/screens/dashboard_maestro_super_admin.html',
@@ -38,19 +66,24 @@ export async function loginClinica({ clinicaId, email, password }) {
     email,
     password,
   })
-  if (authError) throw new Error('Email o contraseña incorrectos.')
+  if (authError) {
+    await registrarIntentoLogin(email, false, 'credenciales')
+    throw new Error('Email o contraseña incorrectos.')
+  }
 
   // 2. Obtener perfil y validar
   const perfil = await obtenerPerfil(authData.user.id)
 
   if (!perfil.activo) {
     await supabase.auth.signOut()
+    await registrarIntentoLogin(email, false, 'suspendida')
     throw new Error('Tu cuenta está suspendida. Contactá al administrador.')
   }
 
   // 3. Verificar que el ID de clínica coincide
   if (perfil.rol !== 'super_admin' && perfil.clinica_id !== clinicaId) {
     await supabase.auth.signOut()
+    await registrarIntentoLogin(email, false, 'clinica_mismatch')
     throw new Error('El ID de clínica no coincide con tu cuenta.')
   }
 
@@ -68,11 +101,15 @@ export async function loginPacientePassword({ email, password }) {
     email,
     password,
   })
-  if (error) throw new Error('Email o contraseña incorrectos.')
+  if (error) {
+    await registrarIntentoLogin(email, false, 'credenciales')
+    throw new Error('Email o contraseña incorrectos.')
+  }
 
   const perfil = await obtenerPerfil(authData.user.id)
   if (perfil.rol !== 'paciente') {
     await supabase.auth.signOut()
+    await registrarIntentoLogin(email, false, 'rol_invalido')
     throw new Error('Esta cuenta no es de paciente.')
   }
 
@@ -105,7 +142,10 @@ export async function verificarOTP(token) {
     token,
     type: 'email',
   })
-  if (error) throw new Error('Código incorrecto o expirado.')
+  if (error) {
+    await registrarIntentoLogin(email, false, 'otp')
+    throw new Error('Código incorrecto o expirado.')
+  }
 
   const perfil = await obtenerPerfil(data.user.id)
   localStorage.setItem('tp_rol', perfil.rol)

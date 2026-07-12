@@ -196,24 +196,24 @@
     <!-- Security Stats -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
-        <p class="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-500">Sesiones Activas</p>
-        <p class="text-3xl font-headline font-bold text-white">34</p>
-        <p class="text-xs text-slate-600 mt-1">En este momento</p>
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-500">Usuarios Activos</p>
+        <p id="stat-sesiones" class="text-3xl font-headline font-bold text-white">—</p>
+        <p class="text-xs text-slate-600 mt-1">Cuentas habilitadas</p>
       </div>
       <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
         <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#f87171;">Fallos de Login</p>
-        <p class="text-3xl font-headline font-bold text-white">7</p>
+        <p id="stat-fallos" class="text-3xl font-headline font-bold text-white">—</p>
         <p class="text-xs text-slate-600 mt-1">Últimas 24h</p>
       </div>
       <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
-        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#fbbf24;">IPs Bloqueadas</p>
-        <p class="text-3xl font-headline font-bold text-white">2</p>
-        <p class="text-xs text-slate-600 mt-1">Rate limit activo</p>
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#fbbf24;">Cuentas Bloqueadas</p>
+        <p id="stat-bloqueados" class="text-3xl font-headline font-bold text-white">—</p>
+        <p class="text-xs text-slate-600 mt-1">≥5 fallos en 1h</p>
       </div>
       <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
-        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#4ade80;">Tokens Activos</p>
-        <p class="text-3xl font-headline font-bold text-white">34</p>
-        <p class="text-xs text-slate-600 mt-1">JWT válidos</p>
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#4ade80;">Intentos (24h)</p>
+        <p id="stat-total" class="text-3xl font-headline font-bold text-white">—</p>
+        <p class="text-xs text-slate-600 mt-1">Total registrados</p>
       </div>
     </div>
 
@@ -256,8 +256,8 @@
         <div class="bg-slate-900 rounded-[2rem] border border-slate-800/20 overflow-hidden">
           <div class="px-6 py-5 border-b border-slate-800/30 flex items-center justify-between">
             <div>
-              <h3 class="font-headline text-base font-bold text-white">IPs Bloqueadas</h3>
-              <p class="text-xs text-slate-500 mt-0.5">Rate limit automático</p>
+              <h3 class="font-headline text-base font-bold text-white">Cuentas Bloqueadas</h3>
+              <p class="text-xs text-slate-500 mt-0.5">≥5 fallos en la última hora</p>
             </div>
           </div>
           <div id="blocked-ips" class="divide-y divide-slate-800/30"></div>
@@ -271,24 +271,11 @@
 <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-slate-100 px-6 py-3 rounded-full font-semibold text-sm shadow-lg z-50 border border-slate-700"></div>
 
 <script>
-var SESSIONS = [
-  { user: 'Nazareno Hidalgo', email: 'nazareno@serenecare.io', ip: '190.2.14.88', inicio: 'hace 4 min', rol: 'super_admin', color: '#818cf8' },
-  { user: 'María García', email: 'maria@clinicasol.com', ip: '181.44.22.17', inicio: 'hace 12 min', rol: 'admin_clinica', color: '#a78bfa' },
-  { user: 'Carlos López', email: 'carlos@menteplus.com', ip: '200.45.88.12', inicio: 'hace 28 min', rol: 'admin_clinica', color: '#a78bfa' },
-  { user: 'Ana Martínez', email: 'ana@clinicasol.com', ip: '186.23.44.91', inicio: 'hace 1h', rol: 'terapeuta', color: '#4ade80' },
-  { user: 'Pedro Sánchez', email: 'pedro@menteplus.com', ip: '190.44.11.203', inicio: 'hace 2h', rol: 'terapeuta', color: '#4ade80' },
-  { user: 'Laura Fernández', email: 'laura@bienestar.com', ip: '201.55.33.78', inicio: 'hace 3h', rol: 'terapeuta', color: '#4ade80' },
-]
-var FAILED = [
-  { email: 'soporte@xyzinc.com', ip: '45.23.111.88', time: 'hace 8 min', attempts: 5 },
-  { email: 'admin@test.com', ip: '185.220.101.47', time: 'hace 22 min', attempts: 3 },
-  { email: 'root@unknown.net', ip: '103.21.59.14', time: 'hace 1h', attempts: 8 },
-  { email: 'carlos@menteplus.com', ip: '200.45.88.12', time: 'hace 2h', attempts: 1 },
-]
-var BLOCKED = [
-  { ip: '45.23.111.88', reason: '5+ intentos fallidos', since: 'hace 8 min', expires: '52 min restantes' },
-  { ip: '185.220.101.47', reason: 'Patrón de escaneo', since: 'hace 25 min', expires: '35 min restantes' },
-]
+// Datos reales cargados por el módulo (query a intentos_login + usuarios).
+// Arrancan vacíos: nada de datos falsos si aún no hay registros.
+var SESSIONS = []
+var FAILED = []
+var BLOCKED = []
 
 document.addEventListener('DOMContentLoaded', function() {
   var panelApps = document.getElementById('panel-apps')
@@ -341,6 +328,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var tbody = document.getElementById('tbody-sessions')
   var sessions = SESSIONS.slice()
   function renderSessions() {
+    if (!sessions.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="text-slate-500 text-xs text-center py-8">No hay usuarios activos que mostrar</td></tr>'
+      return
+    }
     tbody.innerHTML = sessions.map(function(s, i) {
       var initials = s.user.split(' ').map(function(n){return n[0]}).slice(0,2).join('')
       return '<tr class="threat-row">' +
@@ -378,27 +369,53 @@ document.addEventListener('DOMContentLoaded', function() {
     toast('Todas las sesiones han sido cerradas')
   })
 
-  // Failed logins
+  // Failed logins (datos reales vía _reloadFailed)
   var failedDiv = document.getElementById('failed-logins')
-  failedDiv.innerHTML = FAILED.map(function(f) {
-    return '<div class="px-6 py-3 flex items-center justify-between gap-2">' +
-      '<div><p class="text-xs font-semibold text-slate-300">' + f.email + '</p><p class="text-[10px] text-slate-500 font-mono">' + f.ip + ' • ' + f.time + '</p></div>' +
-      '<span class="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0" style="background:rgba(239,68,68,0.1);color:#f87171;">' + f.attempts + ' intentos</span>' +
-    '</div>'
-  }).join('')
+  function renderFailed() {
+    if (!FAILED.length) {
+      failedDiv.innerHTML = '<p class="text-slate-500 text-xs text-center py-8">Sin intentos fallidos registrados</p>'
+      return
+    }
+    failedDiv.innerHTML = FAILED.map(function(f) {
+      var meta = (f.ip && f.ip !== '—' ? f.ip + ' • ' : '') + f.time
+      return '<div class="px-6 py-3 flex items-center justify-between gap-2">' +
+        '<div><p class="text-xs font-semibold text-slate-300">' + f.email + '</p><p class="text-[10px] text-slate-500 font-mono">' + meta + '</p></div>' +
+        '<span class="text-xs font-bold px-2 py-0.5 rounded-full flex-shrink-0" style="background:rgba(239,68,68,0.1);color:#f87171;">' + f.attempts + (f.attempts === 1 ? ' intento' : ' intentos') + '</span>' +
+      '</div>'
+    }).join('')
+  }
+  window._reloadFailed = function(arr) { FAILED = arr; renderFailed() }
+  renderFailed()
 
-  // Blocked IPs
+  // Cuentas bloqueadas (datos reales vía _reloadBlocked)
   var blockedDiv = document.getElementById('blocked-ips')
-  blockedDiv.innerHTML = BLOCKED.map(function(b) {
-    return '<div class="px-6 py-4 flex items-start gap-3">' +
-      '<span class="material-symbols-outlined text-sm flex-shrink-0 mt-0.5" style="color:#f87171;">block</span>' +
-      '<div class="flex-1">' +
-        '<p class="text-xs font-mono font-bold text-slate-200">' + b.ip + '</p>' +
-        '<p class="text-[10px] text-slate-500 mt-0.5">' + b.reason + '</p>' +
-        '<p class="text-[10px] font-mono" style="color:#fbbf24;">' + b.expires + '</p>' +
-      '</div>' +
-    '</div>'
-  }).join('')
+  function renderBlocked() {
+    if (!BLOCKED.length) {
+      blockedDiv.innerHTML = '<p class="text-slate-500 text-xs text-center py-8">Ninguna cuenta bloqueada</p>'
+      return
+    }
+    blockedDiv.innerHTML = BLOCKED.map(function(b) {
+      return '<div class="px-6 py-4 flex items-start gap-3">' +
+        '<span class="material-symbols-outlined text-sm flex-shrink-0 mt-0.5" style="color:#f87171;">block</span>' +
+        '<div class="flex-1">' +
+          '<p class="text-xs font-mono font-bold text-slate-200">' + b.email + '</p>' +
+          '<p class="text-[10px] text-slate-500 mt-0.5">' + b.reason + '</p>' +
+          '<p class="text-[10px] font-mono" style="color:#fbbf24;">' + b.since + '</p>' +
+        '</div>' +
+      '</div>'
+    }).join('')
+  }
+  window._reloadBlocked = function(arr) { BLOCKED = arr; renderBlocked() }
+  renderBlocked()
+
+  // Contadores de arriba
+  window._setSecStats = function(s) {
+    var set = function(id, v){ var el = document.getElementById(id); if (el) el.textContent = v }
+    if (s.sesiones   != null) set('stat-sesiones', s.sesiones)
+    if (s.fallos     != null) set('stat-fallos', s.fallos)
+    if (s.bloqueados != null) set('stat-bloqueados', s.bloqueados)
+    if (s.total      != null) set('stat-total', s.total)
+  }
 
   // Logout
   var btnLogout = document.getElementById('btn-logout')
@@ -447,6 +464,70 @@ if (usuarios && usuarios.length && typeof window._reloadSessions === 'function')
     }
   })
   window._reloadSessions(mapped)
+}
+if (typeof window._setSecStats === 'function') {
+  window._setSecStats({ sesiones: usuarios ? usuarios.length : 0 })
+}
+
+// ── Intentos de login reales (últimas 24h) ────────────────────
+function haceCuanto(iso) {
+  const diff = Date.now() - new Date(iso).getTime()
+  const min = Math.floor(diff / 60000)
+  if (min < 1) return 'hace segundos'
+  if (min < 60) return 'hace ' + min + ' min'
+  const h = Math.floor(min / 60)
+  if (h < 24) return 'hace ' + h + 'h'
+  return 'hace ' + Math.floor(h / 24) + 'd'
+}
+
+try {
+  const desde24h = new Date(Date.now() - 24 * 3600 * 1000).toISOString()
+  const { data: intentos, error } = await supabase
+    .from('intentos_login')
+    .select('email, exito, motivo, ip, created_at')
+    .gte('created_at', desde24h)
+    .order('created_at', { ascending: false })
+    .limit(500)
+
+  if (!error && intentos) {
+    const fallidos = intentos.filter(function(i) { return !i.exito })
+
+    // Agrupar fallos por email
+    const porEmail = {}
+    fallidos.forEach(function(i) {
+      const k = i.email || '(desconocido)'
+      if (!porEmail[k]) porEmail[k] = { email: k, attempts: 0, last: i.created_at, ip: i.ip || '—' }
+      porEmail[k].attempts++
+      if (new Date(i.created_at) > new Date(porEmail[k].last)) { porEmail[k].last = i.created_at; porEmail[k].ip = i.ip || porEmail[k].ip }
+    })
+    const listaFallos = Object.values(porEmail)
+      .sort(function(a, b) { return new Date(b.last) - new Date(a.last) })
+      .map(function(g) { return { email: g.email, ip: g.ip, time: haceCuanto(g.last), attempts: g.attempts } })
+
+    // Bloqueados: ≥5 fallos en la última hora
+    const unaHora = Date.now() - 3600 * 1000
+    const fallosPorEmailHora = {}
+    fallidos.forEach(function(i) {
+      if (new Date(i.created_at).getTime() >= unaHora) {
+        const k = i.email || '(desconocido)'
+        if (!fallosPorEmailHora[k]) fallosPorEmailHora[k] = { email: k, n: 0, last: i.created_at }
+        fallosPorEmailHora[k].n++
+        if (new Date(i.created_at) > new Date(fallosPorEmailHora[k].last)) fallosPorEmailHora[k].last = i.created_at
+      }
+    })
+    const bloqueados = Object.values(fallosPorEmailHora)
+      .filter(function(g) { return g.n >= 5 })
+      .map(function(g) { return { email: g.email, reason: g.n + ' fallos en la última hora', since: haceCuanto(g.last) } })
+
+    if (typeof window._reloadFailed === 'function')  window._reloadFailed(listaFallos)
+    if (typeof window._reloadBlocked === 'function') window._reloadBlocked(bloqueados)
+    if (typeof window._setSecStats === 'function') {
+      window._setSecStats({ fallos: fallidos.length, bloqueados: bloqueados.length, total: intentos.length })
+    }
+  }
+} catch (e) {
+  // La tabla intentos_login aún no existe (migración pendiente) → se mantienen los estados vacíos
+  console.warn('[seguridad] intentos_login no disponible:', e && e.message)
 }
 </script>
 

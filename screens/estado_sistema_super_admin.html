@@ -210,167 +210,63 @@
     <!-- Tab: Estado -->
     <div id="tab-estado">
 
-    <!-- Overall Status Banner -->
-    <div class="rounded-2xl p-6 border flex items-center gap-5" style="background: rgba(34,197,94,0.06); border-color: rgba(34,197,94,0.2);">
-      <div class="w-4 h-4 rounded-full bg-green-400 status-dot-ok flex-shrink-0"></div>
+    <!-- Overall Status Banner (rellenado en vivo por checkHealth) -->
+    <div id="overall-banner" class="rounded-2xl p-6 border flex items-center gap-5" style="background: rgba(100,116,139,0.06); border-color: rgba(100,116,139,0.2);">
+      <div id="overall-dot" class="w-4 h-4 rounded-full bg-slate-400 flex-shrink-0"></div>
       <div class="flex-1">
-        <p class="font-headline text-xl font-extrabold text-white">Todos los sistemas operativos</p>
-        <p class="text-xs text-slate-400 mt-0.5">Última verificación: hace 47 segundos • Próxima en 13 segundos</p>
+        <p id="overall-title" class="font-headline text-xl font-extrabold text-white">Comprobando estado…</p>
+        <p id="overall-sub" class="text-xs text-slate-400 mt-0.5">Ejecutando comprobaciones en vivo</p>
       </div>
       <div class="text-right">
-        <p class="text-2xl font-headline font-bold" style="color:#4ade80;">99.98%</p>
-        <p class="text-xs text-slate-500">Uptime 90 días</p>
+        <p id="overall-count" class="text-2xl font-headline font-bold text-slate-400">—</p>
+        <p class="text-xs text-slate-500">Servicios OK</p>
       </div>
     </div>
 
-    <!-- Service Status Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30 flex items-center gap-4">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,0.12);">
-          <span class="material-symbols-outlined" style="color:#22c55e;">storage</span>
-        </div>
-        <div class="flex-1">
-          <p class="text-sm font-semibold text-slate-200">Base de Datos</p>
-          <p class="text-xs text-slate-500">Supabase PostgreSQL</p>
-        </div>
-        <div class="text-right">
-          <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(34,197,94,0.12);color:#4ade80;">Operativo</span>
-          <p class="text-[10px] text-slate-600 mt-1 font-mono">12ms</p>
-        </div>
-      </div>
-      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30 flex items-center gap-4">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,0.12);">
-          <span class="material-symbols-outlined" style="color:#22c55e;">api</span>
-        </div>
-        <div class="flex-1">
-          <p class="text-sm font-semibold text-slate-200">API Gateway</p>
-          <p class="text-xs text-slate-500">REST / Edge Functions</p>
-        </div>
-        <div class="text-right">
-          <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(34,197,94,0.12);color:#4ade80;">Operativo</span>
-          <p class="text-[10px] text-slate-600 mt-1 font-mono">28ms</p>
-        </div>
-      </div>
-      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30 flex items-center gap-4">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,0.12);">
-          <span class="material-symbols-outlined" style="color:#22c55e;">smart_toy</span>
-        </div>
-        <div class="flex-1">
-          <p class="text-sm font-semibold text-slate-200">Motor IA (Claude)</p>
-          <p class="text-xs text-slate-500">Anthropic API</p>
-        </div>
-        <div class="text-right">
-          <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(34,197,94,0.12);color:#4ade80;">Operativo</span>
-          <p class="text-[10px] text-slate-600 mt-1 font-mono">340ms</p>
-        </div>
-      </div>
-      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30 flex items-center gap-4">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,0.12);">
-          <span class="material-symbols-outlined" style="color:#22c55e;">mail</span>
-        </div>
-        <div class="flex-1">
-          <p class="text-sm font-semibold text-slate-200">Servicio de Email</p>
-          <p class="text-xs text-slate-500">Resend / SMTP</p>
-        </div>
-        <div class="text-right">
-          <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(34,197,94,0.12);color:#4ade80;">Operativo</span>
-          <p class="text-[10px] text-slate-600 mt-1 font-mono">89ms</p>
-        </div>
-      </div>
-      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30 flex items-center gap-4">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(245,158,11,0.12);">
-          <span class="material-symbols-outlined" style="color:#f59e0b;">lock</span>
-        </div>
-        <div class="flex-1">
-          <p class="text-sm font-semibold text-slate-200">Autenticación</p>
-          <p class="text-xs text-slate-500">Supabase Auth</p>
-        </div>
-        <div class="text-right">
-          <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(245,158,11,0.1);color:#fbbf24;">Degradado</span>
-          <p class="text-[10px] text-slate-600 mt-1 font-mono">210ms</p>
-        </div>
-      </div>
-      <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30 flex items-center gap-4">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,0.12);">
-          <span class="material-symbols-outlined" style="color:#22c55e;">attach_file</span>
-        </div>
-        <div class="flex-1">
-          <p class="text-sm font-semibold text-slate-200">Storage</p>
-          <p class="text-xs text-slate-500">Supabase Storage</p>
-        </div>
-        <div class="text-right">
-          <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(34,197,94,0.12);color:#4ade80;">Operativo</span>
-          <p class="text-[10px] text-slate-600 mt-1 font-mono">54ms</p>
-        </div>
-      </div>
-    </div>
+    <!-- Service Status Grid (renderizado por checkHealth) -->
+    <div id="service-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
 
     <!-- Metrics Row -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- DB Metrics -->
+      <!-- DB latency (medida en vivo) + resto pendiente de métricas de servidor -->
       <div class="bg-slate-900 rounded-[2rem] p-8 border border-slate-800/20">
         <h3 class="font-headline text-lg font-bold text-white mb-6">Métricas de Base de Datos</h3>
         <div class="space-y-5">
           <div>
             <div class="flex justify-between mb-2">
-              <span class="text-xs text-slate-400 font-semibold">Uso de conexiones</span>
-              <span class="text-xs font-mono text-slate-300">38 / 100</span>
+              <span class="text-xs text-slate-400 font-semibold">Latencia de consulta (medida ahora)</span>
+              <span id="db-latency-val" class="text-xs font-mono text-slate-300">…</span>
             </div>
             <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div class="h-full rounded-full bar-segment" style="width:38%;background:linear-gradient(90deg,#22c55e,#4ade80)"></div>
+              <div id="db-latency-bar" class="h-full rounded-full bar-segment" style="width:0%;background:linear-gradient(90deg,#22c55e,#4ade80)"></div>
             </div>
           </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="text-xs text-slate-400 font-semibold">Espacio de disco</span>
-              <span class="text-xs font-mono text-slate-300">2.1 GB / 8 GB</span>
+          <div class="rounded-xl p-4 mt-2" style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="material-symbols-outlined text-slate-500 text-base">schedule</span>
+              <span class="text-xs font-bold text-slate-400">Conexiones · disco · cache</span>
             </div>
-            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div class="h-full rounded-full bar-segment" style="width:26%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="text-xs text-slate-400 font-semibold">Cache hit rate</span>
-              <span class="text-xs font-mono text-slate-300">94.2%</span>
-            </div>
-            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div class="h-full rounded-full bar-segment" style="width:94%;background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="text-xs text-slate-400 font-semibold">Query latencia (p99)</span>
-              <span class="text-xs font-mono text-slate-300">47ms</span>
-            </div>
-            <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
-              <div class="h-full rounded-full bar-segment" style="width:15%;background:linear-gradient(90deg,#22c55e,#4ade80)"></div>
-            </div>
+            <p class="text-[11px] text-slate-500 leading-relaxed">Estas métricas requieren el service role de Supabase (métricas del servidor). Se conectarán cuando se despliegue el endpoint de monitorización. <span class="text-slate-600">Próximamente.</span></p>
           </div>
         </div>
       </div>
 
-      <!-- Uptime History -->
+      <!-- Incidentes derivados de logs reales -->
       <div class="bg-slate-900 rounded-[2rem] p-8 border border-slate-800/20">
-        <h3 class="font-headline text-lg font-bold text-white mb-2">Historial Uptime (90 días)</h3>
-        <p class="text-xs text-slate-500 mb-6">Cada barra = 1 día. Verde = 100% • Amarillo = degradado • Rojo = incidente</p>
-        <div id="uptime-bars" class="flex items-end gap-0.5 h-16 mb-3"></div>
-        <div class="flex justify-between text-[10px] text-slate-600 font-mono">
-          <span>Hace 90 días</span><span>Hoy</span>
+        <h3 class="font-headline text-lg font-bold text-white mb-2">Incidencias recientes</h3>
+        <p id="incident-sub" class="text-xs text-slate-500 mb-6">Derivadas de los errores registrados en el sistema</p>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-slate-800/40 rounded-xl p-4 text-center">
+            <p class="text-xs text-slate-500 mb-1">Errores (logs cargados)</p>
+            <p id="incident-errors" class="font-headline font-bold text-2xl" style="color:#fbbf24">—</p>
+          </div>
+          <div class="bg-slate-800/40 rounded-xl p-4 text-center">
+            <p class="text-xs text-slate-500 mb-1">Última comprobación</p>
+            <p id="last-check" class="font-headline font-bold text-2xl text-white">—</p>
+          </div>
         </div>
-        <div class="mt-6 grid grid-cols-3 gap-3">
-          <div class="bg-slate-800/40 rounded-xl p-3 text-center">
-            <p class="text-xs text-slate-500 mb-1">Tiempo activo</p>
-            <p class="font-headline font-bold text-white">99.98%</p>
-          </div>
-          <div class="bg-slate-800/40 rounded-xl p-3 text-center">
-            <p class="text-xs text-slate-500 mb-1">Incidentes</p>
-            <p class="font-headline font-bold" style="color:#fbbf24">2</p>
-          </div>
-          <div class="bg-slate-800/40 rounded-xl p-3 text-center">
-            <p class="text-xs text-slate-500 mb-1">Tiempo caído</p>
-            <p class="font-headline font-bold" style="color:#f87171">1.3 min</p>
-          </div>
+        <div class="rounded-xl p-4 mt-4" style="background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);">
+          <p class="text-[11px] text-slate-500 leading-relaxed">El <b>historial de uptime a 90 días</b> necesita datos de monitorización almacenados (aún no se registran). <span class="text-slate-600">Próximamente.</span></p>
         </div>
       </div>
     </div>
@@ -482,29 +378,6 @@ document.addEventListener('DOMContentLoaded', function() {
     e.stopPropagation(); temaOscuro = !temaOscuro; localStorage.setItem('tp_tema', temaOscuro ? 'oscuro' : 'claro'); syncTema()
   })
 
-  // Uptime bars
-  var container = document.getElementById('uptime-bars')
-  var incidentDays = [14, 52]
-  var degradedDays = [28, 67, 71]
-  for (var i = 0; i < 90; i++) {
-    var bar = document.createElement('div')
-    bar.style.flex = '1'
-    bar.style.borderRadius = '2px'
-    bar.style.minWidth = '2px'
-    if (incidentDays.includes(i)) {
-      bar.style.height = '40%'
-      bar.style.background = '#ef4444'
-    } else if (degradedDays.includes(i)) {
-      bar.style.height = '75%'
-      bar.style.background = '#f59e0b'
-    } else {
-      bar.style.height = (80 + Math.random() * 20) + '%'
-      bar.style.background = '#22c55e'
-      bar.style.opacity = '0.7'
-    }
-    container.appendChild(bar)
-  }
-
   var btnLogout = document.getElementById('btn-logout')
   if (btnLogout) btnLogout.addEventListener('click', function(e) {
     e.preventDefault()
@@ -606,17 +479,22 @@ function switchTab(tab) {
 import { supabase } from '../js/supabase-client.js'
 import { guardaSuperAdmin } from '../js/admin.js'
 
+const SUPABASE_URL = 'https://wnuwuxenzwfqmhxagryk.supabase.co'
+const ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o'
+
 const session = await guardaSuperAdmin()
 if (!session) { throw new Error('redirigiendo') }
 
+// ── Logs reales (para la pestaña Logs + derivar incidencias) ──
+let realLogs = false
 try {
   const { data: logs, error } = await supabase
     .from('system_logs')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(100)
-
   if (!error && logs && logs.length) {
+    realLogs = true
     window.LOGS_DATA = logs.map(function(l) {
       return {
         ts: (l.created_at || '').replace('T', ' ').slice(0, 19),
@@ -630,6 +508,172 @@ try {
     if (typeof window.renderLogs === 'function') { window.renderLogs() }
   }
 } catch(e) { /* mantiene datos de demostración */ }
+
+// ── Estados visuales ──────────────────────────────────────────
+const STATES = {
+  ok:      { label:'Operativo',   badgeBg:'rgba(34,197,94,0.12)',  badgeCol:'#4ade80', iconBg:'rgba(34,197,94,0.12)',  iconCol:'#22c55e' },
+  slow:    { label:'Lento',       badgeBg:'rgba(245,158,11,0.1)',  badgeCol:'#fbbf24', iconBg:'rgba(245,158,11,0.12)', iconCol:'#f59e0b' },
+  down:    { label:'Caído',       badgeBg:'rgba(248,113,113,0.1)', badgeCol:'#f87171', iconBg:'rgba(239,68,68,0.12)',  iconCol:'#ef4444' },
+  unknown: { label:'Sin monitor', badgeBg:'rgba(100,116,139,0.15)',badgeCol:'#94a3b8', iconBg:'rgba(100,116,139,0.15)',iconCol:'#94a3b8' },
+}
+
+const SERVICES = [
+  { key:'db',      name:'Base de Datos',   sub:'Supabase PostgreSQL',  icon:'storage' },
+  { key:'api',     name:'API Gateway',     sub:'REST / Edge Functions',icon:'api' },
+  { key:'auth',    name:'Autenticación',   sub:'Supabase Auth',        icon:'lock' },
+  { key:'ia',      name:'Motor IA',        sub:'derivado de logs',     icon:'smart_toy' },
+  { key:'email',   name:'Servicio de Email',sub:'derivado de logs',    icon:'mail' },
+  { key:'storage', name:'Storage',         sub:'Supabase Storage',     icon:'attach_file' },
+]
+
+function renderGrid() {
+  const grid = document.getElementById('service-grid')
+  if (!grid) return
+  grid.innerHTML = SERVICES.map(function(s) {
+    return '' +
+      '<div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30 flex items-center gap-4">' +
+        '<div id="svc-'+s.key+'-icon" class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(100,116,139,0.15);">' +
+          '<span id="svc-'+s.key+'-glyph" class="material-symbols-outlined" style="color:#94a3b8;">'+s.icon+'</span>' +
+        '</div>' +
+        '<div class="flex-1">' +
+          '<p class="text-sm font-semibold text-slate-200">'+s.name+'</p>' +
+          '<p class="text-xs text-slate-500">'+s.sub+'</p>' +
+        '</div>' +
+        '<div class="text-right">' +
+          '<span id="svc-'+s.key+'-badge" class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(100,116,139,0.15);color:#94a3b8;">Comprobando…</span>' +
+          '<p id="svc-'+s.key+'-lat" class="text-[10px] text-slate-600 mt-1 font-mono">—</p>' +
+        '</div>' +
+      '</div>'
+  }).join('')
+}
+
+function setService(key, state, latText) {
+  const st = STATES[state] || STATES.unknown
+  const badge = document.getElementById('svc-'+key+'-badge')
+  const lat   = document.getElementById('svc-'+key+'-lat')
+  const icon  = document.getElementById('svc-'+key+'-icon')
+  const glyph = document.getElementById('svc-'+key+'-glyph')
+  if (badge) { badge.textContent = st.label; badge.style.background = st.badgeBg; badge.style.color = st.badgeCol }
+  if (lat)   { lat.textContent = latText || '—' }
+  if (icon)  { icon.style.background = st.iconBg }
+  if (glyph) { glyph.style.color = st.iconCol }
+}
+
+// ── Comprobaciones reales ─────────────────────────────────────
+async function checkDB() {
+  const t0 = performance.now()
+  try {
+    const { error } = await supabase.from('planes').select('id').limit(1)
+    const ms = Math.round(performance.now() - t0)
+    if (error) return { state:'down', ms:null }
+    return { state: ms > 800 ? 'slow' : 'ok', ms }
+  } catch(e) { return { state:'down', ms:null } }
+}
+
+async function checkFetch(path) {
+  const t0 = performance.now()
+  try {
+    const res = await fetch(SUPABASE_URL + path, { headers: { apikey: ANON, Authorization: 'Bearer ' + ANON } })
+    const ms = Math.round(performance.now() - t0)
+    if (res.status >= 500) return { state:'down', ms }
+    return { state: ms > 800 ? 'slow' : 'ok', ms }
+  } catch(e) { return { state:'down', ms:null } }
+}
+
+function fromLogs(serviceMatch) {
+  // Deriva estado de un servicio a partir de errores recientes en logs reales
+  if (!realLogs || !window.LOGS_DATA) return { state:'unknown', ms:null }
+  const recent = window.LOGS_DATA.slice(0, 40)
+  const errs = recent.filter(function(l){
+    return l.level === 'ERROR' && serviceMatch.test(l.service || '')
+  })
+  return { state: errs.length ? 'slow' : 'ok', ms:null, note: errs.length ? errs.length+' err' : 'ok' }
+}
+
+async function checkHealth() {
+  renderGrid()
+
+  // Lanza las comprobaciones en paralelo
+  const [db, api, auth, storage] = await Promise.all([
+    checkDB(),
+    checkFetch('/rest/v1/'),
+    checkFetch('/auth/v1/health'),
+    checkFetch('/storage/v1/version'),
+  ])
+  const ia    = fromLogs(/ia|claude|openai|motor/i)
+  const email = fromLogs(/email|mail|resend|brevo|smtp/i)
+
+  const results = { db, api, auth, storage, ia, email }
+  setService('db',      db.state,      db.ms != null ? db.ms+'ms' : '—')
+  setService('api',     api.state,     api.ms != null ? api.ms+'ms' : '—')
+  setService('auth',    auth.state,    auth.ms != null ? auth.ms+'ms' : '—')
+  setService('storage', storage.state, storage.ms != null ? storage.ms+'ms' : '—')
+  setService('ia',      ia.state,      ia.note || 'sin datos')
+  setService('email',   email.state,   email.note || 'sin datos')
+
+  // Latencia de BD en el panel de métricas
+  if (db.ms != null) {
+    const val = document.getElementById('db-latency-val')
+    const bar = document.getElementById('db-latency-bar')
+    if (val) val.textContent = db.ms + 'ms'
+    if (bar) {
+      const pct = Math.min(100, Math.round(db.ms / 10)) // 1000ms => 100%
+      bar.style.width = pct + '%'
+      bar.style.background = db.ms > 800 ? 'linear-gradient(90deg,#f59e0b,#fbbf24)' : 'linear-gradient(90deg,#22c55e,#4ade80)'
+    }
+  }
+
+  // Banner global: peor estado de los servicios comprobables en vivo
+  const live = [db, api, auth, storage, ia, email]
+  const oks   = live.filter(function(r){ return r.state === 'ok' }).length
+  const downs = live.filter(function(r){ return r.state === 'down' }).length
+  const slows = live.filter(function(r){ return r.state === 'slow' }).length
+  const unk   = live.filter(function(r){ return r.state === 'unknown' }).length
+
+  const banner = document.getElementById('overall-banner')
+  const dot    = document.getElementById('overall-dot')
+  const title  = document.getElementById('overall-title')
+  const sub    = document.getElementById('overall-sub')
+  const count  = document.getElementById('overall-count')
+
+  let bg, border, dotCls, titleTxt, titleCol
+  if (downs > 0) {
+    bg='rgba(239,68,68,0.06)'; border='rgba(239,68,68,0.2)'; dotCls='bg-red-400'
+    titleTxt = downs + (downs===1?' servicio caído':' servicios caídos'); titleCol='#f87171'
+  } else if (slows > 0) {
+    bg='rgba(245,158,11,0.06)'; border='rgba(245,158,11,0.2)'; dotCls='bg-amber-400'
+    titleTxt = 'Rendimiento degradado'; titleCol='#fbbf24'
+  } else {
+    bg='rgba(34,197,94,0.06)'; border='rgba(34,197,94,0.2)'; dotCls='bg-green-400 status-dot-ok'
+    titleTxt = 'Todos los sistemas operativos'; titleCol='#ffffff'
+  }
+  const ahora = new Date().toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit', second:'2-digit' })
+  if (banner) { banner.style.background = bg; banner.style.borderColor = border }
+  if (dot)    { dot.className = 'w-4 h-4 rounded-full flex-shrink-0 ' + dotCls }
+  if (title)  { title.textContent = titleTxt; title.style.color = titleCol }
+  if (sub)    { sub.textContent = 'Comprobado a las ' + ahora + (unk ? ' · ' + unk + ' sin monitor directo' : '') }
+  if (count)  { count.textContent = oks + '/' + live.length; count.style.color = downs?'#f87171':(slows?'#fbbf24':'#4ade80') }
+
+  // Panel de incidencias
+  const incErr = document.getElementById('incident-errors')
+  const lastChk = document.getElementById('last-check')
+  const incSub = document.getElementById('incident-sub')
+  if (incErr) {
+    if (realLogs && window.LOGS_DATA) {
+      const nErr = window.LOGS_DATA.filter(function(l){ return l.level === 'ERROR' }).length
+      incErr.textContent = nErr
+      incErr.style.color = nErr ? '#fbbf24' : '#4ade80'
+    } else {
+      incErr.textContent = '—'
+      if (incSub) incSub.textContent = 'Aún no hay logs registrados en el sistema'
+    }
+  }
+  if (lastChk) lastChk.textContent = ahora.slice(0,5)
+}
+
+checkHealth()
+// Re-comprueba cada 60s mientras la pestaña esté abierta
+setInterval(checkHealth, 60000)
 </script>
 
 <script>
