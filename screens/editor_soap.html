@@ -698,11 +698,14 @@ async function asistirIA(campo, seccion) {
   try {
     const contexto  = `S: ${campos.subjetivo.value}\nO: ${campos.objetivo.value}\nA: ${campos.evaluacion.value}\nP: ${campos.plan.value}`;
     const secciones = { s:'Subjetivo (perspectiva del paciente)', o:'Objetivo (observaciones clínicas)', a:'Evaluación (análisis clínico)', p:'Plan (próximos pasos terapéuticos)' };
-    const resp = await llamarOpenAI([
-      { role: 'system', content: 'Eres un psicólogo clínico experto. Completa notas SOAP de forma profesional, concisa y en español.' },
-      { role: 'user',   content: `Nota SOAP actual:\n${contexto}\n\nCompleta únicamente el campo "${secciones[seccion]}" de manera profesional y clínica.` },
-    ], { temperature: 0.6 });
-    const texto = resp.choices?.[0]?.message?.content || '';
+    const _rr = await fetch('/api/transcripcion/asistir', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: [
+        { role: 'system', content: 'Eres un psicólogo clínico experto. Completa notas SOAP de forma profesional, concisa y en español.' },
+        { role: 'user',   content: `Nota SOAP actual:\n${contexto}\n\nCompleta únicamente el campo "${secciones[seccion]}" de manera profesional y clínica.` },
+      ], temperature: 0.6 }),
+    });
+    const texto = (await _rr.json()).texto || '';
     if (texto) { campo.value = texto; document.getElementById('ia-banner').classList.remove('hidden'); adjustLayout(); }
   } catch(e) { window.mostrarToast('Error al conectar con la IA.'); }
   finally {
