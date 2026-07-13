@@ -114,7 +114,7 @@ html.light .bg-slate-800\/50{background:rgba(0,0,0,0.05)!important;}
         <span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:'FILL' 1;">emergency</span>SOS
       </button>
       <button onclick="toggleAppsPanel()" title="Módulos" style="padding:7px;border-radius:10px;border:none;background:none;cursor:pointer;color:#94a3b8;transition:background 0.15s;flex-shrink:0;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'"><span class="material-symbols-outlined" style="font-size:22px;display:block;">apps</span></button>
-      <button onclick="toggleNotif()" style="position:relative;padding:7px;border-radius:10px;border:none;background:none;cursor:pointer;color:#94a3b8;transition:background 0.15s;flex-shrink:0;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'"><span class="material-symbols-outlined" style="font-size:22px;display:block;">notifications</span><span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#f87171;border:2px solid #020617;"></span></button>
+      <button onclick="toggleNotif()" style="position:relative;padding:7px;border-radius:10px;border:none;background:none;cursor:pointer;color:#94a3b8;transition:background 0.15s;flex-shrink:0;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='none'"><span class="material-symbols-outlined" style="font-size:22px;display:block;">notifications</span><span id="notif-dot" style="display:none;position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#f87171;border:2px solid #020617;"></span></button>
     </div>
   </header>
 
@@ -145,7 +145,7 @@ html.light .bg-slate-800\/50{background:rgba(0,0,0,0.05)!important;}
     </div>
 
     <!-- Banner: Tarea asignada -->
-    <div id="banner-tarea" class="fade-up" style="margin-bottom:1rem;border-radius:1.25rem;overflow:hidden;border:1px solid rgba(167,139,250,0.25);background:rgba(167,139,250,0.05);">
+    <div id="banner-tarea" class="fade-up" style="display:none;margin-bottom:1rem;border-radius:1.25rem;overflow:hidden;border:1px solid rgba(167,139,250,0.25);background:rgba(167,139,250,0.05);">
       <div style="display:flex;align-items:center;gap:1rem;padding:1rem 1.25rem;">
         <div style="width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);">
           <span class="material-symbols-outlined" style="color:#a78bfa;font-size:20px;font-variation-settings:'FILL' 1;">task_alt</span>
@@ -664,41 +664,17 @@ function abrirRecurso(titulo, tipo, url) {
     <button onclick="document.getElementById('notif-panel').style.display='none'" style="background:none;border:none;cursor:pointer;color:#64748b;"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
   </div>
   <div>
-    <!-- Tarea asignada -->
-    <div onclick="abrirTarea()" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(167,139,250,0.05)'" onmouseout="this.style.background='none'">
+    <!-- Tarea asignada (real, oculta si no hay recurso) -->
+    <div id="notif-tarea" onclick="abrirTarea()" style="display:none;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);align-items:flex-start;gap:0.75rem;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(167,139,250,0.05)'" onmouseout="this.style.background='none'">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.2);"><span class="material-symbols-outlined" style="color:#a78bfa;font-size:18px;font-variation-settings:'FILL' 1;">task_alt</span></div>
       <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
-          <p style="font-size:0.8rem;font-weight:700;color:#ede9fe;margin:0;">Tarea asignada</p>
-          <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(167,139,250,0.2);color:#a78bfa;text-transform:uppercase;">Nueva</span>
+          <p style="font-size:0.8rem;font-weight:700;color:#ede9fe;margin:0;">Recurso asignado</p>
+          <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(167,139,250,0.2);color:#a78bfa;text-transform:uppercase;">Nuevo</span>
         </div>
-        <p style="font-size:0.72rem;color:#64748b;margin:0;">Registro de pensamientos · Dra. Rivadavia</p>
+        <p id="notif-tarea-sub" style="font-size:0.72rem;color:#64748b;margin:0;"></p>
       </div>
-      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">hoy</span>
-    </div>
-    <!-- Sesión reprogramada -->
-    <div onclick="mostrarToastReprogramada()" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:flex-start;gap:0.75rem;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(251,146,60,0.05)'" onmouseout="this.style.background='none'">
-      <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(251,146,60,0.15);border:1px solid rgba(251,146,60,0.2);"><span class="material-symbols-outlined" style="color:#fb923c;font-size:18px;font-variation-settings:'FILL' 1;">event_repeat</span></div>
-      <div style="flex:1;">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
-          <p style="font-size:0.8rem;font-weight:700;color:#ffedd5;margin:0;">Sesión reprogramada</p>
-          <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(251,146,60,0.2);color:#fb923c;text-transform:uppercase;">Aviso</span>
-        </div>
-        <p style="font-size:0.72rem;color:#64748b;margin:0;">22 may → 29 may · 10:00 · Dra. Rivadavia</p>
-      </div>
-      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">hoy</span>
-    </div>
-    <!-- Nuevo recurso -->
-    <div style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:flex-start;gap:0.75rem;">
-      <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(52,211,153,0.12);"><span class="material-symbols-outlined" style="color:#34d399;font-size:18px;font-variation-settings:'FILL' 1;">article</span></div>
-      <div style="flex:1;">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
-          <p style="font-size:0.8rem;font-weight:700;color:#e2e8f0;margin:0;">Nuevo recurso compartido</p>
-          <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(52,211,153,0.15);color:#34d399;text-transform:uppercase;">Nuevo</span>
-        </div>
-        <p style="font-size:0.72rem;color:#64748b;margin:0;">Técnicas de regulación emocional · PDF</p>
-      </div>
-      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">hoy</span>
+      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">nuevo</span>
     </div>
     <!-- Cuestionario -->
     <a id="notif-escala" href="cuestionario_phq9.html" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:none;align-items:flex-start;gap:0.75rem;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(45,212,191,0.05)'" onmouseout="this.style.background='none'">
@@ -712,18 +688,18 @@ function abrirRecurso(titulo, tipo, url) {
       </div>
       <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">hoy</span>
     </a>
-    <!-- Sesión mañana -->
-    <div style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:flex-start;gap:0.75rem;">
+    <!-- Próxima sesión (real, oculta si no hay) -->
+    <div id="notif-cita" style="display:none;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);align-items:flex-start;gap:0.75rem;">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(52,211,153,0.12);"><span class="material-symbols-outlined" style="color:#34d399;font-size:18px;">calendar_today</span></div>
-      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Sesión mañana a las 10:00</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Dra. Marta Rivadavia — Online</p></div>
-      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">1h</span>
+      <div style="flex:1;"><p id="notif-cita-titulo" style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Próxima sesión</p><p id="notif-cita-sub" style="font-size:0.72rem;color:#64748b;margin:0;"></p></div>
+      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;"></span>
     </div>
     <div id="notif-escalas-count" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:none;align-items:flex-start;gap:0.75rem;">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(245,158,11,0.12);"><span class="material-symbols-outlined" style="color:#fbbf24;font-size:18px;">assignment</span></div>
       <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p id="notif-escalas-count-txt" style="font-size:0.72rem;color:#64748b;margin:0;">Tenés 2 escalas por completar</p></div>
       <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">ayer</span>
     </div>
-    <a href="consentimiento_firma_paciente.html" style="padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:0.75rem;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(251,191,36,0.04)'" onmouseout="this.style.background='none'">
+    <a id="notif-consent" href="consentimiento_firma_paciente.html" style="display:none;padding:1rem 1.25rem;align-items:flex-start;gap:0.75rem;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(251,191,36,0.04)'" onmouseout="this.style.background='none'">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.2);">
         <span class="material-symbols-outlined" style="color:#fbbf24;font-size:18px;font-variation-settings:'FILL' 1;">history_edu</span>
       </div>
@@ -732,10 +708,15 @@ function abrirRecurso(titulo, tipo, url) {
           <p style="font-size:0.8rem;font-weight:700;color:#fef3c7;margin:0;">Firma pendiente</p>
           <span style="font-size:0.58rem;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(251,191,36,0.2);color:#fbbf24;text-transform:uppercase;">Nuevo</span>
         </div>
-        <p style="font-size:0.72rem;color:#64748b;margin:0;">Consentimiento informado · Dra. Rivadavia</p>
+        <p id="notif-consent-sub" style="font-size:0.72rem;color:#64748b;margin:0;">Documento pendiente de firma</p>
       </div>
-      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">hoy</span>
+      <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">nuevo</span>
     </a>
+    <!-- Estado vacío -->
+    <div id="notif-empty" style="display:none;padding:2.5rem 1.25rem;text-align:center;">
+      <span class="material-symbols-outlined" style="color:#475569;font-size:32px;">notifications_off</span>
+      <p style="font-size:0.8rem;color:#64748b;margin:0.5rem 0 0;">No tienes notificaciones nuevas</p>
+    </div>
   </div>
   <div style="padding:0.875rem 1.25rem;border-top:1px solid rgba(255,255,255,0.06);">
     <button onclick="document.getElementById('notif-panel').style.display='none'" style="width:100%;padding:0.6rem;border-radius:0.75rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);color:#94a3b8;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:Manrope,sans-serif;">Marcar todo como leído</button>
@@ -1130,21 +1111,21 @@ function mostrarToastExito(msg) {
       <div style="background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.12);border-radius:14px;padding:14px 16px;margin-bottom:16px;">
         <p id="modal-ej-instr" style="font-size:0.83rem;color:#cbd5e1;line-height:1.6;margin:0;">Durante esta semana, cada vez que notes un pensamiento negativo intenso, registralo en la planilla adjunta.</p>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
-        <div style="width:34px;height:34px;border-radius:9px;background:rgba(239,68,68,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <span class="material-symbols-outlined" style="color:#f87171;font-size:16px;font-variation-settings:'FILL' 1;">description</span>
+      <div id="modal-ej-descarga" onclick="descargarPlanilla()" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+        <div style="width:34px;height:34px;border-radius:9px;background:rgba(52,211,153,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span class="material-symbols-outlined" style="color:#34d399;font-size:16px;font-variation-settings:'FILL' 1;">description</span>
         </div>
         <div style="flex:1;">
-          <p style="font-size:0.8rem;font-weight:700;color:#e2e8f0;margin:0 0 1px;">Planilla de registro — Semana 4.pdf</p>
-          <p style="font-size:0.68rem;color:#64748b;margin:0;">PDF · 340 KB</p>
+          <p id="modal-ej-archivo" style="font-size:0.8rem;font-weight:700;color:#e2e8f0;margin:0 0 1px;">Material del recurso</p>
+          <p style="font-size:0.68rem;color:#64748b;margin:0;">Pulsa para descargar</p>
         </div>
-        <span class="material-symbols-outlined" style="color:#64748b;font-size:17px;">download</span>
+        <span class="material-symbols-outlined" style="color:#34d399;font-size:17px;">download</span>
       </div>
     </div>
     <div style="padding:0 24px 24px;display:flex;gap:10px;">
       <button onclick="cerrarModal('modal-tarea')" style="flex:1;padding:11px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#94a3b8;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Cerrar</button>
-      <button onclick="marcarTareaCompleta()" style="flex:2;padding:11px;border-radius:12px;border:none;background:linear-gradient(135deg,rgba(167,139,250,0.9),rgba(139,92,246,0.9));color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;">
-        <span class="material-symbols-outlined" style="font-size:16px;">check_circle</span>Marcar como completada
+      <button onclick="descargarPlanilla()" style="flex:2;padding:11px;border-radius:12px;border:none;background:linear-gradient(135deg,rgba(52,211,153,0.9),rgba(16,185,129,0.9));color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <span class="material-symbols-outlined" style="font-size:16px;">download</span>Descargar
       </button>
     </div>
   </div>
@@ -1152,58 +1133,12 @@ function mostrarToastExito(msg) {
 
 <script>
 // ── Ejercicios desde localStorage ─────────────────────────────────────────
-(function() {
-  var EJ_KEY = 'tp_ejercicios_demo';
-
-  function getEjercicios() {
-    try { return JSON.parse(localStorage.getItem(EJ_KEY)) || []; } catch(e) { return []; }
-  }
-
-  function getPendiente() {
-    return getEjercicios().find(function(e){ return e.estado !== 'completado'; }) || null;
-  }
-
-  function initBanner() {
-    var ej = getPendiente();
-    var banner = document.getElementById('banner-tarea');
-    if (!ej) { banner.style.display = 'none'; return; }
-    banner.style.display = 'flex';
-    var titulo = banner.querySelector('[data-ej-titulo]');
-    var subtit  = banner.querySelector('[data-ej-subtit]');
-    if (titulo) titulo.textContent = ej.titulo;
-    if (subtit) {
-      var fecha = ej.fecha ? ' · Entrega: ' + new Date(ej.fecha + 'T00:00').toLocaleDateString('es-ES', { day:'numeric', month:'long' }) : '';
-      subtit.textContent = ej.instrucciones ? ej.instrucciones.substring(0, 60) + (ej.instrucciones.length > 60 ? '…' : '') + fecha : fecha.replace(' · ', '');
-    }
-  }
-
-  function rellenarModal(ej) {
-    var el = function(id){ return document.getElementById(id); };
-    if (!ej) return;
-    var fechaLabel = ej.fecha ? new Date(ej.fecha + 'T00:00').toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' }) : '—';
-    if (el('modal-ej-titulo'))   el('modal-ej-titulo').textContent   = ej.titulo;
-    if (el('modal-ej-asignado')) el('modal-ej-asignado').textContent = 'Asignado: ' + ej.asignado;
-    if (el('modal-ej-fecha'))    el('modal-ej-fecha').textContent    = 'Entrega: ' + fechaLabel;
-    if (el('modal-ej-instr'))    el('modal-ej-instr').textContent    = ej.instrucciones || 'Sin instrucciones adicionales.';
-  }
-
-  window.abrirTarea = function() {
-    var ej = getPendiente();
-    rellenarModal(ej);
-    mostrarModal('modal-tarea');
-  };
-
-  window.marcarTareaCompleta = function() {
-    var lista = getEjercicios();
-    var idx = lista.findIndex(function(e){ return e.estado !== 'completado'; });
-    if (idx !== -1) { lista[idx].estado = 'completado'; localStorage.setItem(EJ_KEY, JSON.stringify(lista)); }
-    cerrarModal('modal-tarea');
-    initBanner();
-    mostrarToastExito('¡Tarea completada! Tu psicólogo fue notificado.');
-  };
-
-  initBanner();
-})();
+// Cableado con datos REALES en el módulo principal (abajo): window.abrirTarea,
+// window.descargarPlanilla y window.marcarTareaCompleta se definen ahí.
+// No-ops de seguridad por si se hace click antes de que el módulo cargue:
+window.abrirTarea = window.abrirTarea || function(){};
+window.descargarPlanilla = window.descargarPlanilla || function(){};
+window.marcarTareaCompleta = window.marcarTareaCompleta || function(){ if (window.cerrarModal) cerrarModal('modal-tarea'); };
 
 window.mostrarToastReprogramada = function() {
   var t = document.getElementById('toast-reprogramada');
@@ -1501,6 +1436,76 @@ try {
       if (ct) ct.textContent = 'Tenés ' + pend.length + ' escalas por completar'
       notifCount.style.display = 'flex'
     }
+
+    // ── Notificaciones REALES: recurso asignado + próxima cita + consentimiento + escala ──
+    let nTotal = 0
+
+    // 1) Recurso asignado por el terapeuta (la "tarea")
+    try {
+      const { data: _asig } = await supabase.from('recursos_asignados')
+        .select('created_at, recursos(id, titulo, tipo, descripcion, contenido_html)')
+        .order('created_at', { ascending: false })
+      const _recs = (_asig || []).map(function(a){ return a.recursos }).filter(Boolean)
+      const rec = _recs[0]
+      if (rec) {
+        nTotal++
+        window.__recTarea = rec
+        const bt = document.getElementById('banner-tarea')
+        if (bt) {
+          const t = bt.querySelector('[data-ej-titulo]'); if (t) t.textContent = 'Recurso asignado por tu psicólogo'
+          const s = bt.querySelector('[data-ej-subtit]'); if (s) s.textContent = rec.titulo + (rec.tipo ? ' · ' + rec.tipo : '')
+          bt.style.display = 'flex'
+        }
+        const ns = document.getElementById('notif-tarea-sub'); if (ns) ns.textContent = rec.titulo
+        const nt = document.getElementById('notif-tarea'); if (nt) nt.style.display = 'flex'
+        const mt = document.getElementById('modal-ej-titulo'); if (mt) mt.textContent = rec.titulo
+        const mf = document.getElementById('modal-ej-fecha'); if (mf) mf.style.display = 'none'
+        const mi = document.getElementById('modal-ej-instr'); if (mi) mi.textContent = rec.descripcion || 'Tu psicólogo te compartió este material. Puedes descargarlo abajo.'
+        const ma = document.getElementById('modal-ej-archivo'); if (ma) ma.textContent = (rec.titulo || 'Material') + '.html'
+      }
+      window.abrirTarea = function(){ if (window.__recTarea && window.mostrarModal) window.mostrarModal('modal-tarea') }
+      window.descargarPlanilla = function(){
+        const r = window.__recTarea
+        if (!r || !r.contenido_html) { if (window.mostrarToastExito) window.mostrarToastExito('Este recurso no incluye archivo descargable.'); return }
+        const blob = new Blob([r.contenido_html], { type: 'text/html;charset=utf-8' })
+        const url = URL.createObjectURL(blob), a = document.createElement('a')
+        a.href = url; a.download = (r.titulo || 'recurso').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_') + '.html'
+        document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url) }, 1000)
+      }
+    } catch(e) { console.warn('Recurso notif:', e.message) }
+
+    // 2) Próxima cita real (desde window.SESIONES ya cargado)
+    try {
+      const _hoy0 = new Date(); _hoy0.setHours(0,0,0,0)
+      const _prox = (window.SESIONES || [])
+        .map(function(s){ var hm = (s.hora || '00:00').split(':'); return { s: s, dt: new Date(s.y, s.m, s.d, parseInt(hm[0],10)||0, parseInt(hm[1],10)||0) }; })
+        .filter(function(x){ return x.dt >= _hoy0; })
+        .sort(function(a,b){ return a.dt - b.dt; })[0]
+      if (_prox) {
+        nTotal++
+        const _mes = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']
+        const s = _prox.s
+        const ct = document.getElementById('notif-cita-titulo'); if (ct) ct.textContent = 'Próxima sesión · ' + s.d + ' ' + _mes[s.m] + (s.hora ? ' · ' + s.hora : '')
+        const cs = document.getElementById('notif-cita-sub'); if (cs) cs.textContent = (s.ps || 'Tu psicólogo') + (s.mod ? ' — ' + s.mod : '')
+        const nci = document.getElementById('notif-cita'); if (nci) nci.style.display = 'flex'
+      }
+    } catch(e) { console.warn('Cita notif:', e.message) }
+
+    // 3) Consentimiento pendiente (consent ya cargado arriba)
+    if (consent && consent.token_firma) {
+      nTotal++
+      const nco = document.getElementById('notif-consent')
+      if (nco) { nco.href = 'consentimiento_firma_paciente.html?token=' + consent.token_firma; nco.style.display = 'flex' }
+      const ncs = document.getElementById('notif-consent-sub')
+      if (ncs) ncs.textContent = (TIPOS_CONSENT[consent.tipo] || 'Documento pendiente de firma')
+    }
+
+    // 4) Escala pendiente (solic ya calculado arriba)
+    if (solic) nTotal++
+
+    // Punto rojo de la campana + estado vacío
+    if (nTotal > 0) { const _d = document.getElementById('notif-dot'); if (_d) _d.style.display = 'block' }
+    else { const _e = document.getElementById('notif-empty'); if (_e) _e.style.display = 'block' }
   }
 } catch(e) { console.error('Portal datos:', e.message) }
 
