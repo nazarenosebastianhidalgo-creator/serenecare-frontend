@@ -1553,6 +1553,28 @@ const session = { user: { id: perfil.id } }
 const clinicaId = perfil.clinica_id
 const hoy = new Date().toISOString().split('T')[0]
 
+// Aviso: falta configurar la línea de crisis del SOS y ya hay pacientes usando el portal
+if (clinicaId) {
+  try {
+    const [{ data: _cli }, { count: _nPac }] = await Promise.all([
+      supabase.from('clinicas').select('telefono_crisis').eq('id', clinicaId).single(),
+      supabase.from('pacientes').select('id', { count: 'exact', head: true }).eq('clinica_id', clinicaId),
+    ])
+    if ((!_cli || !_cli.telefono_crisis) && (_nPac || 0) > 0) {
+      const _m = document.querySelector('main')
+      if (_m) {
+        const _b = document.createElement('div')
+        _b.style.cssText = 'margin:16px 24px 0;padding:14px 18px;border-radius:14px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);display:flex;align-items:center;gap:12px;'
+        _b.innerHTML = '<span class="material-symbols-outlined" style="color:#f87171;font-size:22px;flex-shrink:0;">emergency</span>'
+          + '<div style="flex:1;"><p style="margin:0;font-weight:800;color:#fecaca;font-size:0.9rem;font-family:Manrope,sans-serif;">Configura tu línea de crisis</p>'
+          + '<p style="margin:2px 0 0;color:#94a3b8;font-size:0.78rem;">Tus pacientes ya usan el portal, pero el botón SOS aún no tiene el número de crisis de tu país. Es importante para su seguridad.</p></div>'
+          + '<a href="config_clinica.html" style="flex-shrink:0;background:#ef4444;color:#fff;text-decoration:none;font-weight:800;font-size:0.8rem;padding:9px 16px;border-radius:10px;font-family:Manrope,sans-serif;white-space:nowrap;">Configurar ahora</a>'
+        _m.insertBefore(_b, _m.firstChild)
+      }
+    }
+  } catch(_) {}
+}
+
 // Actualizar info de usuario en sidebar
 const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()
 
