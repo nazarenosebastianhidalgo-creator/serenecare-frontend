@@ -311,7 +311,7 @@ function mostrarToast(msg) {
   import { guardaPaciente, obtenerDocumentosCompartidos } from '../js/paciente.js'
   import { mostrarError, verificarSesion } from '../js/auth.js'
   import { supabase } from '../js/supabase-client.js'
-  if (!(await verificarSesion(['psicologo', 'admin_clinica']))) throw new Error('acceso no autorizado')
+  if (!(await verificarSesion(['paciente']))) throw new Error('acceso no autorizado')
 
   const { data: { session } } = await supabase.auth.getSession()
   const modoDemo = false  // demo deshabilitado: se exige login
