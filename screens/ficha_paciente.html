@@ -1070,6 +1070,32 @@ else {
       document.getElementById('header-sub').textContent    = p.motivo_consulta || '';
       document.getElementById('header-estado').classList.remove('hidden');
 
+      // Ejercicios completados por el paciente (respuestas a recursos tipo ejercicio)
+      try {
+        const { data: _resps } = await supabase
+          .from('respuestas_ejercicios')
+          .select('respuesta, updated_at, recursos(titulo)')
+          .eq('paciente_id', pacienteId)
+          .order('updated_at', { ascending: false });
+        if (_resps && _resps.length) {
+          const _main = document.querySelector('main');
+          if (_main) {
+            const _sec = document.createElement('div');
+            _sec.style.cssText = 'margin:16px 24px;padding:18px 20px;border-radius:16px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.2);';
+            _sec.innerHTML = '<p style="font-family:Manrope,sans-serif;font-weight:800;color:#ede9fe;margin:0 0 12px;font-size:0.95rem;display:flex;align-items:center;gap:8px;"><span class="material-symbols-outlined" style="color:#a78bfa;font-size:20px;">assignment_turned_in</span>Ejercicios completados por el paciente</p>'
+              + _resps.map(function(r){
+                  var fecha = r.updated_at ? new Date(r.updated_at).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}) : '';
+                  var tit = (r.recursos && r.recursos.titulo) ? r.recursos.titulo : 'Ejercicio';
+                  var resp = (r.respuesta || '(sin texto)').replace(/</g,'&lt;');
+                  return '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px 14px;margin-bottom:10px;">'
+                    + '<div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;"><span style="font-weight:700;color:#e2e8f0;font-size:0.85rem;">'+tit+'</span><span style="color:#64748b;font-size:0.72rem;">'+fecha+'</span></div>'
+                    + '<p style="color:#cbd5e1;font-size:0.85rem;line-height:1.55;margin:0;white-space:pre-wrap;">'+resp+'</p></div>';
+                }).join('');
+            _main.appendChild(_sec);
+          }
+        }
+      } catch(e) { /* no bloquea la ficha */ }
+
       if (p.email)    document.getElementById('pac-email').textContent    = p.email;
       if (p.telefono) document.getElementById('pac-telefono').textContent = p.telefono;
       if (p.ocupacion) document.getElementById('pac-ocupacion').textContent = p.ocupacion;
