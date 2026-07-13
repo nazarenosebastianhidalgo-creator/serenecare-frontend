@@ -354,54 +354,9 @@ html.light .bg-slate-800\/50{background:rgba(0,0,0,0.05)!important;}
       <div class="card rounded-2xl p-7 fade-up" style="animation-delay:0.3s;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
           <h3 class="font-headline font-bold text-white">Recursos Compartidos</h3>
-          <span style="font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.2);">1 nuevo</span>
+          <span id="recursos-badge" style="display:none;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.2);">—</span>
         </div>
-        <div class="space-y-3">
-          <!-- Recurso nuevo -->
-          <div class="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-colors" style="background:rgba(52,211,153,0.04);border:1px solid rgba(52,211,153,0.15);" onmouseover="this.style.background='rgba(52,211,153,0.08)'" onmouseout="this.style.background='rgba(52,211,153,0.04)'" onclick="abrirRecurso('Técnicas de regulación emocional','pdf','/recursos/regulacion-emocional.pdf')">
-            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.15);">
-              <span class="material-symbols-outlined text-base" style="color:#34d399;">article</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
-                <p class="text-sm font-bold truncate" style="color:#34d399;margin:0;">Técnicas de regulación emocional</p>
-                <span style="font-size:0.58rem;font-weight:700;padding:1px 5px;border-radius:8px;background:rgba(52,211,153,0.2);color:#34d399;white-space:nowrap;flex-shrink:0;">Nuevo</span>
-              </div>
-              <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">PDF • 1.8 MB · Hoy</p>
-            </div>
-            <span class="material-symbols-outlined text-slate-600 text-base">download</span>
-          </div>
-          <div class="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-colors" style="background:rgba(255,255,255,0.02);" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'" onclick="abrirRecurso('Ejercicio TCC - Semana 3','pdf','/recursos/ejercicio-tcc-semana3.pdf')">
-            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(239,68,68,0.15);">
-              <span class="material-symbols-outlined text-base" style="color:#f87171;">description</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-bold text-white truncate">Ejercicio TCC — Semana 3</p>
-              <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">PDF • 2.4 MB</p>
-            </div>
-            <span class="material-symbols-outlined text-slate-600 text-base">download</span>
-          </div>
-          <div class="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-colors" style="background:rgba(255,255,255,0.02);" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'" onclick="abrirRecurso('Meditación Guiada para Ansiedad','audio','/recursos/meditacion-ansiedad.mp3')">
-            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.15);">
-              <span class="material-symbols-outlined text-base" style="color:#34d399;">audio_file</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-bold text-white truncate">Meditación Guiada para Ansiedad</p>
-              <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">MP3 • 12:40</p>
-            </div>
-            <span class="material-symbols-outlined text-slate-600 text-base">play_circle</span>
-          </div>
-          <div class="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-colors" style="background:rgba(255,255,255,0.02);" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.02)'" onclick="abrirRecurso('Lista de Lecturas Recomendadas','enlace','https://serenecare.es/blog/lecturas-recomendadas-bienestar')">
-            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(129,140,248,0.15);">
-              <span class="material-symbols-outlined text-base" style="color:#818cf8;">menu_book</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-bold text-white truncate">Lista de Lecturas Recomendadas</p>
-              <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">ENLACE • Bienestar</p>
-            </div>
-            <span class="material-symbols-outlined text-slate-600 text-base">open_in_new</span>
-          </div>
-        </div>
+        <div id="recursos-lista" class="space-y-3"></div>
       </div>
     </div>
   </div>
@@ -1492,6 +1447,45 @@ try {
         a.href = url; a.download = (r.titulo || 'recurso').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_') + '.html'
         document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url) }, 1000)
       }
+
+      // Render de la sección "Recursos Compartidos" (todos los asignados, reales)
+      window.__recursos = {}
+      const _cont = document.getElementById('recursos-lista')
+      const _badge = document.getElementById('recursos-badge')
+      if (_cont) {
+        if (!_recs.length) {
+          _cont.innerHTML = '<p style="text-align:center;color:#64748b;font-size:0.8rem;padding:1.25rem 0;">Aún no tienes recursos compartidos</p>'
+          if (_badge) _badge.style.display = 'none'
+        } else {
+          if (_badge) { _badge.style.display = ''; _badge.textContent = _recs.length + (_recs.length === 1 ? ' recurso' : ' recursos') }
+          _cont.innerHTML = _recs.map(function(r) {
+            window.__recursos[r.id] = r
+            var esAudio = r.archivo_tipo === 'audio'
+            var esArchivo = !!r.archivo_url
+            var icon = esAudio ? 'audio_file' : (esArchivo ? 'description' : 'article')
+            var accIcon = esAudio ? 'play_circle' : 'download'
+            var meta = esAudio ? 'AUDIO' : (esArchivo ? (r.archivo_tipo || 'ARCHIVO').toUpperCase() : (r.tipo || 'RECURSO').toUpperCase())
+            var tit = (r.titulo || 'Recurso').replace(/</g, '&lt;')
+            return '<div onclick="abrirRecursoReal(\'' + r.id + '\')" class="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-colors" style="background:rgba(255,255,255,0.02);" onmouseover="this.style.background=\'rgba(255,255,255,0.05)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.02)\'">'
+              + '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.15);"><span class="material-symbols-outlined text-base" style="color:#34d399;">' + icon + '</span></div>'
+              + '<div class="flex-1 min-w-0"><p class="text-sm font-bold text-white truncate">' + tit + '</p><p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">' + meta + '</p></div>'
+              + '<span class="material-symbols-outlined text-slate-600 text-base">' + accIcon + '</span></div>'
+          }).join('')
+        }
+      }
+      window.abrirRecursoReal = function(id) {
+        var r = (window.__recursos || {})[id]; if (!r) return
+        if (r.archivo_url) {
+          if (r.archivo_tipo === 'audio') { var au = new Audio(r.archivo_url); au.play().catch(function(){ window.open(r.archivo_url, '_blank') }); return }
+          window.open(r.archivo_url, '_blank'); return
+        }
+        if (r.contenido_html) {
+          var blob = new Blob([r.contenido_html], { type: 'text/html;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a')
+          a.href = url; a.download = (r.titulo || 'recurso').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_') + '.html'
+          document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(url) }, 1000); return
+        }
+        if (window.mostrarToastExito) window.mostrarToastExito('Este recurso no tiene archivo descargable.')
+      }
     } catch(e) { console.warn('Recurso notif:', e.message) }
 
     // 2) Próxima cita real (desde window.SESIONES ya cargado)
@@ -1531,67 +1525,6 @@ try {
 
 })();</script>
 
-<script>
-// Cargar recursos compartidos reales desde la API
-(async function() {
-  var session = null;
-  try {
-    var supabase = window.supabase || null;
-    if (supabase) {
-      var { data: { session: s } } = await supabase.auth.getSession();
-      session = s;
-    }
-  } catch(e) { /* supabase no disponible */ }
-
-  if (!session) {
-    // Modo demo - mostrar los recursos estáticos
-    return;
-  }
-
-  try {
-    var resp = await fetch('/api/recursos/mis-recursos', {
-      headers: { 'Authorization': 'Bearer ' + session.access_token }
-    });
-    if (!resp.ok) throw new Error('Error ' + resp.status);
-    var recursos = await resp.json();
-
-    var contenedor = document.querySelector('.space-y-3');
-    if (!contenedor || recursos.length === 0) return;
-
-    // Reemplazar contenido con datos reales
-    contenedor.innerHTML = recursos.map(function(r) {
-      var icono, color, bg, accion;
-      if (r.tipo === 'pdf') {
-        icono = 'description'; color = '#34d399'; bg = 'rgba(52,211,153,0.15)';
-        accion = '<span class="material-symbols-outlined text-slate-600 text-base">download</span>';
-      } else if (r.tipo === 'audio') {
-        icono = 'audio_file'; color = '#34d399'; bg = 'rgba(52,211,153,0.15)';
-        accion = '<span class="material-symbols-outlined text-slate-600 text-base">play_circle</span>';
-      } else {
-        icono = 'menu_book'; color = '#818cf8'; bg = 'rgba(129,140,248,0.15)';
-        accion = '<span class="material-symbols-outlined text-slate-600 text-base">open_in_new</span>';
-      }
-      var fecha = r.created_at ? new Date(r.created_at).toLocaleDateString('es-ES', {day:'numeric',month:'short'}) : '';
-      return '<div class="flex items-center gap-4 p-3 rounded-xl cursor-pointer transition-colors" style="background:rgba(255,255,255,0.02);" onclick="abrirRecurso(\'' + r.titulo.replace(/'/g, "\\'") + '\',\'' + r.tipo + '\',\'' + r.url.replace(/'/g, "\\'") + '\')">'
-        + '<div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:' + bg + ';">'
-        + '<span class="material-symbols-outlined text-base" style="color:' + color + ';">' + icono + '</span></div>'
-        + '<div class="flex-1 min-w-0"><p class="text-sm font-bold text-white truncate">' + r.titulo + '</p>'
-        + '<p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">' + r.tipo.toUpperCase() + (fecha ? ' · ' + fecha : '') + '</p></div>'
-        + accion + '</div>';
-    }).join('');
-
-    // Actualizar badge de nuevo si hay recursos recientes (< 7 días)
-    var nuevos = recursos.filter(function(r) {
-      var d = new Date(r.created_at);
-      return (Date.now() - d.getTime()) < 7 * 24 * 60 * 60 * 1000;
-    });
-    var badge = document.querySelector('.space-y-3').previousElementSibling;
-    if (badge) {
-      var span = badge.querySelector('span[style*="rgba(52,211,153")');
-      if (span) span.textContent = nuevos.length + ' nuevo' + (nuevos.length !== 1 ? 's' : '');
-    }
-  } catch(e) { console.error('Error cargando recursos:', e); }
-})();
-</script>
+<!-- (loader /api/recursos/mis-recursos eliminado: los recursos se renderizan en el módulo principal desde recursos_asignados) -->
 
 <script src="/js/lineas-crisis.js"></script>
