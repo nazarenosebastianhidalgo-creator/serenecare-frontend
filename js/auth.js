@@ -213,6 +213,21 @@ export async function verificarSesion(rolesPermitidos = []) {
   localStorage.setItem('tp_clinica_id', perfil.clinica_id ?? '')
   localStorage.setItem('tp_nombre', `${perfil.nombre} ${perfil.apellido}`)
 
+  // Línea de crisis/emergencias de la clínica (para el SOS del paciente)
+  if (perfil.clinica_id) {
+    try {
+      const { data: cl } = await supabase
+        .from('clinicas')
+        .select('telefono_crisis, telefono_emergencias')
+        .eq('id', perfil.clinica_id)
+        .single()
+      if (cl) {
+        if (cl.telefono_crisis) localStorage.setItem('tp_crisis', cl.telefono_crisis)
+        if (cl.telefono_emergencias) localStorage.setItem('tp_emergencia', cl.telefono_emergencias)
+      }
+    } catch { /* no bloquea el acceso */ }
+  }
+
   if (rolesPermitidos.length > 0 && !rolesPermitidos.includes(perfil.rol)) {
     const rutaRol = RUTAS[perfil.rol] || '/login.html'
     window.location.href = rutaRol

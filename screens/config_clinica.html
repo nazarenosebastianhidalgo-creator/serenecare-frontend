@@ -177,6 +177,20 @@
               <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Sitio web</label>
               <input type="text" class="field" value="https://clinicasol.com" id="cfg-web"/>
             </div>
+            <div class="pt-4 mt-1 border-t border-slate-800/40">
+              <p class="text-xs font-bold uppercase tracking-widest mb-2" style="color:#f87171;">Línea de crisis (botón SOS del paciente)</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Crisis / conducta suicida</label>
+                  <input type="text" class="field" placeholder="Ej. España: 024" id="cfg-crisis"/>
+                </div>
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Emergencias</label>
+                  <input type="text" class="field" placeholder="Ej. España: 112" id="cfg-emergencia"/>
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-2">Pon los números <b>reales de tu país</b>. Es lo que verá y marcará tu paciente en una crisis.</p>
+            </div>
           </div>
         </div>
 
@@ -1027,7 +1041,7 @@ const clinicaId = perfil.clinica_id
 
 const [{ data: usu }, { data: clinica }] = await Promise.all([
   supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single(),
-  supabase.from('clinicas').select('nombre, email, telefono, direccion, website').eq('id', clinicaId).single(),
+  supabase.from('clinicas').select('nombre, email, telefono, direccion, website, telefono_crisis, telefono_emergencias').eq('id', clinicaId).single(),
 ])
 
 if (usu) {
@@ -1044,6 +1058,8 @@ if (clinica) {
   set('cfg-tel',       clinica.telefono)
   set('cfg-direccion', clinica.direccion)
   set('cfg-web',       clinica.website)
+  set('cfg-crisis',      clinica.telefono_crisis)
+  set('cfg-emergencia',  clinica.telefono_emergencias)
 }
 
 // Cablear el guardado real (antes era un stub que solo mostraba el toast)
@@ -1052,7 +1068,9 @@ window.guardarConfig = async function() {
   try {
     const { error } = await supabase.from('clinicas').update({
       nombre: g('cfg-nombre'), email: g('cfg-email'), telefono: g('cfg-tel'),
-      direccion: g('cfg-direccion'), website: g('cfg-web'), updated_at: new Date().toISOString(),
+      direccion: g('cfg-direccion'), website: g('cfg-web'),
+      telefono_crisis: g('cfg-crisis') || null, telefono_emergencias: g('cfg-emergencia') || null,
+      updated_at: new Date().toISOString(),
     }).eq('id', clinicaId)
     if (error) throw error
     if (typeof mostrarToast === 'function') mostrarToast('Configuración guardada')
