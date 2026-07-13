@@ -107,6 +107,9 @@
         <span class="material-symbols-outlined" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:16px;color:#475569;">search</span>
         <input id="buscador" type="text" placeholder="Buscar recurso..." oninput="filtrar()" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:7px 12px 7px 34px;font-size:12px;color:#e2e8f0;outline:none;width:200px;" onfocus="this.style.borderColor='rgba(139,92,246,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"/>
       </div>
+      <button onclick="window.abrirNuevoRecurso && window.abrirNuevoRecurso()" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#5b21b6,#a78bfa);border:none;border-radius:12px;padding:8px 14px;font-size:12px;font-weight:800;color:#fff;cursor:pointer;font-family:Manrope,sans-serif;">
+        <span class="material-symbols-outlined" style="font-size:16px;">add</span>Nuevo recurso
+      </button>
       <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
       </button>
@@ -779,6 +782,89 @@ window.asignar = function(id) {
   _modal.querySelector('#ma-recurso').textContent = r.titulo
   _modal.style.display = 'flex'
 }
+
+// ── Nuevo recurso personalizado (texto y/o archivo: audio, PDF, imagen) ──
+const _nr = document.createElement('div')
+_nr.style.cssText = 'display:none;position:fixed;inset:0;z-index:320;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:16px;'
+_nr.innerHTML = '<div style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;width:100%;max-width:460px;max-height:92vh;overflow-y:auto;" onclick="event.stopPropagation()">'
+  + '<p style="font-family:Manrope,sans-serif;font-size:16px;font-weight:800;color:#f1f5f9;margin:0 0 16px;">Nuevo recurso</p>'
+  + '<label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">Título *</label>'
+  + '<input id="nr-titulo" type="text" placeholder="Ej: Audio de relajación guiada" style="width:100%;margin:6px 0 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;color:#e2e8f0;font-size:14px;outline:none;box-sizing:border-box;"/>'
+  + '<label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">Instrucciones (opcional)</label>'
+  + '<textarea id="nr-instr" rows="3" placeholder="Qué debe hacer el paciente..." style="width:100%;margin:6px 0 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;color:#e2e8f0;font-size:14px;outline:none;font-family:inherit;resize:vertical;box-sizing:border-box;"></textarea>'
+  + '<label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">Archivo (opcional · audio, PDF, imagen · máx 25MB)</label>'
+  + '<input id="nr-file" type="file" accept="audio/*,application/pdf,image/*" style="width:100%;margin:6px 0 14px;color:#94a3b8;font-size:13px;"/>'
+  + '<label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:0.06em;">Asignar a (opcional)</label>'
+  + '<select id="nr-paciente" style="width:100%;margin:6px 0 4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px;color:#e2e8f0;font-size:14px;outline:none;box-sizing:border-box;"></select>'
+  + '<p id="nr-msg" style="font-size:12px;color:#f87171;min-height:16px;margin:6px 0 0;"></p>'
+  + '<div style="display:flex;gap:8px;margin-top:12px;">'
+  + '<button id="nr-cancelar" style="flex:1;padding:10px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>'
+  + '<button id="nr-guardar" style="flex:1;padding:10px;border-radius:12px;background:linear-gradient(135deg,#5b21b6,#a78bfa);border:none;color:#fff;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Guardar</button>'
+  + '</div></div>'
+_nr.addEventListener('click', () => { _nr.style.display = 'none' })
+document.body.appendChild(_nr)
+_nr.querySelector('#nr-paciente').innerHTML = '<option value="">— No asignar aún —</option>' + _pacientes.map(p => '<option value="'+p.id+'">'+(((p.nombre||'')+' '+(p.apellido||'')).trim())+'</option>').join('')
+_nr.querySelector('#nr-cancelar').addEventListener('click', () => { _nr.style.display = 'none' })
+
+window.abrirNuevoRecurso = function() {
+  ['nr-titulo','nr-instr','nr-file','nr-paciente'].forEach(id => { const el = _nr.querySelector('#'+id); if (el) el.value = '' })
+  _nr.querySelector('#nr-msg').textContent = ''
+  _nr.style.display = 'flex'
+}
+
+function _tipoArchivo(mime) {
+  if (!mime) return 'otro'
+  if (mime.startsWith('audio/')) return 'audio'
+  if (mime === 'application/pdf') return 'pdf'
+  if (mime.startsWith('image/')) return 'imagen'
+  return 'otro'
+}
+
+_nr.querySelector('#nr-guardar').addEventListener('click', async () => {
+  const btn = _nr.querySelector('#nr-guardar')
+  const msg = _nr.querySelector('#nr-msg')
+  const titulo = _nr.querySelector('#nr-titulo').value.trim()
+  const instr = _nr.querySelector('#nr-instr').value.trim()
+  const file = _nr.querySelector('#nr-file').files[0]
+  const pacId = _nr.querySelector('#nr-paciente').value
+  if (!titulo) { msg.style.color = '#f87171'; msg.textContent = 'Ponle un título.'; return }
+  if (!instr && !file) { msg.style.color = '#f87171'; msg.textContent = 'Añade instrucciones o un archivo.'; return }
+  btn.disabled = true; msg.style.color = '#94a3b8'; msg.textContent = 'Guardando…'
+  try {
+    let archivo_url = null, archivo_tipo = null
+    if (file) {
+      if (file.size > 25 * 1024 * 1024) throw new Error('El archivo supera 25 MB.')
+      msg.textContent = 'Subiendo archivo…'
+      const ext = (file.name.split('.').pop() || 'bin').toLowerCase()
+      const path = (usu?.clinica_id || 'global') + '/' + Date.now() + '_' + Math.random().toString(36).slice(2,8) + '.' + ext
+      const up = await supabase.storage.from('recursos').upload(path, file, { contentType: file.type, upsert: false })
+      if (up.error) throw up.error
+      archivo_url = supabase.storage.from('recursos').getPublicUrl(path).data.publicUrl
+      archivo_tipo = _tipoArchivo(file.type)
+    }
+    const contenido_html = instr
+      ? '<!doctype html><meta charset="utf-8"><body style="font-family:sans-serif;max-width:700px;margin:2rem auto"><h1>' + titulo.replace(/</g,'&lt;') + '</h1><p>' + instr.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</p></body>'
+      : null
+    const { data: recIns, error: recErr } = await supabase.from('recursos').insert({
+      tipo: archivo_tipo === 'audio' ? 'audio' : 'ejercicio', titulo: titulo, descripcion: instr || null,
+      contenido_html: contenido_html, archivo_url: archivo_url, archivo_tipo: archivo_tipo,
+      clinica_id: usu?.clinica_id || null, activo: true, formato: archivo_tipo ? archivo_tipo.toUpperCase() : 'HTML',
+    }).select('id').single()
+    if (recErr) throw recErr
+    if (pacId) {
+      const { error: asigErr } = await supabase.from('recursos_asignados').upsert({
+        recurso_id: recIns.id, paciente_id: pacId, psicologo_id: session.user.id, clinica_id: usu?.clinica_id,
+      }, { onConflict: 'recurso_id,paciente_id' })
+      if (asigErr) throw asigErr
+    }
+    _nr.style.display = 'none'
+    if (window.mostrarToast) mostrarToast(pacId ? 'Recurso creado y asignado ✓' : 'Recurso creado ✓')
+    setTimeout(() => location.reload(), 800)
+  } catch(e) {
+    msg.style.color = '#f87171'; msg.textContent = 'No se pudo guardar: ' + (e.message || 'error')
+    btn.disabled = false
+  }
+})
 
 if (window.renderGrid && window.getFiltrados) renderGrid(getFiltrados())
 else if (window.renderGrid) renderGrid(window.RECURSOS)

@@ -1443,7 +1443,7 @@ try {
     // 1) Recurso asignado por el terapeuta (la "tarea")
     try {
       const { data: _asig } = await supabase.from('recursos_asignados')
-        .select('created_at, recursos(id, titulo, tipo, descripcion, contenido_html)')
+        .select('created_at, recursos(id, titulo, tipo, descripcion, contenido_html, archivo_url, archivo_tipo)')
         .order('created_at', { ascending: false })
       const _recs = (_asig || []).map(function(a){ return a.recursos }).filter(Boolean)
       const rec = _recs[0]
@@ -1460,13 +1460,27 @@ try {
         const nt = document.getElementById('notif-tarea'); if (nt) nt.style.display = 'flex'
         const mt = document.getElementById('modal-ej-titulo'); if (mt) mt.textContent = rec.titulo
         const mf = document.getElementById('modal-ej-fecha'); if (mf) mf.style.display = 'none'
-        const mi = document.getElementById('modal-ej-instr'); if (mi) mi.textContent = rec.descripcion || 'Tu psicólogo te compartió este material. Puedes descargarlo abajo.'
-        const ma = document.getElementById('modal-ej-archivo'); if (ma) ma.textContent = (rec.titulo || 'Material') + '.html'
+        const mi = document.getElementById('modal-ej-instr'); if (mi) mi.textContent = rec.descripcion || 'Tu psicólogo te compartió este material.'
+        // Archivo: reproductor si es audio, descarga si es otro archivo, o el HTML del texto
+        const descRow = document.getElementById('modal-ej-descarga')
+        const ma = document.getElementById('modal-ej-archivo')
+        if (rec.archivo_url && rec.archivo_tipo === 'audio') {
+          if (descRow) { descRow.onclick = null; descRow.style.cursor = 'default'; descRow.innerHTML = '<audio controls preload="none" style="width:100%" src="' + rec.archivo_url + '"></audio>' }
+        } else if (rec.archivo_url) {
+          if (ma) ma.textContent = 'Descargar archivo (' + (rec.archivo_tipo || 'archivo') + ')'
+        } else {
+          if (ma) ma.textContent = (rec.titulo || 'Material') + '.html'
+        }
       }
       window.abrirTarea = function(){ if (window.__recTarea && window.mostrarModal) window.mostrarModal('modal-tarea') }
       window.descargarPlanilla = function(){
         const r = window.__recTarea
-        if (!r || !r.contenido_html) { if (window.mostrarToastExito) window.mostrarToastExito('Este recurso no incluye archivo descargable.'); return }
+        if (!r) return
+        if (r.archivo_url) {
+          const a = document.createElement('a'); a.href = r.archivo_url; a.target = '_blank'; a.rel = 'noopener'
+          document.body.appendChild(a); a.click(); a.remove(); return
+        }
+        if (!r.contenido_html) { if (window.mostrarToastExito) window.mostrarToastExito('Este recurso no incluye archivo descargable.'); return }
         const blob = new Blob([r.contenido_html], { type: 'text/html;charset=utf-8' })
         const url = URL.createObjectURL(blob), a = document.createElement('a')
         a.href = url; a.download = (r.titulo || 'recurso').replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '_') + '.html'

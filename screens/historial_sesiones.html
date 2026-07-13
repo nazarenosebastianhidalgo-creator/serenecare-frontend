@@ -323,14 +323,16 @@ function mostrarToast(msg) {
 
     // Recursos asignados por el terapeuta
     const { data: _asig } = await supabase.from('recursos_asignados')
-      .select('id, recursos(id, titulo, tipo, descripcion, contenido_html)')
+      .select('id, recursos(id, titulo, tipo, descripcion, contenido_html, archivo_url, archivo_tipo)')
       .order('created_at', { ascending: false })
     const recursos = (_asig || []).map(a => a.recursos).filter(Boolean)
-    const _recCont = {}; recursos.forEach(r => { _recCont[r.id] = r.contenido_html || '' })
+    const _recById = {}; recursos.forEach(r => { _recById[r.id] = r })
     window.descargarRecurso = function(id) {
-      const html = _recCont[id], r = recursos.find(x => x.id === id)
-      if (!html || !r) return
-      const blob = new Blob([html], { type: 'text/html;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a')
+      const r = _recById[id]
+      if (!r) return
+      if (r.archivo_url) { const a = document.createElement('a'); a.href = r.archivo_url; a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); return }
+      if (!r.contenido_html) return
+      const blob = new Blob([r.contenido_html], { type: 'text/html;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a')
       a.href = url; a.download = r.titulo.replace(/[^\w\s-]/g,'').trim().replace(/\s+/g,'_') + '.html'
       document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000)
     }
@@ -339,7 +341,9 @@ function mostrarToast(msg) {
         <div class="flex justify-between items-center mb-2"><span class="text-[10px] font-bold uppercase tracking-wider" style="color:#a78bfa;">Recurso · ${r.tipo || ''}</span></div>
         <p class="text-sm text-white font-medium">${r.titulo}</p>
         ${r.descripcion ? `<p class="text-xs text-slate-400 mt-1">${r.descripcion}</p>` : ''}
-        <button onclick="descargarRecurso('${r.id}')" class="mt-3 px-4 py-1 text-xs rounded-full font-semibold" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);">⬇ Descargar</button>
+        ${r.archivo_url && r.archivo_tipo === 'audio'
+          ? `<audio controls preload="none" style="width:100%;margin-top:10px" src="${r.archivo_url}"></audio>`
+          : `<button onclick="descargarRecurso('${r.id}')" class="mt-3 px-4 py-1 text-xs rounded-full font-semibold" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);">⬇ ${r.archivo_url ? 'Descargar archivo' : 'Descargar'}</button>`}
       </div>`).join('')
 
     const renderNotas = notas.map(n => `
