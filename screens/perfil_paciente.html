@@ -762,13 +762,67 @@ if (perfil.clinica_id) {
   const { data: cl } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single()
   if (cl) { const nc = document.getElementById('nombre-clinica'); if (nc) nc.textContent = cl.nombre }
 }
+// Valores originales para detectar cambios de contacto
+const _origTel   = (pac && pac.telefono) ? String(pac.telefono).trim() : ''
+const _origEmail = (perfil.email || '').trim()
+
+// Resuelve a quién avisar: el psicólogo asignado; si no hay, un admin de la clínica.
+async function destinatarioAviso() {
+  if (pac && pac.psicologo_id) return pac.psicologo_id
+  if (perfil.clinica_id) {
+    const { data: admin } = await supabase.from('usuarios')
+      .select('id').eq('clinica_id', perfil.clinica_id).eq('rol', 'admin_clinica')
+      .order('created_at', { ascending: true }).limit(1).maybeSingle()
+    if (admin) return admin.id
+  }
+  return null
+}
+
 const _origGuardar = window.guardarCambios
 window.guardarCambios = async function() {
   if (typeof _origGuardar === 'function') _origGuardar()
-  const nom = (document.getElementById('campo-nombre')    || {}).value || ''
-  const ape = (document.getElementById('campo-apellido')  || {}).value || ''
-  await supabase.from('usuarios').update({ nombre: nom, apellido: ape, updated_at: new Date().toISOString() }).eq('id', perfil.id)
-  if (pac) await supabase.from('pacientes').update({ nombre: nom, apellido: ape }).eq('id', pac.id)
+  const nom   = ((document.getElementById('campo-nombre')   || {}).value || '').trim()
+  const ape   = ((document.getElementById('campo-apellido') || {}).value || '').trim()
+  const tel   = ((document.getElementById('campo-telefono') || {}).value || '').trim()
+  const email = ((document.getElementById('campo-email')    || {}).value || '').trim()
+
+  const telCambio   = tel   !== _origTel
+  const emailCambio = email !== _origEmail
+
+  // Persistir de verdad (antes solo se guardaba nombre/apellido)
+  const updUsuario = { nombre: nom, apellido: ape, telefono: tel }
+  if (emailCambio && email) updUsuario.email = email
+  await supabase.from('usuarios').update(updUsuario).eq('id', perfil.id)
+  if (pac) {
+    const updPac = { nombre: nom, apellido: ape, telefono: tel }
+    if (emailCambio && email) updPac.email = email
+    await supabase.from('pacientes').update(updPac).eq('id', pac.id)
+  }
+  // Actualizar el email de acceso también (Supabase pide confirmación por correo)
+  if (emailCambio && email) { try { await supabase.auth.updateUser({ email }) } catch (e) {} }
+
+  // Avisar al profesional si cambió teléfono o email
+  if (telCambio || emailCambio) {
+    try {
+      const paraId = await destinatarioAviso()
+      if (paraId) {
+        const nombrePac = (nom + ' ' + ape).trim() || 'Tu paciente'
+        let lineas = '🔔 Aviso automático — ' + nombrePac + ' actualizó sus datos de contacto:'
+        if (telCambio)   lineas += '\n📞 Teléfono: ' + (tel || '(vacío)') + (_origTel ? ' (antes ' + _origTel + ')' : '')
+        if (emailCambio) lineas += '\n✉️ Email: ' + (email || '(vacío)') + (_origEmail ? ' (antes ' + _origEmail + ')' : '')
+        lineas += '\nPor favor verificá que sean correctos.'
+        await supabase.from('mensajes').insert({
+          clinica_id: perfil.clinica_id,
+          de_id: perfil.id,
+          para_id: paraId,
+          texto: lineas,
+          leido: false,
+        })
+      }
+    } catch (e) { /* el aviso no debe bloquear el guardado */ }
+    // Refrescar los "originales" para no reenviar el aviso si vuelve a guardar sin cambios
+    if (pac) pac.telefono = tel
+  }
 }
 window.cambiarPassword = async function() {
   const nueva = (document.getElementById('pass-nueva')     || {}).value || ''
