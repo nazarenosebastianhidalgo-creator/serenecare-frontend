@@ -174,8 +174,13 @@
         <h3 class="font-headline font-bold text-white text-sm">Mis Notas</h3>
         <button onclick="switchPanelP('calma')" class="text-slate-500 hover:text-white"><span class="material-symbols-outlined text-sm">close</span></button>
       </div>
+      <!-- Referencia: lo que apuntaste en "Para tu próxima sesión" (Mis Sesiones) -->
+      <div id="temas-ref" class="hidden mb-3 rounded-2xl p-3" style="background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.18);max-height:130px;overflow-y:auto;flex-shrink:0;">
+        <p class="text-[10px] font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1" style="color:#2dd4bf;"><span class="material-symbols-outlined" style="font-size:12px;">flag</span>Querías tratar hoy</p>
+        <p id="temas-ref-txt" class="text-xs" style="color:#cbd5e1;line-height:1.55;white-space:pre-line;"></p>
+      </div>
       <p class="text-[10px] text-slate-500 mb-3">Notas privadas durante la sesión. Solo tú las ves.</p>
-      <textarea id="notas-paciente" class="flex-1 w-full rounded-2xl p-4 text-sm text-slate-300 placeholder-slate-600 focus:outline-none resize-none" style="background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.06);" placeholder="Escribe lo que quieres recordar de esta sesión..."></textarea>
+      <textarea id="notas-paciente" class="flex-1 w-full rounded-2xl p-4 text-sm text-slate-300 placeholder-slate-600 focus:outline-none resize-none" style="background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.06);min-height:80px;" placeholder="Escribe lo que quieres recordar de esta sesión..."></textarea>
       <button onclick="guardarNotasPaciente()" class="mt-3 w-full py-2.5 rounded-2xl font-bold text-sm text-white" style="background:rgba(20,184,166,0.25);border:1px solid rgba(20,184,166,0.3);">Guardar</button>
       <p id="notas-paciente-ok" class="hidden text-center text-xs mt-2 font-bold" style="color:#2dd4bf;">✓ Guardado</p>
     </div>
@@ -558,6 +563,14 @@ try {
 
   // ── NOTAS PRIVADAS DEL PACIENTE (persisten en BD, una por cita) ──
   if (pac) {
+    // Referencia: lo que apuntó en "Para tu próxima sesión" (Mis Sesiones)
+    const { data: temas } = await supabase.from('temas_sesion').select('contenido').eq('paciente_id', pac.id).maybeSingle()
+    if (temas && (temas.contenido || '').trim()) {
+      const ref = document.getElementById('temas-ref')
+      const reftxt = document.getElementById('temas-ref-txt')
+      if (ref && reftxt) { reftxt.textContent = temas.contenido.trim(); ref.classList.remove('hidden') }
+    }
+
     let notaRow = null
     const notaQ = supabase.from('notas_paciente').select('id, contenido').eq('paciente_id', pac.id)
     const { data: notaExist } = await (citaId ? notaQ.eq('cita_id', citaId) : notaQ.is('cita_id', null)).maybeSingle()
