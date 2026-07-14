@@ -106,10 +106,10 @@ html.light .hover\:bg-white\/5:hover,html.light .hover\:bg-white\/8:hover{backgr
         <span class="material-symbols-outlined" style="color:#34d399;font-variation-settings:'FILL' 1;">psychology</span>
       </div>
       <div>
-        <h1 class="font-headline font-bold text-white text-sm">Asistente Terapéutico IA</h1>
+        <h1 id="chat-titulo" class="font-headline font-bold text-white text-sm">Asistente IA</h1>
         <div class="flex items-center gap-1.5">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-          <span class="text-[10px] text-slate-400">Listo para escucharte</span>
+          <span id="chat-status" class="text-[10px] text-slate-400">Próximamente</span>
         </div>
       </div>
     </div>
@@ -132,7 +132,7 @@ html.light .hover\:bg-white\/5:hover,html.light .hover\:bg-white\/8:hover{backgr
       <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Tus contactos</p>
       <div class="space-y-1" id="convs">
         <!-- Asistente IA (siempre) -->
-        <div class="flex items-center gap-2.5 p-3 rounded-xl" style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);">
+        <div id="conv-ai" onclick="window.__mostrarAI && window.__mostrarAI()" class="flex items-center gap-2.5 p-3 rounded-xl cursor-pointer" style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);">
           <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.15);"><span class="material-symbols-outlined text-base" style="color:#34d399;">auto_awesome</span></div>
           <div class="min-w-0"><span class="font-headline font-semibold text-xs block truncate" style="color:#34d399;">Asistente IA</span><span class="text-[10px] text-slate-400">Apoyo entre sesiones</span></div>
         </div>
@@ -150,13 +150,20 @@ html.light .hover\:bg-white\/5:hover,html.light .hover\:bg-white\/8:hover{backgr
     <div class="flex-1 flex flex-col overflow-hidden">
       <div id="chat-messages" class="flex-1 overflow-y-auto px-8 py-6 space-y-5"></div>
 
-      <!-- Input deshabilitado: acompañante IA en desarrollo -->
       <div class="px-8 pb-6 flex-shrink-0">
-        <div class="flex items-center justify-center gap-3 p-4 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px dashed rgba(148,163,184,0.25);">
-          <span class="material-symbols-outlined text-slate-400 text-lg">schedule</span>
-          <p class="text-sm text-slate-300 font-semibold">Tu acompañante IA estará disponible <span style="color:#34d399;">próximamente</span></p>
+        <!-- Input IA: desactivado (en desarrollo) -->
+        <div id="input-ai">
+          <div class="flex items-center justify-center gap-3 p-4 rounded-2xl" style="background:rgba(255,255,255,0.04);border:1px dashed rgba(148,163,184,0.25);">
+            <span class="material-symbols-outlined text-slate-400 text-lg">schedule</span>
+            <p class="text-sm text-slate-300 font-semibold">Tu acompañante IA estará disponible <span style="color:#34d399;">próximamente</span></p>
+          </div>
+          <p class="text-[10px] text-center text-slate-600 mt-2">Mientras tanto, habla con tu psicólogo (aquí al lado). En crisis: <span data-crisis-num>024</span> · Emergencias <span data-emergency-num>112</span>.</p>
         </div>
-        <p class="text-[10px] text-center text-slate-600 mt-2">Mientras tanto, habla con tu psicólogo. En crisis: <span data-crisis-num>024</span> · Emergencias <span data-emergency-num>112</span>.</p>
+        <!-- Input real: chat con el profesional -->
+        <div id="input-prof" style="display:none;" class="flex items-center gap-2">
+          <input id="msg-input" type="text" placeholder="Escribe un mensaje a tu psicólogo..." class="flex-1 rounded-2xl px-4 py-3 text-sm text-slate-200 focus:outline-none" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);" onkeydown="if(event.key==='Enter')window.__enviarProf&&window.__enviarProf()"/>
+          <button onclick="window.__enviarProf&&window.__enviarProf()" class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#059669,#34d399);border:none;cursor:pointer;"><span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL' 1;">send</span></button>
+        </div>
       </div>
     </div>
 
@@ -246,7 +253,7 @@ document.getElementById('input-msg').addEventListener('keydown', function(e) {
 <script type="module">
   import { guardaPaciente, enviarMensajeAsistente, obtenerHistorialChat } from '../js/paciente.js'
   import { mostrarError } from '../js/auth.js'
-  import { supabase } from '../js/supabase-client.js'
+  import { supabase, enviarMensaje } from '../js/supabase-client.js'
 
   const { data: { session } } = await supabase.auth.getSession()
   const modoDemo = false  // demo deshabilitado: se exige login
@@ -254,21 +261,79 @@ document.getElementById('input-msg').addEventListener('keydown', function(e) {
 
   const chatContainer = document.getElementById('chat-messages')
 
-  // Acompañante IA EN DESARROLLO: se muestra "próximamente" y no se llama al
-  // backend de IA. Se reactivará endurecido (prompt de seguridad en servidor,
-  // protocolo de crisis, auth, modelo barato con límites).
-  chatContainer.innerHTML = `
-    <div class="flex flex-col items-center justify-center h-full text-center px-8 gap-4">
-      <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);">
-        <span class="material-symbols-outlined text-3xl" style="color:#34d399;">auto_awesome</span>
-      </div>
-      <h3 class="text-lg font-bold text-white font-headline">Tu acompañante IA llega pronto</h3>
-      <p class="text-sm text-slate-400" style="max-width:24rem;">Estamos preparando un acompañante de apoyo emocional seguro y supervisado. Estará disponible muy pronto.</p>
-      <p class="text-xs text-slate-600">Mientras tanto, habla con tu psicólogo. En crisis: <span data-crisis-num>024</span> · Emergencias <span data-emergency-num>112</span>.</p>
-    </div>`
+  const _uid = session.user.id
+  const inputAI = document.getElementById('input-ai')
+  const inputProf = document.getElementById('input-prof')
+  const chatTitulo = document.getElementById('chat-titulo')
+  const chatStatus = document.getElementById('chat-status')
+  let chatActivo = null  // usuario id del profesional; null = Asistente IA
 
-  window.enviar = function() { /* desactivado: feature en desarrollo */ }
+  const esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c] }) }
+
+  // Estado "Asistente IA" (en desarrollo: no se llama a ningún backend de IA)
+  function mostrarAI() {
+    chatActivo = null
+    if (chatTitulo) chatTitulo.textContent = 'Asistente IA'
+    if (chatStatus) chatStatus.textContent = 'Próximamente'
+    if (inputProf) inputProf.style.display = 'none'
+    if (inputAI) inputAI.style.display = ''
+    chatContainer.innerHTML = `
+      <div class="flex flex-col items-center justify-center h-full text-center px-8 gap-4">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);">
+          <span class="material-symbols-outlined text-3xl" style="color:#34d399;">auto_awesome</span>
+        </div>
+        <h3 class="text-lg font-bold text-white font-headline">Tu acompañante IA llega pronto</h3>
+        <p class="text-sm text-slate-400" style="max-width:24rem;">Estamos preparando un acompañante de apoyo emocional seguro y supervisado. Estará disponible muy pronto.</p>
+        <p class="text-xs text-slate-600">Mientras tanto, habla con tu psicólogo (aquí al lado). En crisis: <span data-crisis-num>024</span> · Emergencias <span data-emergency-num>112</span>.</p>
+      </div>`
+  }
+  window.__mostrarAI = mostrarAI
+  window.enviar = function() { /* IA en desarrollo */ }
   document.querySelectorAll('[data-sugerencia]').forEach(btn => { btn.style.display = 'none' })
+
+  async function cargarMensajesProf() {
+    if (!chatActivo) return
+    try {
+      // Query directa (sin embed: no hay FK mensajes→usuarios en el schema)
+      const { data: msgs } = await supabase.from('mensajes')
+        .select('texto, de_id, created_at')
+        .or('and(de_id.eq.' + _uid + ',para_id.eq.' + chatActivo + '),and(de_id.eq.' + chatActivo + ',para_id.eq.' + _uid + ')')
+        .order('created_at', { ascending: true })
+      if (!msgs || !msgs.length) {
+        chatContainer.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-center px-8 gap-2"><span class="material-symbols-outlined text-3xl text-slate-600">forum</span><p class="text-sm text-slate-400">Aún no hay mensajes. Escríbele cuando lo necesites.</p></div>'
+        return
+      }
+      chatContainer.innerHTML = msgs.map(function(m){
+        const mio = m.de_id === _uid
+        const hora = m.created_at ? new Date(m.created_at).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' }) : ''
+        return '<div class="flex ' + (mio ? 'justify-end' : 'justify-start') + '">'
+          + '<div class="max-w-md px-4 py-2.5 rounded-2xl text-sm" style="' + (mio ? 'background:rgba(52,211,153,0.15);color:#e2e8f0;border:1px solid rgba(52,211,153,0.2);' : 'background:rgba(255,255,255,0.05);color:#e2e8f0;border:1px solid rgba(255,255,255,0.08);') + '">'
+          + esc(m.texto) + '<p class="text-[10px] text-slate-500 mt-1" style="text-align:right;">' + hora + '</p></div></div>'
+      }).join('')
+      chatContainer.scrollTop = chatContainer.scrollHeight
+    } catch(e) { console.warn('Mensajes:', e.message) }
+  }
+
+  window.__abrirChatProf = async function(id, nombre) {
+    chatActivo = id
+    if (chatTitulo) chatTitulo.textContent = nombre || 'Tu psicólogo'
+    if (chatStatus) chatStatus.textContent = 'Tu psicólogo'
+    if (inputAI) inputAI.style.display = 'none'
+    if (inputProf) inputProf.style.display = 'flex'
+    chatContainer.innerHTML = '<p class="text-center text-slate-500 text-sm py-8">Cargando…</p>'
+    await cargarMensajesProf()
+    const inp = document.getElementById('msg-input'); if (inp) inp.focus()
+  }
+
+  window.__enviarProf = async function() {
+    const inp = document.getElementById('msg-input')
+    if (!chatActivo || !inp || !inp.value.trim()) return
+    const texto = inp.value.trim(); inp.value = ''
+    try { await enviarMensaje(chatActivo, texto); await cargarMensajesProf() }
+    catch(e) { if (window.mostrarError) mostrarError('No se pudo enviar el mensaje.') }
+  }
+
+  mostrarAI()  // estado inicial
 
   // Contactos reales: el psicólogo que atiende al paciente (o el admin de la clínica si no hay)
   try {
@@ -279,21 +344,20 @@ document.getElementById('input-msg').addEventListener('keydown', function(e) {
       const { data: cts } = await supabase.from('citas').select('psicologo_id').eq('paciente_id', pac.id).not('psicologo_id', 'is', null).order('fecha', { ascending: false })
       const psiIds = Array.from(new Set((cts || []).map(c => c.psicologo_id))).slice(0, 5)
       if (psiIds.length) {
-        // El paciente puede leer usuarios (no psicologos por RLS) → resolvemos el nombre ahí
         const { data: psis } = await supabase.from('usuarios').select('id, nombre, apellido').in('id', psiIds)
-        contactos = (psis || []).map(p => ({ nombre: ((p.nombre || '') + ' ' + (p.apellido || '')).trim() || 'Tu psicólogo', rol: 'Psicólogo/a' }))
-        if (!contactos.length) contactos = [{ nombre: 'Tu psicólogo', rol: 'Psicólogo/a' }]  // tiene psicólogo aunque el nombre no cargue
+        contactos = (psis || []).map(p => ({ id: p.id, nombre: ((p.nombre || '') + ' ' + (p.apellido || '')).trim() || 'Tu psicólogo', rol: 'Psicólogo/a' }))
+        if (!contactos.length) contactos = psiIds.map(function(id){ return { id: id, nombre: 'Tu psicólogo', rol: 'Psicólogo/a' } })
       }
       if (!contactos.length && pac.clinica_id) {
-        const { data: adm } = await supabase.from('usuarios').select('nombre, apellido').eq('clinica_id', pac.clinica_id).eq('rol', 'admin_clinica').eq('activo', true).limit(1)
-        if (adm && adm.length) contactos = [{ nombre: ((adm[0].nombre || '') + ' ' + (adm[0].apellido || '')).trim() || 'Tu clínica', rol: 'Administración' }]
+        const { data: adm } = await supabase.from('usuarios').select('id, nombre, apellido').eq('clinica_id', pac.clinica_id).eq('rol', 'admin_clinica').eq('activo', true).limit(1)
+        if (adm && adm.length) contactos = [{ id: adm[0].id, nombre: ((adm[0].nombre || '') + ' ' + (adm[0].apellido || '')).trim() || 'Tu clínica', rol: 'Administración' }]
       }
-      const esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c] }) }
       convs.insertAdjacentHTML('beforeend', contactos.map(function(c){
         const ini = (c.nombre || '?').split(' ').map(function(w){ return w[0] || '' }).slice(0, 2).join('').toUpperCase() || '?'
-        return '<a href="mensajeria.html" class="flex items-center gap-2.5 p-3 rounded-xl hover:bg-white/5 transition-colors" style="text-decoration:none;">'
+        const nombreJS = esc(c.nombre).replace(/'/g, "\\'")
+        return '<div id="conv-' + c.id + '" onclick="window.__abrirChatProf(\'' + c.id + '\',\'' + nombreJS + '\')" class="flex items-center gap-2.5 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">'
           + '<div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-[10px] font-bold" style="background:rgba(96,165,250,0.18);color:#60a5fa;">' + ini + '</div>'
-          + '<div class="min-w-0"><span class="font-headline font-semibold text-xs text-slate-200 block truncate">' + esc(c.nombre) + '</span><span class="text-[10px] text-slate-500">' + c.rol + '</span></div></a>'
+          + '<div class="min-w-0"><span class="font-headline font-semibold text-xs text-slate-200 block truncate">' + esc(c.nombre) + '</span><span class="text-[10px] text-slate-500">' + c.rol + '</span></div></div>'
       }).join(''))
     }
   } catch(e) { console.warn('Contactos:', e.message) }
