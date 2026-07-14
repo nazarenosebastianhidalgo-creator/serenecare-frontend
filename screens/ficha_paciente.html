@@ -199,7 +199,7 @@
           <button onclick="location.href='config_informe_ia.html?paciente='+getPacienteId()" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);font-size:12px;font-weight:600;color:#94a3b8;cursor:pointer;width:100%;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
             <span class="material-symbols-outlined" style="font-size:16px;color:#34d399;font-variation-settings:'FILL' 1;">description</span> Generar informe IA
           </button>
-          <button onclick="location.href='telemedicina_psicologo.html?paciente='+getPacienteNombre()" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);font-size:12px;font-weight:600;color:#94a3b8;cursor:pointer;width:100%;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
+          <button onclick="location.href='telemedicina_psicologo.html?paciente='+getPacienteNombre()+(window.__pacienteId?'&paciente_id='+window.__pacienteId:'')" style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);font-size:12px;font-weight:600;color:#94a3b8;cursor:pointer;width:100%;text-align:left;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='rgba(255,255,255,0.03)'">
             <span class="material-symbols-outlined" style="font-size:16px;color:#a78bfa;font-variation-settings:'FILL' 1;">videocam</span> Iniciar videollamada
           </button>
         </div>
@@ -368,7 +368,7 @@
             <p style="font-size:11px;color:#a78bfa;">Hoy · 14:30</p>
           </div>
         </div>
-        <button onclick="location.href='telemedicina_psicologo.html?paciente='+getPacienteNombre()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:12px;color:#a78bfa;font-size:12px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;transition:background 0.15s;" onmouseover="this.style.background='rgba(139,92,246,0.25)'" onmouseout="this.style.background='rgba(139,92,246,0.15)'">
+        <button onclick="location.href='telemedicina_psicologo.html?paciente='+getPacienteNombre()+(window.__pacienteId?'&paciente_id='+window.__pacienteId:'')" style="width:100%;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);border-radius:12px;color:#a78bfa;font-size:12px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;transition:background 0.15s;" onmouseover="this.style.background='rgba(139,92,246,0.25)'" onmouseout="this.style.background='rgba(139,92,246,0.15)'">
           <span class="material-symbols-outlined" style="font-size:15px;font-variation-settings:'FILL' 1;">videocam</span>
           Iniciar sesión
         </button>
@@ -1029,6 +1029,7 @@ if (!session) { window.location.href = '../login.html'; }
 
 const params = new URLSearchParams(window.location.search);
 const pacienteId = params.get('id') || params.get('paciente');
+window.__pacienteId = pacienteId;  // para pasar el id a la videollamada
 
 // Enviar solicitud de escala (PHQ-9/GAD-7) al paciente
 window.enviarSolicitudEscala = async function(tipo) {
@@ -1091,6 +1092,26 @@ else {
                     + '<div style="display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;"><span style="font-weight:700;color:#e2e8f0;font-size:0.85rem;">'+tit+'</span><span style="color:#64748b;font-size:0.72rem;">'+fecha+'</span></div>'
                     + '<p style="color:#cbd5e1;font-size:0.85rem;line-height:1.55;margin:0;white-space:pre-wrap;">'+resp+'</p></div>';
                 }).join('');
+            _main.appendChild(_sec);
+          }
+        }
+      } catch(e) { /* no bloquea la ficha */ }
+
+      // Temas que el paciente quiere tratar en su próxima sesión
+      try {
+        const { data: _tema } = await supabase
+          .from('temas_sesion')
+          .select('contenido, updated_at')
+          .eq('paciente_id', pacienteId)
+          .maybeSingle();
+        if (_tema && _tema.contenido && _tema.contenido.trim()) {
+          const _main = document.querySelector('main');
+          if (_main) {
+            const fecha = _tema.updated_at ? new Date(_tema.updated_at).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}) : '';
+            const _sec = document.createElement('div');
+            _sec.style.cssText = 'margin:16px 24px;padding:18px 20px;border-radius:16px;background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.25);';
+            _sec.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;"><p style="font-family:Manrope,sans-serif;font-weight:800;color:#d1fae5;margin:0;font-size:0.95rem;display:flex;align-items:center;gap:8px;"><span class="material-symbols-outlined" style="color:#34d399;font-size:20px;">edit_note</span>Temas que el paciente quiere tratar</p><span style="color:#64748b;font-size:0.72rem;">'+fecha+'</span></div>'
+              + '<p style="color:#e2e8f0;font-size:0.9rem;line-height:1.6;margin:0;white-space:pre-wrap;">'+_tema.contenido.replace(/</g,'&lt;')+'</p>';
             _main.appendChild(_sec);
           }
         }

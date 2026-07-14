@@ -149,53 +149,16 @@ html.light .sesion-row:hover{background:#f8fafc!important;border-color:#cbd5e1!i
         </div>
       </div>
 
-      <!-- Panel lateral: Tareas terapéuticas -->
+      <!-- Panel: Para tu próxima sesión -->
       <div class="card rounded-2xl p-7">
         <h2 class="font-headline font-bold text-white text-lg flex items-center gap-2 mb-2">
-          <span class="material-symbols-outlined" style="color:#34d399;">task_alt</span>
-          Tareas Terapéuticas
+          <span class="material-symbols-outlined" style="color:#34d399;">edit_note</span>
+          Para tu próxima sesión
         </h2>
-        <p class="text-xs text-slate-500 mb-7">Áreas de enfoque para esta semana.</p>
-        <div class="space-y-6">
-          <div class="pl-7 relative before:content-[''] before:absolute before:left-0 before:top-1.5 before:w-4 before:h-4 before:rounded-full before:border-2 before:border-emerald-400" style="before:background:rgba(52,211,153,0.15);">
-            <div class="flex justify-between items-start mb-1">
-              <h4 class="font-bold text-white text-sm">Ejercicio de Respiración</h4>
-              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider" style="background:rgba(52,211,153,0.12);color:#34d399;">DIARIO</span>
-            </div>
-            <p class="text-xs text-slate-400 mb-2">Practica la técnica 4-7-8 durante 10 minutos antes de dormir.</p>
-            <button onclick="mostrarToast('Guía — próximamente')" class="text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all" style="color:#34d399;">
-              Abrir Guía <span class="material-symbols-outlined text-xs">arrow_forward</span>
-            </button>
-          </div>
-          <div class="pl-7 relative before:content-[''] before:absolute before:left-0 before:top-1.5 before:w-4 before:h-4 before:rounded-full before:border-2" style="border-color:rgba(255,255,255,0.15);">
-            <div class="flex justify-between items-start mb-1">
-              <h4 class="font-bold text-white text-sm">Propuesta de Diario</h4>
-              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider" style="background:rgba(129,140,248,0.12);color:#818cf8;">SEMANAL</span>
-            </div>
-            <p class="text-xs text-slate-400 mb-2">Reflexiona sobre tres momentos en los que te sentiste en calma.</p>
-            <button onclick="mostrarToast('Diario — próximamente')" class="text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all text-slate-400 hover:text-white">
-              Ir al Diario <span class="material-symbols-outlined text-xs">arrow_forward</span>
-            </button>
-          </div>
-          <div class="pl-7 relative before:content-[''] before:absolute before:left-0 before:top-1.5 before:w-4 before:h-4 before:rounded-full before:border-2" style="border-color:rgba(255,255,255,0.15);">
-            <div class="flex justify-between items-start mb-1">
-              <h4 class="font-bold text-white text-sm">Lectura: Agilidad Emocional</h4>
-              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider" style="background:rgba(255,255,255,0.06);color:#94a3b8;">RECURSO</span>
-            </div>
-            <p class="text-xs text-slate-400 mb-2">Capítulo 2 del PDF sobre el manejo de detonantes.</p>
-            <button onclick="mostrarToast('PDF — próximamente')" class="text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all text-slate-400 hover:text-white">
-              Ver PDF <span class="material-symbols-outlined text-xs">arrow_forward</span>
-            </button>
-          </div>
-        </div>
-        <!-- Progreso semanal -->
-        <div class="mt-8 pt-6 border-t border-slate-800/50">
-          <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Crecimiento Semanal</h4>
-          <div class="h-1.5 w-full rounded-full overflow-hidden mb-2" style="background:rgba(255,255,255,0.06);">
-            <div class="h-full rounded-full w-3/5" style="background:#34d399;"></div>
-          </div>
-          <p class="text-[11px] text-slate-400">3 de 5 tareas completadas. ¡Sigue así!</p>
-        </div>
+        <p class="text-xs text-slate-500 mb-5">Apunta lo que quieras hablar con tu psicólogo — lo verá antes de veros y durante la sesión.</p>
+        <textarea id="temas-txt" rows="8" placeholder="Ej: esta semana me costó dormir · quiero hablar de la discusión con mi hermana · una duda sobre la medicación..." style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;color:#e2e8f0;font-size:14px;outline:none;font-family:inherit;resize:vertical;box-sizing:border-box;line-height:1.55;"></textarea>
+        <button id="temas-guardar" class="mt-3 w-full px-4 py-2.5 rounded-xl text-sm font-bold" style="background:linear-gradient(135deg,#059669,#34d399);color:#022c22;border:none;cursor:pointer;font-family:Manrope,sans-serif;">Guardar</button>
+        <p id="temas-msg" class="text-xs mt-2" style="min-height:16px;color:#94a3b8;"></p>
       </div>
     </div>
   </div>
@@ -346,6 +309,29 @@ function mostrarToast(msg) {
       docContainer.appendChild(seccion)
     }
     // Si no hay notas ni informes, se queda el texto placeholder del contenedor.
+
+    // "Para tu próxima sesión": cargar lo guardado + guardar
+    try {
+      const { data: _pacT } = await supabase.from('pacientes').select('id, clinica_id').eq('usuario_id', session.user.id).maybeSingle()
+      const ta = document.getElementById('temas-txt')
+      const btn = document.getElementById('temas-guardar')
+      const msg = document.getElementById('temas-msg')
+      if (_pacT && ta && btn) {
+        const { data: t } = await supabase.from('temas_sesion').select('contenido').eq('paciente_id', _pacT.id).maybeSingle()
+        if (t && t.contenido) ta.value = t.contenido
+        btn.addEventListener('click', async function(){
+          btn.disabled = true; msg.style.color = '#94a3b8'; msg.textContent = 'Guardando…'
+          try {
+            const { error } = await supabase.from('temas_sesion').upsert({
+              paciente_id: _pacT.id, clinica_id: _pacT.clinica_id, contenido: ta.value, updated_at: new Date().toISOString(),
+            }, { onConflict: 'paciente_id' })
+            if (error) throw error
+            msg.style.color = '#4ade80'; msg.textContent = 'Guardado — tu psicólogo lo verá antes de la sesión.'
+          } catch(e) { msg.style.color = '#f87171'; msg.textContent = 'No se pudo guardar: ' + (e.message || '') }
+          btn.disabled = false
+        })
+      }
+    } catch(e) { console.warn('Temas sesión:', e.message) }
   } catch(e) { mostrarError(e.message) }
 
   window.verInforme = id => { alert('Informe: ' + id) }

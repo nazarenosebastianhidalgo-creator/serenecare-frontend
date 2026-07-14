@@ -121,6 +121,11 @@
         </button>
       </div>
       <div class="flex-1 p-5 overflow-y-auto space-y-5" style="scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.1) transparent;">
+        <!-- Temas que el paciente quiere tratar (real, desde temas_sesion) -->
+        <div id="tele-temas" style="display:none;background:rgba(52,211,153,0.07);border:1px solid rgba(52,211,153,0.25);border-radius:16px;padding:14px 16px;">
+          <p style="font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:#34d399;margin:0 0 8px;display:flex;align-items:center;gap:6px;"><span class="material-symbols-outlined" style="font-size:16px;">edit_note</span>Temas del paciente</p>
+          <p id="tele-temas-txt" style="font-size:13.5px;color:#e2e8f0;line-height:1.55;margin:0;white-space:pre-wrap;"></p>
+        </div>
         <div>
           <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Observaciones Generales</label>
           <textarea id="nota-textarea" class="w-full rounded-2xl p-4 text-sm text-slate-300 placeholder-slate-600 focus:outline-none min-h-[110px] resize-none" style="background:rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.06);" placeholder="Escribe aquí los puntos clave..."></textarea>
@@ -862,5 +867,22 @@ async function finalizarSesion() {
 })
 
 })();</script>
+
+<script type="module">
+// Temas que el paciente quiere tratar — se cargan si la videollamada se abre con ?paciente_id=
+import { supabase } from '../js/supabase-client.js'
+try {
+  const pid = new URLSearchParams(location.search).get('paciente_id')
+  if (pid) {
+    const { data } = await supabase.from('temas_sesion').select('contenido').eq('paciente_id', pid).maybeSingle()
+    if (data && data.contenido && data.contenido.trim()) {
+      const box = document.getElementById('tele-temas')
+      const txt = document.getElementById('tele-temas-txt')
+      if (txt) txt.textContent = data.contenido
+      if (box) box.style.display = 'block'
+    }
+  }
+} catch (e) { /* silencioso: sin sesión o sin temas */ }
+</script>
 </body>
 </html>
