@@ -344,40 +344,49 @@ function mostrarToast(msg) {
       }
     } catch(e) { console.warn('Temas sesión:', e.message) }
 
-    // "Tu progreso": evolución cualitativa en escalas (PHQ-9/GAD-7). Seguro:
-    // no mostramos puntuaciones ni "empeorando" al paciente para no desanimarlo.
+    // "Tu progreso": mini-gráfico de evolución. Muestra SIEMPRE la cuadrícula,
+    // aunque no haya datos (la línea aparece al completar escalas). Eje: arriba =
+    // mejor. Las cifras clínicas reales las ve el terapeuta en la ficha.
+    function renderProgresoChart(evs) {
+      const MAXP = { 'PHQ-9': 27, 'GAD-7': 21 }, COL = { 'PHQ-9': '#38bdf8', 'GAD-7': '#fb923c' }
+      const porTipo = {}
+      ;(evs || []).forEach(function(e){ (porTipo[e.tipo] = porTipo[e.tipo] || []).push(e) })
+      const tipos = Object.keys(porTipo)
+      const W = 280, H = 132, x0 = 6, x1 = W - 6, y0 = 12, y1 = H - 20
+      let grid = ''
+      for (let i = 0; i <= 4; i++) { const y = (y0 + (y1 - y0) * i / 4).toFixed(1); grid += '<line x1="'+x0+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>' }
+      let series = '', dots = ''
+      tipos.forEach(function(t){
+        const arr = porTipo[t], mx = MAXP[t] || 27, col = COL[t] || '#34d399', n = arr.length
+        const pts = arr.map(function(e, i){
+          const bien = Math.max(0, Math.min(100, (1 - (e.puntuacion || 0) / mx) * 100))
+          const x = n === 1 ? (x0 + x1) / 2 : x0 + (x1 - x0) * i / (n - 1)
+          const y = y1 - (y1 - y0) * bien / 100
+          return [x, y]
+        })
+        if (pts.length >= 2) series += '<polyline fill="none" stroke="'+col+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="'+pts.map(function(p){ return p[0].toFixed(1)+','+p[1].toFixed(1) }).join(' ')+'"/>'
+        pts.forEach(function(p){ dots += '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3" fill="'+col+'"/>' })
+      })
+      const overlay = !tipos.length ? '<text x="'+(W/2)+'" y="'+(((y0 + y1) / 2)).toFixed(0)+'" text-anchor="middle" fill="#64748b" font-size="9" font-family="Inter,sans-serif">Tu línea aparecerá aquí</text>' : ''
+      const svg = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Gráfico de tu progreso" style="width:100%;height:auto;display:block;">'
+        + '<text x="'+x0+'" y="9" fill="#475569" font-size="8" font-family="Inter,sans-serif">mejor ↑</text>'
+        + grid + series + dots + overlay + '</svg>'
+      let leg
+      if (tipos.length) leg = '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">' + tipos.map(function(t){ return '<span style="display:flex;align-items:center;gap:5px;font-size:0.72rem;color:#94a3b8;"><span style="width:10px;height:3px;border-radius:2px;background:'+(COL[t] || '#34d399')+';display:inline-block;"></span>'+t+'</span>' }).join('') + '</div>'
+      else leg = '<a href="escalas_paciente.html" style="display:inline-block;margin-top:8px;font-size:0.72rem;font-weight:700;color:#34d399;text-decoration:none;">Completa una escala para empezar →</a>'
+      return svg + leg
+    }
     try {
-      const { data: _pacP } = await supabase.from('pacientes').select('id').eq('usuario_id', session.user.id).maybeSingle()
       const cont = document.getElementById('tu-progreso')
-      if (cont && _pacP) {
-        const { data: evs } = await supabase.from('evaluaciones')
-          .select('tipo, puntuacion, created_at')
-          .eq('paciente_id', _pacP.id)
-          .order('created_at', { ascending: false })
-          .limit(20)
-        const porTipo = {}
-        ;(evs || []).forEach(function(e){ (porTipo[e.tipo] = porTipo[e.tipo] || []).push(e) })
-        const tipos = Object.keys(porTipo)
-        if (!tipos.length) {
-          cont.innerHTML = '<p class="text-slate-500 text-sm" style="padding:0.4rem 0;">Aún no hay datos. Completa tus escalas para ver tu evolución.</p>'
-            + '<a href="escalas_paciente.html" class="inline-block mt-2 text-xs font-bold" style="color:#34d399;text-decoration:none;">Ir a Mis Escalas →</a>'
-        } else {
-          cont.innerHTML = tipos.map(function(t){
-            const arr = porTipo[t], ult = arr[0], prev = arr[1]
-            let estado, color, icon
-            if (prev && ult.puntuacion < prev.puntuacion) { estado = 'Mejorando'; color = '#34d399'; icon = 'trending_down' }
-            else if (prev && ult.puntuacion > prev.puntuacion) { estado = 'Sigue en ello 💚'; color = '#94a3b8'; icon = 'trending_flat' }
-            else if (prev) { estado = 'Estable'; color = '#94a3b8'; icon = 'trending_flat' }
-            else { estado = 'Primer registro'; color = '#94a3b8'; icon = 'flag' }
-            const fecha = ult.created_at ? new Date(ult.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short'}) : ''
-            return '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px 14px;margin-bottom:10px;">'
-              + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;"><span style="font-weight:700;color:#e2e8f0;font-size:0.85rem;">'+t+'</span><span style="color:#64748b;font-size:0.7rem;">'+fecha+'</span></div>'
-              + '<div style="display:flex;align-items:center;gap:6px;"><span class="material-symbols-outlined" style="font-size:18px;color:'+color+';">'+icon+'</span><span style="font-size:0.82rem;font-weight:700;color:'+color+';">'+estado+'</span></div>'
-              + '</div>'
-          }).join('')
-        }
+      const { data: _pacP } = await supabase.from('pacientes').select('id').eq('usuario_id', session.user.id).maybeSingle()
+      let evs = []
+      if (_pacP) {
+        const r = await supabase.from('evaluaciones').select('tipo, puntuacion, created_at')
+          .eq('paciente_id', _pacP.id).order('created_at', { ascending: true }).limit(40)
+        evs = r.data || []
       }
-    } catch(e) { console.warn('Progreso:', e.message); const c = document.getElementById('tu-progreso'); if (c) c.innerHTML = '<p class="text-slate-500 text-sm">No se pudo cargar tu progreso.</p>' }
+      if (cont) cont.innerHTML = renderProgresoChart(evs)
+    } catch(e) { console.warn('Progreso:', e.message); const c = document.getElementById('tu-progreso'); if (c) c.innerHTML = renderProgresoChart([]) }
   } catch(e) { mostrarError(e.message) }
 
   window.verInforme = id => { alert('Informe: ' + id) }
