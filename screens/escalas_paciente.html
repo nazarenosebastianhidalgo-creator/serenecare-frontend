@@ -146,103 +146,20 @@ html.light .option-btn:hover{background:#f1f5f9!important;border-color:#cbd5e1!i
         <span class="material-symbols-outlined text-red-400 text-xl">priority_high</span>
         Pendientes de completar
       </h2>
-      <div id="pendientes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- GAD-7 urgente -->
-        <div class="rounded-2xl p-6 flex justify-between items-center group transition-all hover:-translate-y-1" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);">
-          <div>
-            <span class="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3" style="background:rgba(245,158,11,0.12);color:#fbbf24;">Prioritario</span>
-            <h3 class="font-extrabold text-2xl text-white font-headline mb-0.5">GAD-7</h3>
-            <p class="text-amber-400/80 text-sm font-medium mb-3">Escala de Ansiedad Generalizada</p>
-            <div class="flex items-center gap-4 text-xs font-semibold text-amber-500/60">
-              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 5 min</span>
-              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">list_alt</span> 7 preguntas</span>
-            </div>
-          </div>
-          <button class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white hover:opacity-90 active:scale-95"
-            style="background:linear-gradient(135deg,#059669,#047857);box-shadow:0 4px 12px rgba(5,150,105,0.3);"
-            onclick="abrirEscala('GAD-7','Escala de Ansiedad GAD-7',7)">
-            Completar
-          </button>
-        </div>
-        <!-- BDI urgente -->
-        <div class="rounded-2xl p-6 flex justify-between items-center group transition-all hover:-translate-y-1" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);">
-          <div>
-            <span class="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3" style="background:rgba(245,158,11,0.12);color:#fbbf24;">Prioritario</span>
-            <h3 class="font-extrabold text-2xl text-white font-headline mb-0.5">BDI</h3>
-            <p class="text-amber-400/80 text-sm font-medium mb-3">Inventario de Depresión de Beck</p>
-            <div class="flex items-center gap-4 text-xs font-semibold text-amber-500/60">
-              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> 10 min</span>
-              <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">list_alt</span> 21 preguntas</span>
-            </div>
-          </div>
-          <button class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white hover:opacity-90 active:scale-95"
-            style="background:linear-gradient(135deg,#059669,#047857);box-shadow:0 4px 12px rgba(5,150,105,0.3);"
-            onclick="abrirEscala('BDI','Inventario de Depresión de Beck',21)">
-            Completar
-          </button>
-        </div>
+      <!-- Estado de carga -->
+      <div id="pendientes-loading" class="card rounded-2xl p-8 text-center">
+        <span class="material-symbols-outlined text-3xl text-slate-600 animate-pulse">assignment</span>
+        <p class="text-slate-500 text-sm mt-2">Cargando…</p>
       </div>
-    </div>
-
-    <!-- Explorar escalas -->
-    <div class="mb-10">
-      <h2 class="text-base font-bold text-white font-headline mb-4">Explorar Escalas</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- PHQ-9 Completado -->
-        <div class="card rounded-2xl p-5 transition-all hover:border-slate-700">
-          <div class="flex justify-between items-start mb-4">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.2);">
-              <span class="material-symbols-outlined text-lg" style="color:#34d399;">sentiment_neutral</span>
-            </div>
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest" style="background:rgba(52,211,153,0.1);color:#34d399;">Completado</span>
-          </div>
-          <h4 class="font-bold text-white font-headline mb-1">PHQ-9</h4>
-          <p class="text-slate-500 text-xs mb-3">Cuestionario de Salud del Paciente sobre síntomas depresivos.</p>
-          <div class="flex items-center gap-2 text-xs text-slate-600 font-medium">
-            <span>28/10/2023</span><span>•</span><span>8/27 pts</span>
-          </div>
+      <!-- Vacío -->
+      <div id="pendientes-vacio" class="hidden card rounded-2xl p-8 text-center">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3" style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);">
+          <span class="material-symbols-outlined" style="color:#34d399;">task_alt</span>
         </div>
-        <!-- PCL-5 Bloqueado -->
-        <div class="card rounded-2xl p-5 opacity-50">
-          <div class="flex justify-between items-start mb-4">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(255,255,255,0.06);">
-              <span class="material-symbols-outlined text-lg text-slate-600">lock</span>
-            </div>
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest" style="background:rgba(255,255,255,0.06);color:#64748b;">No disponible</span>
-          </div>
-          <h4 class="font-bold text-white font-headline mb-1">PCL-5</h4>
-          <p class="text-slate-500 text-xs mb-3">Lista de verificación de trastorno de estrés postraumático.</p>
-          <p class="text-xs font-semibold italic text-slate-600">Se desbloquea en la sesión 4</p>
-        </div>
-        <!-- AUDIT Disponible -->
-        <div class="card rounded-2xl p-5 transition-all hover:border-slate-700 cursor-pointer">
-          <div class="flex justify-between items-start mb-4">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.2);">
-              <span class="material-symbols-outlined text-lg text-blue-400">liquor</span>
-            </div>
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest" style="background:rgba(255,255,255,0.06);color:#94a3b8;">Disponible</span>
-          </div>
-          <h4 class="font-bold text-white font-headline mb-1">AUDIT</h4>
-          <p class="text-slate-500 text-xs mb-3">Test de identificación de trastornos por consumo de alcohol.</p>
-          <button class="text-sm font-bold flex items-center gap-1 transition-colors hover:opacity-80" style="color:#34d399;background:none;border:none;cursor:pointer;">
-            Empezar <span class="material-symbols-outlined text-sm">play_arrow</span>
-          </button>
-        </div>
-        <!-- WEMWBS Disponible -->
-        <div class="card rounded-2xl p-5 transition-all hover:border-slate-700 cursor-pointer">
-          <div class="flex justify-between items-start mb-4">
-            <div class="w-11 h-11 rounded-xl flex items-center justify-center" style="background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.2);">
-              <span class="material-symbols-outlined text-lg text-yellow-400">wb_sunny</span>
-            </div>
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest" style="background:rgba(255,255,255,0.06);color:#94a3b8;">Disponible</span>
-          </div>
-          <h4 class="font-bold text-white font-headline mb-1">WEMWBS</h4>
-          <p class="text-slate-500 text-xs mb-3">Escala de bienestar mental de Warwick-Edinburgh.</p>
-          <button class="text-sm font-bold flex items-center gap-1 transition-colors hover:opacity-80" style="color:#34d399;background:none;border:none;cursor:pointer;">
-            Empezar <span class="material-symbols-outlined text-sm">play_arrow</span>
-          </button>
-        </div>
+        <p class="text-slate-300 font-semibold text-sm">No tenés escalas pendientes</p>
+        <p class="text-slate-500 text-xs mt-1">Cuando tu psicólogo te envíe una evaluación, aparecerá aquí.</p>
       </div>
+      <div id="pendientes-grid" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </div>
 
     <!-- Historial de resultados -->
@@ -260,130 +177,14 @@ html.light .option-btn:hover{background:#f1f5f9!important;border-color:#cbd5e1!i
             </tr>
           </thead>
           <tbody id="historial-tbody">
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td class="py-4 px-2 text-sm text-slate-400">28 Oct 2023</td>
-              <td class="py-4 px-2 font-bold text-white">PHQ-9</td>
-              <td class="py-4 px-2 text-center font-mono font-bold text-slate-300">8/27</td>
-              <td class="py-4 px-2">
-                <span class="px-2.5 py-1 rounded-full text-xs font-bold" style="background:rgba(52,211,153,0.1);color:#34d399;">Leve</span>
-              </td>
-              <td class="py-4 px-2 text-right">
-                <button class="text-slate-600 hover:text-slate-300 transition-colors" style="background:none;border:none;cursor:pointer;">
-                  <span class="material-symbols-outlined text-lg">visibility</span>
-                </button>
-              </td>
-            </tr>
-            <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-              <td class="py-4 px-2 text-sm text-slate-400">15 Oct 2023</td>
-              <td class="py-4 px-2 font-bold text-white">GAD-7</td>
-              <td class="py-4 px-2 text-center font-mono font-bold text-slate-300">14/21</td>
-              <td class="py-4 px-2">
-                <span class="px-2.5 py-1 rounded-full text-xs font-bold" style="background:rgba(245,158,11,0.12);color:#fbbf24;">Moderada</span>
-              </td>
-              <td class="py-4 px-2 text-right">
-                <button class="text-slate-600 hover:text-slate-300 transition-colors" style="background:none;border:none;cursor:pointer;">
-                  <span class="material-symbols-outlined text-lg">visibility</span>
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td class="py-4 px-2 text-sm text-slate-400">01 Oct 2023</td>
-              <td class="py-4 px-2 font-bold text-white">BDI</td>
-              <td class="py-4 px-2 text-center font-mono font-bold text-slate-300">28/63</td>
-              <td class="py-4 px-2">
-                <span class="px-2.5 py-1 rounded-full text-xs font-bold" style="background:rgba(239,68,68,0.12);color:#f87171;">Moderada-Grave</span>
-              </td>
-              <td class="py-4 px-2 text-right">
-                <button class="text-slate-600 hover:text-slate-300 transition-colors" style="background:none;border:none;cursor:pointer;">
-                  <span class="material-symbols-outlined text-lg">visibility</span>
-                </button>
-              </td>
-            </tr>
+            <tr id="historial-loading"><td colspan="5" class="py-6 px-2 text-center text-slate-500 text-sm">Cargando…</td></tr>
+            <tr id="historial-vacio" class="hidden"><td colspan="5" class="py-6 px-2 text-center text-slate-500 text-sm">Todavía no completaste ninguna escala.</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
   </main>
-
-  <!-- MODAL GAD-7 -->
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" id="modal-gad7" style="background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);">
-    <div class="w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden" style="background:#0a1628;border:1px solid rgba(255,255,255,0.1);">
-      <!-- Modal header -->
-      <div class="px-8 pt-8 pb-5">
-        <div class="flex justify-between items-start mb-6">
-          <div>
-            <h2 class="text-xl font-extrabold text-white font-headline" id="modal-titulo">Escala de Ansiedad GAD-7</h2>
-            <p class="text-slate-500 text-sm mt-1">Pregunta <span id="current-q">1</span> de <span id="total-q">7</span></p>
-          </div>
-          <button class="w-9 h-9 rounded-xl flex items-center justify-center transition-colors hover:bg-white/8 text-slate-400"
-            style="background:rgba(255,255,255,0.05);border:none;cursor:pointer;"
-            onclick="document.getElementById('modal-gad7').classList.add('hidden')">
-            <span class="material-symbols-outlined text-xl">close</span>
-          </button>
-        </div>
-        <!-- Progress bar -->
-        <div class="w-full h-1.5 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.07);">
-          <div class="h-full rounded-full transition-all duration-500" id="progress-bar" style="background:#34d399;width:14%;"></div>
-        </div>
-      </div>
-      <!-- Modal content -->
-      <div class="px-8 pb-8">
-        <div class="min-h-[280px]">
-          <h3 class="text-lg font-bold text-white font-headline mb-6 leading-snug" id="question-text">
-            Durante las últimas 2 semanas, ¿con qué frecuencia se ha sentido molesto por: Sentirse nervioso/a, intranquilo/a o con los nervios de punta?
-          </h3>
-          <div class="space-y-2.5" id="options-group">
-            <button class="option-btn">
-              <span>Nunca</span>
-              <span class="material-symbols-outlined text-slate-600 text-xl">radio_button_unchecked</span>
-            </button>
-            <button class="option-btn">
-              <span>Varios días</span>
-              <span class="material-symbols-outlined text-slate-600 text-xl">radio_button_unchecked</span>
-            </button>
-            <button class="option-btn">
-              <span>Más de la mitad de los días</span>
-              <span class="material-symbols-outlined text-slate-600 text-xl">radio_button_unchecked</span>
-            </button>
-            <button class="option-btn">
-              <span>Casi todos los días</span>
-              <span class="material-symbols-outlined text-slate-600 text-xl">radio_button_unchecked</span>
-            </button>
-          </div>
-        </div>
-        <!-- Nav buttons -->
-        <div class="flex justify-between items-center mt-8">
-          <button id="btn-prev" onclick="prevQuestion()" disabled
-            class="px-6 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-30 text-slate-400 hover:bg-white/5"
-            style="background:none;border:1px solid rgba(255,255,255,0.08);cursor:pointer;">
-            Anterior
-          </button>
-          <button id="btn-next" onclick="nextQuestion()"
-            class="px-8 py-2.5 rounded-xl font-bold text-sm text-white transition-all active:scale-95"
-            style="background:linear-gradient(135deg,#059669,#047857);border:none;cursor:pointer;">
-            Siguiente
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL ÉXITO -->
-  <div class="fixed inset-0 z-[60] flex items-center justify-center p-4 hidden" id="modal-success" style="background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);">
-    <div class="p-10 rounded-3xl text-center max-w-sm w-full" style="background:#0a1628;border:1px solid rgba(52,211,153,0.25);">
-      <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);">
-        <span class="material-symbols-outlined text-5xl" style="color:#34d399;font-variation-settings:'FILL' 1;">check_circle</span>
-      </div>
-      <h2 class="text-2xl font-extrabold text-white font-headline mb-3">¡Escala completada!</h2>
-      <p class="text-slate-500 mb-7 text-sm leading-relaxed">Tus respuestas han sido enviadas de forma segura a tu terapeuta.</p>
-      <button class="w-full py-3.5 rounded-xl font-bold text-white transition-all active:scale-95"
-        style="background:linear-gradient(135deg,#059669,#047857);border:none;cursor:pointer;"
-        onclick="location.reload()">
-        Volver a Mis Escalas
-      </button>
-    </div>
-  </div>
 
 <script>
 (function(){
@@ -401,96 +202,6 @@ html.light .option-btn:hover{background:#f1f5f9!important;border-color:#cbd5e1!i
     document.getElementById('demo-badge').classList.remove('hidden');
   }
 })();
-
-var currentQuestionIdx = 1;
-var totalQuestions = 7;
-var escalaNombre = 'GAD-7';
-
-var questions = [
-  "Durante las últimas 2 semanas, ¿con qué frecuencia se ha sentido molesto por: Sentirse nervioso/a, intranquilo/a o con los nervios de punta?",
-  "¿No poder dejar de preocuparse o no poder controlar la preocupación?",
-  "¿Preocuparse demasiado por diferentes cosas?",
-  "¿Dificultad para relajarse?",
-  "¿Estar tan inquieto/a que es difícil permanecer sentado/a?",
-  "¿Sentirse fácilmente irritable o enfadado/a?",
-  "¿Sentirse asustado/a como si algo terrible pudiera suceder?"
-];
-
-function resetOptions() {
-  document.querySelectorAll('#options-group button').forEach(function(b) {
-    b.classList.remove('selected');
-    b.style.border = '2px solid rgba(255,255,255,0.08)';
-    b.style.background = 'rgba(255,255,255,0.04)';
-    var icon = b.querySelector('.material-symbols-outlined');
-    if (icon) {
-      icon.textContent = 'radio_button_unchecked';
-      icon.style.color = '#475569';
-      icon.style.fontVariationSettings = "'FILL' 0";
-    }
-  });
-}
-
-function abrirEscala(codigo, titulo, total) {
-  escalaNombre = codigo;
-  totalQuestions = total;
-  currentQuestionIdx = 1;
-  document.getElementById('modal-titulo').textContent = titulo;
-  document.getElementById('current-q').textContent = '1';
-  document.getElementById('total-q').textContent = total;
-  document.getElementById('progress-bar').style.width = (1/total*100) + '%';
-  document.getElementById('btn-prev').disabled = true;
-  document.getElementById('btn-next').textContent = 'Siguiente';
-  document.getElementById('question-text').textContent = questions[0] || 'Pregunta ' + currentQuestionIdx;
-  resetOptions();
-  document.getElementById('modal-gad7').classList.remove('hidden');
-}
-
-function prevQuestion() {
-  if (currentQuestionIdx > 1) {
-    currentQuestionIdx--;
-    updateModalUI();
-    document.getElementById('btn-next').textContent = 'Siguiente';
-  }
-}
-
-function nextQuestion() {
-  if (currentQuestionIdx < totalQuestions) {
-    currentQuestionIdx++;
-    updateModalUI();
-  } else {
-    showSuccess();
-  }
-}
-
-function updateModalUI() {
-  document.getElementById('current-q').textContent = currentQuestionIdx;
-  document.getElementById('question-text').textContent = questions[currentQuestionIdx - 1] || 'Pregunta ' + currentQuestionIdx;
-  document.getElementById('progress-bar').style.width = (currentQuestionIdx / totalQuestions * 100) + '%';
-  document.getElementById('btn-prev').disabled = currentQuestionIdx <= 1;
-  document.getElementById('btn-next').textContent = currentQuestionIdx === totalQuestions ? 'Finalizar' : 'Siguiente';
-  resetOptions();
-}
-
-function showSuccess() {
-  document.getElementById('modal-gad7').classList.add('hidden');
-  document.getElementById('modal-success').classList.remove('hidden');
-}
-
-document.querySelectorAll('#options-group button').forEach(function(btn) {
-  btn.addEventListener('click', function() {
-    resetOptions();
-    btn.classList.add('selected');
-    btn.style.border = '2px solid rgba(52,211,153,0.5)';
-    btn.style.background = 'rgba(52,211,153,0.1)';
-    var icon = btn.querySelector('.material-symbols-outlined');
-    if (icon) {
-      icon.textContent = 'check_circle';
-      icon.style.color = '#34d399';
-      icon.style.fontVariationSettings = "'FILL' 1";
-    }
-    setTimeout(nextQuestion, 380);
-  });
-});
 </script>
 
 <!-- APPS OVERLAY -->
@@ -747,16 +458,30 @@ if (perfil.clinica_id) {
 }
 
 // ── Datos reales: escalas pendientes + historial ──────────────────
-const ESCALAS = {
-  phq9: { titulo: 'PHQ-9', desc: 'Cuestionario de salud del paciente (síntomas depresivos).', preguntas: 9, min: 5, screen: 'cuestionario_phq9.html', max: 27 },
-  gad7: { titulo: 'GAD-7', desc: 'Escala de ansiedad generalizada.',                          preguntas: 7, min: 5, screen: 'cuestionario_gad7.html', max: 21 },
-}
+// El catálogo (escalas_catalogo) es la fuente de verdad: nombre, nº de ítems y
+// puntaje máximo se derivan de ahí. Cualquier escala del catálogo se completa
+// en la pantalla genérica cuestionario_escala.html.
 const normTipo = (t) => (t || '').toLowerCase().replace(/[^a-z0-9]/g, '')
+const catalogo = {}   // normTipo(codigo) -> { titulo, desc, preguntas, max, minutos }
+const { data: escalasCat } = await supabase.from('escalas_catalogo')
+  .select('codigo, nombre, descripcion, items, opciones').eq('activa', true)
+;(escalasCat || []).forEach(function(e) {
+  const items = e.items || []
+  const valores = (e.opciones || []).map(function(o){ return o.valor })
+  const maxOp = valores.length ? Math.max.apply(null, valores) : 0
+  catalogo[normTipo(e.codigo)] = {
+    titulo: e.nombre || e.codigo,
+    desc: e.descripcion || 'Escala asignada por tu terapeuta.',
+    preguntas: items.length,
+    max: items.length * maxOp,
+    minutos: Math.max(2, Math.round(items.length * 0.6)),
+  }
+})
 
 const { data: pac } = await supabase.from('pacientes').select('id').eq('usuario_id', perfil.id).maybeSingle()
 
 if (pac) {
-  // Pendientes
+  // ── Pendientes ──
   const { data: pendientes } = await supabase.from('solicitudes_escalas')
     .select('id, tipo, estado, created_at')
     .eq('paciente_id', pac.id)
@@ -764,64 +489,68 @@ if (pac) {
     .order('created_at', { ascending: false })
 
   const grid = document.getElementById('pendientes-grid')
-  if (grid) {
+  const loadP = document.getElementById('pendientes-loading')
+  const vacioP = document.getElementById('pendientes-vacio')
+  if (loadP) loadP.classList.add('hidden')
+  if (!pendientes || pendientes.length === 0) {
+    if (vacioP) vacioP.classList.remove('hidden')
+  } else if (grid) {
+    grid.classList.remove('hidden')
     grid.innerHTML = ''
-    if (!pendientes || pendientes.length === 0) {
-      grid.innerHTML = '<div class="rounded-2xl p-6 text-center" style="background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.18);grid-column:1/-1;"><span class="material-symbols-outlined" style="color:#34d399;font-size:30px;">task_alt</span><p class="text-sm font-bold text-white font-headline mt-2">No tenés escalas pendientes</p><p class="text-slate-500 text-xs mt-1">Cuando tu terapeuta te asigne una, aparecerá aquí.</p></div>'
-    } else {
-      pendientes.forEach(function(s) {
-        const meta = ESCALAS[normTipo(s.tipo)]
-        const titulo = meta ? meta.titulo : (s.tipo || 'Escala')
-        const subt   = meta ? meta.desc : 'Escala asignada por tu terapeuta.'
-        const card = document.createElement('div')
-        card.className = 'rounded-2xl p-6 flex justify-between items-center group transition-all hover:-translate-y-1'
-        card.style.cssText = 'background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);'
-        let cta
-        if (meta) {
-          cta = '<a href="' + meta.screen + '?solicitud=' + s.id + '" class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#059669,#047857);box-shadow:0 4px 12px rgba(5,150,105,0.3);text-decoration:none;">Completar</a>'
-        } else {
-          cta = '<span class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500" style="background:rgba(255,255,255,0.05);">Próximamente</span>'
-        }
-        const detalle = meta ? ('<div class="flex items-center gap-4 text-xs font-semibold text-amber-500/60"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> ' + meta.min + ' min</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">list_alt</span> ' + meta.preguntas + ' preguntas</span></div>') : ''
-        card.innerHTML = '<div><span class="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3" style="background:rgba(245,158,11,0.12);color:#fbbf24;">Pendiente</span><h3 class="font-extrabold text-2xl text-white font-headline mb-0.5">' + titulo + '</h3><p class="text-amber-400/80 text-sm font-medium mb-3">' + subt + '</p>' + detalle + '</div>' + cta
-        grid.appendChild(card)
-      })
-    }
+    pendientes.forEach(function(s) {
+      const meta = catalogo[normTipo(s.tipo)]
+      const titulo = meta ? meta.titulo : (s.tipo || 'Escala')
+      const subt   = meta ? meta.desc : 'Escala asignada por tu terapeuta.'
+      const card = document.createElement('div')
+      card.className = 'rounded-2xl p-6 flex justify-between items-center group transition-all hover:-translate-y-1'
+      card.style.cssText = 'background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);'
+      // Todas las escalas del catálogo se completan en la pantalla genérica.
+      let cta
+      if (meta) {
+        cta = '<a href="cuestionario_escala.html?solicitud=' + s.id + '" class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-white hover:opacity-90 active:scale-95" style="background:linear-gradient(135deg,#059669,#047857);box-shadow:0 4px 12px rgba(5,150,105,0.3);text-decoration:none;flex-shrink:0;">Completar</a>'
+      } else {
+        cta = '<span class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500" style="background:rgba(255,255,255,0.05);flex-shrink:0;">No disponible</span>'
+      }
+      const detalle = meta ? ('<div class="flex items-center gap-4 text-xs font-semibold text-amber-500/60"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> ' + meta.minutos + ' min</span><span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">list_alt</span> ' + meta.preguntas + ' preguntas</span></div>') : ''
+      card.innerHTML = '<div class="pr-4"><span class="inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-3" style="background:rgba(245,158,11,0.12);color:#fbbf24;">Pendiente</span><h3 class="font-extrabold text-2xl text-white font-headline mb-0.5">' + titulo + '</h3><p class="text-amber-400/80 text-sm font-medium mb-3">' + subt + '</p>' + detalle + '</div>' + cta
+      grid.appendChild(card)
+    })
   }
 
-  // Historial de resultados
+  // ── Historial de resultados ──
   const { data: historial } = await supabase.from('evaluaciones')
     .select('tipo, puntaje, puntuacion, severidad, created_at')
     .eq('paciente_id', pac.id)
     .order('created_at', { ascending: false })
 
   const tbody = document.getElementById('historial-tbody')
-  if (tbody) {
-    tbody.innerHTML = ''
-    if (!historial || historial.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-sm text-slate-500">Aún no completaste ninguna escala.</td></tr>'
-    } else {
-      const SEV_COLOR = (sev) => {
-        const s = (sev || '').toLowerCase()
-        if (s.includes('sever') || s.includes('grave')) return 'background:rgba(239,68,68,0.12);color:#f87171;'
-        if (s.includes('moder')) return 'background:rgba(245,158,11,0.12);color:#fbbf24;'
-        return 'background:rgba(52,211,153,0.1);color:#34d399;'
-      }
-      historial.forEach(function(ev, i) {
-        const meta = ESCALAS[normTipo(ev.tipo)]
-        const fecha = ev.created_at ? new Date(ev.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
-        const punt = (ev.puntaje ?? ev.puntuacion)
-        const puntTxt = (punt != null ? punt : '—') + (meta ? '/' + meta.max : '')
-        const tr = document.createElement('tr')
-        if (i < historial.length - 1) tr.style.cssText = 'border-bottom:1px solid rgba(255,255,255,0.04);'
-        const sevBadge = ev.severidad ? '<span class="px-2.5 py-1 rounded-full text-xs font-bold" style="' + SEV_COLOR(ev.severidad) + '">' + ev.severidad + '</span>' : '<span class="text-slate-600 text-xs">—</span>'
-        tr.innerHTML = '<td class="py-4 px-2 text-sm text-slate-400">' + fecha + '</td>' +
-          '<td class="py-4 px-2 font-bold text-white">' + (meta ? meta.titulo : (ev.tipo || '—')) + '</td>' +
-          '<td class="py-4 px-2 text-center font-mono font-bold text-slate-300">' + puntTxt + '</td>' +
-          '<td class="py-4 px-2">' + sevBadge + '</td><td class="py-4 px-2"></td>'
-        tbody.appendChild(tr)
-      })
+  const loadH = document.getElementById('historial-loading')
+  const vacioH = document.getElementById('historial-vacio')
+  if (loadH) loadH.remove()
+  if (!historial || historial.length === 0) {
+    if (vacioH) vacioH.classList.remove('hidden')
+  } else if (tbody) {
+    if (vacioH) vacioH.remove()
+    const SEV_COLOR = (sev) => {
+      const s = (sev || '').toLowerCase()
+      if (s.includes('sever') || s.includes('grave') || s.includes('alto') || s.includes('tept')) return 'background:rgba(239,68,68,0.12);color:#f87171;'
+      if (s.includes('moder') || s.includes('medio')) return 'background:rgba(245,158,11,0.12);color:#fbbf24;'
+      return 'background:rgba(52,211,153,0.1);color:#34d399;'
     }
+    historial.forEach(function(ev, i) {
+      const meta = catalogo[normTipo(ev.tipo)]
+      const fecha = ev.created_at ? new Date(ev.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
+      const punt = (ev.puntaje ?? ev.puntuacion)
+      const puntTxt = (punt != null ? punt : '—') + (meta && meta.max ? '/' + meta.max : '')
+      const tr = document.createElement('tr')
+      if (i < historial.length - 1) tr.style.cssText = 'border-bottom:1px solid rgba(255,255,255,0.04);'
+      const sevBadge = ev.severidad ? '<span class="px-2.5 py-1 rounded-full text-xs font-bold" style="' + SEV_COLOR(ev.severidad) + '">' + ev.severidad + '</span>' : '<span class="text-slate-600 text-xs">—</span>'
+      tr.innerHTML = '<td class="py-4 px-2 text-sm text-slate-400">' + fecha + '</td>' +
+        '<td class="py-4 px-2 font-bold text-white">' + (meta ? meta.titulo : (ev.tipo || '—')) + '</td>' +
+        '<td class="py-4 px-2 text-center font-mono font-bold text-slate-300">' + puntTxt + '</td>' +
+        '<td class="py-4 px-2">' + sevBadge + '</td><td class="py-4 px-2"></td>'
+      tbody.appendChild(tr)
+    })
   }
 }
 
