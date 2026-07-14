@@ -147,18 +147,29 @@ html.light .sesion-row:hover{background:#f8fafc!important;border-color:#cbd5e1!i
             <p class="text-slate-500 text-sm col-span-2" style="padding:0.5rem 0;">Aquí verás las notas e informes que te comparta tu psicólogo.</p>
           </div>
         </div>
+        <!-- Para tu próxima sesión (a lo ancho, debajo de Documentos) -->
+        <div class="card rounded-2xl p-7">
+          <h2 class="font-headline font-bold text-white text-lg flex items-center gap-2 mb-2">
+            <span class="material-symbols-outlined" style="color:#34d399;">edit_note</span>
+            Para tu próxima sesión
+          </h2>
+          <p class="text-xs text-slate-500 mb-5">Apunta lo que quieras hablar con tu psicólogo — lo verá antes de veros y durante la sesión.</p>
+          <textarea id="temas-txt" rows="10" placeholder="Ej: esta semana me costó dormir · quiero hablar de la discusión con mi hermana · una duda sobre la medicación..." style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:14px;color:#e2e8f0;font-size:14px;outline:none;font-family:inherit;resize:vertical;box-sizing:border-box;line-height:1.6;min-height:180px;"></textarea>
+          <button id="temas-guardar" class="mt-3 px-6 py-2.5 rounded-xl text-sm font-bold" style="background:linear-gradient(135deg,#059669,#34d399);color:#022c22;border:none;cursor:pointer;font-family:Manrope,sans-serif;">Guardar</button>
+          <p id="temas-msg" class="text-xs mt-2" style="min-height:16px;color:#94a3b8;"></p>
+        </div>
       </div>
 
-      <!-- Panel: Para tu próxima sesión -->
+      <!-- Panel lateral: Tu progreso -->
       <div class="card rounded-2xl p-7">
         <h2 class="font-headline font-bold text-white text-lg flex items-center gap-2 mb-2">
-          <span class="material-symbols-outlined" style="color:#34d399;">edit_note</span>
-          Para tu próxima sesión
+          <span class="material-symbols-outlined" style="color:#34d399;">trending_up</span>
+          Tu progreso
         </h2>
-        <p class="text-xs text-slate-500 mb-5">Apunta lo que quieras hablar con tu psicólogo — lo verá antes de veros y durante la sesión.</p>
-        <textarea id="temas-txt" rows="8" placeholder="Ej: esta semana me costó dormir · quiero hablar de la discusión con mi hermana · una duda sobre la medicación..." style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px;color:#e2e8f0;font-size:14px;outline:none;font-family:inherit;resize:vertical;box-sizing:border-box;line-height:1.55;"></textarea>
-        <button id="temas-guardar" class="mt-3 w-full px-4 py-2.5 rounded-xl text-sm font-bold" style="background:linear-gradient(135deg,#059669,#34d399);color:#022c22;border:none;cursor:pointer;font-family:Manrope,sans-serif;">Guardar</button>
-        <p id="temas-msg" class="text-xs mt-2" style="min-height:16px;color:#94a3b8;"></p>
+        <p class="text-xs text-slate-500 mb-5">Tu evolución en las escalas que vas completando.</p>
+        <div id="tu-progreso">
+          <p class="text-slate-500 text-sm" style="padding:0.4rem 0;">Cargando…</p>
+        </div>
       </div>
     </div>
   </div>
@@ -332,6 +343,41 @@ function mostrarToast(msg) {
         })
       }
     } catch(e) { console.warn('Temas sesión:', e.message) }
+
+    // "Tu progreso": evolución cualitativa en escalas (PHQ-9/GAD-7). Seguro:
+    // no mostramos puntuaciones ni "empeorando" al paciente para no desanimarlo.
+    try {
+      const { data: _pacP } = await supabase.from('pacientes').select('id').eq('usuario_id', session.user.id).maybeSingle()
+      const cont = document.getElementById('tu-progreso')
+      if (cont && _pacP) {
+        const { data: evs } = await supabase.from('evaluaciones')
+          .select('tipo, puntuacion, created_at')
+          .eq('paciente_id', _pacP.id)
+          .order('created_at', { ascending: false })
+          .limit(20)
+        const porTipo = {}
+        ;(evs || []).forEach(function(e){ (porTipo[e.tipo] = porTipo[e.tipo] || []).push(e) })
+        const tipos = Object.keys(porTipo)
+        if (!tipos.length) {
+          cont.innerHTML = '<p class="text-slate-500 text-sm" style="padding:0.4rem 0;">Aún no hay datos. Completa tus escalas para ver tu evolución.</p>'
+            + '<a href="escalas_paciente.html" class="inline-block mt-2 text-xs font-bold" style="color:#34d399;text-decoration:none;">Ir a Mis Escalas →</a>'
+        } else {
+          cont.innerHTML = tipos.map(function(t){
+            const arr = porTipo[t], ult = arr[0], prev = arr[1]
+            let estado, color, icon
+            if (prev && ult.puntuacion < prev.puntuacion) { estado = 'Mejorando'; color = '#34d399'; icon = 'trending_down' }
+            else if (prev && ult.puntuacion > prev.puntuacion) { estado = 'Sigue en ello 💚'; color = '#94a3b8'; icon = 'trending_flat' }
+            else if (prev) { estado = 'Estable'; color = '#94a3b8'; icon = 'trending_flat' }
+            else { estado = 'Primer registro'; color = '#94a3b8'; icon = 'flag' }
+            const fecha = ult.created_at ? new Date(ult.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short'}) : ''
+            return '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px 14px;margin-bottom:10px;">'
+              + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;"><span style="font-weight:700;color:#e2e8f0;font-size:0.85rem;">'+t+'</span><span style="color:#64748b;font-size:0.7rem;">'+fecha+'</span></div>'
+              + '<div style="display:flex;align-items:center;gap:6px;"><span class="material-symbols-outlined" style="font-size:18px;color:'+color+';">'+icon+'</span><span style="font-size:0.82rem;font-weight:700;color:'+color+';">'+estado+'</span></div>'
+              + '</div>'
+          }).join('')
+        }
+      }
+    } catch(e) { console.warn('Progreso:', e.message); const c = document.getElementById('tu-progreso'); if (c) c.innerHTML = '<p class="text-slate-500 text-sm">No se pudo cargar tu progreso.</p>' }
   } catch(e) { mostrarError(e.message) }
 
   window.verInforme = id => { alert('Informe: ' + id) }
