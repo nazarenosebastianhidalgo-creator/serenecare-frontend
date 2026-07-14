@@ -52,9 +52,7 @@
   <!-- SESSION ICON SIDEBAR (fixed left) -->
   <aside class="fixed left-4 top-16 bottom-20 w-16 rounded-2xl flex flex-col items-center py-5 gap-5 z-40" style="background:rgba(10,15,28,0.9);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
     <div class="flex flex-col items-center gap-1 mb-2">
-      <div class="w-9 h-9 rounded-xl overflow-hidden" style="border:2px solid rgba(20,184,166,0.4);">
-        <img alt="Tu terapeuta" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfidB96vHjTPNibyYvcIMW11fKUFlAPb1052Sqs24aqcE5cJ296W8jJIu1ceu2PDW4daMzbFkKc3pbOJtiRIjRf0Cynxp_0PsYfTP2g2Rjo0TemK5CiFwGcBIx46TSHA4e6Zab0Dlqhb5VjDlCLR9Uyeod2HRMqT1SdCMEaqO9Nl8DVYu9VvAIeKlmnp21QWbo9fZjGciKjsPuvH5fCpUBImR4gbS8Js5T6az4LzoSmKfMKmWgFwAhtUxua0-HYW_OVFLH12vynrW_"/>
-      </div>
+      <div id="psb-avatar" class="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold" style="border:2px solid rgba(20,184,166,0.4);background:rgba(20,184,166,0.18);color:#2dd4bf;font-family:Manrope,sans-serif;" title="Tu terapeuta">··</div>
       <span class="text-[9px] font-bold uppercase tracking-widest" style="color:#2dd4bf;">Live</span>
     </div>
     <nav class="flex flex-col gap-3">
@@ -70,10 +68,6 @@
         <span class="material-symbols-outlined text-lg">self_care</span>
         <span class="text-[9px]">Calma</span>
       </button>
-      <button id="psb-chat" onclick="switchPanelP('chat')" class="text-slate-500 hover:text-slate-300 p-2.5 hover:bg-white/5 rounded-xl flex flex-col items-center gap-1 transition-all">
-        <span class="material-symbols-outlined text-lg">forum</span>
-        <span class="text-[9px]">Chat</span>
-      </button>
     </nav>
     <button id="btn-fin-sidebar" class="mt-auto text-rose-400 hover:bg-rose-500/10 p-2.5 rounded-xl transition-all" title="Salir">
       <span class="material-symbols-outlined">call_end</span>
@@ -82,7 +76,9 @@
 
   <!-- VIDEO AREA -->
   <div id="video-area" class="flex-1 relative rounded-3xl overflow-hidden shadow-2xl" style="background:#0d1117;">
-    <img id="video-placeholder" alt="Video del terapeuta" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDkWTs_M3BE2zA8I0Z7nhgjXLJ2hum33acULwBHw3w9fsCWuFgwaLu-gATQ_Jjk6bjbIIb0fXwGmAE0SIM0zVNJLL6eoPMuSN52eL9JC8YfM5kMYkJs8imz7vilfBaN8tQ1FpbQajweXEcG8K6p7niZHS87NqXXbuzflQaJhyvxhLN1K5igXwNHJL44cmZ-nD2Pi44LjljjP0Q5-YvMmmyYRRohxs92xo2xOAV6YHnXCd31nUrBO8DUqOyhOp3U35FF5qyY9kD-ooieD"/>
+    <div id="video-placeholder" class="w-full h-full flex items-center justify-center" style="background:#0d1117;">
+      <span class="material-symbols-outlined" style="font-size:64px;color:#1e293b;">videocam</span>
+    </div>
     <!-- Estado de conexión (se rellena por JS) -->
     <div id="video-status" class="absolute inset-0 flex flex-col items-center justify-center text-center" style="display:none;background:rgba(2,6,23,0.82);backdrop-filter:blur(6px);z-index:5;">
       <span id="video-status-icon" class="material-symbols-outlined" style="font-size:44px;color:#2dd4bf;">videocam</span>
@@ -103,7 +99,9 @@
     </div>
     <!-- Patient PiP -->
     <div class="absolute bottom-5 right-5 w-44 h-28 rounded-2xl overflow-hidden shadow-2xl" style="border:2px solid rgba(255,255,255,0.1);">
-      <img alt="Tu cámara" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPczsA3SkLMnc2Ch2hLS2Ma4kuMqwabRzMg_gEitYcXV7LHLhSNlZ8Hj4eoxv7WFj-jBj0DpDJ1avZkeR16NveAMTf6J334y673Tzo4nrP8hcZxUNNnr1Jgrlvpo1XeewJyCv_kn7xC9Gm0WMFTurvkFcJb6c7fXs4Kx-FWMDZv49rfM6jPgxLJEKnUy1HFYQMyjMtCYgfxNqkgsN_iwajCL9Yy8JvaP3RYSNo6J6VJ7137cm4uRunkK_w4hGbHy-qrSyLrsnGkpWL"/>
+      <div class="w-full h-full flex items-center justify-center" style="background:#0d1117;">
+        <span class="material-symbols-outlined" style="font-size:28px;color:#334155;">person</span>
+      </div>
       <div class="absolute bottom-1.5 left-2 flex items-center gap-1">
         <div class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></div>
         <span class="text-[9px] text-white/60">Tú</span>
@@ -182,19 +180,7 @@
       <p id="notas-paciente-ok" class="hidden text-center text-xs mt-2 font-bold" style="color:#2dd4bf;">✓ Guardado</p>
     </div>
 
-    <!-- PANEL CHAT PACIENTE -->
-    <div id="pp-chat" class="hidden flex-1 rounded-3xl flex flex-col overflow-hidden" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
-      <div class="p-4" style="border-bottom:1px solid rgba(255,255,255,0.05);">
-        <h3 class="font-headline font-bold text-white text-sm">Mensajes</h3>
-      </div>
-      <div id="pac-msgs" class="flex-1 p-4 overflow-y-auto flex flex-col gap-2" style="scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
-      <div class="p-3 flex gap-2" style="border-top:1px solid rgba(255,255,255,0.05);">
-        <input id="pac-msg-input" type="text" placeholder="Escribe un mensaje..." class="flex-1 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);" onkeydown="if(event.key==='Enter')enviarMsgPaciente()"/>
-        <button onclick="enviarMsgPaciente()" class="w-8 h-8 rounded-full flex items-center justify-center" style="background:rgba(20,184,166,0.8);">
-          <span class="material-symbols-outlined text-white" style="font-size:14px;font-variation-settings:'FILL' 1;">send</span>
-        </button>
-      </div>
-    </div>
+    <!-- (chat movido a widget flotante abajo-izquierda) -->
 
     <!-- Stats siempre visible abajo -->
     <div class="rounded-3xl p-4 flex items-center justify-around flex-shrink-0" style="background:rgba(20,184,166,0.05);border:1px solid rgba(20,184,166,0.1);">
@@ -225,11 +211,31 @@
   <div id="mas-opciones" style="position:fixed;bottom:96px;right:24px;z-index:200;display:none;background:rgba(10,15,28,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;min-width:190px;box-shadow:0 12px 40px rgba(0,0,0,0.5);">
     <button onclick="compartirPantallaP()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">screen_share</span>Compartir pantalla</button>
     <button onclick="switchPanelP('notas');cerrarMasOpciones()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">description</span>Mis notas</button>
-    <button onclick="switchPanelP('chat');cerrarMasOpciones()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">forum</span>Mensajes</button>
+    <button onclick="abrirChatFlotante();cerrarMasOpciones()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">forum</span>Mensajes</button>
     <div style="border-top:1px solid rgba(255,255,255,0.06);"></div>
     <button onclick="reportarProblema()" class="w-full px-4 py-3 text-left text-sm text-slate-400 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-500">flag</span>Reportar problema</button>
   </div>
 </main>
+
+<!-- WIDGET CHAT FLOTANTE (con el psicólogo) -->
+<div id="chat-fab-wrap" style="position:fixed;left:24px;bottom:24px;z-index:120;">
+  <div id="chat-panel" style="display:none;flex-direction:column;width:320px;height:420px;margin-bottom:12px;background:rgba(10,15,28,0.97);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">
+    <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:8px;flex-shrink:0;">
+      <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:18px;font-variation-settings:'FILL' 1;">chat</span>
+      <span id="chat-titulo" style="flex:1;font-family:Manrope,sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;">Tu psicólogo/a</span>
+      <button onclick="cerrarChatFlotante()" title="Cerrar" style="background:none;border:none;cursor:pointer;color:#94a3b8;display:flex;"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    </div>
+    <div id="chat-msgs" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
+    <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;flex-shrink:0;">
+      <input id="chat-input" type="text" placeholder="Escribe un mensaje…" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;border-radius:10px;padding:8px 12px;font-size:12px;outline:none;" onkeydown="if(event.key==='Enter')enviarChatFlotante()"/>
+      <button onclick="enviarChatFlotante()" title="Enviar" style="width:32px;height:32px;border-radius:50%;background:rgba(20,184,166,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-symbols-outlined" style="font-size:15px;color:#02121a;font-variation-settings:'FILL' 1;">send</span></button>
+    </div>
+  </div>
+  <button id="chat-fab" onclick="toggleChatFlotante()" title="Mensajes con tu psicólogo" style="width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(20,184,166,0.95),rgba(13,148,136,0.95));box-shadow:0 8px 28px rgba(20,184,166,0.4);border:none;cursor:pointer;position:relative;">
+    <span id="chat-fab-icon" class="material-symbols-outlined" style="color:#02121a;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
+    <span id="chat-badge" style="display:none;position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;padding:0 4px;border-radius:99px;background:#f87171;border:2px solid #0a0f1c;font-size:9px;font-weight:800;color:#fff;align-items:center;justify-content:center;"></span>
+  </button>
+</div>
 
 <!-- BOTTOM CONTROL BAR -->
 <footer class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
@@ -299,42 +305,58 @@ document.getElementById('btn-cam').addEventListener('click', function() {
 });
 
 // ── PANEL SWITCHER ──
-var PPANELES = ['calma','notas','chat'];
+var PPANELES = ['calma','notas'];
 window.switchPanelP = function(p) {
   PPANELES.forEach(function(id){ var el=document.getElementById('pp-'+id); if(el){el.classList.add('hidden');el.classList.remove('flex-1');} });
   var t = document.getElementById('pp-'+p); if(t){t.classList.remove('hidden');t.classList.add('flex-1');}
-  ['video','notas','calma','chat'].forEach(function(id){ var b=document.getElementById('psb-'+id); if(b){b.style.background='';b.style.color='';} });
+  ['video','notas','calma'].forEach(function(id){ var b=document.getElementById('psb-'+id); if(b){b.style.background='';b.style.color='';} });
   var ab = document.getElementById('psb-'+(p==='calma'?'calma':p)); if(ab){ab.style.background='rgba(20,184,166,0.15)';ab.style.color='#2dd4bf';}
 };
 window.ocultarPanelDerecho = function() {
   PPANELES.forEach(function(id){ var el=document.getElementById('pp-'+id); if(el){el.classList.add('hidden');el.classList.remove('flex-1');} });
 };
 
-// ── NOTAS PACIENTE ──
+// ── NOTAS PACIENTE (persisten en BD; la carga/guardado real los monta el módulo) ──
 window.guardarNotasPaciente = function() {
   var ta = document.getElementById('notas-paciente');
-  if (ta) localStorage.setItem('pac_notas_sesion', ta.value);
-  var ok = document.getElementById('notas-paciente-ok'); if(ok){ok.classList.remove('hidden');setTimeout(function(){ok.classList.add('hidden');},2000);}
+  var ok = document.getElementById('notas-paciente-ok');
+  var val = ta ? ta.value : '';
+  if (window.__notasGuardar) window.__notasGuardar(val);
+  else if (ta) localStorage.setItem('pac_notas_sesion', val); // fallback si no hay sesión
+  if(ok){ok.classList.remove('hidden');setTimeout(function(){ok.classList.add('hidden');},2000);}
 };
-(function(){ var v=localStorage.getItem('pac_notas_sesion'); if(v){ var ta=document.getElementById('notas-paciente'); if(ta) ta.value=v; } })();
 
-// ── CHAT PACIENTE ──
-var _pacMsgs = [];
-window.enviarMsgPaciente = function() {
-  var input = document.getElementById('pac-msg-input');
-  var text = (input.value||'').trim(); if(!text) return;
-  _pacMsgs.push({from:'me',text:text,time:new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})});
-  input.value=''; renderMsgsPaciente();
-  if(window._enviarMsgPacienteSupabase) window._enviarMsgPacienteSupabase(text);
+// ── CHAT FLOTANTE con el psicólogo (UI; envío/carga los monta el módulo) ──
+window._chatOpen = false;
+window._chatMsgs = [];
+window.toggleChatFlotante = function(){ window._chatOpen ? window.cerrarChatFlotante() : window.abrirChatFlotante(); };
+window.abrirChatFlotante = function(){
+  window._chatOpen = true;
+  var p=document.getElementById('chat-panel'); if(p) p.style.display='flex';
+  var ic=document.getElementById('chat-fab-icon'); if(ic) ic.textContent='close';
+  var b=document.getElementById('chat-badge'); if(b) b.style.display='none';
+  if(window.__chatCargar) window.__chatCargar();
+  var inp=document.getElementById('chat-input'); if(inp) setTimeout(function(){inp.focus();},50);
 };
-function renderMsgsPaciente(){
-  var box=document.getElementById('pac-msgs'); if(!box) return;
-  box.innerHTML=_pacMsgs.map(function(m){
+window.cerrarChatFlotante = function(){
+  window._chatOpen = false;
+  var p=document.getElementById('chat-panel'); if(p) p.style.display='none';
+  var ic=document.getElementById('chat-fab-icon'); if(ic) ic.textContent='chat';
+};
+window.enviarChatFlotante = function(){
+  var i=document.getElementById('chat-input'); var t=((i&&i.value)||'').trim(); if(!t) return;
+  i.value='';
+  if(window.__chatEnviar) window.__chatEnviar(t);
+};
+window.renderChatFlotante = function(){
+  var box=document.getElementById('chat-msgs'); if(!box) return;
+  box.innerHTML=window._chatMsgs.map(function(m){
     var me=m.from==='me';
-    return '<div style="display:flex;justify-content:'+(me?'flex-end':'flex-start')+';"><div style="max-width:85%;padding:7px 10px;border-radius:12px;'+(me?'background:rgba(20,184,166,0.18);border:1px solid rgba(20,184,166,0.25);border-bottom-right-radius:3px;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:3px;')+'"><p style="font-size:12px;color:#e2e8f0;margin:0;word-break:break-word;">'+m.text+'</p><p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:'+(me?'right':'left')+';">'+m.time+'</p></div></div>';
+    var safe=(m.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    return '<div style="display:flex;justify-content:'+(me?'flex-end':'flex-start')+';"><div style="max-width:85%;padding:7px 10px;border-radius:12px;'+(me?'background:rgba(20,184,166,0.18);border:1px solid rgba(20,184,166,0.25);border-bottom-right-radius:3px;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:3px;')+'"><p style="font-size:12px;color:#e2e8f0;margin:0;word-break:break-word;">'+safe+'</p>'+(m.time?'<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:'+(me?'right':'left')+';">'+m.time+'</p>':'')+'</div></div>';
   }).join('');
-  setTimeout(function(){box.scrollTop=box.scrollHeight;},30);
-}
+  setTimeout(function(){box.scrollTop=box.scrollHeight;},20);
+};
 
 // ── RELAJACIÓN PROGRESIVA ──
 var _relajTimer=null, _relajSecs=240, _relajRunning=false;
@@ -481,13 +503,13 @@ try {
 
   if (citaId) {
     const { data } = await supabase.from('citas')
-      .select('id, fecha, hora_inicio, sala_video_url, tipo, psicologo:psicologo_id(nombre, apellido)')
+      .select('id, fecha, hora_inicio, sala_video_url, tipo, psicologo_id, clinica_id, psicologo:psicologo_id(nombre, apellido)')
       .eq('id', citaId).maybeSingle()
     cita = data
   } else if (pac) {
     const hoy = new Date().toISOString().split('T')[0]
     const { data } = await supabase.from('citas')
-      .select('id, fecha, hora_inicio, sala_video_url, tipo, psicologo:psicologo_id(nombre, apellido)')
+      .select('id, fecha, hora_inicio, sala_video_url, tipo, psicologo_id, clinica_id, psicologo:psicologo_id(nombre, apellido)')
       .eq('paciente_id', pac.id)
       .in('tipo', ['online', 'telemedicina', 'videollamada'])
       .gte('fecha', hoy)
@@ -498,11 +520,22 @@ try {
     if (cita) citaId = cita.id
   }
 
+  const psicId    = cita ? (cita.psicologo_id || null) : null
+  const clinicaId = cita ? (cita.clinica_id || null) : null
+
   if (!cita) {
     setEstado('No tenés una sesión de video activa', 'Cuando tengas una sesión online programada, podrás unirte desde acá.', 'event_busy')
   } else {
     const dn = document.getElementById('doctor-nombre')
     if (dn && cita.psicologo) dn.textContent = 'Dr/a. ' + (cita.psicologo.nombre || '') + ' ' + (cita.psicologo.apellido || '')
+    // Avatar del terapeuta = sus iniciales (sin foto inventada)
+    const av = document.getElementById('psb-avatar')
+    if (av && cita.psicologo) {
+      const ini = ((cita.psicologo.nombre||'')[0]||'') + ((cita.psicologo.apellido||'')[0]||'')
+      av.textContent = ini.toUpperCase() || '··'
+    }
+    const ct = document.getElementById('chat-titulo')
+    if (ct && cita.psicologo) ct.textContent = 'Dr/a. ' + (cita.psicologo.nombre||'') + ' ' + (cita.psicologo.apellido||'')
 
     if (cita.sala_video_url) {
       montarSala(cita.sala_video_url)
@@ -523,29 +556,66 @@ try {
     const numEl = document.getElementById('num-sesion'); if (numEl) numEl.textContent = '#' + ((count || 0) + 1);
   }
 
-  // Suscripción a mensajes nuevos (ejercicios de calma + chat)
+  // ── NOTAS PRIVADAS DEL PACIENTE (persisten en BD, una por cita) ──
   if (pac) {
-    window._enviarMsgPacienteSupabase = async function(texto) {
-      if (!cita) return;
-      const psicId = cita.psicologo_id || null;
-      if (!psicId) return;
-      await supabase.from('mensajes').insert({ remitente_id: userId, destinatario_id: psicId, clinica_id: cita.clinica_id, contenido: texto });
-    };
+    let notaRow = null
+    const notaQ = supabase.from('notas_paciente').select('id, contenido').eq('paciente_id', pac.id)
+    const { data: notaExist } = await (citaId ? notaQ.eq('cita_id', citaId) : notaQ.is('cita_id', null)).maybeSingle()
+    notaRow = notaExist || null
+    const taNota = document.getElementById('notas-paciente')
+    if (taNota && notaRow) taNota.value = notaRow.contenido || ''
+    // fallback: si había algo guardado localmente y aún no hay fila en BD, lo migramos al textarea
+    if (taNota && !notaRow) { const loc = localStorage.getItem('pac_notas_sesion'); if (loc && !taNota.value) taNota.value = loc }
 
-    // Escuchar mensajes del psicólogo en tiempo real
+    window.__notasGuardar = async function(val) {
+      try {
+        if (notaRow) {
+          await supabase.from('notas_paciente').update({ contenido: val, updated_at: new Date().toISOString() }).eq('id', notaRow.id)
+        } else {
+          const { data: ins } = await supabase.from('notas_paciente')
+            .insert({ paciente_id: pac.id, cita_id: citaId || null, clinica_id: clinicaId, contenido: val })
+            .select('id').single()
+          if (ins) notaRow = { id: ins.id, contenido: val }
+        }
+        localStorage.removeItem('pac_notas_sesion')  // ya vive en BD
+      } catch (e) { localStorage.setItem('pac_notas_sesion', val) }  // red caída → no perder lo escrito
+    }
+  }
+
+  // ── CHAT FLOTANTE con el psicólogo (tabla mensajes real) ──
+  window.__chatCargar = async function() {
+    if (!psicId) { window._chatMsgs = [{ from:'them', text:'El chat estará disponible cuando tengas una sesión activa con tu psicólogo/a.', time:'' }]; window.renderChatFlotante(); return }
+    const { data } = await supabase.from('mensajes')
+      .select('de_id, texto, created_at')
+      .or(`and(de_id.eq.${userId},para_id.eq.${psicId}),and(de_id.eq.${psicId},para_id.eq.${userId})`)
+      .order('created_at').limit(100)
+    window._chatMsgs = (data || [])
+      .filter(m => !(m.texto || '').startsWith('🧘'))
+      .map(m => ({ from: m.de_id === userId ? 'me' : 'them', text: m.texto, time: new Date(m.created_at).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}) }))
+    window.renderChatFlotante()
+  }
+  window.__chatEnviar = async function(texto) {
+    window._chatMsgs.push({ from:'me', text:texto, time:new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}) })
+    window.renderChatFlotante()
+    if (!psicId) return
+    await supabase.from('mensajes').insert({ clinica_id: clinicaId, de_id: userId, para_id: psicId, texto })
+  }
+
+  // ── Realtime: mensajes entrantes → ejercicio de calma o chat ──
+  if (pac) {
     supabase.channel('pac-msgs-' + userId).on('postgres_changes', {
-      event: 'INSERT', schema: 'public', table: 'mensajes', filter: 'destinatario_id=eq.' + userId
+      event: 'INSERT', schema: 'public', table: 'mensajes', filter: 'para_id=eq.' + userId
     }, function(payload) {
-      var msg = payload.new;
-      if (!msg) return;
-      if (msg.contenido && msg.contenido.startsWith('🧘')) {
-        // Es un ejercicio de calma
+      var msg = payload.new; if (!msg) return;
+      var texto = msg.texto || '';
+      if (texto.startsWith('🧘')) {
         var el = document.getElementById('ejercicio-psi');
         var txt = document.getElementById('ejercicio-psi-texto');
-        if (el && txt) { txt.textContent = msg.contenido.replace('🧘 Ejercicio de calma — ',''); el.classList.remove('hidden'); switchPanelP('calma'); }
+        if (el && txt) { txt.textContent = texto.replace('🧘 Ejercicio de calma — ',''); el.classList.remove('hidden'); switchPanelP('calma'); }
       } else {
-        _pacMsgs.push({ from: 'them', text: msg.contenido, time: new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}) });
-        renderMsgsPaciente();
+        window._chatMsgs.push({ from:'them', text:texto, time:new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}) });
+        window.renderChatFlotante();
+        if (!window._chatOpen) { var b=document.getElementById('chat-badge'); if(b){ b.style.display='flex'; b.textContent=(parseInt(b.textContent||'0',10)||0)+1; } }
       }
     }).subscribe();
   }
