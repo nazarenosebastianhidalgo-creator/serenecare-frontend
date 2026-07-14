@@ -144,7 +144,7 @@ html.light .sesion-row:hover{background:#f8fafc!important;border-color:#cbd5e1!i
             Documentos Compartidos
           </h2>
           <div id="lista-documentos" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <p class="text-slate-500 text-sm col-span-2" style="padding:0.5rem 0;">Aquí verás los documentos y recursos que te comparta tu psicólogo.</p>
+            <p class="text-slate-500 text-sm col-span-2" style="padding:0.5rem 0;">Aquí verás las notas e informes que te comparta tu psicólogo.</p>
           </div>
         </div>
       </div>
@@ -333,18 +333,19 @@ function mostrarToast(msg) {
         <button onclick="alert('Informe: ${i.id}')" class="mt-3 px-4 py-1 text-xs rounded-full font-semibold" style="background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.2);">Ver completo</button>
       </div>`).join('')
 
-    if (notas.length || informes.length || recursos.length) {
+    // Nota: los recursos/ejercicios ya se muestran en el Inicio ("Recursos Compartidos").
+    // Aquí en Mis Sesiones dejamos solo lo de historial: notas e informes compartidos.
+    if (notas.length || informes.length) {
       const docContainer = document.getElementById('lista-documentos')
+      docContainer.innerHTML = ''  // quita el placeholder
       const seccion = document.createElement('div')
-      seccion.className = 'col-span-2 space-y-2 mt-2'
+      seccion.className = 'col-span-2 space-y-2'
       seccion.innerHTML =
-        (recursos.length ? `<h3 class="font-bold text-white text-sm mb-3">Recursos de tu terapeuta</h3>${renderRecursos}` : '') +
-        (notas.length ? `<h3 class="font-bold text-white text-sm mt-6 mb-3">Notas compartidas</h3>${renderNotas}` : '') +
+        (notas.length ? `<h3 class="font-bold text-white text-sm mb-3">Notas compartidas</h3>${renderNotas}` : '') +
         (informes.length ? `<h3 class="font-bold text-white text-sm mt-6 mb-3">Informes IA</h3>${renderInformes}` : '')
-      docContainer.parentElement.appendChild(seccion)
-    } else {
-      mostrarError('Tu psicólogo aún no compartió documentos.')
+      docContainer.appendChild(seccion)
     }
+    // Si no hay notas ni informes, se queda el texto placeholder del contenedor.
   } catch(e) { mostrarError(e.message) }
 
   window.verInforme = id => { alert('Informe: ' + id) }
