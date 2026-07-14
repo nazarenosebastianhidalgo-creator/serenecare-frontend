@@ -365,6 +365,13 @@ function togglePill(btn) {
       if (label.includes('mensaje'))      cb.checked = prefs.mensajes
     })
 
+    // Cargar la antelación guardada (pill activo)
+    const horasPref = Number(prefs.antelacion_horas) || 24
+    document.querySelectorAll('.pill').forEach(p => {
+      const h = parseInt((p.textContent || '').replace(/\D/g, ''), 10)
+      p.classList.toggle('active', h === horasPref)
+    })
+
     // ── Opt-in: avisos de huecos liberados (auto-relleno) ──
     const OFERTAS_API = ''  // relativo: usa el rewrite /api -> backend (mismo origen, sin CORS)
     const trackHuecos = document.getElementById('toggle-huecos')
@@ -402,6 +409,9 @@ function togglePill(btn) {
         if (label.includes('recordatorio')) prefs.recordatorios = cb.checked
         if (label.includes('mensaje'))      prefs.mensajes     = cb.checked
       })
+      // Antelación del recordatorio (la lee el poller de backend)
+      const pillActiva = document.querySelector('.pill.active')
+      if (pillActiva) prefs.antelacion_horas = parseInt(pillActiva.textContent.replace(/\D/g, ''), 10) || 24
       localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
       const ok = document.getElementById('success-msg')
       try {
