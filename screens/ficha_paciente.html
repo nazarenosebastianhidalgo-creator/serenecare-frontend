@@ -898,17 +898,8 @@ function toggleTema() {
   <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px;width:100%;max-width:400px;box-shadow:0 32px 80px rgba(0,0,0,0.6);">
     <p style="font-family:Manrope,sans-serif;font-weight:800;font-size:16px;color:white;margin-bottom:6px;">Solicitar escala clínica</p>
     <p style="font-size:12px;color:#64748b;margin-bottom:20px;">El paciente la recibirá en su portal y podrá completarla antes de la próxima sesión.</p>
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-      <label id="opt-phq9" onclick="seleccionarEscala('PHQ-9')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(139,92,246,0.1);border:2px solid rgba(139,92,246,0.4);cursor:pointer;">
-        <span class="material-symbols-outlined" style="color:#a78bfa;font-size:20px;font-variation-settings:'FILL' 1;">sentiment_dissatisfied</span>
-        <div><p style="font-size:13px;font-weight:800;color:white;font-family:Manrope,sans-serif;">PHQ-9</p><p style="font-size:10px;color:#64748b;">Depresión — 9 preguntas</p></div>
-        <span id="check-phq9" class="material-symbols-outlined" style="margin-left:auto;color:#a78bfa;font-size:18px;font-variation-settings:'FILL' 1;">radio_button_checked</span>
-      </label>
-      <label id="opt-gad7" onclick="seleccionarEscala('GAD-7')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,0.03);border:2px solid rgba(255,255,255,0.08);cursor:pointer;">
-        <span class="material-symbols-outlined" style="color:#60a5fa;font-size:20px;font-variation-settings:'FILL' 1;">mood_bad</span>
-        <div><p style="font-size:13px;font-weight:800;color:white;font-family:Manrope,sans-serif;">GAD-7</p><p style="font-size:10px;color:#64748b;">Ansiedad — 7 preguntas</p></div>
-        <span id="check-gad7" class="material-symbols-outlined" style="margin-left:auto;color:#475569;font-size:18px;">radio_button_unchecked</span>
-      </label>
+    <div id="escalas-opciones" style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;max-height:340px;overflow-y:auto;">
+      <p style="font-size:11px;color:#475569;text-align:center;padding:12px 0;">Cargando escalas…</p>
     </div>
     <div style="display:flex;gap:10px;">
       <button onclick="cerrarModalSolicitar()" style="flex:1;padding:11px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#64748b;font-weight:700;font-size:13px;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
@@ -918,7 +909,14 @@ function toggleTema() {
 </div>
 
 <script>
-var escalaSeleccionada = 'PHQ-9';
+var escalaSeleccionada = null;
+window.__catalogoEscalas = {};   // normTipo -> { max } (lo llena el módulo)
+
+var ICONO_CATEGORIA = {
+  'depresión':'sentiment_dissatisfied', 'depresion':'sentiment_dissatisfied',
+  'ansiedad':'mood_bad', 'estrés':'bolt', 'estres':'bolt',
+  'bienestar':'wb_sunny', 'trauma':'healing'
+};
 
 function solicitarCuestionario() {
   document.getElementById('modal-solicitar').style.display = 'flex';
@@ -926,17 +924,42 @@ function solicitarCuestionario() {
 function cerrarModalSolicitar() {
   document.getElementById('modal-solicitar').style.display = 'none';
 }
-function seleccionarEscala(tipo) {
-  escalaSeleccionada = tipo;
-  var esPhq = tipo === 'PHQ-9';
-  document.getElementById('opt-phq9').style.background = esPhq ? 'rgba(139,92,246,0.1)' : 'rgba(255,255,255,0.03)';
-  document.getElementById('opt-phq9').style.borderColor = esPhq ? 'rgba(139,92,246,0.4)' : 'rgba(255,255,255,0.08)';
-  document.getElementById('check-phq9').textContent = esPhq ? 'radio_button_checked' : 'radio_button_unchecked';
-  document.getElementById('check-phq9').style.color = esPhq ? '#a78bfa' : '#475569';
-  document.getElementById('opt-gad7').style.background = !esPhq ? 'rgba(96,165,250,0.1)' : 'rgba(255,255,255,0.03)';
-  document.getElementById('opt-gad7').style.borderColor = !esPhq ? 'rgba(96,165,250,0.4)' : 'rgba(255,255,255,0.08)';
-  document.getElementById('check-gad7').textContent = !esPhq ? 'radio_button_checked' : 'radio_button_unchecked';
-  document.getElementById('check-gad7').style.color = !esPhq ? '#60a5fa' : '#475569';
+
+// Construye las opciones del modal desde el catálogo (cualquier escala activa)
+window.renderOpcionesEscalas = function(escalas) {
+  var cont = document.getElementById('escalas-opciones');
+  if (!cont) return;
+  if (!escalas || !escalas.length) {
+    cont.innerHTML = '<p style="font-size:11px;color:#475569;text-align:center;padding:12px 0;">No hay escalas disponibles.</p>';
+    document.getElementById('btn-confirmar-solicitud').disabled = true;
+    return;
+  }
+  cont.innerHTML = escalas.map(function(e) {
+    var icono = ICONO_CATEGORIA[(e.categoria||'').toLowerCase()] || 'assignment';
+    var nItems = (e.items || []).length;
+    var sub = (e.categoria ? e.categoria : 'Escala') + (nItems ? ' — ' + nItems + ' preguntas' : '');
+    return '<label data-escala="' + e.codigo + '" onclick="seleccionarEscala(\'' + e.codigo + '\')" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,0.03);border:2px solid rgba(255,255,255,0.08);cursor:pointer;">' +
+      '<span class="material-symbols-outlined" style="color:#a78bfa;font-size:20px;font-variation-settings:\'FILL\' 1;">' + icono + '</span>' +
+      '<div style="min-width:0;"><p style="font-size:13px;font-weight:800;color:white;font-family:Manrope,sans-serif;">' + e.nombre + '</p><p style="font-size:10px;color:#64748b;">' + sub + '</p></div>' +
+      '<span class="check-escala material-symbols-outlined" style="margin-left:auto;color:#475569;font-size:18px;">radio_button_unchecked</span>' +
+    '</label>';
+  }).join('');
+  seleccionarEscala(escalas[0].codigo);   // preselecciona la primera
+};
+
+function seleccionarEscala(codigo) {
+  escalaSeleccionada = codigo;
+  document.querySelectorAll('#escalas-opciones label[data-escala]').forEach(function(lbl) {
+    var sel = lbl.getAttribute('data-escala') === codigo;
+    lbl.style.background = sel ? 'rgba(139,92,246,0.1)' : 'rgba(255,255,255,0.03)';
+    lbl.style.borderColor = sel ? 'rgba(139,92,246,0.4)' : 'rgba(255,255,255,0.08)';
+    var chk = lbl.querySelector('.check-escala');
+    if (chk) {
+      chk.textContent = sel ? 'radio_button_checked' : 'radio_button_unchecked';
+      chk.style.color = sel ? '#a78bfa' : '#475569';
+      chk.style.fontVariationSettings = sel ? "'FILL' 1" : "'FILL' 0";
+    }
+  });
 }
 async function confirmarSolicitud() {
   cerrarModalSolicitar();
@@ -965,6 +988,19 @@ function severidadGAD7(p) {
   return                { label:'Severo',   color:'#f87171' };
 }
 function maxPuntos(tipo) { return tipo === 'GAD-7' ? 21 : 27; }
+function normEsc(t) { return (t||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
+function maxDe(tipo) { var c = window.__catalogoEscalas[normEsc(tipo)]; return (c && c.max) ? c.max : maxPuntos(tipo); }
+function colorSev(label) {
+  var s = (label||'').toLowerCase();
+  if (s.indexOf('sever')>=0 || s.indexOf('grave')>=0 || s.indexOf('alto')>=0 || s.indexOf('tept')>=0) return '#f87171';
+  if (s.indexOf('mod')>=0 || s.indexOf('medio')>=0) return '#fbbf24';
+  return '#34d399';
+}
+// Prefiere la severidad guardada (la calcula la pantalla genérica); si no, cae al cálculo por tipo
+function sevDe(e) {
+  if (e.severidad) return { label: e.severidad, color: colorSev(e.severidad) };
+  return e.tipo === 'GAD-7' ? severidadGAD7(e.puntaje) : severidadPHQ9(e.puntaje);
+}
 
 window.renderEvaluaciones = function(lista) {
   var el = document.getElementById('evaluaciones-lista');
@@ -976,25 +1012,25 @@ window.renderEvaluaciones = function(lista) {
   var porTipo = {};
   lista.forEach(function(e) { if (!porTipo[e.tipo]) porTipo[e.tipo] = e; });
   el.innerHTML = Object.values(porTipo).map(function(e) {
-    var sev = e.tipo === 'GAD-7' ? severidadGAD7(e.puntaje) : severidadPHQ9(e.puntaje);
+    var sev = sevDe(e);
     var fecha = e.created_at ? new Date(e.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short'}) : '';
     return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.02);">' +
       '<div><span style="font-size:11px;color:#64748b;">' + e.tipo + '</span>' +
       (fecha ? '<span style="font-size:10px;color:#334155;margin-left:6px;">' + fecha + '</span>' : '') + '</div>' +
       '<div style="display:flex;align-items:center;gap:6px;">' +
-      '<span style="font-size:12px;font-weight:800;color:' + sev.color + ';font-family:Manrope,sans-serif;">' + e.puntaje + '/' + maxPuntos(e.tipo) + '</span>' +
+      '<span style="font-size:12px;font-weight:800;color:' + sev.color + ';font-family:Manrope,sans-serif;">' + e.puntaje + '/' + maxDe(e.tipo) + '</span>' +
       '<span style="font-size:10px;color:#475569;">' + sev.label + '</span>' +
       '</div></div>';
   }).join('');
 
   // Actualizar tab escalas en timeline
   var items = lista.map(function(e) {
-    var sev = e.tipo === 'GAD-7' ? severidadGAD7(e.puntaje) : severidadPHQ9(e.puntaje);
+    var sev = sevDe(e);
     var fecha = e.created_at ? new Date(e.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}) : '';
     return {
       tipo:'escala', fecha:fecha, hora:'', titulo: e.tipo + ' — ' + sev.label,
-      desc:'Puntaje: ' + e.puntaje + '/' + maxPuntos(e.tipo) + ' · ' + sev.label,
-      color: sev.color, icono:'assignment', bg:'rgba(52,211,153,0.1)', badge: e.puntaje+'/'+maxPuntos(e.tipo), badgeColor: sev.color
+      desc:'Puntaje: ' + e.puntaje + '/' + maxDe(e.tipo) + ' · ' + sev.label,
+      color: sev.color, icono:'assignment', bg:'rgba(52,211,153,0.1)', badge: e.puntaje+'/'+maxDe(e.tipo), badgeColor: sev.color
     };
   });
   window.TIMELINE_DATA.escalas = items;
@@ -1031,8 +1067,9 @@ const params = new URLSearchParams(window.location.search);
 const pacienteId = params.get('id') || params.get('paciente');
 window.__pacienteId = pacienteId;  // para pasar el id a la videollamada
 
-// Enviar solicitud de escala (PHQ-9/GAD-7) al paciente
+// Enviar solicitud de cualquier escala del catálogo al paciente
 window.enviarSolicitudEscala = async function(tipo) {
+  if (!tipo) return { ok:false, msg:'Elegí una escala' };
   if (!pacienteId || pacienteId === 'demo') return { ok:false, msg:'Sin paciente válido' };
   const { data: pac } = await supabase.from('pacientes').select('clinica_id').eq('id', pacienteId).single();
   const { error } = await supabase.from('solicitudes_escalas').insert({
@@ -1044,6 +1081,21 @@ window.enviarSolicitudEscala = async function(tipo) {
   });
   return { ok: !error, msg: error ? error.message : '' };
 };
+
+// Cargar el catálogo de escalas (global de fábrica + propias de la clínica) para el modal
+;(async () => {
+  const { data: escalas } = await supabase.from('escalas_catalogo')
+    .select('codigo, nombre, categoria, items, opciones')
+    .eq('activa', true)
+    .order('categoria', { ascending: true });
+  (escalas || []).forEach((e) => {
+    const valores = (e.opciones || []).map((o) => o.valor);
+    const maxOp = valores.length ? Math.max.apply(null, valores) : 0;
+    const norm = (e.codigo || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    window.__catalogoEscalas[norm] = { max: (e.items || []).length * maxOp };
+  });
+  if (window.renderOpcionesEscalas) window.renderOpcionesEscalas(escalas || []);
+})();
 
 if (!pacienteId || pacienteId === 'demo') { window.renderEvaluaciones([]); }
 
