@@ -227,11 +227,21 @@ function mostrarToast(msg) {
       let _citas = []
       if (_pac) {
         const r = await supabase.from('citas')
-          .select('fecha, hora_inicio, tipo, estado, psicologo_id')
+          .select('id, fecha, hora_inicio, tipo, estado, psicologo_id')
           .eq('paciente_id', _pac.id).lt('fecha', _hoy).neq('estado', 'cancelada')
           .order('fecha', { ascending: false }).limit(50)
         _citas = r.data || []
       }
+      // Notas que el paciente tomó en cada sesión (notas_paciente)
+      const _notasMap = {}
+      if (_pac && _citas.length) {
+        const { data: _notas } = await supabase.from('notas_paciente')
+          .select('id, cita_id, contenido').eq('paciente_id', _pac.id)
+          .in('cita_id', _citas.map(function(c){ return c.id }))
+        ;(_notas || []).forEach(function(n){ if (n.cita_id) _notasMap[n.cita_id] = n })
+      }
+      window.__notasSesionMap = _notasMap
+      window.__pacIdSesiones = _pac ? _pac.id : null
       const _ps = {}
       const _pids = Array.from(new Set(_citas.map(function(c){ return c.psicologo_id }).filter(Boolean)))
       if (_pids.length) {
@@ -244,21 +254,69 @@ function mostrarToast(msg) {
           _contS.innerHTML = '<p class="text-slate-500 text-sm" style="padding:0.5rem 0;">Aún no tienes sesiones anteriores.</p>'
         } else {
           const _mes = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']
+          const _esc = function(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+          window.__vistaNotaSesion = function(id, cont){
+            if ((cont||'').trim()) {
+              return '<div style="display:flex;align-items:flex-start;gap:8px;"><span class="material-symbols-outlined" style="font-size:16px;color:#34d399;flex-shrink:0;margin-top:1px;">sticky_note_2</span><p style="flex:1;font-size:13px;color:#cbd5e1;white-space:pre-line;line-height:1.5;margin:0;">'+_esc(cont)+'</p><button onclick="editarNotaSesion(\''+id+'\')" style="flex-shrink:0;font-size:11px;font-weight:700;color:#34d399;background:none;border:none;cursor:pointer;">Editar</button></div>'
+            }
+            return '<button onclick="editarNotaSesion(\''+id+'\')" style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#64748b;background:none;border:none;cursor:pointer;padding:0;"><span class="material-symbols-outlined" style="font-size:15px;">add</span>Añadir una nota de esta sesión</button>'
+          }
           _contS.innerHTML = _citas.map(function(c){
             const p = (c.fecha || '').split('-')
             const fechaTxt = p.length === 3 ? (parseInt(p[2],10) + ' ' + _mes[parseInt(p[1],10)-1] + ', ' + p[0]) : (c.fecha || '')
             const online = (c.tipo === 'online' || c.tipo === 'telemedicina')
             const ps = _ps[c.psicologo_id] || 'Tu psicólogo'
             const hora = (c.hora_inicio || '').slice(0,5)
-            return '<div class="sesion-row flex flex-wrap md:flex-nowrap items-center gap-5">'
+            const cont = _notasMap[c.id] ? (_notasMap[c.id].contenido || '') : ''
+            return '<div class="sesion-row">'
+              + '<div class="flex flex-wrap md:flex-nowrap items-center gap-5">'
               + '<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.12);"><span class="material-symbols-outlined" style="color:#34d399;">psychiatry</span></div>'
               + '<div class="flex-1"><h3 class="font-bold text-white">' + ps + '</h3>'
               + '<p class="text-slate-400 text-sm flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-xs">calendar_today</span> ' + fechaTxt + (hora ? ' • ' + hora : '') + ' • ' + (online ? 'Online' : 'Presencial') + '</p></div>'
+              + '</div>'
+              + '<div style="margin-top:12px;padding-left:10px;border-left:2px solid rgba(52,211,153,0.22);">'
+              +   '<div data-nota-view="'+c.id+'">' + window.__vistaNotaSesion(c.id, cont) + '</div>'
+              +   '<div data-nota-edit="'+c.id+'" class="hidden" style="margin-top:6px;">'
+              +     '<textarea data-nota-input="'+c.id+'" rows="3" style="width:100%;background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;color:#e2e8f0;font-size:13px;outline:none;resize:vertical;box-sizing:border-box;font-family:inherit;line-height:1.5;" placeholder="Lo que quieres recordar de esta sesión...">'+_esc(cont)+'</textarea>'
+              +     '<div style="display:flex;gap:8px;align-items:center;margin-top:6px;"><button onclick="guardarNotaSesion(\''+c.id+'\')" style="font-size:12px;font-weight:700;color:#022c22;background:linear-gradient(135deg,#059669,#34d399);border:none;border-radius:9px;padding:6px 14px;cursor:pointer;font-family:Manrope,sans-serif;">Guardar</button><button onclick="cancelarNotaSesion(\''+c.id+'\')" style="font-size:12px;font-weight:600;color:#94a3b8;background:none;border:none;cursor:pointer;">Cancelar</button><span data-nota-ok="'+c.id+'" style="font-size:11px;color:#34d399;"></span></div>'
+              +   '</div>'
+              + '</div>'
               + '</div>'
           }).join('')
         }
       }
     } catch(e) { console.warn('Sesiones anteriores:', e.message) }
+
+    // ── Notas de sesión: ver / añadir / editar (guardan en notas_paciente) ──
+    window.editarNotaSesion = function(id){
+      var v=document.querySelector('[data-nota-view="'+id+'"]'); var e=document.querySelector('[data-nota-edit="'+id+'"]');
+      if(v) v.classList.add('hidden'); if(e){ e.classList.remove('hidden'); var t=e.querySelector('[data-nota-input="'+id+'"]'); if(t) t.focus(); }
+    }
+    window.cancelarNotaSesion = function(id){
+      var v=document.querySelector('[data-nota-view="'+id+'"]'); var e=document.querySelector('[data-nota-edit="'+id+'"]');
+      if(e) e.classList.add('hidden'); if(v) v.classList.remove('hidden');
+    }
+    window.guardarNotaSesion = async function(id){
+      var pacId = window.__pacIdSesiones; if(!pacId) return;
+      var t=document.querySelector('[data-nota-input="'+id+'"]'); var val=t?t.value:'';
+      var ok=document.querySelector('[data-nota-ok="'+id+'"]');
+      var map=window.__notasSesionMap||{};
+      try{
+        var existing=map[id];
+        if(existing){
+          await supabase.from('notas_paciente').update({ contenido:val, updated_at:new Date().toISOString() }).eq('id',existing.id);
+          existing.contenido=val;
+        } else {
+          var cli=null; try{ var cr=await supabase.from('citas').select('clinica_id').eq('id',id).maybeSingle(); cli=cr.data?cr.data.clinica_id:null; }catch(_){}
+          var ins=await supabase.from('notas_paciente').insert({ paciente_id:pacId, cita_id:id, clinica_id:cli, contenido:val }).select('id').single();
+          if(ins.data){ map[id]={ id:ins.data.id, cita_id:id, contenido:val }; }
+        }
+        var view=document.querySelector('[data-nota-view="'+id+'"]');
+        if(view && window.__vistaNotaSesion) view.innerHTML=window.__vistaNotaSesion(id, val);
+        if(ok){ ok.textContent='✓ Guardado'; setTimeout(function(){ if(ok) ok.textContent=''; },2000); }
+        window.cancelarNotaSesion(id);
+      }catch(e){ if(ok){ ok.textContent='Error al guardar'; } }
+    }
 
     const { notas, informes } = await obtenerDocumentosCompartidos()
 
