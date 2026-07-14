@@ -12,14 +12,15 @@
     if (crisis) {
       document.querySelectorAll('[data-crisis]').forEach(function (a) {
         a.setAttribute('href', 'tel:' + limpiar(crisis));
-        a.querySelectorAll('[data-crisis-num]').forEach(function (n) { n.textContent = crisis; });
       });
+      // Números (dentro de enlaces o sueltos en texto informativo)
+      document.querySelectorAll('[data-crisis-num]').forEach(function (n) { n.textContent = crisis; });
     }
     if (emerg) {
       document.querySelectorAll('[data-emergency]').forEach(function (a) {
         a.setAttribute('href', 'tel:' + limpiar(emerg));
-        a.querySelectorAll('[data-emergency-num]').forEach(function (n) { n.textContent = emerg; });
       });
+      document.querySelectorAll('[data-emergency-num]').forEach(function (n) { n.textContent = emerg; });
     }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', aplicar);

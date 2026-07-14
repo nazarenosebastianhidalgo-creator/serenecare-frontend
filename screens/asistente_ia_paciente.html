@@ -129,29 +129,19 @@ html.light .hover\:bg-white\/5:hover,html.light .hover\:bg-white\/8:hover{backgr
 
     <!-- Historial de conversaciones (lateral) -->
     <aside class="w-64 flex flex-col border-r border-slate-800/30 p-4 overflow-y-auto flex-shrink-0" style="background:#0a1628;">
-      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Conversaciones</p>
-      <div class="space-y-1">
-        <div class="flex flex-col gap-0.5 p-3 rounded-xl cursor-pointer" style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);">
-          <span class="font-headline font-semibold text-xs" style="color:#34d399;">Asistente Terapéutico IA</span>
-          <span class="text-[10px] text-slate-400">Activa ahora</span>
+      <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2">Tus contactos</p>
+      <div class="space-y-1" id="convs">
+        <!-- Asistente IA (siempre) -->
+        <div class="flex items-center gap-2.5 p-3 rounded-xl" style="background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.15);"><span class="material-symbols-outlined text-base" style="color:#34d399;">auto_awesome</span></div>
+          <div class="min-w-0"><span class="font-headline font-semibold text-xs block truncate" style="color:#34d399;">Asistente IA</span><span class="text-[10px] text-slate-400">Apoyo entre sesiones</span></div>
         </div>
-        <div class="flex flex-col gap-0.5 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
-          <span class="font-headline font-semibold text-xs text-slate-300">Reflexión Diaria</span>
-          <span class="text-[10px] text-slate-500">Ayer</span>
-        </div>
-        <div class="flex flex-col gap-0.5 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
-          <span class="font-headline font-semibold text-xs text-slate-300">Higiene del Sueño</span>
-          <span class="text-[10px] text-slate-500">Hace 3 días</span>
-        </div>
-        <div class="flex flex-col gap-0.5 p-3 rounded-xl cursor-pointer hover:bg-white/5 transition-colors">
-          <span class="font-headline font-semibold text-xs text-slate-300">Equilibrio Vida-Trabajo</span>
-          <span class="text-[10px] text-slate-500">12 oct</span>
-        </div>
+        <!-- Profesionales reales (se rellenan por JS) -->
       </div>
       <div class="mt-auto p-3 rounded-xl" style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.1);">
         <p class="text-[10px] text-slate-400 leading-relaxed">
           <span class="font-bold block mb-0.5" style="color:#f87171;">Apoyo de Emergencia</span>
-          Si estás en crisis, llama al <strong class="text-white">024</strong> (España) o <strong class="text-white">135</strong> (Argentina).
+          Si estás en crisis, llama al <strong class="text-white" data-crisis-num>024</strong> · Emergencias <strong class="text-white" data-emergency-num>112</strong>.
         </p>
       </div>
     </aside>
@@ -166,7 +156,7 @@ html.light .hover\:bg-white\/5:hover,html.light .hover\:bg-white\/8:hover{backgr
           <span class="material-symbols-outlined text-slate-400 text-lg">schedule</span>
           <p class="text-sm text-slate-300 font-semibold">Tu acompañante IA estará disponible <span style="color:#34d399;">próximamente</span></p>
         </div>
-        <p class="text-[10px] text-center text-slate-600 mt-2">Mientras tanto, habla con tu psicólogo. En emergencias: 024 (España) / 135 (Argentina).</p>
+        <p class="text-[10px] text-center text-slate-600 mt-2">Mientras tanto, habla con tu psicólogo. En crisis: <span data-crisis-num>024</span> · Emergencias <span data-emergency-num>112</span>.</p>
       </div>
     </div>
 
@@ -180,14 +170,15 @@ html.light .hover\:bg-white\/5:hover,html.light .hover\:bg-white\/8:hover{backgr
         <p class="text-xs text-slate-400 italic leading-relaxed mb-2">"No tienes que ver toda la escalera, solo da el primer paso."</p>
         <span class="text-[10px] font-bold uppercase tracking-tighter text-slate-500">— Martin Luther King Jr.</span>
       </div>
-      <div class="p-4 rounded-2xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
-        <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Meta de Enfoque</h4>
-        <div class="flex justify-between text-xs font-bold text-white mb-1.5">
-          <span>Calma</span><span>75%</span>
+      <div class="p-4 rounded-2xl" style="background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.15);">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-base" style="color:#34d399;font-variation-settings:'FILL' 1;">forum</span>
+          <h4 class="font-headline font-bold text-white text-sm">¿Necesitas hablar?</h4>
         </div>
-        <div class="h-1.5 w-full rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06);">
-          <div class="h-full rounded-full" style="width:75%;background:#34d399;"></div>
-        </div>
+        <p class="text-xs text-slate-400 leading-relaxed mb-3">Tu psicólogo está a un mensaje. Escríbele cuando lo necesites.</p>
+        <a href="mensajeria.html" class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-xl" style="background:rgba(52,211,153,0.12);color:#34d399;border:1px solid rgba(52,211,153,0.2);text-decoration:none;">
+          <span class="material-symbols-outlined text-sm">chat</span>Escribir a mi psicólogo
+        </a>
       </div>
     </aside>
   </div>
@@ -273,11 +264,39 @@ document.getElementById('input-msg').addEventListener('keydown', function(e) {
       </div>
       <h3 class="text-lg font-bold text-white font-headline">Tu acompañante IA llega pronto</h3>
       <p class="text-sm text-slate-400" style="max-width:24rem;">Estamos preparando un acompañante de apoyo emocional seguro y supervisado. Estará disponible muy pronto.</p>
-      <p class="text-xs text-slate-600">Mientras tanto, habla con tu psicólogo. En emergencias: 024 (España) / 135 (Argentina).</p>
+      <p class="text-xs text-slate-600">Mientras tanto, habla con tu psicólogo. En crisis: <span data-crisis-num>024</span> · Emergencias <span data-emergency-num>112</span>.</p>
     </div>`
 
   window.enviar = function() { /* desactivado: feature en desarrollo */ }
   document.querySelectorAll('[data-sugerencia]').forEach(btn => { btn.style.display = 'none' })
+
+  // Contactos reales: el psicólogo que atiende al paciente (o el admin de la clínica si no hay)
+  try {
+    const { data: pac } = await supabase.from('pacientes').select('id, clinica_id').eq('usuario_id', session.user.id).maybeSingle()
+    const convs = document.getElementById('convs')
+    if (pac && convs) {
+      let contactos = []
+      const { data: cts } = await supabase.from('citas').select('psicologo_id').eq('paciente_id', pac.id).not('psicologo_id', 'is', null).order('fecha', { ascending: false })
+      const psiIds = Array.from(new Set((cts || []).map(c => c.psicologo_id))).slice(0, 5)
+      if (psiIds.length) {
+        // El paciente puede leer usuarios (no psicologos por RLS) → resolvemos el nombre ahí
+        const { data: psis } = await supabase.from('usuarios').select('id, nombre, apellido').in('id', psiIds)
+        contactos = (psis || []).map(p => ({ nombre: ((p.nombre || '') + ' ' + (p.apellido || '')).trim() || 'Tu psicólogo', rol: 'Psicólogo/a' }))
+        if (!contactos.length) contactos = [{ nombre: 'Tu psicólogo', rol: 'Psicólogo/a' }]  // tiene psicólogo aunque el nombre no cargue
+      }
+      if (!contactos.length && pac.clinica_id) {
+        const { data: adm } = await supabase.from('usuarios').select('nombre, apellido').eq('clinica_id', pac.clinica_id).eq('rol', 'admin_clinica').eq('activo', true).limit(1)
+        if (adm && adm.length) contactos = [{ nombre: ((adm[0].nombre || '') + ' ' + (adm[0].apellido || '')).trim() || 'Tu clínica', rol: 'Administración' }]
+      }
+      const esc = function(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c] }) }
+      convs.insertAdjacentHTML('beforeend', contactos.map(function(c){
+        const ini = (c.nombre || '?').split(' ').map(function(w){ return w[0] || '' }).slice(0, 2).join('').toUpperCase() || '?'
+        return '<a href="mensajeria.html" class="flex items-center gap-2.5 p-3 rounded-xl hover:bg-white/5 transition-colors" style="text-decoration:none;">'
+          + '<div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-[10px] font-bold" style="background:rgba(96,165,250,0.18);color:#60a5fa;">' + ini + '</div>'
+          + '<div class="min-w-0"><span class="font-headline font-semibold text-xs text-slate-200 block truncate">' + esc(c.nombre) + '</span><span class="text-[10px] text-slate-500">' + c.rol + '</span></div></a>'
+      }).join(''))
+    }
+  } catch(e) { console.warn('Contactos:', e.message) }
 </script>
 
 <!-- APPS OVERLAY -->
