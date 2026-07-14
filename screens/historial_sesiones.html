@@ -134,62 +134,7 @@ html.light .sesion-row:hover{background:#f8fafc!important;border-color:#cbd5e1!i
             <span class="material-symbols-outlined text-lg" style="color:#34d399;">calendar_month</span>
             Sesiones Anteriores
           </h2>
-          <div class="space-y-3" id="lista-sesiones">
-            <!-- Sesión 1 -->
-            <div class="sesion-row flex flex-wrap md:flex-nowrap items-center gap-5">
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.12);">
-                <span class="material-symbols-outlined" style="color:#34d399;">psychiatry</span>
-              </div>
-              <div class="flex-1">
-                <h3 class="font-bold text-white">Tu psicólogo</h3>
-                <p class="text-slate-400 text-sm flex items-center gap-1 mt-0.5">
-                  <span class="material-symbols-outlined text-xs">calendar_today</span> 24 oct, 2023 • 50 min
-                </p>
-              </div>
-              <div class="flex gap-2">
-                <button onclick="mostrarToast('Notas clínicas — próximamente')" class="px-4 py-2 rounded-xl text-sm font-bold transition-all" style="background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.08);">Ver Notas</button>
-                <button onclick="mostrarToast('Resumen — próximamente')" class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition-all" style="background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.25);">
-                  <span class="material-symbols-outlined text-sm">summarize</span> Resumen
-                </button>
-              </div>
-            </div>
-            <!-- Sesión 2 -->
-            <div class="sesion-row flex flex-wrap md:flex-nowrap items-center gap-5">
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(129,140,248,0.12);">
-                <span class="material-symbols-outlined" style="color:#818cf8;">spa</span>
-              </div>
-              <div class="flex-1">
-                <h3 class="font-bold text-white">Tu psicólogo</h3>
-                <p class="text-slate-400 text-sm flex items-center gap-1 mt-0.5">
-                  <span class="material-symbols-outlined text-xs">calendar_today</span> 10 oct, 2023 • 45 min
-                </p>
-              </div>
-              <div class="flex gap-2">
-                <button onclick="mostrarToast('Notas clínicas — próximamente')" class="px-4 py-2 rounded-xl text-sm font-bold transition-all" style="background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.08);">Ver Notas</button>
-                <button onclick="mostrarToast('Resumen — próximamente')" class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition-all" style="background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.25);">
-                  <span class="material-symbols-outlined text-sm">summarize</span> Resumen
-                </button>
-              </div>
-            </div>
-            <!-- Sesión 3 -->
-            <div class="sesion-row flex flex-wrap md:flex-nowrap items-center gap-5">
-              <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(251,191,36,0.12);">
-                <span class="material-symbols-outlined" style="color:#fbbf24;">self_improvement</span>
-              </div>
-              <div class="flex-1">
-                <h3 class="font-bold text-white">Taller: Resiliencia Consciente</h3>
-                <p class="text-slate-400 text-sm flex items-center gap-1 mt-0.5">
-                  <span class="material-symbols-outlined text-xs">calendar_today</span> 28 sep, 2023 • 90 min
-                </p>
-              </div>
-              <div class="flex gap-2">
-                <button onclick="mostrarToast('Repetición — próximamente')" class="px-4 py-2 rounded-xl text-sm font-bold transition-all" style="background:rgba(255,255,255,0.05);color:#94a3b8;border:1px solid rgba(255,255,255,0.08);">Repetición</button>
-                <button onclick="mostrarToast('Resumen — próximamente')" class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-1.5 transition-all" style="background:rgba(52,211,153,0.15);color:#34d399;border:1px solid rgba(52,211,153,0.25);">
-                  <span class="material-symbols-outlined text-sm">summarize</span> Resumen
-                </button>
-              </div>
-            </div>
-          </div>
+          <div class="space-y-3" id="lista-sesiones"></div>
         </div>
 
         <!-- Documentos compartidos -->
@@ -199,26 +144,7 @@ html.light .sesion-row:hover{background:#f8fafc!important;border-color:#cbd5e1!i
             Documentos Compartidos
           </h2>
           <div id="lista-documentos" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="card rounded-2xl p-5 flex items-center gap-4 cursor-pointer group hover:bg-white/5 transition-all">
-              <div class="p-3 rounded-xl" style="background:rgba(239,68,68,0.12);">
-                <span class="material-symbols-outlined text-2xl" style="color:#f87171;">picture_as_pdf</span>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="font-bold text-white truncate">Informe de Progreso T3</h4>
-                <p class="text-xs text-slate-500">Compartido por tu psicólogo • 2MB</p>
-              </div>
-              <span class="material-symbols-outlined text-slate-600 group-hover:text-slate-300 transition-colors">download</span>
-            </div>
-            <div class="card rounded-2xl p-5 flex items-center gap-4 cursor-pointer group hover:bg-white/5 transition-all">
-              <div class="p-3 rounded-xl" style="background:rgba(239,68,68,0.12);">
-                <span class="material-symbols-outlined text-2xl" style="color:#f87171;">picture_as_pdf</span>
-              </div>
-              <div class="flex-1 min-w-0">
-                <h4 class="font-bold text-white truncate">Evaluación Inicial</h4>
-                <p class="text-xs text-slate-500">12 ago, 2023 • 1.4MB</p>
-              </div>
-              <span class="material-symbols-outlined text-slate-600 group-hover:text-slate-300 transition-colors">download</span>
-            </div>
+            <p class="text-slate-500 text-sm col-span-2" style="padding:0.5rem 0;">Aquí verás los documentos y recursos que te comparta tu psicólogo.</p>
           </div>
         </div>
       </div>
@@ -319,6 +245,47 @@ function mostrarToast(msg) {
 
   try {
     if (modoDemo) { mostrarError('Conectá tu cuenta para ver tus sesiones y documentos.'); throw new Error() }
+
+    // Sesiones anteriores REALES (citas pasadas del paciente)
+    try {
+      const { data: _pac } = await supabase.from('pacientes').select('id').eq('usuario_id', session.user.id).maybeSingle()
+      const _hoy = new Date().toISOString().split('T')[0]
+      let _citas = []
+      if (_pac) {
+        const r = await supabase.from('citas')
+          .select('fecha, hora_inicio, tipo, estado, psicologo_id')
+          .eq('paciente_id', _pac.id).lt('fecha', _hoy).neq('estado', 'cancelada')
+          .order('fecha', { ascending: false }).limit(50)
+        _citas = r.data || []
+      }
+      const _ps = {}
+      const _pids = Array.from(new Set(_citas.map(function(c){ return c.psicologo_id }).filter(Boolean)))
+      if (_pids.length) {
+        const { data: _psi } = await supabase.from('psicologos').select('id, nombre').in('id', _pids)
+        ;(_psi || []).forEach(function(p){ _ps[p.id] = p.nombre })
+      }
+      const _contS = document.getElementById('lista-sesiones')
+      if (_contS) {
+        if (!_citas.length) {
+          _contS.innerHTML = '<p class="text-slate-500 text-sm" style="padding:0.5rem 0;">Aún no tienes sesiones anteriores.</p>'
+        } else {
+          const _mes = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']
+          _contS.innerHTML = _citas.map(function(c){
+            const p = (c.fecha || '').split('-')
+            const fechaTxt = p.length === 3 ? (parseInt(p[2],10) + ' ' + _mes[parseInt(p[1],10)-1] + ', ' + p[0]) : (c.fecha || '')
+            const online = (c.tipo === 'online' || c.tipo === 'telemedicina')
+            const ps = _ps[c.psicologo_id] || 'Tu psicólogo'
+            const hora = (c.hora_inicio || '').slice(0,5)
+            return '<div class="sesion-row flex flex-wrap md:flex-nowrap items-center gap-5">'
+              + '<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(52,211,153,0.12);"><span class="material-symbols-outlined" style="color:#34d399;">psychiatry</span></div>'
+              + '<div class="flex-1"><h3 class="font-bold text-white">' + ps + '</h3>'
+              + '<p class="text-slate-400 text-sm flex items-center gap-1 mt-0.5"><span class="material-symbols-outlined text-xs">calendar_today</span> ' + fechaTxt + (hora ? ' • ' + hora : '') + ' • ' + (online ? 'Online' : 'Presencial') + '</p></div>'
+              + '</div>'
+          }).join('')
+        }
+      }
+    } catch(e) { console.warn('Sesiones anteriores:', e.message) }
+
     const { notas, informes } = await obtenerDocumentosCompartidos()
 
     // Recursos asignados por el terapeuta
