@@ -390,6 +390,17 @@
         </div>
       </div>
 
+      <!-- Feedback de sesiones (⭐ + ánimo + comentario del paciente) -->
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+          <span class="material-symbols-outlined" style="font-size:14px;color:#fbbf24;">reviews</span>
+          <p class="section-label" style="margin-bottom:0;">Feedback de sesiones</p>
+        </div>
+        <div id="feedback-lista" class="flex flex-col gap-2">
+          <div style="text-align:center;padding:16px 0;"><span style="font-size:11px;color:#475569;">Cargando...</span></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </main>
@@ -1002,6 +1013,32 @@ function sevDe(e) {
   return e.tipo === 'GAD-7' ? severidadGAD7(e.puntaje) : severidadPHQ9(e.puntaje);
 }
 
+window.renderFeedback = function(lista) {
+  var el = document.getElementById('feedback-lista');
+  if (!el) return;
+  if (!lista || !lista.length) {
+    el.innerHTML = '<p style="font-size:11px;color:#475569;text-align:center;padding:12px 0;">Sin feedback de sesiones todavía</p>';
+    return;
+  }
+  el.innerHTML = lista.map(function(e) {
+    var ans = (e.respuestas && e.respuestas.answers) || {};
+    var estrellas = e.puntaje != null ? e.puntaje : (ans.puntaje || 0);
+    var animo = ans.estado_animo || '';
+    var coment = (ans.comentario || '').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    var fecha = e.created_at ? new Date(e.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}) : '';
+    var stars = '';
+    for (var i=1;i<=5;i++){ stars += '<span class="material-symbols-outlined" style="font-size:15px;color:'+(i<=estrellas?'#fbbf24':'#334155')+';font-variation-settings:\'FILL\' 1;">star</span>'; }
+    return '<div style="padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);">'
+      + '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">'
+      +   '<div style="display:flex;align-items:center;gap:1px;">'+stars+'</div>'
+      +   (animo ? '<span style="font-size:10px;font-weight:700;color:#a78bfa;background:rgba(167,139,250,0.12);padding:2px 8px;border-radius:99px;">'+animo+'</span>' : '')
+      + '</div>'
+      + (coment ? '<p style="font-size:12px;color:#cbd5e1;line-height:1.45;margin:6px 0 4px;">“'+coment+'”</p>' : '<div style="height:4px;"></div>')
+      + '<p style="font-size:10px;color:#475569;margin:0;">'+fecha+'</p>'
+      + '</div>';
+  }).join('');
+};
+
 window.renderEvaluaciones = function(lista) {
   var el = document.getElementById('evaluaciones-lista');
   if (!lista || !lista.length) {
@@ -1097,7 +1134,7 @@ window.enviarSolicitudEscala = async function(tipo) {
   if (window.renderOpcionesEscalas) window.renderOpcionesEscalas(escalas || []);
 })();
 
-if (!pacienteId || pacienteId === 'demo') { window.renderEvaluaciones([]); }
+if (!pacienteId || pacienteId === 'demo') { window.renderEvaluaciones([]); window.renderFeedback([]); }
 
 else {
   try {
@@ -1255,10 +1292,14 @@ else {
       }
     }
 
-    window.renderEvaluaciones(evals || []);
+    // El feedback de sesión NO es una escala clínica: va a su propia sección
+    const _todas = evals || [];
+    window.renderEvaluaciones(_todas.filter(function(e){ return e.tipo !== 'feedback_sesion'; }));
+    window.renderFeedback(_todas.filter(function(e){ return e.tipo === 'feedback_sesion'; }));
   } catch(e) {
     console.warn('Error cargando ficha:', e.message);
     window.renderEvaluaciones([]);
+    window.renderFeedback([]);
   }
 }
 </script>

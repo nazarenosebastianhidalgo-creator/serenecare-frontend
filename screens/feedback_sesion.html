@@ -268,11 +268,14 @@ function votarEstrella(n) {
 
     btnEnviar?.addEventListener('click', async () => {
       const comentario = document.querySelector('textarea')?.value || ''
+      // Emoción elegida (calma / aliviado / reflexivo / cansado / esperanzado / desafiante)
+      const moodEl = document.querySelector('.mood-btn.selected')
+      const estado_animo = moodEl ? (moodEl.querySelector('span:last-child')?.textContent || '').trim() : ''
       setBotonCargando(btnEnviar, true)
       try {
         await guardarEvaluacion({
           tipo: 'feedback_sesion',
-          respuestas: { puntaje, comentario },
+          respuestas: { puntaje, comentario, estado_animo },
           puntaje,
         })
         const ok = document.getElementById('success-msg')

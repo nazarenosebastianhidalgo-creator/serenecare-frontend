@@ -186,6 +186,7 @@ export async function guardarEvaluacion({ tipo, respuestas, puntaje, severidad }
     puntuacion:  puntaje,   // la tabla tiene ambas columnas; las mantenemos en sync
   }
   if (severidad) fila.severidad = severidad
+  if (paciente.psicologo_id) fila.psicologo_id = paciente.psicologo_id  // atribuir al psicólogo del paciente
   const { error } = await supabase.from('evaluaciones').insert(fila)
   if (error) throw new Error('No se pudo guardar la evaluación.')
 }
