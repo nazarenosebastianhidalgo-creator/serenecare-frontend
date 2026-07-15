@@ -201,25 +201,6 @@
     </div>
   </section>
 
-  <!-- REACCIONES -->
-  <div id="emoji-popup" style="position:fixed;bottom:96px;left:50%;transform:translateX(-50%);z-index:200;display:none;gap:8px;background:rgba(2,6,23,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:99px;padding:8px 16px;">
-    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('👍')">👍</span>
-    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('❤️')">❤️</span>
-    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('😊')">😊</span>
-    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('🙏')">🙏</span>
-    <span style="font-size:22px;cursor:pointer;" onclick="reaccionar('👋')">👋</span>
-  </div>
-  <div id="reaccion-float" style="position:fixed;bottom:160px;left:50%;transform:translateX(-50%);font-size:52px;display:none;pointer-events:none;z-index:300;animation:floatUp 1.8s forwards;"></div>
-  <style>@keyframes floatUp{0%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-80px)}}</style>
-
-  <!-- MÁS OPCIONES dropdown -->
-  <div id="mas-opciones" style="position:fixed;bottom:96px;right:24px;z-index:200;display:none;background:rgba(10,15,28,0.95);border:1px solid rgba(255,255,255,0.1);border-radius:16px;overflow:hidden;min-width:190px;box-shadow:0 12px 40px rgba(0,0,0,0.5);">
-    <button onclick="compartirPantallaP()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">screen_share</span>Compartir pantalla</button>
-    <button onclick="switchPanelP('notas');cerrarMasOpciones()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">description</span>Mis notas</button>
-    <button onclick="abrirChatFlotante();cerrarMasOpciones()" class="w-full px-4 py-3 text-left text-sm text-slate-300 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-400">forum</span>Mensajes</button>
-    <div style="border-top:1px solid rgba(255,255,255,0.06);"></div>
-    <button onclick="reportarProblema()" class="w-full px-4 py-3 text-left text-sm text-slate-400 hover:bg-white/5 flex items-center gap-3"><span class="material-symbols-outlined text-base text-slate-500">flag</span>Reportar problema</button>
-  </div>
 </main>
 
 <!-- WIDGET CHAT FLOTANTE (con el psicólogo) -->
@@ -255,12 +236,6 @@
       <span id="screen-icon-p" class="material-symbols-outlined text-slate-300">screen_share</span>
     </button>
     <div class="w-px h-6 bg-slate-800 mx-1"></div>
-    <button onclick="toggleEmojis()" class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Reacción">
-      <span class="material-symbols-outlined text-slate-300">mood</span>
-    </button>
-    <button onclick="toggleMasOpciones()" class="w-11 h-11 rounded-full flex items-center justify-center transition-all" style="background:rgba(255,255,255,0.06);" title="Más opciones">
-      <span class="material-symbols-outlined text-slate-300">more_horiz</span>
-    </button>
     <button id="btn-finalizar" class="h-11 px-6 rounded-full font-bold text-sm flex items-center gap-2 transition-all ml-2" style="background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3);" onmouseover="this.style.background='rgba(239,68,68,0.7)';this.style.color='white'" onmouseout="this.style.background='rgba(239,68,68,0.15)';this.style.color='#f87171'">
       <span class="material-symbols-outlined">call_end</span>
       Finalizar
@@ -403,7 +378,6 @@ window.toggleRuido = function() {
 // ── COMPARTIR PANTALLA ──
 var _screenStreamP=null;
 window.compartirPantallaP = async function() {
-  cerrarMasOpciones();
   if(_screenStreamP){
     _screenStreamP.getTracks().forEach(function(t){t.stop();}); _screenStreamP=null;
     document.getElementById('btn-screen-p').style.background='rgba(255,255,255,0.06)';
@@ -423,31 +397,6 @@ window.compartirPantallaP = async function() {
     };
   } catch(e){}
 };
-
-// ── REACCIONES ──
-var _emojisOpen=false;
-window.toggleEmojis=function(){
-  _emojisOpen=!_emojisOpen;
-  document.getElementById('emoji-popup').style.display=_emojisOpen?'flex':'none';
-  cerrarMasOpciones();
-};
-window.reaccionar=function(emoji){
-  _emojisOpen=false; document.getElementById('emoji-popup').style.display='none';
-  var el=document.getElementById('reaccion-float');
-  el.textContent=emoji; el.style.display='block';
-  el.style.animation='none'; void el.offsetWidth; el.style.animation='floatUp 1.8s forwards';
-  setTimeout(function(){el.style.display='none';},1800);
-};
-
-// ── MÁS OPCIONES ──
-var _masOpen=false;
-window.toggleMasOpciones=function(){_masOpen=!_masOpen;document.getElementById('mas-opciones').style.display=_masOpen?'block':'none';if(_masOpen&&_emojisOpen){_emojisOpen=false;document.getElementById('emoji-popup').style.display='none';}};
-window.cerrarMasOpciones=function(){_masOpen=false;document.getElementById('mas-opciones').style.display='none';};
-window.reportarProblema=function(){cerrarMasOpciones();alert('Problema reportado. Tu clínica ha sido notificada.');};
-document.addEventListener('click',function(e){
-  if(_masOpen&&!document.getElementById('mas-opciones').contains(e.target)&&e.target.title!=='Más opciones') cerrarMasOpciones();
-  if(_emojisOpen&&!document.getElementById('emoji-popup').contains(e.target)&&e.target.title!=='Reacción') {_emojisOpen=false;document.getElementById('emoji-popup').style.display='none';}
-});
 
 // ── FINALIZAR ──
 function finalizarSesion() {
