@@ -376,13 +376,7 @@ var SOAP_PENDIENTES = [
   { paciente:'Miguel Torres', sesion:'Hoy · 10:00',    urgencia:'alta',  av:'MT', color:'#60a5fa' },
   { paciente:'Marco Ibáñez',  sesion:'5 mayo · 16:00', urgencia:'media', av:'MI', color:'#94a3b8' },
 ];
-var PACIENTES_RECIENTES = [
-  { nombre:'Carlos Ruiz',    info:'Próxima: hoy 11:30', av:'CR', color:'#fbbf24' },
-  { nombre:'Laura Pérez',    info:'Última: hoy 9:00',   av:'LP', color:'#2dd4bf' },
-  { nombre:'Miguel Torres',  info:'Última: hoy 10:00',  av:'MT', color:'#60a5fa' },
-  { nombre:'Sofía Mendez',   info:'Última: ayer 14:00', av:'SM', color:'#f472b6' },
-  { nombre:'Patricia Vidal', info:'Hace 7 días',         av:'PV', color:'#fb923c' },
-];
+var PACIENTES_RECIENTES = [];   // se llena con los reales desde la BD (módulo)
 var NOTIFS_PSI = [
   { icon:'event_busy',      color:'#f87171', msg:'Beatriz Torres canceló su cita de 16:00',        hora:'Hace 5 min', leida:false },
   { icon:'pending_actions', color:'#fbbf24', msg:'Nota SOAP de Miguel Torres sin completar',       hora:'Hace 2 h',   leida:false },
@@ -414,6 +408,7 @@ function renderSoap(){
 }
 
 function renderPacientes(){
+  if(!PACIENTES_RECIENTES.length){ document.getElementById('lista-pacientes').innerHTML='<p style="font-size:11px;color:#475569;text-align:center;padding:14px 0;">Aún no tienes pacientes.</p>'; return; }
   document.getElementById('lista-pacientes').innerHTML=PACIENTES_RECIENTES.map(function(p){
     return '<a href="pacientes_psicologo.html" class="paciente-row"><div style="width:30px;height:30px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:'+hexRgba(p.color,0.15)+';color:'+p.color+';">'+p.av+'</div><div style="flex:1;min-width:0;"><p style="font-size:12px;font-weight:700;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+p.nombre+'</p><p style="font-size:10px;color:#475569;">'+p.info+'</p></div><span class="material-symbols-outlined" style="font-size:14px;color:#334155;flex-shrink:0;">chevron_right</span></a>';
   }).join('');
