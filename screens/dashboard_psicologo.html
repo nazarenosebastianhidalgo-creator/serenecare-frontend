@@ -124,7 +124,7 @@
       <p id="fecha-hoy" class="text-slate-500 text-xs capitalize"></p>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="mostrarToast('Módulo nueva cita — próximamente')" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">
+      <button onclick="abrirNuevaCita()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">
         <span class="material-symbols-outlined text-base">add</span>
         Nueva cita
       </button>
@@ -702,6 +702,48 @@ window.cwEnviar=function(){
 </div>
 
 <!-- MODAL FEEDBACK MEJORAS -->
+<!-- MODAL NUEVA CITA (psicólogo agenda para sí mismo) -->
+<div id="modal-nueva-cita" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(2,6,23,0.88);backdrop-filter:blur(14px);align-items:center;justify-content:center;">
+  <div style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:24px;width:100%;max-width:420px;margin:1rem;box-shadow:0 40px 80px rgba(0,0,0,0.6);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:12px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-symbols-outlined" style="font-size:18px;color:#a78bfa;">event</span></div>
+        <p style="font-family:Manrope,sans-serif;font-size:16px;font-weight:800;color:#f1f5f9;margin:0;">Nueva cita</p>
+      </div>
+      <button onclick="cerrarNuevaCita()" style="background:none;border:none;cursor:pointer;color:#475569;padding:4px;"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Paciente</label>
+        <select id="nc-pac" class="w-full rounded-xl px-3 py-2.5 text-sm text-slate-200" style="background:#0a1424;border:1px solid rgba(255,255,255,0.1);"><option value="">Elige paciente…</option></select>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <div style="flex:1;">
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Fecha</label>
+          <input id="nc-fecha" type="date" class="w-full rounded-xl px-3 py-2.5 text-sm text-slate-200" style="background:#0a1424;border:1px solid rgba(255,255,255,0.1);"/>
+        </div>
+        <div style="flex:1;">
+          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Hora</label>
+          <select id="nc-hora" class="w-full rounded-xl px-3 py-2.5 text-sm text-slate-200" style="background:#0a1424;border:1px solid rgba(255,255,255,0.1);">
+            <option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option><option>12:00</option><option>12:30</option><option>15:00</option><option>15:30</option><option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option><option>18:00</option><option>18:30</option><option>19:00</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Tipo</label>
+        <select id="nc-tipo" class="w-full rounded-xl px-3 py-2.5 text-sm text-slate-200" style="background:#0a1424;border:1px solid rgba(255,255,255,0.1);">
+          <option value="individual">Presencial</option>
+          <option value="online">Online (videollamada)</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button onclick="cerrarNuevaCita()" style="flex:1;padding:11px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#475569;font-weight:700;font-size:13px;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
+      <button onclick="guardarNuevaCitaPsi()" style="flex:2;padding:11px;border-radius:12px;background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.35);color:#a78bfa;font-weight:800;font-size:13px;cursor:pointer;font-family:Manrope,sans-serif;">Agendar cita</button>
+    </div>
+  </div>
+</div>
+
 <div id="modal-feedback" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(2,6,23,0.88);backdrop-filter:blur(14px);align-items:center;justify-content:center;">
   <div style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:28px;width:100%;max-width:440px;margin:1rem;box-shadow:0 40px 80px rgba(0,0,0,0.6);">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -826,6 +868,34 @@ window.__enviarSugerencia = async function(s) {
       estado: 'pendiente',
     });
   } catch (e) { console.warn('sugerencia:', e.message); }
+};
+
+// Nueva cita: el psicólogo agenda para sí mismo (antes era un stub "próximamente")
+window.abrirNuevaCita = function() { document.getElementById('modal-nueva-cita').style.display = 'flex'; };
+window.cerrarNuevaCita = function() { document.getElementById('modal-nueva-cita').style.display = 'none'; };
+try {
+  const { data: _pacs } = await supabase.from('pacientes').select('id, nombre, apellido').eq('clinica_id', _perfil.clinica_id).order('nombre');
+  const _sel = document.getElementById('nc-pac');
+  if (_sel) _sel.innerHTML = '<option value="">Elige paciente…</option>' + (_pacs || []).map(p => '<option value="' + p.id + '">' + ((p.nombre || '') + ' ' + (p.apellido || '')).trim() + '</option>').join('');
+} catch (_) {}
+window.guardarNuevaCitaPsi = async function() {
+  const pacId = document.getElementById('nc-pac').value;
+  const fecha = document.getElementById('nc-fecha').value;
+  const hora  = document.getElementById('nc-hora').value;
+  const tipo  = document.getElementById('nc-tipo').value;
+  if (!pacId || !fecha || !hora) { mostrarToast('Completa paciente, fecha y hora'); return; }
+  const [h, m] = hora.split(':').map(Number); const mins = h * 60 + m + 50;
+  const hFin = String(Math.floor(mins / 60)).padStart(2, '0') + ':' + String(mins % 60).padStart(2, '0');
+  try {
+    const { error } = await supabase.from('citas').insert({
+      clinica_id: _perfil.clinica_id, paciente_id: pacId, psicologo_id: _perfil.id,
+      fecha, hora_inicio: hora, hora_fin: hFin, tipo: tipo || 'individual', estado: 'confirmada',
+    });
+    if (error) throw error;
+    cerrarNuevaCita();
+    mostrarToast('Cita agendada ✓');
+    setTimeout(function () { location.reload(); }, 800);
+  } catch (e) { mostrarToast('No se pudo agendar: ' + (e.message || '')); }
 };
 
 const userId = session.user.id;
