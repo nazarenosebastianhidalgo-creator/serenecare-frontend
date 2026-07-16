@@ -156,14 +156,14 @@
   <div class="p-8">
 
     <!-- Card próxima videollamada -->
-    <div class="mb-6 rounded-2xl p-5 flex items-center justify-between" style="background:linear-gradient(135deg,rgba(74,222,128,0.08),rgba(34,197,94,0.04));border:1px solid rgba(74,222,128,0.2);">
+    <div id="card-videollamada" class="mb-6 rounded-2xl p-5 flex items-center justify-between" style="display:none;background:linear-gradient(135deg,rgba(74,222,128,0.08),rgba(34,197,94,0.04));border:1px solid rgba(74,222,128,0.2);">
       <div class="flex items-center gap-4">
         <div class="w-11 h-11 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);">
           <span class="material-symbols-outlined" style="color:#4ade80;font-size:22px;font-variation-settings:'FILL' 1;">videocam</span>
         </div>
         <div>
           <p class="text-xs font-bold uppercase tracking-widest" style="color:#4ade80;">Próxima videollamada</p>
-          <p class="font-headline font-bold text-white text-sm mt-0.5">Elena Rodríguez <span class="text-slate-400 font-normal">· Hoy 14:30 · Sesión #24</span></p>
+          <p class="font-headline font-bold text-white text-sm mt-0.5" id="vc-nombre"></p>
         </div>
       </div>
       <a href="sala_espera_psicologo.html" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90 active:scale-95" style="background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);text-decoration:none;">
@@ -180,9 +180,9 @@
           <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,0.15);">
             <span class="material-symbols-outlined" style="color:#a78bfa;font-variation-settings:'FILL' 1;">calendar_today</span>
           </div>
-          <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:rgba(20,184,166,0.1);color:#2dd4bf;">+2 vs ayer</span>
+          
         </div>
-        <p class="text-3xl font-extrabold text-white font-headline kpi-val">7</p>
+        <p class="text-3xl font-extrabold text-white font-headline kpi-val">0</p>
         <p class="text-xs text-slate-500 mt-1">Citas hoy</p>
       </div>
 
@@ -191,9 +191,9 @@
           <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(96,165,250,0.15);">
             <span class="material-symbols-outlined" style="color:#60a5fa;font-variation-settings:'FILL' 1;">group</span>
           </div>
-          <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:rgba(96,165,250,0.1);color:#60a5fa;">estable</span>
+          
         </div>
-        <p class="text-3xl font-extrabold text-white font-headline kpi-val">24</p>
+        <p class="text-3xl font-extrabold text-white font-headline kpi-val">0</p>
         <p class="text-xs text-slate-500 mt-1">Pacientes activos</p>
       </div>
 
@@ -202,10 +202,10 @@
           <div class="w-10 h-10 rounded-xl flex items-center justify-center proxima-pulse" style="background:rgba(251,191,36,0.15);">
             <span class="material-symbols-outlined" style="color:#fbbf24;font-variation-settings:'FILL' 1;">schedule</span>
           </div>
-          <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:rgba(139,92,246,0.1);color:#a78bfa;">En 30 min</span>
+          
         </div>
-        <p class="text-3xl font-extrabold text-white font-headline kpi-val">11:30</p>
-        <p class="text-xs text-slate-500 mt-1">Carlos Ruiz · 1Âª consulta</p>
+        <p class="text-3xl font-extrabold text-white font-headline kpi-val">—</p>
+        <p class="text-xs text-slate-500 mt-1">Sin próximas citas</p>
       </div>
 
       <div class="card rounded-2xl p-5">
@@ -213,9 +213,9 @@
           <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:rgba(20,184,166,0.15);">
             <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">insights</span>
           </div>
-          <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:rgba(20,184,166,0.1);color:#2dd4bf;">â†‘ 4 vs ant.</span>
+          
         </div>
-        <p class="text-3xl font-extrabold text-white font-headline kpi-val">19</p>
+        <p class="text-3xl font-extrabold text-white font-headline kpi-val">0</p>
         <p class="text-xs text-slate-500 mt-1">Sesiones esta semana</p>
       </div>
 
@@ -950,6 +950,10 @@ const { data: citas } = await supabase
   .eq('fecha', hoy)
   .order('hora_inicio');
 
+// KPI "Citas hoy" — siempre real, aunque sea 0
+var kpis = document.querySelectorAll('.kpi-val');
+if (kpis[0]) kpis[0].textContent = (citas ? citas.length : 0);
+
 if (citas?.length) {
   CITAS_HOY = citas.map(function(c, i) {
     var [hh, mm] = c.hora_inicio.split(':');
@@ -970,26 +974,38 @@ if (citas?.length) {
   });
   renderCitas();
 
-  // KPI citas hoy
-  var kpis = document.querySelectorAll('.kpi-val');
-  if (kpis[0]) kpis[0].textContent = citas.length;
-
-  // Próxima cita
-  var proxima = citas.find(function(c) {
-    var [hh,mm] = c.hora_inicio.split(':'); return parseInt(hh)*60+parseInt(mm) > minActual;
-  });
-  if (proxima && kpis[2]) {
-    kpis[2].textContent = proxima.hora_inicio.substring(0,5);
-    kpis[2].nextElementSibling.textContent = (proxima.pacientes?.nombre||'') + ' · próxima';
-  }
-
-  // Banner videollamada próxima
-  var proxVideo = citas.find(function(c){ return c.tipo==='telemedicina' && c.estado!=='completada' && c.estado!=='cancelada'; });
-  if (proxVideo) {
-    var bNombre = document.querySelector('[style*="Elena Rodríguez"]');
-    if (bNombre) bNombre.innerHTML = (proxVideo.pacientes?.nombre||'') + ' ' + (proxVideo.pacientes?.apellido||'') + ' <span class="text-slate-400 font-normal">· Hoy ' + proxVideo.hora_inicio.substring(0,5) + '</span>';
+  // Banner "Próxima videollamada": cita online de hoy sin completar
+  var proxVideo = citas.find(function(c){ return ['online','telemedicina','videollamada'].indexOf(c.tipo) >= 0 && c.estado!=='completada' && c.estado!=='cancelada'; });
+  var cardVid = document.getElementById('card-videollamada');
+  if (proxVideo && cardVid) {
+    var vn = document.getElementById('vc-nombre');
+    if (vn) vn.innerHTML = ((proxVideo.pacientes?.nombre||'') + ' ' + (proxVideo.pacientes?.apellido||'')).trim() + ' <span class="text-slate-400 font-normal">· Hoy ' + proxVideo.hora_inicio.substring(0,5) + '</span>';
+    cardVid.style.display = 'flex';
   }
 }
+
+// ── KPI "Próxima cita": la siguiente futura (hoy tras ahora, o próximos días) ──
+try {
+  var { data: _prox } = await supabase.from('citas')
+    .select('fecha, hora_inicio, pacientes(nombre, apellido)')
+    .eq('psicologo_id', userId).neq('estado', 'cancelada')
+    .gte('fecha', hoy).order('fecha').order('hora_inicio').limit(30);
+  var _now = new Date();
+  var proxCita = (_prox || []).find(function(c){
+    return new Date(c.fecha + 'T' + String(c.hora_inicio).substring(0,5) + ':00') > _now;
+  });
+  var kpi2 = document.querySelectorAll('.kpi-val')[2];
+  if (kpi2) {
+    if (proxCita) {
+      kpi2.textContent = proxCita.hora_inicio.substring(0,5);
+      var _cuando = proxCita.fecha === hoy ? 'hoy' : new Date(proxCita.fecha + 'T00:00:00').toLocaleDateString('es-ES', { day:'numeric', month:'short' });
+      if (kpi2.nextElementSibling) kpi2.nextElementSibling.textContent = ((proxCita.pacientes?.nombre||'') + ' ' + (proxCita.pacientes?.apellido||'')).trim() + ' · ' + _cuando;
+    } else {
+      kpi2.textContent = '—';
+      if (kpi2.nextElementSibling) kpi2.nextElementSibling.textContent = 'Sin próximas citas';
+    }
+  }
+} catch(_) {}
 
 // ── Total pacientes ────────────────────────────────────────────
 if (clinicaId) {
@@ -1060,18 +1076,18 @@ if (clinicaId) {
   }
 }
 
-// ── Sesiones esta semana ───────────────────────────────────────
-var lunes = new Date(); lunes.setDate(lunes.getDate() - lunes.getDay() + 1);
+// ── Sesiones esta semana (agendadas, sin canceladas — igual que el gráfico) ──
+var lunes = new Date(); var _wl = lunes.getDay(); lunes.setDate(lunes.getDate() - (_wl === 0 ? 6 : _wl - 1));
 var domingo = new Date(lunes); domingo.setDate(lunes.getDate() + 6);
 var { count: sesSemana } = await supabase
   .from('citas').select('id', { count:'exact', head:true })
   .eq('psicologo_id', userId)
   .gte('fecha', lunes.toISOString().split('T')[0])
   .lte('fecha', domingo.toISOString().split('T')[0])
-  .eq('estado', 'completada');
+  .neq('estado', 'cancelada');
 
-var kpis = document.querySelectorAll('.kpi-val');
-if (kpis[3] && sesSemana !== null) kpis[3].textContent = sesSemana;
+var kpisS = document.querySelectorAll('.kpi-val');
+if (kpisS[3] && sesSemana !== null) kpisS[3].textContent = sesSemana;
 
 // Gráfico "Sesiones por día": conteo REAL por día (lun–dom), semana actual y anterior
 try {
