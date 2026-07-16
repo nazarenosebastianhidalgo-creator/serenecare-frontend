@@ -427,68 +427,36 @@
     <!-- RIGHT PANEL -->
     <div class="flex-shrink-0 flex flex-col gap-4 py-5 pr-6" style="width:280px;">
 
-      <!-- Citas de hoy -->
-      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:1.25rem;flex:1;min-height:0;overflow-y:auto;" class="hide-scrollbar">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-          <h3 style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:800;color:#f1f5f9;">Citas de hoy</h3>
-          <span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);border-radius:20px;padding:2px 8px;">3 sesiones</span>
+            <!-- Tendencia de citas -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:1.25rem;flex:1;min-height:0;display:flex;flex-direction:column;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <h3 style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:800;color:#f1f5f9;">Tendencia de citas</h3>
+          <span id="tend-delta" style="font-size:11px;font-weight:800;padding:2px 9px;border-radius:20px;background:rgba(255,255,255,0.06);color:#64748b;">—</span>
         </div>
-
-        <!-- Cita 1 -->
-        <div class="cita-hoy-row" onclick="window.location.href='telemedicina_psicologo.html?paciente=Elena+Rodríguez'">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:800;color:#a78bfa;font-family:Manrope,sans-serif;">ER</div>
-          <div style="flex:1;min-width:0;">
-            <p style="font-size:10px;font-weight:700;color:#a78bfa;margin-bottom:1px;">14:30 — 15:30</p>
-            <p style="font-size:12px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Elena Rodríguez</p>
-            <p style="font-size:10px;color:#64748b;">Ansiedad generalizada</p>
-          </div>
-          <span class="material-symbols-outlined" style="font-size:16px;color:#334155;flex-shrink:0;">videocam</span>
-        </div>
-
-        <!-- Cita 2 -->
-        <div class="cita-hoy-row" onclick="mostrarToast('Marcos Vidal · 4:00 PM · Terapia Cognitiva')">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(20,184,166,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:800;color:#2dd4bf;font-family:Manrope,sans-serif;">MV</div>
-          <div style="flex:1;min-width:0;">
-            <p style="font-size:10px;font-weight:700;color:#2dd4bf;margin-bottom:1px;">16:00 — 17:00</p>
-            <p style="font-size:12px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Marcos Vidal</p>
-            <p style="font-size:10px;color:#64748b;">Terapia Cognitiva</p>
-          </div>
-          <span class="material-symbols-outlined" style="font-size:16px;color:#334155;flex-shrink:0;">person</span>
-        </div>
-
-        <!-- Cita 3 -->
-        <div class="cita-hoy-row" onclick="mostrarToast('Lucía Ferreyra · 5:30 PM · Sesión de Pareja')">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(245,158,11,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:800;color:#fbbf24;font-family:Manrope,sans-serif;">LF</div>
-          <div style="flex:1;min-width:0;">
-            <p style="font-size:10px;font-weight:700;color:#fbbf24;margin-bottom:1px;">17:30 — 18:30</p>
-            <p style="font-size:12px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Lucía Ferreyra</p>
-            <p style="font-size:10px;color:#64748b;">Sesión de Pareja</p>
-          </div>
-          <span class="material-symbols-outlined" style="font-size:16px;color:#334155;flex-shrink:0;">diversity_3</span>
-        </div>
-
-        <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.05);">
-          <p style="font-size:10px;color:#475569;text-align:center;">Toca una cita para ver detalles</p>
-        </div>
+        <p id="tend-num" style="font-family:Manrope,sans-serif;font-size:1.9rem;font-weight:800;color:#f1f5f9;line-height:1;margin:0;">—</p>
+        <p style="font-size:10px;color:#64748b;margin:2px 0 0;">citas esta semana</p>
+        <div id="tend-chart" style="display:flex;align-items:flex-end;gap:6px;height:72px;margin-top:18px;"></div>
+        <div id="tend-labels" style="display:flex;gap:6px;margin-top:5px;"></div>
+        <p style="font-size:10px;color:#475569;text-align:center;margin-top:auto;padding-top:12px;">Últimas 6 semanas · vs semana anterior</p>
       </div>
 
       <!-- Resumen semana -->
       <div style="border-radius:20px;padding:1.25rem;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(139,92,246,0.2),rgba(109,40,217,0.15));border:1px solid rgba(139,92,246,0.25);">
         <div style="position:absolute;right:-16px;bottom:-16px;width:80px;height:80px;border-radius:50%;background:rgba(139,92,246,0.15);filter:blur(20px);pointer-events:none;"></div>
         <h5 style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:800;color:#f1f5f9;margin-bottom:4px;">Resumen semanal</h5>
-        <p style="font-size:11px;color:#a78bfa;margin-bottom:12px;">7 sesiones · 85% ocupación</p>
+        <p style="font-size:11px;color:#a78bfa;margin-bottom:12px;"><span id="res-sesiones">—</span> sesiones · <span id="res-ocup">—</span>% ocupación</p>
         <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:10px;color:#94a3b8;">Completadas</span>
-            <span style="font-size:11px;font-weight:700;color:#2dd4bf;">4</span>
+            <span id="res-comp" style="font-size:11px;font-weight:700;color:#2dd4bf;">—</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:10px;color:#94a3b8;">Pendientes</span>
-            <span style="font-size:11px;font-weight:700;color:#a78bfa;">3</span>
+            <span id="res-pend" style="font-size:11px;font-weight:700;color:#a78bfa;">—</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:10px;color:#94a3b8;">Espacios libres</span>
-            <span style="font-size:11px;font-weight:700;color:#64748b;">3</span>
+            <span id="res-libres" style="font-size:11px;font-weight:700;color:#64748b;">—</span>
           </div>
         </div>
         <button onclick="mostrarToast('Compartir disponibilidad — próximamente')" style="width:100%;padding:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:#e2e8f0;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:Manrope,sans-serif;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
@@ -791,66 +759,47 @@ window.semanaNext=function(){ if(vistaActual==='dia') vistaRef.setDate(vistaRef.
 window.semanaHoy=function(){ vistaRef=new Date(); renderVista(); };
 renderVista();
 
-const { data: citas } = await supabase
-  .from('citas')
-  .select('*, pacientes(nombre, apellido)')
-  .eq('psicologo_id', session.user.id)
-  .eq('fecha', hoy)
-  .order('hora_inicio');
-
-{
-  const _citas = citas || [];
-  const contenedor = document.querySelector('.cita-hoy-row')?.parentElement;
-  if (contenedor) {
-    // Eliminar citas hardcodeadas SIEMPRE (aunque hoy no haya citas)
-    contenedor.querySelectorAll('.cita-hoy-row').forEach(function(el){ el.remove(); });
-    var badge = contenedor.querySelector('span[style*="3 sesiones"]');
-    if (badge) badge.textContent = _citas.length + ' sesión' + (_citas.length !== 1 ? 'es' : '');
-    if (!_citas.length) {
-      var vacio = document.createElement('div'); vacio.className = 'cita-hoy-row';
-      vacio.style.cssText = 'padding:10px 12px;color:#64748b;font-size:12px;';
-      vacio.textContent = 'No tienes citas hoy.';
-      contenedor.insertBefore(vacio, contenedor.querySelector('div[style*="border-top"]'));
-    }
-    _citas.forEach(function(c, i) {
-      var nombre = (c.pacientes?.nombre || '') + ' ' + (c.pacientes?.apellido || '');
-      var ini = ((c.pacientes?.nombre||'?')[0] + ((c.pacientes?.apellido||'?')[0]||'')).toUpperCase();
-      var color = COLORS[i % COLORS.length];
-      var icono = c.tipo === 'telemedicina' ? 'videocam' : 'person';
-      var div = document.createElement('div');
-      div.className = 'cita-hoy-row';
-      div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:background 0.15s;';
-      div.onmouseover = function(){ this.style.background='rgba(255,255,255,0.04)'; };
-      div.onmouseout  = function(){ this.style.background=''; };
-      div.innerHTML =
-        '<div style="width:36px;height:36px;border-radius:10px;background:' + color.replace(')',',0.2)').replace('rgb','rgba') + ';display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:800;color:' + color + ';font-family:Manrope,sans-serif;">' + ini + '</div>' +
-        '<div style="flex:1;min-width:0;">' +
-          '<p style="font-size:10px;font-weight:700;color:' + color + ';margin-bottom:1px;">' + c.hora_inicio.substring(0,5) + ' — ' + c.hora_fin.substring(0,5) + '</p>' +
-          '<p style="font-size:12px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + nombre.trim() + '</p>' +
-          '<p style="font-size:10px;color:#64748b;">' + (c.tipo === 'telemedicina' ? 'Videollamada' : 'Presencial') + '</p>' +
-        '</div>' +
-        '<span class="material-symbols-outlined" style="font-size:16px;color:#334155;flex-shrink:0;">' + icono + '</span>';
-      contenedor.insertBefore(div, contenedor.querySelector('div[style*="border-top"]'));
-    });
+// ── Tendencia de citas (6 semanas) + resumen semanal REAL ──
+try {
+  const _lun = lunesDe(new Date());
+  const _ini6 = new Date(_lun); _ini6.setDate(_ini6.getDate() - 5*7);
+  const _finS = new Date(_lun); _finS.setDate(_finS.getDate() + 6);
+  const { data: _cs } = await supabase.from('citas').select('fecha, estado')
+    .eq('psicologo_id', session.user.id).neq('estado','cancelada')
+    .gte('fecha', isoDe(_ini6)).lte('fecha', isoDe(_finS));
+  const semanas = [];
+  for (let w=0; w<6; w++){ const mm=new Date(_ini6); mm.setDate(mm.getDate()+w*7); semanas.push({ mon: mm, iso: isoDe(mm), n: 0 }); }
+  (_cs||[]).forEach(function(c){ for (let w=semanas.length-1; w>=0; w--){ if (c.fecha >= semanas[w].iso){ semanas[w].n++; break; } } });
+  const thisW = semanas[5].n, lastW = semanas[4].n;
+  const tn=document.getElementById('tend-num'); if(tn) tn.textContent = thisW;
+  const tdEl=document.getElementById('tend-delta');
+  if(tdEl){
+    const delta = lastW>0 ? Math.round((thisW-lastW)/lastW*100) : (thisW>0?100:0);
+    const up = thisW>=lastW;
+    tdEl.textContent = (up?'↑ ':'↓ ') + Math.abs(delta) + '%';
+    tdEl.style.background = up ? 'rgba(52,211,153,0.15)' : 'rgba(248,113,113,0.15)';
+    tdEl.style.color = up ? '#34d399' : '#f87171';
   }
+  const maxN = Math.max.apply(null, semanas.map(function(s){return s.n;}).concat([1]));
+  const chart=document.getElementById('tend-chart'), labels=document.getElementById('tend-labels');
+  if(chart) chart.innerHTML = semanas.map(function(s,i){
+    const pct = Math.round(s.n/maxN*100), isNow=i===5;
+    return '<div style="flex:1;display:flex;align-items:flex-end;height:100%;"><div title="'+s.n+' citas" style="width:100%;border-radius:4px 4px 0 0;height:'+(pct||4)+'%;background:'+(isNow?'rgba(139,92,246,0.9)':'rgba(139,92,246,0.4)')+';transition:height 0.3s;"></div></div>';
+  }).join('');
+  if(labels) labels.innerHTML = semanas.map(function(s,i){
+    return '<span style="flex:1;text-align:center;font-size:8px;font-weight:700;color:'+(i===5?'#a78bfa':'#475569')+';">'+(i===5?'Esta':s.mon.getDate()+'/'+(s.mon.getMonth()+1))+'</span>';
+  }).join('');
 
-  // Resumen semanal
-  var lunes = new Date(); lunes.setDate(lunes.getDate() - lunes.getDay() + 1);
-  var domingo = new Date(lunes); domingo.setDate(lunes.getDate() + 6);
-  var { data: semana } = await supabase
-    .from('citas').select('estado')
-    .eq('psicologo_id', session.user.id)
-    .gte('fecha', lunes.toISOString().split('T')[0])
-    .lte('fecha', domingo.toISOString().split('T')[0]);
-  if (semana) {
-    var comp = semana.filter(function(c){ return c.estado === 'completada'; }).length;
-    var pend = semana.filter(function(c){ return c.estado !== 'completada' && c.estado !== 'cancelada'; }).length;
-    var resumen = document.querySelector('[style*="7 sesiones"]');
-    if (resumen) resumen.textContent = semana.length + ' sesiones · esta semana';
-    var spans = document.querySelectorAll('[style*="color:#2dd4bf"]');
-    // actualización de spans de resumen semanal si existen
-  }
-}
+  // Resumen semanal real
+  const semAct = (_cs||[]).filter(function(c){ return c.fecha >= semanas[5].iso; });
+  const comp = semAct.filter(function(c){ return c.estado==='completada'; }).length;
+  const pend = semAct.filter(function(c){ return c.estado!=='completada'; }).length;
+  const CAP = 40; // capacidad orientativa: 8 citas/día × 5 días
+  const ocup = Math.min(100, Math.round(semAct.length/CAP*100));
+  const libres = Math.max(0, CAP - semAct.length);
+  const _set=function(id,v){ const e=document.getElementById(id); if(e) e.textContent=v; };
+  _set('res-sesiones', semAct.length); _set('res-ocup', ocup); _set('res-comp', comp); _set('res-pend', pend); _set('res-libres', libres);
+} catch(e) { console.warn('agenda tendencia/resumen:', e.message); }
 
 })();</script>
 <!-- MINI CHAT WIDGET -->
