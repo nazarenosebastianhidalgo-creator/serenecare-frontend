@@ -1311,7 +1311,7 @@ else {
         fecha: n.created_at ? new Date(n.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short',year:'numeric'}) : '',
         hora:'',
         titulo:'Nota SOAP',
-        desc: [n.subjetivo,n.objetivo,n.analisis,n.plan].filter(Boolean).join(' · ').slice(0,120) || 'Sin contenido',
+        desc: [n.subjetivo,n.objetivo,(n.evaluacion||n.analisis),n.plan].filter(Boolean).join(' · ').slice(0,120) || 'Sin contenido',
         color:'#fbbf24', icono:'clinical_notes', bg:'rgba(245,158,11,0.15)',
         badge:'SOAP', badgeColor:'#fbbf24',
       }));
