@@ -143,14 +143,8 @@
 
       <!-- Datos personales -->
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <p class="section-label" style="margin:0;">Datos personales</p>
-          <button id="dp-edit-btn" onclick="toggleEditDatos(true)" title="Editar" style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#a78bfa;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:3px 9px;cursor:pointer;font-family:Manrope,sans-serif;">
-            <span class="material-symbols-outlined" style="font-size:13px;">edit</span>Editar
-          </button>
-        </div>
-        <!-- Vista -->
-        <div id="dp-view" class="flex flex-col gap-3" style="margin-top:12px;">
+        <p class="section-label">Datos personales</p>
+        <div class="flex flex-col gap-3">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:11px;color:#475569;">Edad</span>
             <span id="pac-edad" style="font-size:12px;font-weight:700;color:#e2e8f0;">—</span>
@@ -166,35 +160,6 @@
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <span style="font-size:11px;color:#475569;">Inicio terapia</span>
             <span id="pac-inicio" style="font-size:12px;font-weight:700;color:#e2e8f0;">—</span>
-          </div>
-        </div>
-        <!-- Edición -->
-        <div id="dp-edit" style="display:none;flex-direction:column;gap:10px;margin-top:12px;">
-          <div>
-            <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;">Fecha de nacimiento</label>
-            <input id="dp-nac" type="date" style="width:100%;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:12px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;"/>
-          </div>
-          <div>
-            <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;">Género</label>
-            <select id="dp-gen" style="width:100%;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:12px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;">
-              <option value="" style="color:#0f172a;">—</option>
-              <option value="Femenino" style="color:#0f172a;">Femenino</option>
-              <option value="Masculino" style="color:#0f172a;">Masculino</option>
-              <option value="No binario" style="color:#0f172a;">No binario</option>
-              <option value="Prefiere no decir" style="color:#0f172a;">Prefiere no decir</option>
-            </select>
-          </div>
-          <div>
-            <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;">Ocupación</label>
-            <input id="dp-ocu" type="text" placeholder="Ej. Docente, comerciante…" style="width:100%;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:12px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;"/>
-          </div>
-          <div>
-            <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;">Diagnóstico / motivo</label>
-            <input id="dp-diag" type="text" placeholder="Ej. F41.1 Ansiedad generalizada" style="width:100%;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:12px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;"/>
-          </div>
-          <div style="display:flex;gap:8px;">
-            <button onclick="guardarDatosPersonales()" style="flex:1;padding:8px;border-radius:9px;background:linear-gradient(135deg,rgba(167,139,250,0.85),rgba(139,92,246,0.85));border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Guardar</button>
-            <button onclick="toggleEditDatos(false)" style="padding:8px 14px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;font-size:12px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
           </div>
         </div>
       </div>
@@ -909,29 +874,6 @@ window.pintarDatosPersonales = function(p) {
   }
 };
 
-// Alterna vista/edición de Datos personales y precarga los inputs
-function toggleEditDatos(show) {
-  var p = window.__pacData || {};
-  if (show) {
-    document.getElementById('dp-nac').value  = p.fecha_nacimiento || '';
-    document.getElementById('dp-gen').value  = p.genero || '';
-    document.getElementById('dp-ocu').value  = p.ocupacion || '';
-    document.getElementById('dp-diag').value = p.motivo_consulta || '';
-  }
-  document.getElementById('dp-view').style.display    = show ? 'none' : 'flex';
-  document.getElementById('dp-edit').style.display    = show ? 'flex' : 'none';
-  document.getElementById('dp-edit-btn').style.display = show ? 'none' : 'flex';
-}
-
-async function guardarDatosPersonales() {
-  if (!window.__guardarDatosPersonales) return;
-  await window.__guardarDatosPersonales({
-    fecha_nacimiento: document.getElementById('dp-nac').value || null,
-    genero:           document.getElementById('dp-gen').value || null,
-    ocupacion:        document.getElementById('dp-ocu').value.trim() || null,
-    motivo_consulta:  document.getElementById('dp-diag').value.trim() || null,
-  });
-}
 
 function toggleAppsPanel() {
   var o = document.getElementById('apps-overlay');
@@ -1229,18 +1171,6 @@ window.__eliminarEjercicio = async function(asignacionId) {
   await cargarEjercicios();
 };
 cargarEjercicios();
-
-// ── Guardar datos personales del paciente (edad/género/ocupación/diagnóstico) ──
-window.__guardarDatosPersonales = async function(campos) {
-  if (!pacienteId || pacienteId === 'demo') { alert('Sin paciente válido'); return; }
-  const { error } = await supabase.from('pacientes').update(campos).eq('id', pacienteId);
-  if (error) { alert('No se pudo guardar: ' + error.message); return; }
-  window.__pacData = Object.assign({}, window.__pacData || {}, campos);
-  window.pintarDatosPersonales(window.__pacData);
-  document.getElementById('pac-diagnostico').textContent = campos.motivo_consulta || '—';
-  const hs = document.getElementById('header-sub'); if (hs) hs.textContent = campos.motivo_consulta || '';
-  if (window.toggleEditDatos) window.toggleEditDatos(false);
-};
 
 // Cargar el catálogo de escalas (global de fábrica + propias de la clínica) para el modal
 ;(async () => {

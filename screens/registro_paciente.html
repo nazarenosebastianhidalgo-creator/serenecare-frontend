@@ -184,6 +184,11 @@
       </div>
 
       <div>
+        <label class="field-label">Ocupación / Profesión</label>
+        <input type="text" class="field-input" id="d-ocupacion" placeholder="Ej. Docente, comerciante…"/>
+      </div>
+
+      <div>
         <label class="field-label">Dirección (opcional)</label>
         <input type="text" class="field-input" placeholder="Calle, número, ciudad"/>
       </div>
@@ -497,8 +502,20 @@ if (session) {
   const apellidoFinal = (pac?.apellido || meta.apellido || '').trim()
   const clinicaFinal  = clinicaId || pac?.clinica_id || null
 
-  if (pacienteId) {
-    await supabase.from('pacientes').update({ usuario_id: session.user.id, estado: 'activo' }).eq('id', pacienteId)
+  // Datos personales que rellena el paciente en el registro
+  const datosPac = { usuario_id: session.user.id, estado: 'activo' }
+  const _nac = (document.getElementById('d-nacimiento') || {}).value
+  const _gen = (document.getElementById('d-genero') || {}).value
+  const _ocu = ((document.getElementById('d-ocupacion') || {}).value || '').trim()
+  const _tel = ((document.getElementById('d-tel') || {}).value || '').trim()
+  if (_nac) datosPac.fecha_nacimiento = _nac
+  if (_gen) datosPac.genero = _gen
+  if (_ocu) datosPac.ocupacion = _ocu
+  if (_tel) datosPac.telefono = _tel
+
+  const _pacIdUpd = pacienteId || pac?.id
+  if (_pacIdUpd) {
+    await supabase.from('pacientes').update(datosPac).eq('id', _pacIdUpd)
   }
   if (clinicaFinal) localStorage.setItem('tp_clinica_id', clinicaFinal)
 
