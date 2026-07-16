@@ -289,6 +289,7 @@ window.__toggleTheme=function(){window.__setTheme(document.documentElement.class
   document.title = 'SereneCare — ' + (escala.nombre || codigo)
 
   let preguntaActual = 0
+  let autoTimer = null
   const respuestas = new Array(total).fill(null)
 
   // Render de opciones para la pregunta actual
@@ -331,10 +332,13 @@ window.__toggleTheme=function(){window.__setTheme(document.documentElement.class
   function seleccionar(valor){
     respuestas[preguntaActual] = valor
     actualizarUI()
-    if (preguntaActual < total-1 && !esItemSensible()) setTimeout(siguientePregunta, 320)
+    // Evita el doble avance si se tocan dos opciones seguidas (dejaba una pregunta sin responder)
+    if (autoTimer) { clearTimeout(autoTimer); autoTimer = null }
+    if (preguntaActual < total-1 && !esItemSensible()) autoTimer = setTimeout(function(){ autoTimer = null; siguientePregunta() }, 320)
   }
 
   window.siguientePregunta = function(){
+    if (autoTimer) { clearTimeout(autoTimer); autoTimer = null }
     if (respuestas[preguntaActual] === null) { mostrarError('Elegí una opción para continuar.'); return }
     if (preguntaActual < total-1) { preguntaActual++; actualizarUI() }
     else enviarResultado()
@@ -352,7 +356,13 @@ window.__toggleTheme=function(){window.__setTheme(document.documentElement.class
 
   let enviando = false
   async function enviarResultado(){
-    if (respuestas.some(r => r === null)) { mostrarError('Respondé todas las preguntas.'); return }
+    // Si quedó alguna sin responder, la abrimos en vez de fallar en silencio
+    const faltaIdx = respuestas.findIndex(r => r === null)
+    if (faltaIdx !== -1) {
+      preguntaActual = faltaIdx; actualizarUI()
+      mostrarError('Te faltó la pregunta ' + (faltaIdx + 1) + '. La abrí para que la completes.')
+      return
+    }
     if (enviando) return; enviando = true
     const btnSig = $('btn-siguiente'); btnSig.disabled = true
     const { puntaje, severidad, color } = calcular()
