@@ -426,7 +426,7 @@ function drawChart(){
   var vals=data[sel]||[0,0,0,0,0,0,0];
   var hoy=(new Date().getDay()===0?6:new Date().getDay()-1);
   var max=Math.max.apply(null,vals.concat([1]));
-  var mH=88;
+  var mH=90;
   var total=vals.reduce(function(a,b){return a+b;},0);
   var etiqueta=sel==='actual'?'esta semana':(sel==='anterior'?'semana anterior':'próxima semana');
   var ct=document.getElementById('chart-total');
@@ -434,12 +434,12 @@ function drawChart(){
   document.getElementById('chart-wrap').innerHTML=dias.map(function(d,i){
     var h=Math.round((vals[i]/max)*mH);
     var isH=(sel==='actual' && i===hoy);
-    var numCol=isH?'#a78bfa':(vals[i]?'#cbd5e1':'#334155');
+    var numCol=isH?'#a78bfa':'#cbd5e1';
     var barBg=isH?'rgba(139,92,246,0.9)':(vals[i]?'rgba(139,92,246,0.45)':'rgba(255,255,255,0.05)');
-    return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;">'
-      +'<span style="font-size:11px;font-weight:800;color:'+numCol+';font-family:Manrope,sans-serif;">'+vals[i]+'</span>'
+    return '<div onmouseover="this.querySelector(\'.sc-num\').style.opacity=1" onmouseout="this.querySelector(\'.sc-num\').style.opacity=0" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;cursor:default;">'
+      +'<span class="sc-num" style="opacity:0;transition:opacity 0.15s;font-size:11px;font-weight:800;color:'+numCol+';font-family:Manrope,sans-serif;">'+vals[i]+'</span>'
       +'<div style="flex:1;display:flex;align-items:flex-end;width:100%;">'
-        +'<div style="flex:1;height:'+(h||3)+'px;border-radius:5px 5px 0 0;background:'+barBg+';'+(isH?'box-shadow:0 0 14px rgba(139,92,246,0.5);':'')+'transition:height 0.3s;" title="'+d+': '+vals[i]+' sesión'+(vals[i]===1?'':'es')+'"></div>'
+        +'<div style="flex:1;height:'+(h||3)+'px;border-radius:5px 5px 0 0;background:'+barBg+';'+(isH?'box-shadow:0 0 14px rgba(139,92,246,0.5);':'')+'transition:height 0.3s;"></div>'
       +'</div>'
       +'<span style="font-size:10px;font-weight:'+(isH?'700':'500')+';color:'+(isH?'#a78bfa':'#475569')+';">'+d+(isH?' •':'')+'</span>'
       +'</div>';
