@@ -147,7 +147,7 @@
       </button>
       <button id="btn-notif-psi" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
-        <span id="notif-dot-psi" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+        <span id="notif-dot-psi" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
       </button>
     </div>
   </header>
@@ -158,7 +158,7 @@
       <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
       <button id="btn-marcar-psi" class="text-xs font-bold" style="color:#a78bfa;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
     </div>
-    <div id="notif-list-psi" class="max-h-72 overflow-y-auto"></div>
+    <div id="notif-list-psi" data-notif-list class="max-h-72 overflow-y-auto"></div>
     <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
       <a href="notificaciones_psicologo.html" style="font-size:11px;font-weight:700;color:#a78bfa;text-decoration:none;">Ver todas las notificaciones →</a>
     </div>
@@ -727,12 +727,7 @@ function cerrarApps(e) {
 }
 
 // ── Notificaciones ────────────────────────────────────────────────────────────
-var NOTIFS_PSI = [
-  { icon:'event_busy',      color:'#f87171', msg:'Beatriz Torres canceló su cita de 16:00',   hora:'Hace 5 min', leida:false },
-  { icon:'pending_actions', color:'#fbbf24', msg:'Nota SOAP de Miguel Torres sin completar',  hora:'Hace 2 h',   leida:false },
-  { icon:'chat',            color:'#a78bfa', msg:'Nuevo mensaje de Elena Ruiz',               hora:'Hace 3 h',   leida:true  },
-  { icon:'event_available', color:'#34d399', msg:'Lucía Mora confirmó su cita de mañana',     hora:'Ayer',       leida:true  },
-];
+var NOTIFS_PSI = [];
 var notifOpenPsi = false;
 function renderNotifsPsi() {
   var dot = document.getElementById('notif-dot-psi');
@@ -915,5 +910,6 @@ window.enviarMensaje = async function() {
 };
 
 })();</script>
+<script type="module">import { initCampana } from '../js/notif-bell.js'; initCampana();</script>
 </body>
 </html>

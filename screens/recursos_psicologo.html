@@ -122,13 +122,13 @@
       <div class="relative">
         <button id="btn-notif" onclick="toggleNotif()" class="p-2 rounded-xl hover:bg-white/5 transition-colors relative" style="border:none;background:none;cursor:pointer;">
           <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">notifications</span>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style="background:#a78bfa;"></span>
+          <span data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style="background:#a78bfa;"></span>
         </button>
         <div id="notif-panel" class="hidden" style="position:absolute;top:calc(100% + 8px);right:0;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;box-shadow:0 24px 60px rgba(0,0,0,0.5);z-index:100;overflow:hidden;">
           <div style="padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,0.06);">
             <p style="font-family:Manrope,sans-serif;font-size:13px;font-weight:800;color:#f1f5f9;">Notificaciones</p>
           </div>
-          <div style="padding:8px;">
+          <div data-notif-list style="max-height:300px;overflow-y:auto;padding:8px;">
             <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:12px;background:rgba(139,92,246,0.06);">
               <span class="material-symbols-outlined" style="font-size:16px;color:#fbbf24;margin-top:1px;font-variation-settings:’FILL’ 1;">pending_actions</span>
               <div><p style="font-size:12px;font-weight:700;color:#e2e8f0;">3 notas SOAP pendientes</p><p style="font-size:11px;color:#475569;margin-top:2px;">Mateo, Carlos, Sofía</p></div>
@@ -849,7 +849,8 @@ _nr.querySelector('#nr-guardar').addEventListener('click', async () => {
       archivo_tipo = _tipoArchivo(file.type)
     }
     const contenido_html = instr
-      ? '<!doctype html><meta charset="utf-8"><body style="font-family:sans-serif;max-width:700px;margin:2rem auto"><h1>' + titulo.replace(/</g,'&lt;') + '</h1><p>' + instr.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</p></body>'
+      ? '<!doctype html><meta charset="utf-8"><body style="font-family:sans-serif;max-width:700px;margin:2rem auto"><h1>' + titulo.replace(/</g,'&lt;') + '</h1><p>' + instr.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</p><script type="module">import { initCampana } from '../js/notif-bell.js'; initCampana();</script>
+</body>'
       : null
     const { data: recIns, error: recErr } = await supabase.from('recursos').insert({
       tipo: archivo_tipo === 'audio' ? 'audio' : 'ejercicio', titulo: titulo, descripcion: instr || null,

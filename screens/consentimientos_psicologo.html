@@ -117,7 +117,7 @@
       </button>
       <button id="btn-notif-con" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
-        <span id="notif-dot-con" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+        <span id="notif-dot-con" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
       </button>
     </div>
   </header>
@@ -128,7 +128,7 @@
       <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
       <button id="btn-marcar-con" class="text-xs font-bold" style="color:#a78bfa;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
     </div>
-    <div id="notif-list-con" class="max-h-72 overflow-y-auto"></div>
+    <div id="notif-list-con" data-notif-list class="max-h-72 overflow-y-auto"></div>
     <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
       <a href="notificaciones_psicologo.html" style="font-size:11px;font-weight:700;color:#a78bfa;text-decoration:none;">Ver todas las notificaciones →</a>
     </div>
@@ -366,11 +366,7 @@ var CONSENTIMIENTOS = [
   { id:3, paciente:'Mateo Torres',      initiales:'MT', color:'#64748b', tipo:'Contrato de Telesalud',      fecha:'—',            estado:'sin-enviar' },
 ];
 
-var NOTIFS_CON = [
-  { icon:'draw',          color:'#4ade80', msg:'Elena Sofia Varga firmó su consentimiento',      hora:'Hace 10 min', leida:false },
-  { icon:'pending_actions',color:'#fbbf24',msg:'Mateo Torres: consentimiento pendiente de envío',hora:'Hace 2 h',    leida:false },
-  { icon:'history_edu',   color:'#818cf8', msg:'Nuevo paciente requiere consentimiento GDPR',    hora:'Ayer',        leida:true  },
-];
+var NOTIFS_CON = [];
 
 /* ── TABLA ──────────────────────────────────────────────── */
 var filtroActual = 'todos';
@@ -707,5 +703,6 @@ window.enviarConsentimiento = async function() {
 };
 
 })();</script>
+<script type="module">import { initCampana } from '../js/notif-bell.js'; initCampana();</script>
 </body>
 </html>
