@@ -264,20 +264,14 @@
 
     <!-- Chart -->
     <div class="card rounded-2xl p-6">
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
-          <h3 class="font-headline font-bold text-white text-base">Sesiones — semana actual</h3>
-          <p class="text-xs text-slate-500 mt-0.5">Comparativa con semana anterior</p>
+          <h3 class="font-headline font-bold text-white text-base">Sesiones por día</h3>
+          <p id="chart-total" class="text-xs text-slate-500 mt-0.5">&nbsp;</p>
         </div>
-        <div class="flex items-center gap-4 text-xs">
-          <span class="flex items-center gap-1.5">
-            <span class="inline-block w-2.5 h-2.5 rounded-sm" style="background:rgba(139,92,246,0.7);"></span>
-            <span class="text-slate-400">Esta semana</span>
-          </span>
-          <span class="flex items-center gap-1.5">
-            <span class="inline-block w-2.5 h-2.5 rounded-sm" style="background:rgba(255,255,255,0.12);"></span>
-            <span class="text-slate-400">Semana anterior</span>
-          </span>
+        <div style="display:flex;gap:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:3px;">
+          <button id="tab-sem-actual" onclick="cambiarSemana('actual')" style="padding:5px 13px;border:none;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;background:rgba(139,92,246,0.22);color:#a78bfa;transition:all 0.15s;">Esta semana</button>
+          <button id="tab-sem-anterior" onclick="cambiarSemana('anterior')" style="padding:5px 13px;border:none;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;background:transparent;color:#64748b;transition:all 0.15s;">Semana anterior</button>
         </div>
       </div>
       <div id="chart-wrap" style="display:flex;gap:8px;height:130px;align-items:stretch;"></div>
@@ -425,12 +419,35 @@ function renderPacientes(){
 }
 
 function drawChart(){
-  var dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],es=[3,5,4,7,0,0,0],sa=[3,4,5,4,3,0,0],hoy=3,max=Math.max.apply(null,es.concat(sa))||1,mH=90;
+  var dias=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  var data=window.__semData||{actual:[0,0,0,0,0,0,0],anterior:[0,0,0,0,0,0,0]};
+  var sel=window.__semSel||'actual';
+  var vals=data[sel]||[0,0,0,0,0,0,0];
+  var hoy=(new Date().getDay()===0?6:new Date().getDay()-1);
+  var max=Math.max.apply(null,vals.concat([1]));
+  var mH=100;
+  var total=vals.reduce(function(a,b){return a+b;},0);
+  var ct=document.getElementById('chart-total');
+  if(ct) ct.textContent=total+' sesión'+(total===1?'':'es')+' · '+(sel==='actual'?'esta semana':'semana anterior');
   document.getElementById('chart-wrap').innerHTML=dias.map(function(d,i){
-    var h1=Math.round((es[i]/max)*mH),h2=Math.round((sa[i]/max)*mH),isH=i===hoy;
-    return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;"><div style="flex:1;display:flex;align-items:flex-end;gap:3px;width:100%;"><div style="flex:1;height:'+(h1||3)+'px;border-radius:4px 4px 0 0;background:'+(isH?'rgba(139,92,246,0.85)':'rgba(139,92,246,0.38)')+';'+(isH?'box-shadow:0 0 14px rgba(139,92,246,0.5);':'')+'" title="'+es[i]+' sesiones"></div><div style="flex:1;height:'+(h2||3)+'px;border-radius:4px 4px 0 0;background:rgba(255,255,255,0.1);" title="Sem. ant: '+sa[i]+'"></div></div><span style="font-size:10px;font-weight:'+(isH?'700':'500')+';color:'+(isH?'#a78bfa':'#475569')+';">'+d+(isH?' â—':'')+'</span></div>';
+    var h=Math.round((vals[i]/max)*mH);
+    var isH=(sel==='actual' && i===hoy);
+    return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">'
+      +'<div style="flex:1;display:flex;align-items:flex-end;width:100%;">'
+      +'<div style="flex:1;height:'+(h||3)+'px;border-radius:5px 5px 0 0;background:'+(isH?'rgba(139,92,246,0.9)':'rgba(139,92,246,0.45)')+';'+(isH?'box-shadow:0 0 14px rgba(139,92,246,0.5);':'')+'" title="'+vals[i]+' sesion(es)"></div>'
+      +'</div>'
+      +'<span style="font-size:10px;font-weight:'+(isH?'700':'500')+';color:'+(isH?'#a78bfa':'#475569')+';">'+d+(isH?' •':'')+'</span>'
+      +'</div>';
   }).join('');
 }
+window.drawChart=drawChart;
+window.cambiarSemana=function(which){
+  window.__semSel=which;
+  var ba=document.getElementById('tab-sem-actual'), bn=document.getElementById('tab-sem-anterior');
+  if(ba){ ba.style.background=which==='actual'?'rgba(139,92,246,0.22)':'transparent'; ba.style.color=which==='actual'?'#a78bfa':'#64748b'; }
+  if(bn){ bn.style.background=which==='anterior'?'rgba(139,92,246,0.22)':'transparent'; bn.style.color=which==='anterior'?'#a78bfa':'#64748b'; }
+  drawChart();
+};
 
 var notifOpenPsi=false;
 function renderNotifsPsi(){
@@ -1034,6 +1051,27 @@ var { count: sesSemana } = await supabase
 
 var kpis = document.querySelectorAll('.kpi-val');
 if (kpis[3] && sesSemana !== null) kpis[3].textContent = sesSemana;
+
+// Gráfico "Sesiones por día": conteo REAL por día (lun–dom), semana actual y anterior
+try {
+  var lunAct = new Date(); var _wd0 = lunAct.getDay(); lunAct.setDate(lunAct.getDate() - (_wd0 === 0 ? 6 : _wd0 - 1)); lunAct.setHours(0,0,0,0);
+  var lunAnt = new Date(lunAct); lunAnt.setDate(lunAct.getDate() - 7);
+  var domAct = new Date(lunAct); domAct.setDate(lunAct.getDate() + 6);
+  var _iso = function(d){ return d.toISOString().split('T')[0]; };
+  var isoLunAct = _iso(lunAct);
+  var { data: citasCh } = await supabase.from('citas')
+    .select('fecha, estado').eq('psicologo_id', userId)
+    .gte('fecha', _iso(lunAnt)).lte('fecha', _iso(domAct)).neq('estado', 'cancelada');
+  var act = [0,0,0,0,0,0,0], ant = [0,0,0,0,0,0,0];
+  (citasCh || []).forEach(function(c){
+    var d = new Date(c.fecha + 'T00:00:00');
+    var wd = d.getDay(); wd = (wd === 0 ? 6 : wd - 1);   // lun=0 … dom=6
+    if (c.fecha >= isoLunAct) act[wd]++; else ant[wd]++;
+  });
+  window.__semData = { actual: act, anterior: ant };
+  window.__semSel = 'actual';
+  if (window.drawChart) window.drawChart();
+} catch(e) { console.warn('gráfico sesiones:', e.message); }
 
 })();</script>
 </body>
