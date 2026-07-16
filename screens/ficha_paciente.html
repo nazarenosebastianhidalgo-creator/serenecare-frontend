@@ -283,25 +283,36 @@
 
       <!-- Gráfico evolución escalas (solo visible en tab Escalas) -->
       <div id="chart-escalas" style="display:none;margin-bottom:20px;">
-        <!-- Chips resumen -->
-        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-          <div id="chip-phq9" style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:12px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);">
-            <span style="width:10px;height:10px;border-radius:50%;background:#a78bfa;flex-shrink:0;"></span>
-            <span style="font-size:11px;font-weight:700;color:#a78bfa;font-family:Manrope,sans-serif;">PHQ-9</span>
-            <span id="chip-phq9-val" style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;">—</span>
-            <span id="chip-phq9-delta" style="font-size:10px;font-weight:700;color:#34d399;"></span>
-          </div>
-          <div id="chip-gad7" style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:12px;background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.2);">
-            <span style="width:10px;height:10px;border-radius:50%;background:#60a5fa;flex-shrink:0;"></span>
-            <span style="font-size:11px;font-weight:700;color:#60a5fa;font-family:Manrope,sans-serif;">GAD-7</span>
-            <span id="chip-gad7-val" style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;">—</span>
-            <span id="chip-gad7-delta" style="font-size:10px;font-weight:700;color:#34d399;"></span>
+        <!-- Chips dinámicos (uno por escala) + registrar a mano -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+          <div id="escalas-chips" style="display:flex;gap:8px;flex-wrap:wrap;flex:1;min-width:0;"></div>
+          <button onclick="toggleRegistroEscala(true)" style="display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#a78bfa;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:9px;padding:6px 11px;cursor:pointer;font-family:Manrope,sans-serif;white-space:nowrap;flex-shrink:0;">
+            <span class="material-symbols-outlined" style="font-size:14px;">edit_note</span>Registrar a mano
+          </button>
+        </div>
+        <!-- Formulario registro manual -->
+        <div id="reg-escala" style="display:none;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:14px;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;">
+            <div style="flex:1;min-width:140px;">
+              <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;">Escala</label>
+              <select id="reg-esc-tipo" onchange="actualizarMaxEscala()" style="width:100%;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:12px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;"></select>
+            </div>
+            <div style="width:120px;">
+              <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;">Puntaje <span id="reg-esc-max" style="color:#475569;"></span></label>
+              <input id="reg-esc-punt" type="number" min="0" style="width:100%;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:12px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;"/>
+            </div>
+            <div style="width:150px;">
+              <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;">Fecha</label>
+              <input id="reg-esc-fecha" type="date" style="width:100%;padding:7px 10px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:12px;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;"/>
+            </div>
+            <button onclick="guardarEscalaManual()" style="padding:8px 16px;border-radius:9px;background:linear-gradient(135deg,rgba(167,139,250,0.85),rgba(139,92,246,0.85));border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Guardar</button>
+            <button onclick="toggleRegistroEscala(false)" style="padding:8px 12px;border-radius:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;font-size:12px;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;">Cancelar</button>
           </div>
         </div>
         <!-- Canvas Chart.js -->
         <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:20px;">
           <canvas id="canvas-escalas" height="180"></canvas>
-          <p id="escalas-empty" style="display:none;text-align:center;font-size:12px;color:#475569;padding:40px 0;">Aún no hay resultados de PHQ-9 ni GAD-7 para este paciente.<br>Envíale una escala con el botón «Solicitar».</p>
+          <p id="escalas-empty" style="display:none;text-align:center;font-size:12px;color:#475569;padding:40px 0;">Este paciente aún no tiene escalas registradas.<br>Envíale una con «Solicitar» o registra una a mano.</p>
         </div>
       </div>
 
@@ -529,139 +540,117 @@ function setTab(btn, tab) {
 
 var _chartEscalasInstance = null;
 
-function initChartEscalas(datosPhq, datosGad) {
+function initChartEscalas() {
   window._chartEscalasInited = true;
-
-  // Datos REALES (guardados por renderEvaluaciones). Nada de demo.
-  var phq = datosPhq || window.__phqData || [];
-  var gad = datosGad || window.__gadData || [];
-
+  var series = window.__escalasSeries || {};      // { tipo: [{iso, fecha, val, max}] }
+  var tipos  = Object.keys(series).filter(function(t){ return series[t] && series[t].length; });
   var canvas = document.getElementById('canvas-escalas');
   var empty  = document.getElementById('escalas-empty');
+  var chips  = document.getElementById('escalas-chips');
 
-  // Sin datos reales → estado vacío, sin curvas falsas
-  if (!phq.length && !gad.length) {
+  if (!tipos.length) {
     if (_chartEscalasInstance) { _chartEscalasInstance.destroy(); _chartEscalasInstance = null; }
     if (canvas) canvas.style.display = 'none';
     if (empty)  empty.style.display  = 'block';
-    document.getElementById('chip-phq9-val').textContent = '—';
-    document.getElementById('chip-gad7-val').textContent = '—';
-    document.getElementById('chip-phq9-delta').textContent = '';
-    document.getElementById('chip-gad7-delta').textContent = '';
+    if (chips)  chips.innerHTML = '';
     return;
   }
   if (canvas) canvas.style.display = 'block';
   if (empty)  empty.style.display  = 'none';
 
-  // Chips resumen: último valor + delta (solo si esa escala tiene datos)
-  if (phq.length) {
-    var lastPhq = phq[phq.length - 1];
-    var deltaPhq = lastPhq.val - phq[0].val;
-    document.getElementById('chip-phq9-val').textContent = lastPhq.val + ' pts';
-    document.getElementById('chip-phq9-delta').textContent = (deltaPhq < 0 ? '↓' + Math.abs(deltaPhq) : deltaPhq > 0 ? '↑' + deltaPhq : '=') + ' total';
-    document.getElementById('chip-phq9-delta').style.color = deltaPhq < 0 ? '#34d399' : '#f87171';
-  } else {
-    document.getElementById('chip-phq9-val').textContent = '—';
-    document.getElementById('chip-phq9-delta').textContent = '';
-  }
+  var COLORS = ['#a78bfa','#60a5fa','#34d399','#fbbf24','#f472b6','#22d3ee','#fb923c','#c084fc'];
 
-  if (gad.length) {
-    var lastGad = gad[gad.length - 1];
-    var deltaGad = lastGad.val - gad[0].val;
-    document.getElementById('chip-gad7-val').textContent = lastGad.val + ' pts';
-    document.getElementById('chip-gad7-delta').textContent = (deltaGad < 0 ? '↓' + Math.abs(deltaGad) : deltaGad > 0 ? '↑' + deltaGad : '=') + ' total';
-    document.getElementById('chip-gad7-delta').style.color = deltaGad < 0 ? '#34d399' : '#f87171';
-  } else {
-    document.getElementById('chip-gad7-val').textContent = '—';
-    document.getElementById('chip-gad7-delta').textContent = '';
-  }
+  // Eje X = todas las fechas unicas (ISO) ordenadas
+  var allIso = [];
+  tipos.forEach(function(t){ series[t].forEach(function(p){ if (allIso.indexOf(p.iso) < 0) allIso.push(p.iso); }); });
+  allIso.sort();
+  var labels = allIso.map(function(iso){ return new Date(iso+'T00:00').toLocaleDateString('es-ES',{day:'numeric',month:'short'}); });
 
-  // Labels desde la serie que tenga más puntos
-  var labels = (phq.length >= gad.length ? phq : gad).map(function(p){ return p.fecha; });
-
+  chips.innerHTML = '';
+  var ctx = document.getElementById('canvas-escalas').getContext('2d');
   if (_chartEscalasInstance) { _chartEscalasInstance.destroy(); }
 
-  var ctx = document.getElementById('canvas-escalas').getContext('2d');
-
-  var gradPhq = ctx.createLinearGradient(0, 0, 0, 200);
-  gradPhq.addColorStop(0, 'rgba(167,139,250,0.25)');
-  gradPhq.addColorStop(1, 'rgba(167,139,250,0)');
-
-  var gradGad = ctx.createLinearGradient(0, 0, 0, 200);
-  gradGad.addColorStop(0, 'rgba(96,165,250,0.2)');
-  gradGad.addColorStop(1, 'rgba(96,165,250,0)');
+  var datasets = tipos.map(function(t, i){
+    var col = COLORS[i % COLORS.length];
+    var pts = series[t];
+    var byIso = {}; pts.forEach(function(p){ byIso[p.iso] = p.val; });
+    var data = allIso.map(function(iso){ return (iso in byIso) ? byIso[iso] : null; });
+    var last = pts[pts.length-1], delta = last.val - pts[0].val;
+    var mejorMas = (window.__escalasMejor && window.__escalasMejor[t] === 'mas');
+    var good = mejorMas ? (delta > 0) : (delta < 0);
+    var deltaTxt = delta === 0 ? '=' : (delta < 0 ? '↓'+Math.abs(delta) : '↑'+delta);
+    chips.insertAdjacentHTML('beforeend',
+      '<div style="display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);">'
+      + '<span style="width:9px;height:9px;border-radius:50%;background:'+col+';flex-shrink:0;"></span>'
+      + '<span style="font-size:11px;font-weight:700;color:'+col+';font-family:Manrope,sans-serif;">'+t+'</span>'
+      + '<span style="font-size:12px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;">'+last.val+'/'+last.max+'</span>'
+      + (pts.length>1 ? '<span style="font-size:10px;font-weight:700;color:'+(good?'#34d399':'#f87171')+';">'+deltaTxt+'</span>' : '')
+      + '</div>');
+    return {
+      label: t, data: data, borderColor: col, backgroundColor: 'transparent',
+      borderWidth: 2.5, pointBackgroundColor: col, pointRadius: 4, pointHoverRadius: 6,
+      tension: 0.35, spanGaps: true, fill: false,
+    };
+  });
 
   _chartEscalasInstance = new Chart(ctx, {
     type: 'line',
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: 'PHQ-9 (Depresión)',
-          data: phq.map(function(p){ return p.val; }),
-          borderColor: '#a78bfa',
-          backgroundColor: gradPhq,
-          borderWidth: 2.5,
-          pointBackgroundColor: '#a78bfa',
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          tension: 0.4,
-          fill: true,
-        },
-        {
-          label: 'GAD-7 (Ansiedad)',
-          data: gad.map(function(g){ return g.val; }),
-          borderColor: '#60a5fa',
-          backgroundColor: gradGad,
-          borderWidth: 2.5,
-          pointBackgroundColor: '#60a5fa',
-          pointRadius: 4,
-          pointHoverRadius: 6,
-          tension: 0.4,
-          fill: true,
-        }
-      ]
-    },
+    data: { labels: labels, datasets: datasets },
     options: {
       responsive: true,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: {
-          labels: { color: '#64748b', font: { family: 'Inter', size: 11 }, boxWidth: 10, padding: 16 }
-        },
+        legend: { labels: { color: '#64748b', font: { family: 'Inter', size: 11 }, boxWidth: 10, padding: 14 } },
         tooltip: {
-          backgroundColor: '#0d1b2e',
-          borderColor: 'rgba(255,255,255,0.1)',
-          borderWidth: 1,
-          titleColor: '#e2e8f0',
-          bodyColor: '#94a3b8',
-          padding: 12,
-          cornerRadius: 12,
-        }
-      },
-      scales: {
-        x: {
-          grid: { color: 'rgba(255,255,255,0.04)' },
-          ticks: { color: '#475569', font: { size: 11 } }
-        },
-        y: {
-          min: 0,
-          max: 27,
-          grid: { color: 'rgba(255,255,255,0.04)' },
-          ticks: {
-            color: '#475569', font: { size: 11 }, stepSize: 5,
-            callback: function(v) {
-              if (v === 5)  return '5 Leve';
-              if (v === 10) return '10 Mod';
-              if (v === 15) return '15 M-Sev';
-              if (v === 20) return '20 Sev';
-              return v;
+          backgroundColor: '#0d1b2e', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+          titleColor: '#e2e8f0', bodyColor: '#94a3b8', padding: 12, cornerRadius: 12,
+          callbacks: {
+            label: function(c){
+              if (c.parsed.y == null) return null;
+              var t = c.dataset.label;
+              var mx = (window.__escalasMax && window.__escalasMax[t]) || '';
+              return t + ': ' + c.parsed.y + (mx ? '/'+mx : '') + ' pts';
             }
           }
         }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#475569', font: { size: 11 } } },
+        y: { min: 0, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#475569', font: { size: 11 } } }
       }
     }
   });
+}
+
+// ── Registro manual de escalas (el psicólogo aplica una escala en sesión) ──
+function toggleRegistroEscala(show) {
+  var box = document.getElementById('reg-escala');
+  box.style.display = show ? 'block' : 'none';
+  if (show) {
+    document.getElementById('reg-esc-fecha').value = new Date().toISOString().split('T')[0];
+    document.getElementById('reg-esc-punt').value = '';
+    document.getElementById('reg-esc-tipo').value = '';
+    document.getElementById('reg-esc-max').textContent = '';
+  }
+}
+function actualizarMaxEscala() {
+  var tipo = document.getElementById('reg-esc-tipo').value;
+  var max = (window.__escalasCatMax && window.__escalasCatMax[tipo]) || null;
+  document.getElementById('reg-esc-max').textContent = max ? '(0–' + max + ')' : '';
+  var inp = document.getElementById('reg-esc-punt');
+  if (max) inp.max = max; else inp.removeAttribute('max');
+}
+async function guardarEscalaManual() {
+  var tipo  = document.getElementById('reg-esc-tipo').value;
+  var punt  = document.getElementById('reg-esc-punt').value;
+  var fecha = document.getElementById('reg-esc-fecha').value;
+  if (!tipo) { alert('Elegí una escala'); return; }
+  if (punt === '' || isNaN(parseInt(punt, 10))) { document.getElementById('reg-esc-punt').focus(); return; }
+  var val = parseInt(punt, 10);
+  var max = (window.__escalasCatMax && window.__escalasCatMax[tipo]) || null;
+  if (val < 0 || (max && val > max)) { alert('El puntaje debe estar entre 0 y ' + (max || '?')); return; }
+  if (!window.__guardarEscalaManual) return;
+  await window.__guardarEscalaManual(tipo, val, fecha || null);
 }
 
 // ── Ejercicios entre sesiones ──────────────────────────────────────────────
@@ -1072,20 +1061,25 @@ window.renderEvaluaciones = function(lista) {
   });
   window.TIMELINE_DATA.escalas = items;
 
-  // Actualizar gráfico con datos reales (ordenados por fecha asc)
+  // Serie por escala (TODAS las que tenga el paciente), para el gráfico multi-línea.
+  // 'lista' ya viene sin feedback_sesion. Ordenado por fecha asc.
   var sorted = lista.slice().sort(function(a,b){ return new Date(a.created_at) - new Date(b.created_at); });
-  var phqData = sorted.filter(function(e){ return e.tipo === 'PHQ-9'; }).map(function(e){
-    return { fecha: new Date(e.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short'}), val: e.puntaje };
+  var series = {}, maxMap = {}, mejorMap = {};
+  sorted.forEach(function(e){
+    if (!e.tipo || e.puntaje == null) return;
+    var iso = e.created_at ? new Date(e.created_at).toISOString().split('T')[0] : '';
+    if (!series[e.tipo]) series[e.tipo] = [];
+    series[e.tipo].push({ iso: iso, fecha: iso, val: e.puntaje, max: maxDe(e.tipo) });
+    maxMap[e.tipo] = maxDe(e.tipo);
+    var c = window.__catalogoEscalas[normEsc(e.tipo)];
+    if (c && c.mejor) mejorMap[e.tipo] = c.mejor;
   });
-  var gadData = sorted.filter(function(e){ return e.tipo === 'GAD-7'; }).map(function(e){
-    return { fecha: new Date(e.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short'}), val: e.puntaje };
-  });
-  // Guardar datos reales para que la pestaña del gráfico los use (sin demo)
-  window.__phqData = phqData;
-  window.__gadData = gadData;
+  window.__escalasSeries = series;
+  window.__escalasMax    = maxMap;
+  window.__escalasMejor  = mejorMap;
   window._chartEscalasInited = false;
   if (document.getElementById('chart-escalas').style.display !== 'none') {
-    initChartEscalas(phqData, gadData);
+    initChartEscalas();
   }
 };
 </script>
@@ -1172,18 +1166,45 @@ window.__eliminarEjercicio = async function(asignacionId) {
 };
 cargarEjercicios();
 
+// ── Registrar una escala a mano (aplicada en sesión) → evaluaciones ──
+window.__guardarEscalaManual = async function(tipo, puntaje, fecha) {
+  if (!pacienteId || pacienteId === 'demo') { alert('Sin paciente válido'); return; }
+  const cid = await _clinicaDelPaciente();
+  const row = {
+    paciente_id: pacienteId, psicologo_id: session.user.id, clinica_id: cid,
+    tipo: tipo, puntaje: puntaje, puntuacion: puntaje,
+  };
+  if (fecha) row.created_at = fecha + 'T12:00:00';
+  const { error } = await supabase.from('evaluaciones').insert(row);
+  if (error) { alert('No se pudo guardar la escala: ' + error.message); return; }
+  const { data: evals } = await supabase.from('evaluaciones').select('*').eq('paciente_id', pacienteId).order('created_at');
+  const todos = evals || [];
+  window.renderEvaluaciones(todos.filter(e => e.tipo !== 'feedback_sesion'));
+  window.renderFeedback(todos.filter(e => e.tipo === 'feedback_sesion'));
+  if (window.toggleRegistroEscala) window.toggleRegistroEscala(false);
+  window._chartEscalasInited = false;
+  if (document.getElementById('chart-escalas').style.display !== 'none') initChartEscalas();
+};
+
 // Cargar el catálogo de escalas (global de fábrica + propias de la clínica) para el modal
 ;(async () => {
   const { data: escalas } = await supabase.from('escalas_catalogo')
-    .select('codigo, nombre, categoria, items, opciones')
+    .select('codigo, nombre, categoria, items, opciones, mejor')
     .eq('activa', true)
     .order('categoria', { ascending: true });
+  window.__escalasCatMax = {};   // codigo -> max (para el registro manual)
+  const optsHtml = ['<option value="">Elegí una escala…</option>'];
   (escalas || []).forEach((e) => {
     const valores = (e.opciones || []).map((o) => o.valor);
     const maxOp = valores.length ? Math.max.apply(null, valores) : 0;
     const norm = (e.codigo || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-    window.__catalogoEscalas[norm] = { max: (e.items || []).length * maxOp };
+    const max = (e.items || []).length * maxOp;
+    window.__catalogoEscalas[norm] = { max: max, mejor: e.mejor };
+    window.__escalasCatMax[e.codigo] = max;
+    optsHtml.push('<option value="' + e.codigo + '">' + (e.nombre || e.codigo) + ' (' + (e.categoria || '') + ')</option>');
   });
+  const selReg = document.getElementById('reg-esc-tipo');
+  if (selReg) selReg.innerHTML = optsHtml.join('');
   if (window.renderOpcionesEscalas) window.renderOpcionesEscalas(escalas || []);
 })();
 
