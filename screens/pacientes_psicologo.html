@@ -191,8 +191,9 @@
         <div class="flex gap-1" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:4px;">
           <button class="tab-btn tab-active" onclick="setTab(this,'todos')">Todos</button>
           <button class="tab-btn tab-inactive" onclick="setTab(this,'activo')">Activos</button>
-          <button class="tab-btn tab-inactive" onclick="setTab(this,'pausa')">En pausa</button>
+          <button class="tab-btn tab-inactive" onclick="setTab(this,'lista_espera')">Lista de espera</button>
           <button class="tab-btn tab-inactive" onclick="setTab(this,'alta')">Alta</button>
+          <button class="tab-btn tab-inactive" onclick="setTab(this,'baja')">Baja</button>
         </div>
       </div>
       <div class="flex items-center gap-2 text-xs text-slate-500">
@@ -289,9 +290,10 @@ var tabActual = 'todos';
 
 function estadoBadge(estado) {
   var map = {
-    activo: { label:'Activo',   bg:'rgba(20,184,166,0.12)',  color:'#2dd4bf', border:'rgba(20,184,166,0.25)'  },
-    pausa:  { label:'En pausa', bg:'rgba(245,158,11,0.12)',  color:'#fbbf24', border:'rgba(245,158,11,0.25)'  },
-    alta:   { label:'Alta',     bg:'rgba(139,92,246,0.12)',  color:'#a78bfa', border:'rgba(139,92,246,0.25)'  },
+    activo:       { label:'Activo',          bg:'rgba(20,184,166,0.12)',  color:'#2dd4bf', border:'rgba(20,184,166,0.25)'  },
+    lista_espera: { label:'Lista de espera', bg:'rgba(245,158,11,0.12)',  color:'#fbbf24', border:'rgba(245,158,11,0.25)'  },
+    alta:         { label:'Alta',            bg:'rgba(139,92,246,0.12)',  color:'#a78bfa', border:'rgba(139,92,246,0.25)'  },
+    baja:         { label:'Baja',            bg:'rgba(148,163,184,0.12)', color:'#94a3b8', border:'rgba(148,163,184,0.25)' },
   };
   var s = map[estado] || map.activo;
   return '<span style="font-size:10px;font-weight:700;background:'+s.bg+';color:'+s.color+';border:1px solid '+s.border+';border-radius:20px;padding:3px 10px;white-space:nowrap;">'+s.label+'</span>';
