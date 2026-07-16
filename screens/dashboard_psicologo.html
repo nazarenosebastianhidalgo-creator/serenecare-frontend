@@ -362,15 +362,7 @@
 </div>
 
 <script>
-var CITAS_HOY = [
-  { hora:'9:00',  paciente:'Laura Pérez',    tipo:'Terapia cognitiva',       duracion:50, estado:'completada', av:'LP', color:'#2dd4bf' },
-  { hora:'10:00', paciente:'Miguel Torres',  tipo:'Ansiedad generalizada',   duracion:50, estado:'completada', av:'MT', color:'#60a5fa' },
-  { hora:'11:30', paciente:'Carlos Ruiz',    tipo:'Primera consulta',         duracion:60, estado:'proxima',    av:'CR', color:'#fbbf24' },
-  { hora:'14:00', paciente:'Sofía Mendez',   tipo:'Depresión — seguimiento',  duracion:50, estado:'pendiente',  av:'SM', color:'#f472b6' },
-  { hora:'15:30', paciente:'Roberto Díaz',   tipo:'Terapia de pareja',        duracion:80, estado:'pendiente',  av:'RD', color:'#34d399' },
-  { hora:'17:00', paciente:'Patricia Vidal', tipo:'Estrés laboral',           duracion:50, estado:'pendiente',  av:'PV', color:'#fb923c' },
-  { hora:'18:00', paciente:'Elena García',   tipo:'Seguimiento mensual',      duracion:30, estado:'pendiente',  av:'EG', color:'#a78bfa' },
-];
+var CITAS_HOY = [];   // se llena con las citas reales de hoy desde la BD (módulo)
 var SOAP_PENDIENTES = [];   // se llena con datos reales desde la BD (módulo)
 var PACIENTES_RECIENTES = [];   // se llena con los reales desde la BD (módulo)
 var NOTIFS_PSI = [
@@ -390,6 +382,7 @@ function estadoBadge(e){
 }
 
 function renderCitas(){
+  if(!CITAS_HOY.length){ document.getElementById('lista-citas').innerHTML='<p style="font-size:11px;color:#475569;text-align:center;padding:14px 0;">No tienes citas hoy.</p>'; return; }
   document.getElementById('lista-citas').innerHTML=CITAS_HOY.map(function(c){
     var tr=c.estado==='completada'?'<span class="material-symbols-outlined" style="font-size:16px;color:#2dd4bf;flex-shrink:0;font-variation-settings:\'FILL\' 1;">check_circle</span>':c.estado==='proxima'?'<span class="material-symbols-outlined" style="font-size:16px;color:#a78bfa;flex-shrink:0;font-variation-settings:\'FILL\' 1;">radio_button_checked</span>':'';
     return '<div class="cita-row cita-'+c.estado+'"><div style="display:flex;align-items:center;gap:12px;"><div style="width:36px;height:36px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:'+hexRgba(c.color,0.15)+';color:'+c.color+';">'+c.av+'</div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:13px;font-weight:700;color:#f1f5f9;">'+c.paciente+'</span>'+estadoBadge(c.estado)+'</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px;"><span style="font-size:11px;color:#475569;">'+c.hora+'</span><span style="color:#1e293b;">·</span><span style="font-size:11px;color:#475569;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+c.tipo+'</span><span style="color:#1e293b;">·</span><span style="font-size:11px;color:#475569;">'+c.duracion+' min</span></div></div>'+tr+'</div></div>';
@@ -952,7 +945,7 @@ if (citas?.length) {
     return {
       hora: c.hora_inicio.substring(0,5),
       paciente: nombre.trim(),
-      tipo: c.tipo === 'telemedicina' ? 'Videollamada' : 'Presencial',
+      tipo: (['online','telemedicina','videollamada'].indexOf(c.tipo) >= 0) ? 'Videollamada' : 'Presencial',
       duracion: 50,
       estado: estado,
       av: initiales(c.pacientes?.nombre, c.pacientes?.apellido),
