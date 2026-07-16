@@ -516,56 +516,46 @@ function abrirRecurso(titulo, tipo, url) {
 </script>
 
 <script>
-// Diario de ánimo
+// Diario de ánimo (persiste en la tabla diario_animo vía el módulo → lo ve el psicólogo en la ficha)
 (function(){
   var COLORS = ['','rgba(248,113,113,0.75)','rgba(251,191,36,0.75)','rgba(148,163,184,0.5)','rgba(52,211,153,0.55)','rgba(52,211,153,0.85)'];
   var DIAS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  window.__animoMap = window.__animoMap || {};
 
-  function fechaKey(d) {
-    return 'tp_animo_' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  function isoKey(d) {
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
+  function valDe(d) { return parseInt(window.__animoMap[isoKey(d)]) || 0; }
 
   function getLast7() {
     var result = [];
     for (var i = 6; i >= 0; i--) {
       var d = new Date(); d.setDate(d.getDate() - i);
-      result.push({ fecha: new Date(d), val: parseInt(localStorage.getItem(fechaKey(d))) || 0 });
+      result.push({ fecha: new Date(d), val: valDe(d) });
     }
     return result;
   }
-
   function calcRacha() {
     var racha = 0, d = new Date();
-    while (true) {
-      if (!parseInt(localStorage.getItem(fechaKey(d)))) break;
-      racha++; d.setDate(d.getDate() - 1);
-    }
+    while (valDe(d)) { racha++; d.setDate(d.getDate() - 1); }
     return racha;
   }
 
   function renderAnimo() {
-    var hoyKey = fechaKey(new Date());
-    var hoyVal = parseInt(localStorage.getItem(hoyKey)) || 0;
+    var hoyVal = valDe(new Date());
     var datos = getLast7();
-
     document.querySelectorAll('.animo-btn').forEach(function(btn) {
       var v = parseInt(btn.getAttribute('data-val'));
-      if (hoyVal && v === hoyVal) {
-        btn.style.background = 'rgba(52,211,153,0.15)';
-        btn.style.borderColor = 'rgba(52,211,153,0.4)';
-      } else {
-        btn.style.background = 'rgba(255,255,255,0.03)';
-        btn.style.borderColor = 'rgba(255,255,255,0.07)';
-      }
+      var on = hoyVal && v === hoyVal;
+      btn.style.background = on ? 'rgba(52,211,153,0.15)' : 'rgba(255,255,255,0.03)';
+      btn.style.borderColor = on ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.07)';
     });
-
-    document.getElementById('animo-ok').style.display = hoyVal ? 'block' : 'none';
-
-    var racha = calcRacha();
-    document.getElementById('animo-racha').textContent = racha >= 2 ? '🔥 ' + racha + ' días' : racha === 1 ? '🔥 1 día' : '';
-
+    var okEl = document.getElementById('animo-ok'); if (okEl) okEl.style.display = hoyVal ? 'block' : 'none';
+    var rEl = document.getElementById('animo-racha');
+    if (rEl) { var racha = calcRacha(); rEl.textContent = racha >= 2 ? '🔥 ' + racha + ' días' : racha === 1 ? '🔥 1 día' : ''; }
     var chart = document.getElementById('animo-chart');
     var labels = document.getElementById('animo-labels');
+    if (!chart || !labels) return;
     chart.innerHTML = ''; labels.innerHTML = '';
     datos.forEach(function(item) {
       var pct = item.val ? (item.val / 5 * 100) : 6;
@@ -579,10 +569,12 @@ function abrirRecurso(titulo, tipo, url) {
       labels.appendChild(lbl);
     });
   }
+  window.renderAnimo = renderAnimo;
 
   window.registrarAnimo = function(val) {
-    localStorage.setItem(fechaKey(new Date()), val);
+    window.__animoMap[isoKey(new Date())] = val;  // se pinta al instante
     renderAnimo();
+    if (window.__guardarAnimo) window.__guardarAnimo(val);  // persiste en BD (lo monta el módulo)
   };
 
   renderAnimo();
@@ -1291,6 +1283,26 @@ if (!perfil) return
 // Cargar citas REALES del paciente en el calendario (reemplaza los demos)
 try {
   const { data: pacRow } = await supabase.from('pacientes').select('id').eq('usuario_id', perfil.id).maybeSingle()
+
+  // Diario de ánimo: cargar histórico (30 días) + persistir de verdad en diario_animo
+  if (pacRow) {
+    const _desdeA = new Date(); _desdeA.setDate(_desdeA.getDate() - 30)
+    const { data: _animo } = await supabase.from('diario_animo')
+      .select('fecha, valor').eq('paciente_id', pacRow.id)
+      .gte('fecha', _desdeA.toISOString().split('T')[0]).order('fecha')
+    window.__animoMap = window.__animoMap || {}
+    ;(_animo || []).forEach(function(a){ window.__animoMap[a.fecha] = a.valor })
+    window.__guardarAnimo = async function(val){
+      const h = new Date()
+      const iso = h.getFullYear() + '-' + String(h.getMonth()+1).padStart(2,'0') + '-' + String(h.getDate()).padStart(2,'0')
+      window.__animoMap[iso] = val
+      try {
+        await supabase.from('diario_animo').upsert({ paciente_id: pacRow.id, fecha: iso, valor: val }, { onConflict: 'paciente_id,fecha' })
+      } catch(e) { console.warn('diario_animo:', e.message) }
+    }
+    if (window.renderAnimo) window.renderAnimo()
+  }
+
   let citasP = []
   if (pacRow) {
     const r = await supabase.from('citas')

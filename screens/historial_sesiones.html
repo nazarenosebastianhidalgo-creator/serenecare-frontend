@@ -170,6 +170,15 @@ html.light .sesion-row:hover{background:#f8fafc!important;border-color:#cbd5e1!i
         <div id="tu-progreso">
           <p class="text-slate-500 text-sm" style="padding:0.4rem 0;">Cargando…</p>
         </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.07);margin:18px 0 14px;"></div>
+        <h3 class="font-headline font-bold text-white text-sm flex items-center gap-2 mb-1">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:18px;">mood</span>
+          Tu ánimo
+        </h3>
+        <p class="text-xs text-slate-500 mb-3">Cómo te has sentido últimamente (lo registras en <b>Inicio</b>).</p>
+        <div id="tu-animo">
+          <p class="text-slate-500 text-sm" style="padding:0.4rem 0;">Cargando…</p>
+        </div>
       </div>
     </div>
   </div>
@@ -434,6 +443,29 @@ function mostrarToast(msg) {
       else leg = '<a href="escalas_paciente.html" style="display:inline-block;margin-top:8px;font-size:0.72rem;font-weight:700;color:#34d399;text-decoration:none;">Completa una escala para empezar →</a>'
       return svg + leg
     }
+    // "Tu ánimo": barritas de los últimos 14 días (el paciente lo registra en Inicio → diario_animo)
+    function renderAnimoBarras(map) {
+      const COLORS = ['','#f87171','#fbbf24','#94a3b8','#4ade80','#34d399']
+      const DIAS = ['D','L','M','X','J','V','S']
+      const dias = []; let hay = false
+      for (let i = 13; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i)
+        const iso = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0')
+        const v = parseInt(map[iso]) || 0
+        if (v) hay = true
+        dias.push({ d: d, v: v })
+      }
+      if (!hay) return '<p style="font-size:0.72rem;color:#64748b;padding:6px 0;">Registra tu ánimo en <a href="portal_paciente_inicio.html" style="color:#a78bfa;font-weight:700;text-decoration:none;">Inicio</a> y tu evolución aparecerá aquí.</p>'
+      let bars = '<div style="display:flex;align-items:flex-end;gap:4px;height:64px;">'
+      dias.forEach(function(it){
+        const pct = it.v ? (it.v/5*100) : 5
+        const col = it.v ? COLORS[it.v] : 'rgba(255,255,255,0.05)'
+        bars += '<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%;"><div title="'+(it.v||'—')+'/5" style="width:100%;border-radius:4px 4px 0 0;background:'+col+';height:'+pct+'%;transition:height .4s;"></div></div>'
+      })
+      bars += '</div><div style="display:flex;gap:4px;margin-top:5px;">'
+      dias.forEach(function(it){ bars += '<span style="flex:1;text-align:center;font-size:0.55rem;font-weight:700;color:#475569;font-family:Manrope,sans-serif;">'+DIAS[it.d.getDay()]+'</span>' })
+      return bars + '</div>'
+    }
     try {
       const cont = document.getElementById('tu-progreso')
       const { data: _pacP } = await supabase.from('pacientes').select('id').eq('usuario_id', session.user.id).maybeSingle()
@@ -445,6 +477,20 @@ function mostrarToast(msg) {
       }
       if (cont) cont.innerHTML = renderProgresoChart(evs)
     } catch(e) { console.warn('Progreso:', e.message); const c = document.getElementById('tu-progreso'); if (c) c.innerHTML = renderProgresoChart([]) }
+
+    // "Tu ánimo": cargar de diario_animo (lo registra el paciente en Inicio)
+    try {
+      const contA = document.getElementById('tu-animo')
+      const { data: _pacA } = await supabase.from('pacientes').select('id').eq('usuario_id', session.user.id).maybeSingle()
+      const animoMap = {}
+      if (_pacA) {
+        const desde = new Date(); desde.setDate(desde.getDate() - 14)
+        const r = await supabase.from('diario_animo').select('fecha, valor')
+          .eq('paciente_id', _pacA.id).gte('fecha', desde.toISOString().split('T')[0])
+        ;(r.data || []).forEach(function(a){ animoMap[a.fecha] = a.valor })
+      }
+      if (contA) contA.innerHTML = renderAnimoBarras(animoMap)
+    } catch(e) { console.warn('Ánimo:', e.message); const c = document.getElementById('tu-animo'); if (c) c.innerHTML = renderAnimoBarras({}) }
   } catch(e) { mostrarError(e.message) }
 
   window.verInforme = id => { alert('Informe: ' + id) }
