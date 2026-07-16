@@ -194,11 +194,12 @@ var ESTADO_LABEL = { pendiente:'Pendiente', revisada:'Revisada', implementada:'I
 var ESTADO_OPCIONES = ['pendiente','revisada','implementada','descartada'];
 var _modalId = null;
 
+window.__SUG = window.__SUG || [];   // lo llena el módulo desde la BD
 function cargarSugerencias() {
-  return JSON.parse(localStorage.getItem('tp_sugerencias') || '[]');
+  return window.__SUG || [];
 }
 function guardarSugerencias(arr) {
-  localStorage.setItem('tp_sugerencias', JSON.stringify(arr));
+  window.__SUG = arr;   // la persistencia real va a la BD (ver mutaciones + módulo)
 }
 
 function actualizarStats(todas) {
@@ -337,13 +338,13 @@ function escHtml(str) {
 window.cambiarEstado = function(id, nuevoEstado) {
   var todas = cargarSugerencias();
   var sg = todas.find(function(s){ return String(s.id) === String(id); });
-  if (sg) { sg.estado = nuevoEstado; guardarSugerencias(todas); renderSugerencias(); }
+  if (sg) { sg.estado = nuevoEstado; if (window.__sugUpdate) window.__sugUpdate(id, { estado: nuevoEstado }); renderSugerencias(); }
 };
 
 window.eliminarSugerencia = function(id) {
   if (!confirm('¿Eliminar esta sugerencia?')) return;
-  var todas = cargarSugerencias().filter(function(s){ return String(s.id) !== String(id); });
-  guardarSugerencias(todas);
+  if (window.__sugDelete) window.__sugDelete(id);
+  window.__SUG = cargarSugerencias().filter(function(s){ return String(s.id) !== String(id); });
   renderSugerencias();
 };
 
@@ -365,38 +366,41 @@ window.guardarNota = function() {
   var nota = document.getElementById('modal-nota').value.trim();
   var todas = cargarSugerencias();
   var sg = todas.find(function(s){ return String(s.id) === String(_modalId); });
-  if (sg) { sg.nota = nota; guardarSugerencias(todas); }
+  if (sg) { sg.nota = nota; if (window.__sugUpdate) window.__sugUpdate(_modalId, { nota: nota }); }
   cerrarModal();
   renderSugerencias();
 };
 
 window.limpiarTodo = function() {
   if (!confirm('¿Eliminar TODAS las sugerencias? Esta acción no se puede deshacer.')) return;
-  localStorage.removeItem('tp_sugerencias');
+  if (window.__sugDeleteAll) window.__sugDeleteAll();
+  window.__SUG = [];
   renderSugerencias();
 };
 
-// Init
+// Init (se pinta vacío; el módulo carga de la BD y vuelve a pintar)
 renderSugerencias();
-
-// Datos de demo si no hay nada
-(function seedDemo() {
-  if (cargarSugerencias().length > 0) return;
-  var demo = [
-    { id: 1716000000001, fecha: new Date(Date.now() - 2*24*60*60*1000).toISOString(), rol: 'psicologo', usuario: 'Dr. López', clinica: 'Clínica Salud Mental Norte', categoria: 'agenda', texto: 'Sería ideal poder ver la disponibilidad de todos los terapeutas en una sola vista de calendario, en lugar de cambiar uno por uno.', prioridad: 'importante', estado: 'pendiente' },
-    { id: 1716000000002, fecha: new Date(Date.now() - 5*24*60*60*1000).toISOString(), rol: 'admin_clinica', usuario: 'María Gómez', clinica: 'Centro PsicoCare', categoria: 'facturacion', texto: 'Necesitamos poder generar facturas agrupadas por seguro médico al final del mes. Ahora hay que hacerlo una por una.', prioridad: 'critico', estado: 'pendiente' },
-    { id: 1716000000003, fecha: new Date(Date.now() - 10*24*60*60*1000).toISOString(), rol: 'psicologo', usuario: 'Dra. Martínez', clinica: 'Clínica Salud Mental Norte', categoria: 'ia', texto: 'El informe de IA a veces incluye términos muy técnicos que el paciente no entiende. ¿Se podría ajustar el nivel del lenguaje?', prioridad: 'nice', estado: 'revisada' },
-    { id: 1716000000004, fecha: new Date(Date.now() - 15*24*60*60*1000).toISOString(), rol: 'admin_clinica', usuario: 'Carlos Ruiz', clinica: 'PsicoSalud Sur', categoria: 'pacientes', texto: 'Falta un campo de "notas internas del admin" en la ficha del paciente, separado de las notas clínicas del terapeuta.', prioridad: 'importante', estado: 'implementada' },
-  ];
-  guardarSugerencias(demo);
-  renderSugerencias();
-})();
 </script>
 
 <script type="module">
 import { guardaSuperAdmin } from '../js/admin.js';
 import { supabase } from '../js/supabase-client.js';
 await guardaSuperAdmin();
+
+// Cargar las sugerencias REALES de la BD (antes: localStorage + demos)
+async function _cargarSugerenciasDB() {
+  const { data } = await supabase.from('sugerencias_mejora').select('*').order('created_at', { ascending: false });
+  window.__SUG = (data || []).map(function(r) {
+    return { id: r.id, fecha: r.created_at, rol: r.rol, usuario: r.usuario_nombre, clinica: r.clinica_nombre,
+             categoria: r.categoria, texto: r.texto, prioridad: r.prioridad, tamano: r.tamano, estado: r.estado, nota: r.nota };
+  });
+  if (window.renderSugerencias) window.renderSugerencias();
+}
+window.__sugUpdate    = async function(id, campos) { try { await supabase.from('sugerencias_mejora').update(campos).eq('id', id); } catch(e) { console.warn('sug update:', e.message); } };
+window.__sugDelete    = async function(id) { try { await supabase.from('sugerencias_mejora').delete().eq('id', id); } catch(e) { console.warn('sug delete:', e.message); } };
+window.__sugDeleteAll = async function() { try { const ids = (window.__SUG || []).map(function(s){ return s.id; }); if (ids.length) await supabase.from('sugerencias_mejora').delete().in('id', ids); } catch(e) { console.warn('sug clear:', e.message); } };
+await _cargarSugerenciasDB();
+
 const btn = document.getElementById('btn-logout');
 if (btn) {
   btn.addEventListener('click', async e => {
