@@ -999,7 +999,7 @@ try {
     if (proxCita) {
       kpi2.textContent = proxCita.hora_inicio.substring(0,5);
       var _cuando = proxCita.fecha === hoy ? 'hoy' : new Date(proxCita.fecha + 'T00:00:00').toLocaleDateString('es-ES', { day:'numeric', month:'short' });
-      if (kpi2.nextElementSibling) kpi2.nextElementSibling.textContent = ((proxCita.pacientes?.nombre||'') + ' ' + (proxCita.pacientes?.apellido||'')).trim() + ' · ' + _cuando;
+      if (kpi2.nextElementSibling) kpi2.nextElementSibling.textContent = 'Próxima cita · ' + ((proxCita.pacientes?.nombre||'') + ' ' + (proxCita.pacientes?.apellido||'')).trim() + ' · ' + _cuando;
     } else {
       kpi2.textContent = '—';
       if (kpi2.nextElementSibling) kpi2.nextElementSibling.textContent = 'Sin próximas citas';
