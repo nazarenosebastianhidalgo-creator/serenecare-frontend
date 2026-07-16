@@ -133,11 +133,11 @@
       <!-- Avatar + basic info -->
       <div class="card text-center" style="padding:1.5rem;">
         <div id="pac-avatar" class="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-extrabold mx-auto mb-4" style="background:rgba(139,92,246,0.2);color:#a78bfa;font-family:Manrope,sans-serif;">ER</div>
-        <h3 id="pac-nombre" class="font-headline font-extrabold text-white text-lg">Elena Rodríguez</h3>
-        <p id="pac-diagnostico" class="text-xs mt-1" style="color:#64748b;">Trastorno de Ansiedad Social</p>
+        <h3 id="pac-nombre" class="font-headline font-extrabold text-white text-lg">Cargando…</h3>
+        <p id="pac-diagnostico" class="text-xs mt-1" style="color:#64748b;">—</p>
         <div class="flex items-center justify-center gap-2 mt-3">
           <span id="pac-estado-badge" class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.2);">Activo</span>
-          <span id="pac-sesiones-badge" class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:rgba(255,255,255,0.04);color:#64748b;border:1px solid rgba(255,255,255,0.08);">24 sesiones</span>
+          <span id="pac-sesiones-badge" class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:rgba(255,255,255,0.04);color:#64748b;border:1px solid rgba(255,255,255,0.08);">— sesiones</span>
         </div>
       </div>
 
@@ -170,11 +170,11 @@
         <div class="flex flex-col gap-3">
           <div style="display:flex;align-items:center;gap:8px;">
             <span class="material-symbols-outlined" style="font-size:15px;color:#a78bfa;font-variation-settings:'FILL' 1;">mail</span>
-            <span id="pac-email" style="font-size:11px;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">elena.r@email.com</span>
+            <span id="pac-email" style="font-size:11px;color:#64748b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">—</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             <span class="material-symbols-outlined" style="font-size:15px;color:#a78bfa;font-variation-settings:'FILL' 1;">call</span>
-            <span id="pac-telefono" style="font-size:11px;color:#64748b;">+34 612 345 678</span>
+            <span id="pac-telefono" style="font-size:11px;color:#64748b;">—</span>
           </div>
         </div>
       </div>
@@ -249,12 +249,8 @@
           <div style="display:flex;flex-direction:column;gap:10px;">
             <input id="ej-titulo" type="text" placeholder="Título del ejercicio…" style="width:100%;padding:9px 13px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:0.83rem;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(167,139,250,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
             <textarea id="ej-instrucciones" placeholder="Instrucciones para el paciente…" rows="3" style="width:100%;padding:9px 13px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:0.83rem;font-family:Inter,sans-serif;outline:none;resize:vertical;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(167,139,250,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"></textarea>
-            <div style="display:flex;gap:10px;align-items:center;">
-              <div style="flex:1;">
-                <label style="font-size:10px;font-weight:700;color:#64748b;display:block;margin-bottom:4px;font-family:Manrope,sans-serif;text-transform:uppercase;letter-spacing:0.06em;">Fecha entrega</label>
-                <input id="ej-fecha" type="date" style="width:100%;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;font-size:0.82rem;font-family:Inter,sans-serif;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='rgba(167,139,250,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
-              </div>
-              <button onclick="asignarEjercicio()" style="padding:9px 20px;border-radius:10px;background:linear-gradient(135deg,rgba(167,139,250,0.85),rgba(139,92,246,0.85));border:none;color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;white-space:nowrap;margin-top:18px;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+            <div style="display:flex;justify-content:flex-end;">
+              <button onclick="asignarEjercicio()" style="padding:9px 20px;border-radius:10px;background:linear-gradient(135deg,rgba(167,139,250,0.85),rgba(139,92,246,0.85));border:none;color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:Manrope,sans-serif;white-space:nowrap;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
                 <span style="display:flex;align-items:center;gap:6px;"><span class="material-symbols-outlined" style="font-size:15px;">send</span>Asignar</span>
               </button>
             </div>
@@ -307,6 +303,7 @@
         <!-- Canvas Chart.js -->
         <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:20px;">
           <canvas id="canvas-escalas" height="180"></canvas>
+          <p id="escalas-empty" style="display:none;text-align:center;font-size:12px;color:#475569;padding:40px 0;">Aún no hay resultados de PHQ-9 ni GAD-7 para este paciente.<br>Envíale una escala con el botón «Solicitar».</p>
         </div>
       </div>
 
@@ -329,28 +326,28 @@
               <span class="material-symbols-outlined" style="font-size:16px;color:#a78bfa;font-variation-settings:'FILL' 1;">event</span>
               <span style="font-size:12px;color:#64748b;">Total sesiones</span>
             </div>
-            <span style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;" id="stat-sesiones">24</span>
+            <span style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;" id="stat-sesiones">—</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,0.02);">
             <div style="display:flex;align-items:center;gap:8px;">
               <span class="material-symbols-outlined" style="font-size:16px;color:#fbbf24;font-variation-settings:'FILL' 1;">clinical_notes</span>
               <span style="font-size:12px;color:#64748b;">Notas SOAP</span>
             </div>
-            <span style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;" id="stat-notas">22</span>
+            <span style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;" id="stat-notas">—</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,0.02);">
             <div style="display:flex;align-items:center;gap:8px;">
               <span class="material-symbols-outlined" style="font-size:16px;color:#34d399;font-variation-settings:'FILL' 1;">psychology</span>
               <span style="font-size:12px;color:#64748b;">Informes IA</span>
             </div>
-            <span style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;" id="stat-informes">3</span>
+            <span style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;" id="stat-informes">—</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,0.02);">
             <div style="display:flex;align-items:center;gap:8px;">
               <span class="material-symbols-outlined" style="font-size:16px;color:#60a5fa;font-variation-settings:'FILL' 1;">schedule</span>
               <span style="font-size:12px;color:#64748b;">Horas totales</span>
             </div>
-            <span style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;" id="stat-horas">36h</span>
+            <span style="font-size:13px;font-weight:800;color:#e2e8f0;font-family:Manrope,sans-serif;" id="stat-horas">—</span>
           </div>
         </div>
       </div>
@@ -460,14 +457,7 @@
 
 <script>
 var TIMELINE_DATA = {
-  todo: [
-    { tipo:'sesion', fecha:'8 may 2026', hora:'14:30', titulo:'Sesión TCC — Exposición gradual', desc:'Paciente reporta reducción de evitación en situaciones sociales laborales. Se practicó exposición imaginada y role-play de escenario de reunión de trabajo. Respuesta positiva.', color:'#a78bfa', icono:'event', bg:'rgba(139,92,246,0.15)', badge:'Completada', badgeColor:'#34d399' },
-    { tipo:'nota',   fecha:'7 may 2026', hora:'15:10', titulo:'Nota SOAP — Sesión anterior', desc:'S: Refiere menos evitación. O: Contacto visual sostenido, lenguaje corporal más abierto. A: Progreso moderado en jerarquía de exposición. P: Continuar con ítem 5 de jerarquía.', color:'#fbbf24', icono:'clinical_notes', bg:'rgba(245,158,11,0.15)', badge:'SOAP', badgeColor:'#fbbf24' },
-    { tipo:'sesion', fecha:'1 may 2026', hora:'14:30', titulo:'Sesión TCC — Reestructuración cognitiva', desc:'Trabajamos pensamiento automático "todos me juzgan". Se aplicó registro de pensamiento disfuncional. Paciente identificó evidencia en contra con poca dificultad.', color:'#a78bfa', icono:'event', bg:'rgba(139,92,246,0.15)', badge:'Completada', badgeColor:'#34d399' },
-    { tipo:'informe',fecha:'28 abr 2026', hora:'', titulo:'Informe IA — Progreso mensual', desc:'Análisis de 4 sesiones del mes de abril. Tendencia positiva en reducción de evitación conductual. Puntuación GAD-7 bajó de 14 a 8. Se recomienda mantener ritmo actual.', color:'#34d399', icono:'psychology', bg:'rgba(52,211,153,0.15)', badge:'IA', badgeColor:'#34d399' },
-    { tipo:'sesion', fecha:'24 abr 2026', hora:'14:30', titulo:'Sesión TCC — Psicoeducación ansiedad', desc:'Explicación del modelo cognitivo-conductual de la ansiedad social. Paciente conectó bien con el modelo. Se estableció jerarquía de situaciones temidas.', color:'#a78bfa', icono:'event', bg:'rgba(139,92,246,0.15)', badge:'Completada', badgeColor:'#34d399' },
-    { tipo:'sesion', fecha:'10 abr 2026', hora:'11:00', titulo:'Sesión inicial — Evaluación y anamnesis', desc:'Primera sesión de evaluación. Historia clínica completa. Motivo de consulta: ansiedad social que interfiere en entorno laboral. Objetivos acordados para el tratamiento.', color:'#60a5fa', icono:'person_search', bg:'rgba(96,165,250,0.15)', badge:'Evaluación', badgeColor:'#60a5fa' },
-  ],
+  todo: [],
   sesiones: [],
   notas: [],
   informes: [],
@@ -544,41 +534,52 @@ var _chartEscalasInstance = null;
 function initChartEscalas(datosPhq, datosGad) {
   window._chartEscalasInited = true;
 
-  // Demo data si no se pasan datos reales
-  var phq = datosPhq || [
-    { fecha: '10 ene', val: 18 },
-    { fecha: '7 feb',  val: 16 },
-    { fecha: '7 mar',  val: 14 },
-    { fecha: '10 abr', val: 11 },
-    { fecha: '1 may',  val: 9  },
-    { fecha: '8 may',  val: 8  },
-  ];
-  var gad = datosGad || [
-    { fecha: '10 ene', val: 14 },
-    { fecha: '7 feb',  val: 13 },
-    { fecha: '7 mar',  val: 11 },
-    { fecha: '10 abr', val: 9  },
-    { fecha: '1 may',  val: 7  },
-    { fecha: '8 may',  val: 6  },
-  ];
+  // Datos REALES (guardados por renderEvaluaciones). Nada de demo.
+  var phq = datosPhq || window.__phqData || [];
+  var gad = datosGad || window.__gadData || [];
 
-  // Chips resumen: último valor + delta
-  var lastPhq = phq[phq.length - 1];
-  var firstPhq = phq[0];
-  var deltaPhq = lastPhq.val - firstPhq.val;
-  document.getElementById('chip-phq9-val').textContent = lastPhq.val + ' pts';
-  document.getElementById('chip-phq9-delta').textContent = (deltaPhq < 0 ? '↓' + Math.abs(deltaPhq) : deltaPhq > 0 ? '↑' + deltaPhq : '=') + ' total';
-  document.getElementById('chip-phq9-delta').style.color = deltaPhq < 0 ? '#34d399' : '#f87171';
+  var canvas = document.getElementById('canvas-escalas');
+  var empty  = document.getElementById('escalas-empty');
 
-  var lastGad = gad[gad.length - 1];
-  var firstGad = gad[0];
-  var deltaGad = lastGad.val - firstGad.val;
-  document.getElementById('chip-gad7-val').textContent = lastGad.val + ' pts';
-  document.getElementById('chip-gad7-delta').textContent = (deltaGad < 0 ? '↓' + Math.abs(deltaGad) : deltaGad > 0 ? '↑' + deltaGad : '=') + ' total';
-  document.getElementById('chip-gad7-delta').style.color = deltaGad < 0 ? '#34d399' : '#f87171';
+  // Sin datos reales → estado vacío, sin curvas falsas
+  if (!phq.length && !gad.length) {
+    if (_chartEscalasInstance) { _chartEscalasInstance.destroy(); _chartEscalasInstance = null; }
+    if (canvas) canvas.style.display = 'none';
+    if (empty)  empty.style.display  = 'block';
+    document.getElementById('chip-phq9-val').textContent = '—';
+    document.getElementById('chip-gad7-val').textContent = '—';
+    document.getElementById('chip-phq9-delta').textContent = '';
+    document.getElementById('chip-gad7-delta').textContent = '';
+    return;
+  }
+  if (canvas) canvas.style.display = 'block';
+  if (empty)  empty.style.display  = 'none';
 
-  // Unir labels (fechas de PHQ o GAD)
-  var labels = phq.map(function(p){ return p.fecha; });
+  // Chips resumen: último valor + delta (solo si esa escala tiene datos)
+  if (phq.length) {
+    var lastPhq = phq[phq.length - 1];
+    var deltaPhq = lastPhq.val - phq[0].val;
+    document.getElementById('chip-phq9-val').textContent = lastPhq.val + ' pts';
+    document.getElementById('chip-phq9-delta').textContent = (deltaPhq < 0 ? '↓' + Math.abs(deltaPhq) : deltaPhq > 0 ? '↑' + deltaPhq : '=') + ' total';
+    document.getElementById('chip-phq9-delta').style.color = deltaPhq < 0 ? '#34d399' : '#f87171';
+  } else {
+    document.getElementById('chip-phq9-val').textContent = '—';
+    document.getElementById('chip-phq9-delta').textContent = '';
+  }
+
+  if (gad.length) {
+    var lastGad = gad[gad.length - 1];
+    var deltaGad = lastGad.val - gad[0].val;
+    document.getElementById('chip-gad7-val').textContent = lastGad.val + ' pts';
+    document.getElementById('chip-gad7-delta').textContent = (deltaGad < 0 ? '↓' + Math.abs(deltaGad) : deltaGad > 0 ? '↑' + deltaGad : '=') + ' total';
+    document.getElementById('chip-gad7-delta').style.color = deltaGad < 0 ? '#34d399' : '#f87171';
+  } else {
+    document.getElementById('chip-gad7-val').textContent = '—';
+    document.getElementById('chip-gad7-delta').textContent = '';
+  }
+
+  // Labels desde la serie que tenga más puntos
+  var labels = (phq.length >= gad.length ? phq : gad).map(function(p){ return p.fecha; });
 
   if (_chartEscalasInstance) { _chartEscalasInstance.destroy(); }
 
@@ -667,14 +668,9 @@ function initChartEscalas(datosPhq, datosGad) {
 
 // ── Ejercicios entre sesiones ──────────────────────────────────────────────
 
-function getEjKey() { return 'tp_ejercicios_' + getPacienteId(); }
-
+// Ejercicios reales (tabla `ejercicios`); los carga el módulo en window.__ejercicios
 function getEjercicios() {
-  try { return JSON.parse(localStorage.getItem(getEjKey())) || []; } catch(e) { return []; }
-}
-
-function saveEjercicios(list) {
-  localStorage.setItem(getEjKey(), JSON.stringify(list));
+  return window.__ejercicios || [];
 }
 
 var EJ_PLANTILLAS = [
@@ -718,36 +714,23 @@ function usarPlantilla(idx) {
 function limpiarForm() {
   document.getElementById('ej-titulo').value = '';
   document.getElementById('ej-instrucciones').value = '';
-  document.getElementById('ej-fecha').value = '';
   document.getElementById('ej-titulo').focus();
 }
 
-function asignarEjercicio() {
+async function asignarEjercicio() {
   var titulo = document.getElementById('ej-titulo').value.trim();
   var instr  = document.getElementById('ej-instrucciones').value.trim();
-  var fecha  = document.getElementById('ej-fecha').value;
   if (!titulo) { document.getElementById('ej-titulo').focus(); return; }
-
-  var lista = getEjercicios();
-  lista.unshift({
-    id: Date.now(),
-    titulo: titulo,
-    instrucciones: instr,
-    fecha: fecha,
-    estado: 'pendiente',
-    asignado: new Date().toLocaleDateString('es-ES', { day:'numeric', month:'short' })
-  });
-  saveEjercicios(lista);
-
-  document.getElementById('ej-titulo').value = '';
-  document.getElementById('ej-instrucciones').value = '';
-  document.getElementById('ej-fecha').value = '';
-  renderEjercicios();
+  if (!window.__asignarEjercicio) return;
+  var btnOk = await window.__asignarEjercicio(titulo, instr);
+  if (btnOk) {
+    document.getElementById('ej-titulo').value = '';
+    document.getElementById('ej-instrucciones').value = '';
+  }
 }
 
 function eliminarEjercicio(id) {
-  saveEjercicios(getEjercicios().filter(function(e){ return e.id !== id; }));
-  renderEjercicios();
+  if (window.__eliminarEjercicio) window.__eliminarEjercicio(id);
 }
 
 function renderEjercicios() {
@@ -759,7 +742,8 @@ function renderEjercicios() {
   }
   cont.innerHTML = lista.map(function(e) {
     var completado = e.estado === 'completado';
-    var fechaLabel = e.fecha ? new Date(e.fecha + 'T00:00').toLocaleDateString('es-ES', { day:'numeric', month:'short' }) : '—';
+    var fechaLabel = e.fecha_limite ? new Date(e.fecha_limite + 'T00:00').toLocaleDateString('es-ES', { day:'numeric', month:'short' }) : '—';
+    var asignadoLabel = e.created_at ? new Date(e.created_at).toLocaleDateString('es-ES', { day:'numeric', month:'short' }) : '—';
     return '<div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);margin-bottom:8px;">'
       + '<div style="width:34px;height:34px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:' + (completado ? 'rgba(52,211,153,0.12)' : 'rgba(167,139,250,0.12)') + ';border:1px solid ' + (completado ? 'rgba(52,211,153,0.25)' : 'rgba(167,139,250,0.25)') + ';">'
       +   '<span class="material-symbols-outlined" style="font-size:16px;color:' + (completado ? '#34d399' : '#a78bfa') + ';font-variation-settings:\'FILL\' 1;">' + (completado ? 'task_alt' : 'assignment') + '</span>'
@@ -770,9 +754,9 @@ function renderEjercicios() {
       +     '<span style="font-size:9px;font-weight:700;padding:1px 7px;border-radius:8px;background:' + (completado ? 'rgba(52,211,153,0.12)' : 'rgba(251,146,60,0.12)') + ';color:' + (completado ? '#34d399' : '#fb923c') + ';">' + (completado ? 'Completado' : 'Pendiente') + '</span>'
       +   '</div>'
       +   (e.instrucciones ? '<p style="font-size:0.75rem;color:#64748b;margin:0 0 4px;line-height:1.4;">' + e.instrucciones.substring(0,80) + (e.instrucciones.length > 80 ? '…' : '') + '</p>' : '')
-      +   '<span style="font-size:0.7rem;color:#475569;display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:12px;">event</span>Entrega: ' + fechaLabel + ' · Asignado: ' + e.asignado + '</span>'
+      +   '<span style="font-size:0.7rem;color:#475569;display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:12px;">event</span>Entrega: ' + fechaLabel + ' · Asignado: ' + asignadoLabel + '</span>'
       + '</div>'
-      + '<button onclick="eliminarEjercicio(' + e.id + ')" title="Eliminar" style="flex-shrink:0;width:26px;height:26px;border-radius:7px;border:none;background:none;cursor:pointer;color:#334155;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background=\'rgba(248,113,113,0.1)\';this.style.color=\'#f87171\'" onmouseout="this.style.background=\'none\';this.style.color=\'#334155\'">'
+      + '<button onclick="eliminarEjercicio(\'' + e.id + '\')" title="Eliminar" style="flex-shrink:0;width:26px;height:26px;border-radius:7px;border:none;background:none;cursor:pointer;color:#334155;display:flex;align-items:center;justify-content:center;" onmouseover="this.style.background=\'rgba(248,113,113,0.1)\';this.style.color=\'#f87171\'" onmouseout="this.style.background=\'none\';this.style.color=\'#334155\'">'
       +   '<span class="material-symbols-outlined" style="font-size:15px;">delete</span>'
       + '</button>'
       + '</div>';
@@ -788,31 +772,25 @@ function initChartAnimo() {
 
   var EMOJIS = ['','😢','😔','😐','🙂','😊'];
   var LABELS_EMOJI = ['','Muy mal','Mal','Regular','Bien','Muy bien'];
-  var labels = [], datos = [], registrados = 0, suma = 0;
 
-  for (var i = 29; i >= 0; i--) {
-    var d = new Date(); d.setDate(d.getDate() - i);
-    var key = 'tp_animo_' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-    var val = parseInt(localStorage.getItem(key)) || null;
-    var dia = d.getDate();
-    var mes = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][d.getMonth()];
-    labels.push(dia === 1 ? dia + ' ' + mes : '' + dia);
-    datos.push(val);
-    if (val) { registrados++; suma += val; }
+  // Datos REALES del paciente (diario_animo, cargados desde Supabase). Sin localStorage.
+  var labels = (window._animoLabels || []).slice();
+  var datos  = (window._animoDatos  || []).slice();
+
+  // Si aún no hay datos cargados, eje de 30 días vacío (no rompe el gráfico)
+  if (!datos.length) {
+    for (var i = 29; i >= 0; i--) {
+      var d = new Date(); d.setDate(d.getDate() - i);
+      var dia = d.getDate();
+      var mes = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][d.getMonth()];
+      labels.push(dia === 1 ? dia + ' ' + mes : '' + dia);
+      datos.push(null);
+    }
+    document.getElementById('animo-avg').textContent = '—';
+    document.getElementById('animo-racha-ficha').textContent = '0 días';
+    document.getElementById('animo-dias').textContent = '0 / 30';
   }
-
-  // Racha actual
-  var racha = 0, r = new Date();
-  while (true) {
-    var rk = 'tp_animo_' + r.getFullYear() + '-' + String(r.getMonth()+1).padStart(2,'0') + '-' + String(r.getDate()).padStart(2,'0');
-    if (!parseInt(localStorage.getItem(rk))) break;
-    racha++; r.setDate(r.getDate() - 1);
-  }
-
-  var avg = registrados ? (suma / registrados).toFixed(1) : null;
-  document.getElementById('animo-avg').textContent = avg ? avg + ' / 5' : '—';
-  document.getElementById('animo-racha-ficha').textContent = racha + (racha === 1 ? ' día' : ' días');
-  document.getElementById('animo-dias').textContent = registrados + ' / 30';
+  // (avg/racha/días ya los rellenó la carga desde Supabase cuando sí hay datos)
 
   if (_chartAnimoInstance) { _chartAnimoInstance.destroy(); }
 
@@ -1080,9 +1058,12 @@ window.renderEvaluaciones = function(lista) {
   var gadData = sorted.filter(function(e){ return e.tipo === 'GAD-7'; }).map(function(e){
     return { fecha: new Date(e.created_at).toLocaleDateString('es-ES',{day:'numeric',month:'short'}), val: e.puntaje };
   });
-  if (phqData.length || gadData.length) {
-    window._chartEscalasInited = false;
-    initChartEscalas(phqData.length ? phqData : null, gadData.length ? gadData : null);
+  // Guardar datos reales para que la pestaña del gráfico los use (sin demo)
+  window.__phqData = phqData;
+  window.__gadData = gadData;
+  window._chartEscalasInited = false;
+  if (document.getElementById('chart-escalas').style.display !== 'none') {
+    initChartEscalas(phqData, gadData);
   }
 };
 </script>
@@ -1118,6 +1099,56 @@ window.enviarSolicitudEscala = async function(tipo) {
   });
   return { ok: !error, msg: error ? error.message : '' };
 };
+
+// ── Ejercicios reales: recursos(tipo='ejercicio') + recursos_asignados + respuestas_ejercicios ──
+// (el MISMO sistema que ve y completa el paciente; la tabla `ejercicios` estaba muerta)
+async function _clinicaDelPaciente() {
+  const { data: pac } = await supabase.from('pacientes').select('clinica_id').eq('id', pacienteId).single();
+  return pac ? pac.clinica_id : null;
+}
+async function cargarEjercicios() {
+  if (!pacienteId || pacienteId === 'demo') { window.__ejercicios = []; window.renderEjercicios(); return; }
+  const [{ data: asig }, { data: resp }] = await Promise.all([
+    supabase.from('recursos_asignados')
+      .select('id, recurso_id, created_at, recursos!inner(titulo, descripcion, tipo)')
+      .eq('paciente_id', pacienteId)
+      .eq('recursos.tipo', 'ejercicio')
+      .order('created_at', { ascending: false }),
+    supabase.from('respuestas_ejercicios').select('recurso_id').eq('paciente_id', pacienteId),
+  ]);
+  const completados = new Set((resp || []).map(r => r.recurso_id));
+  window.__ejercicios = (asig || []).map(a => ({
+    id: a.id,                       // id de la asignación (para quitar)
+    recurso_id: a.recurso_id,
+    titulo: a.recursos ? a.recursos.titulo : 'Ejercicio',
+    instrucciones: a.recursos ? a.recursos.descripcion : '',
+    fecha_limite: null,
+    created_at: a.created_at,
+    estado: completados.has(a.recurso_id) ? 'completado' : 'pendiente',
+  }));
+  window.renderEjercicios();
+}
+window.__asignarEjercicio = async function(titulo, instrucciones) {
+  if (!pacienteId || pacienteId === 'demo') { alert('Sin paciente válido'); return false; }
+  const cid = await _clinicaDelPaciente();
+  const { data: rec, error: recErr } = await supabase.from('recursos').insert({
+    tipo: 'ejercicio', titulo, descripcion: instrucciones || null,
+    clinica_id: cid, activo: true, formato: 'HTML',
+  }).select('id').single();
+  if (recErr) { alert('No se pudo crear el ejercicio: ' + recErr.message); return false; }
+  const { error: asigErr } = await supabase.from('recursos_asignados').upsert({
+    recurso_id: rec.id, paciente_id: pacienteId, psicologo_id: session.user.id, clinica_id: cid,
+  }, { onConflict: 'recurso_id,paciente_id' });
+  if (asigErr) { alert('No se pudo asignar: ' + asigErr.message); return false; }
+  await cargarEjercicios();
+  return true;
+};
+window.__eliminarEjercicio = async function(asignacionId) {
+  const { error } = await supabase.from('recursos_asignados').delete().eq('id', asignacionId);
+  if (error) { alert('No se pudo quitar: ' + error.message); return; }
+  await cargarEjercicios();
+};
+cargarEjercicios();
 
 // Cargar el catálogo de escalas (global de fábrica + propias de la clínica) para el modal
 ;(async () => {
@@ -1206,8 +1237,8 @@ else {
         }
       } catch(e) { /* no bloquea la ficha */ }
 
-      if (p.email)    document.getElementById('pac-email').textContent    = p.email;
-      if (p.telefono) document.getElementById('pac-telefono').textContent = p.telefono;
+      document.getElementById('pac-email').textContent    = p.email    || '—';
+      document.getElementById('pac-telefono').textContent = p.telefono || '—';
       if (p.ocupacion) document.getElementById('pac-ocupacion').textContent = p.ocupacion;
       if (p.fecha_nacimiento) {
         const edad = Math.floor((Date.now() - new Date(p.fecha_nacimiento)) / (365.25*24*3600*1000));
@@ -1300,6 +1331,7 @@ else {
     console.warn('Error cargando ficha:', e.message);
     window.renderEvaluaciones([]);
     window.renderFeedback([]);
+    window.renderTimeline([]);
   }
 }
 </script>
