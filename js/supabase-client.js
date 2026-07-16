@@ -77,9 +77,11 @@ export async function upsertPaciente(paciente) {
 // ── Citas ──────────────────────────────────────────────────────
 export async function getCitas(opts = {}) {
   const cid = await clinicaId();
+  // Nota: citas.psicologo_id → auth.users (no public.usuarios), así que NO se puede
+  // embeber usuarios() aquí; PostgREST devolvía 400 y rompía a los callers.
   let q = supabase
     .from('citas')
-    .select('*, pacientes(nombre, apellido, telefono), usuarios(nombre, apellido)')
+    .select('*, pacientes(nombre, apellido, telefono)')
     .eq('clinica_id', cid)
     .order('fecha').order('hora_inicio');
   if (opts.fecha)       q = q.eq('fecha', opts.fecha);
