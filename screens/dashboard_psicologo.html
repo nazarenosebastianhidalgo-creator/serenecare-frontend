@@ -240,9 +240,9 @@
           <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-base" style="color:#fbbf24;font-variation-settings:'FILL' 1;">pending_actions</span>
-              <h3 class="font-headline font-bold text-white text-sm">Notas SOAP pendientes</h3>
+              <h3 class="font-headline font-bold text-white text-sm">Notas SOAP recientes</h3>
             </div>
-            <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(251,191,36,0.15);color:#fbbf24;">3</span>
+            <span id="soap-count" class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(251,191,36,0.15);color:#fbbf24;" title="Pendientes">0</span>
           </div>
           <div id="lista-soap" class="flex flex-col gap-2"></div>
           <a href="notas_soap.html" class="flex items-center justify-center gap-1 mt-4 py-2 rounded-xl text-xs font-bold hover:opacity-80 transition-opacity" style="background:rgba(251,191,36,0.08);color:#fbbf24;border:1px solid rgba(251,191,36,0.15);text-decoration:none;">
@@ -371,11 +371,7 @@ var CITAS_HOY = [
   { hora:'17:00', paciente:'Patricia Vidal', tipo:'Estrés laboral',           duracion:50, estado:'pendiente',  av:'PV', color:'#fb923c' },
   { hora:'18:00', paciente:'Elena García',   tipo:'Seguimiento mensual',      duracion:30, estado:'pendiente',  av:'EG', color:'#a78bfa' },
 ];
-var SOAP_PENDIENTES = [
-  { paciente:'Laura Pérez',   sesion:'Hoy · 9:00',     urgencia:'alta',  av:'LP', color:'#2dd4bf' },
-  { paciente:'Miguel Torres', sesion:'Hoy · 10:00',    urgencia:'alta',  av:'MT', color:'#60a5fa' },
-  { paciente:'Marco Ibáñez',  sesion:'5 mayo · 16:00', urgencia:'media', av:'MI', color:'#94a3b8' },
-];
+var SOAP_PENDIENTES = [];   // se llena con datos reales desde la BD (módulo)
 var PACIENTES_RECIENTES = [];   // se llena con los reales desde la BD (módulo)
 var NOTIFS_PSI = [
   { icon:'event_busy',      color:'#f87171', msg:'Beatriz Torres canceló su cita de 16:00',        hora:'Hace 5 min', leida:false },
@@ -401,9 +397,17 @@ function renderCitas(){
 }
 
 function renderSoap(){
-  document.getElementById('lista-soap').innerHTML=SOAP_PENDIENTES.map(function(s){
-    var uc=s.urgencia==='alta'?'#f87171':'#fbbf24';
-    return '<div class="soap-card"><div style="display:flex;align-items:center;gap:10px;"><div style="width:30px;height:30px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:'+hexRgba(s.color,0.15)+';color:'+s.color+';">'+s.av+'</div><div style="flex:1;"><p style="font-size:12px;font-weight:700;color:#f1f5f9;">'+s.paciente+'</p><p style="font-size:10px;color:#64748b;margin-top:1px;">'+s.sesion+'</p></div><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:'+hexRgba(uc,0.12)+';color:'+uc+';">'+(s.urgencia==='alta'?'Urgente':'Pendiente')+'</span></div></div>';
+  var el=document.getElementById('lista-soap');
+  if(!SOAP_PENDIENTES.length){ el.innerHTML='<p style="font-size:11px;color:#475569;text-align:center;padding:12px 0;">Sin sesiones recientes.</p>'; return; }
+  el.innerHTML=SOAP_PENDIENTES.map(function(s){
+    var comp=s.estado==='completado';
+    var bc=comp?'#34d399':'#fbbf24';
+    var label=comp?'Completado':'Pendiente';
+    return '<a href="notas_soap.html" class="soap-card" style="text-decoration:none;display:block;"><div style="display:flex;align-items:center;gap:10px;">'
+      +'<div style="width:30px;height:30px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:'+hexRgba(s.color,0.15)+';color:'+s.color+';">'+s.av+'</div>'
+      +'<div style="flex:1;min-width:0;"><p style="font-size:12px;font-weight:700;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+s.paciente+'</p><p style="font-size:10px;color:#64748b;margin-top:1px;">'+s.sesion+'</p></div>'
+      +'<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:'+hexRgba(bc,0.12)+';color:'+bc+';flex-shrink:0;">'+label+'</span>'
+      +'</div></a>';
   }).join('');
 }
 
@@ -987,37 +991,43 @@ if (clinicaId) {
   if (kpis[1] && count !== null) kpis[1].textContent = count;
 }
 
-// ── Notas SOAP pendientes ──────────────────────────────────────
+// ── Notas SOAP recientes (pendiente / completado) ──────────────
 var { data: notasHechas } = await supabase
   .from('notas_soap').select('sesion_id').eq('psicologo_id', userId);
-var citasConNota = (notasHechas||[]).map(function(n){ return n.sesion_id; }).filter(Boolean);
+var conNota = {}; (notasHechas || []).forEach(function(n){ if (n.sesion_id) conNota[n.sesion_id] = true; });
 
-var _qSinNota = supabase
+var { data: citasCompl } = await supabase
   .from('citas')
-  .select('*, pacientes(nombre, apellido)')
+  .select('id, fecha, hora_inicio, pacientes(nombre, apellido)')
   .eq('psicologo_id', userId)
-  .in('estado', ['completada'])
+  .eq('estado', 'completada')
   .order('fecha', { ascending: false })
-  .limit(5);
-// Solo excluir las que ya tienen nota si hay alguna (evita el bug "NOT IN (null)")
-if (citasConNota.length) {
-  _qSinNota = _qSinNota.not('id', 'in', '(' + citasConNota.join(',') + ')');
-}
-var { data: citasSinNota } = await _qSinNota;
+  .limit(12);
 
-if (citasSinNota?.length) {
-  SOAP_PENDIENTES = citasSinNota.map(function(c, i) {
-    return {
-      paciente: (c.pacientes?.nombre||'') + ' ' + (c.pacientes?.apellido||''),
-      sesion: c.fecha + ' · ' + c.hora_inicio.substring(0,5),
-      urgencia: i === 0 ? 'alta' : 'media',
-      av: initiales(c.pacientes?.nombre, c.pacientes?.apellido),
-      color: colorFor(i),
-    };
-  });
-  renderSoap();
-  document.querySelector('[style*="3"]') && null; // badge actualizado dinámicamente
-}
+var soapLista = (citasCompl || []).map(function(c){
+  var nom = (c.pacientes && c.pacientes.nombre) || '', ape = (c.pacientes && c.pacientes.apellido) || '';
+  return {
+    id: c.id,
+    paciente: (nom + ' ' + ape).trim(),
+    fecha: c.fecha,
+    hora: String(c.hora_inicio),
+    sesion: c.fecha + ' · ' + String(c.hora_inicio).substring(0,5),
+    estado: conNota[c.id] ? 'completado' : 'pendiente',
+    av: initiales(nom, ape),
+  };
+});
+// Orden: sesión más reciente arriba (se ve la mezcla de estados; las pendientes van marcadas)
+soapLista.sort(function(a, b){
+  if (a.fecha !== b.fecha) return a.fecha > b.fecha ? -1 : 1;
+  return a.hora > b.hora ? -1 : 1;
+});
+soapLista.forEach(function(s, i){ s.color = colorFor(i); });
+SOAP_PENDIENTES = soapLista.slice(0, 6);
+
+var nPend = soapLista.filter(function(s){ return s.estado === 'pendiente'; }).length;
+var badge = document.getElementById('soap-count');
+if (badge) badge.textContent = nPend;
+renderSoap();
 
 // ── Pacientes recientes ────────────────────────────────────────
 if (clinicaId) {
