@@ -191,7 +191,6 @@
         <div class="flex gap-1" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:4px;">
           <button class="tab-btn tab-active" onclick="setTab(this,'todos')">Todos</button>
           <button class="tab-btn tab-inactive" onclick="setTab(this,'activo')">Activos</button>
-          <button class="tab-btn tab-inactive" onclick="setTab(this,'lista_espera')">Lista de espera</button>
           <button class="tab-btn tab-inactive" onclick="setTab(this,'alta')">Alta</button>
           <button class="tab-btn tab-inactive" onclick="setTab(this,'baja')">Baja</button>
         </div>
@@ -290,13 +289,26 @@ var tabActual = 'todos';
 
 function estadoBadge(estado) {
   var map = {
-    activo:       { label:'Activo',          bg:'rgba(20,184,166,0.12)',  color:'#2dd4bf', border:'rgba(20,184,166,0.25)'  },
-    lista_espera: { label:'Lista de espera', bg:'rgba(245,158,11,0.12)',  color:'#fbbf24', border:'rgba(245,158,11,0.25)'  },
-    alta:         { label:'Alta',            bg:'rgba(139,92,246,0.12)',  color:'#a78bfa', border:'rgba(139,92,246,0.25)'  },
-    baja:         { label:'Baja',            bg:'rgba(148,163,184,0.12)', color:'#94a3b8', border:'rgba(148,163,184,0.25)' },
+    activo: { label:'Activo', color:'#2dd4bf' },
+    alta:   { label:'Alta',   color:'#a78bfa' },
+    baja:   { label:'Baja',   color:'#94a3b8' },
   };
   var s = map[estado] || map.activo;
-  return '<span style="font-size:10px;font-weight:700;background:'+s.bg+';color:'+s.color+';border:1px solid '+s.border+';border-radius:20px;padding:3px 10px;white-space:nowrap;">'+s.label+'</span>';
+  return '<span style="font-size:10px;font-weight:700;color:'+s.color+';">'+s.label+'</span>';
+}
+
+// Selector de estado editable: guarda en la BD al cambiar
+function estadoSelect(p) {
+  var colors = { activo:'#2dd4bf', alta:'#a78bfa', baja:'#94a3b8' };
+  var cur = (colors[p.estado]) ? p.estado : 'activo';
+  var col = colors[cur];
+  var opciones = [ {v:'activo',l:'Activo'}, {v:'alta',l:'Alta'}, {v:'baja',l:'Baja'} ];
+  var html = '<select title="Cambiar estado" onmousedown="event.stopPropagation();" onclick="event.preventDefault();event.stopPropagation();" '
+    + 'onchange="event.preventDefault();event.stopPropagation();cambiarEstado(\''+p.id+'\',this.value,this);" '
+    + 'style="font-size:10px;font-weight:700;color:'+col+';background:rgba(30,41,59,0.6);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 22px 3px 10px;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url(\'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2394a3b8%22 stroke-width=%223%22><path d=%22M6 9l6 6 6-6%22/></svg>\');background-repeat:no-repeat;background-position:right 7px center;">';
+  html += opciones.map(function(o){ return '<option value="'+o.v+'"'+(o.v===cur?' selected':'')+' style="color:#0f172a;background:#e2e8f0;">'+o.l+'</option>'; }).join('');
+  html += '</select>';
+  return html;
 }
 
 function renderPacientes() {
@@ -319,7 +331,7 @@ function renderPacientes() {
       +'<div style="width:40px;height:40px;border-radius:12px;background:'+p.bg+';display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:'+p.color+';font-family:Manrope,sans-serif;flex-shrink:0;">'+p.iniciales+'</div>'
       +'<div style="min-width:0;"><div style="display:flex;align-items:center;gap:4px;"><p style="font-size:13px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Manrope,sans-serif;">'+p.nombre+'</p>'+soapBadge+'</div>'
       +'<p style="font-size:11px;color:#64748b;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+p.diagnostico+'</p></div>'
-      +'<div>'+estadoBadge(p.estado)+'</div>'
+      +'<div>'+estadoSelect(p)+'</div>'
       +'<div style="display:flex;align-items:center;gap:6px;">'+hoyBadge+'</div>'
       +'<div style="font-size:12px;font-weight:600;color:#94a3b8;text-align:center;">'+p.sesiones+'</div>'
       +'<div style="display:flex;justify-content:flex-end;gap:6px;align-items:center;">'
@@ -504,6 +516,25 @@ window.invitarPaciente = async function(pacId) {
     alert('Error: ' + e.message);
     if (btn) { btn.textContent = 'Invitar'; btn.disabled = false; }
   }
+};
+
+window.cambiarEstado = async function(pacId, nuevo, sel) {
+  var pac = window.PACIENTES.find(function(p){ return p.id === pacId; });
+  var anterior = pac ? pac.estado : 'activo';
+  if (anterior === nuevo) return;
+  if (sel) sel.disabled = true;
+  var { error } = await supabase.from('pacientes').update({ estado: nuevo }).eq('id', pacId);
+  if (sel) sel.disabled = false;
+  if (error) {
+    alert('No se pudo cambiar el estado: ' + error.message);
+    if (sel) sel.value = anterior;
+    return;
+  }
+  if (pac) pac.estado = nuevo;
+  // Recalcular KPI de activos y re-renderizar (respeta la pestaña activa)
+  document.getElementById('kpi-activos').textContent =
+    window.PACIENTES.filter(function(p){ return (p.estado || 'activo') === 'activo'; }).length;
+  renderPacientes();
 };
 
 </script>
