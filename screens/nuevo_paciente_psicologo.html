@@ -251,7 +251,7 @@
           </div>
           <div>
             <label class="field-label">Ocupación / Profesión</label>
-            <input type="text" class="field-input" placeholder="Ej. Docente, Comerciante..."/>
+            <input id="f-ocupacion" type="text" class="field-input" placeholder="Ej. Docente, Comerciante..."/>
           </div>
         </div>
       </div>
@@ -1142,6 +1142,8 @@ async function guardarPaciente() {
   const psicologoId = session.user.id || localStorage.getItem('tp_user_id');
   const nacimiento  = (document.getElementById('f-nacimiento') || {}).value || null;
   const motivo      = (document.getElementById('f-como-llego') || {}).value || null;
+  const genero      = (document.getElementById('f-genero') || {}).value || null;
+  const ocupacion   = ((document.getElementById('f-ocupacion') || {}).value || '').trim() || null;
   const apellidoEl  = document.getElementById('f-apellido');
   const apellido    = apellidoEl ? apellidoEl.value.trim() : '';
 
@@ -1152,6 +1154,8 @@ async function guardarPaciente() {
     psicologo_id:     psicologoId,
     fecha_nacimiento: nacimiento || null,
     motivo_consulta:  motivo || null,
+    genero:           genero,
+    ocupacion:        ocupacion,
     estado:           'activo',
   });
 
@@ -1239,6 +1243,8 @@ window.guardarPaciente = async function() {
   var tel        = (document.getElementById('f-tel')        || {}).value || ''
   var nacimiento = (document.getElementById('f-nacimiento') || {}).value || null
   var motivo     = (document.getElementById('f-como-llego') || {}).value || null
+  var genero     = (document.getElementById('f-genero')     || {}).value || null
+  var ocupacion  = (((document.getElementById('f-ocupacion') || {}).value) || '').trim() || null
   nombre = nombre.trim(); email = email.trim(); tel = tel.trim()
   if (!nombre || !email || !tel) {
     if (typeof mostrarToast === 'function') mostrarToast('Completa al menos Nombre, Email y Telefono antes de guardar.')
@@ -1259,6 +1265,8 @@ window.guardarPaciente = async function() {
       psicologo_id: psicologoId,
       fecha_nacimiento: nacimiento || null,
       motivo_consulta: motivo || null,
+      genero: genero,
+      ocupacion: ocupacion,
       estado: 'activo',
     }).select('id').single()
 
