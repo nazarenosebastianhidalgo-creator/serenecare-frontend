@@ -315,85 +315,28 @@
     </div>
     <div class="mb-4">
       <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Para</label>
-      <select class="w-full px-4 py-2.5 rounded-xl text-sm text-slate-200" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);outline:none;">
+      <select id="nuevo-para" class="w-full px-4 py-2.5 rounded-xl text-sm text-slate-200" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);outline:none;">
         <option value="">Seleccionar paciente o colega...</option>
-        <option>Elena Rodríguez — Paciente</option>
-        <option>Carlos Mendoza — Paciente</option>
-        <option>Ana García — Paciente</option>
-        <option>Dr. Martínez — Colega</option>
-        <option>Recepción — Staff</option>
       </select>
     </div>
     <div class="mb-5">
       <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Mensaje</label>
-      <textarea class="msg-input" rows="4" placeholder="Escribe tu mensaje..."></textarea>
+      <textarea id="nuevo-texto" class="msg-input" rows="4" placeholder="Escribe tu mensaje..."></textarea>
     </div>
     <div class="flex justify-end gap-3">
       <button onclick="cerrarNuevoMensaje()" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-400 hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">Cancelar</button>
-      <button onclick="cerrarNuevoMensaje()" class="px-5 py-2 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;cursor:pointer;">Enviar</button>
+      <button onclick="enviarNuevoMensaje()" class="px-5 py-2 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;cursor:pointer;">Enviar</button>
     </div>
   </div>
 </div>
 
 <script>
 // ── Data — Equipo ─────────────────────────────────────────────────────────────
-const CONVERSACIONES = [
-  {
-    id: 'c1', nombre: 'Elena Rodríguez', iniciales: 'ER', tipo: 'Paciente',
-    noLeido: 2, hora: '10:42', color: '#a78bfa',
-    preview: 'Buenos días, quería consultarle sobre los ejercicios de...',
-    mensajes: [
-      { out: false, texto: 'Buenas tardes, doctora. ¿Podría confirmar nuestra sesión del miércoles?', hora: 'Mar 13:05' },
-      { out: true,  texto: 'Claro, Elena. La sesión queda confirmada para el miércoles a las 16:00.', hora: 'Mar 13:18' },
-      { out: false, texto: 'Perfecto, muchas gracias. Una pregunta más, ¿los ejercicios de respiración los hago antes de dormir?', hora: 'Mar 13:21' },
-      { out: true,  texto: 'Exacto, 5-10 minutos antes de acostarte. Recuerda: inhala 4 segundos, mantén 4, exhala 6.', hora: 'Mar 13:25' },
-      { out: false, texto: 'Los estuve practicando y noto que me cuesta mantener los 4 segundos al inicio.', hora: 'Hoy 10:30' },
-      { out: false, texto: 'Buenos días, quería consultarle sobre los ejercicios de respiración que me indicó.', hora: 'Hoy 10:42' },
-    ]
-  },
-  {
-    id: 'c2', nombre: 'Carlos Mendoza', iniciales: 'CM', tipo: 'Paciente',
-    noLeido: 1, hora: 'Ayer', color: '#60a5fa',
-    preview: 'Gracias por el informe. Lo revisaré esta noche.',
-    mensajes: [
-      { out: true,  texto: 'Carlos, le envío el resumen de la última sesión. Por favor revíselo antes del próximo encuentro.', hora: 'Lun 11:00' },
-      { out: false, texto: 'Recibido. Lo leo hoy mismo.', hora: 'Lun 14:32' },
-      { out: false, texto: 'Gracias por el informe. Lo revisaré esta noche.', hora: 'Ayer 18:15' },
-    ]
-  },
-  {
-    id: 'c3', nombre: 'Ana García', iniciales: 'AG', tipo: 'Paciente',
-    noLeido: 0, hora: 'Lun', color: '#34d399',
-    preview: 'Anotado, hasta el jueves entonces.',
-    mensajes: [
-      { out: false, texto: 'Hola, ¿tendría disponibilidad el jueves por la tarde?', hora: 'Vie 16:00' },
-      { out: true,  texto: 'Sí, tengo un hueco a las 17:30. ¿Le viene bien?', hora: 'Vie 16:45' },
-      { out: false, texto: 'Perfecto.', hora: 'Vie 16:50' },
-      { out: false, texto: 'Anotado, hasta el jueves entonces.', hora: 'Lun 09:10' },
-    ]
-  },
-  {
-    id: 'c4', nombre: 'Dr. Martínez', iniciales: 'DM', tipo: 'Colega',
-    noLeido: 0, hora: 'Lun', color: '#fbbf24',
-    preview: 'Te paso el protocolo esta semana sin falta.',
-    mensajes: [
-      { out: true,  texto: 'Hola Javier, ¿tienes el protocolo actualizado de derivaciones?', hora: 'Dom 10:00' },
-      { out: false, texto: 'Sí, lo tengo. Te lo envío en unos días.', hora: 'Dom 10:25' },
-      { out: false, texto: 'Te paso el protocolo esta semana sin falta.', hora: 'Lun 08:50' },
-    ]
-  },
-  {
-    id: 'c5', nombre: 'Recepción', iniciales: 'RC', tipo: 'Staff',
-    noLeido: 0, hora: 'Vie', color: '#f472b6',
-    preview: 'Listo, ya reprogramé la cita de Mendoza.',
-    mensajes: [
-      { out: true,  texto: 'Necesito reprogramar la cita de Carlos Mendoza del viernes a la próxima semana.', hora: 'Jue 15:30' },
-      { out: false, texto: 'Entendido, ¿algún horario preferido?', hora: 'Jue 15:35' },
-      { out: true,  texto: 'Lunes o martes por la mañana.', hora: 'Jue 15:36' },
-      { out: false, texto: 'Listo, ya reprogramé la cita de Mendoza para el martes 9:00.', hora: 'Vie 09:00' },
-    ]
-  },
-];
+// Conversaciones reales (pacientes + colegas): las carga el módulo de abajo en
+// window.CONVERSACIONES. Debe ser `var` (no `const`) para que `CONVERSACIONES` y
+// `window.CONVERSACIONES` sean la MISMA variable y las funciones de este script
+// vean los datos reales que asigna el módulo.
+var CONVERSACIONES = [];
 
 // ── Data — WhatsApp ───────────────────────────────────────────────────────────
 const WHATSAPP_CONVS = [
@@ -775,6 +718,12 @@ function toggleTema() {
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
 function abrirNuevoMensaje() {
+  // Rellena el desplegable con los destinatarios REALES (pacientes + colegas)
+  var sel = document.getElementById('nuevo-para');
+  var convs = window.CONVERSACIONES || [];
+  sel.innerHTML = '<option value="">Seleccionar paciente o colega...</option>' +
+    convs.map(function(c){ return '<option value="' + c.id + '">' + c.nombre + ' — ' + c.tipo + '</option>'; }).join('');
+  document.getElementById('nuevo-texto').value = '';
   var m = document.getElementById('modal-nuevo');
   m.style.display = 'flex';
   m.classList.remove('hidden');
@@ -783,6 +732,18 @@ function cerrarNuevoMensaje() {
   var m = document.getElementById('modal-nuevo');
   m.style.display = 'none';
   m.classList.add('hidden');
+}
+function enviarNuevoMensaje() {
+  var id    = document.getElementById('nuevo-para').value;
+  var texto = document.getElementById('nuevo-texto').value.trim();
+  if (!id)    { document.getElementById('nuevo-para').focus(); return; }
+  if (!texto) { document.getElementById('nuevo-texto').focus(); return; }
+  cerrarNuevoMensaje();
+  canalActivo = 'equipo';                 // el envío real va por el canal equipo (Supabase)
+  seleccionarConv(id);                    // abre la conversación (carga mensajes reales)
+  var input = document.getElementById('msg-input');
+  input.value = texto;
+  enviarMensaje();                        // usa el override real del módulo (sbEnviar → tabla mensajes)
 }
 
 function iniciarVideo() {
