@@ -790,7 +790,18 @@ function iniciales(nombre, apellido) {
 }
 
 try {
-  const [pacientes, colegas] = await Promise.all([getPacientes(), getPsicologos()]);
+  // Contactos por rol:
+  //  · Psicólogo → SUS pacientes + el equipo de psicólogos de SU clínica (colegas)
+  //  · Admin de clínica → los pacientes de la clínica (sin equipo)
+  const esPsico = _perfil.rol === 'psicologo';
+  const [pacientesRaw, colegasRaw] = await Promise.all([
+    getPacientes(),                                    // ya filtra por clinica_id
+    esPsico ? getPsicologos() : Promise.resolve([]),   // colegas solo para el psicólogo
+  ]);
+  const pacientes = esPsico
+    ? (pacientesRaw || []).filter(p => p.psicologo_id === userId)   // el psicólogo, solo los suyos
+    : (pacientesRaw || []);                                          // el admin, todos los de la clínica
+  const colegas = colegasRaw || [];
 
   const convsPaciente = (pacientes || []).map((p, i) => ({
     id: p.usuario_id || p.id,
