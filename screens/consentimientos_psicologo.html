@@ -155,7 +155,7 @@
           </div>
           <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:rgba(74,222,128,0.1);color:#4ade80;"></span>
         </div>
-        <p id="kpi-firmados" class="text-3xl font-extrabold text-white font-headline">1</p>
+        <p id="kpi-firmados" class="text-3xl font-extrabold text-white font-headline">0</p>
         <p class="text-xs text-slate-500 mt-1">Firmados</p>
       </div>
       <div class="card rounded-2xl p-6">
@@ -165,7 +165,7 @@
           </div>
           <span class="text-xs font-bold px-2 py-1 rounded-lg" style="background:rgba(251,191,36,0.1);color:#fbbf24;"></span>
         </div>
-        <p id="kpi-pendientes" class="text-3xl font-extrabold text-white font-headline">2</p>
+        <p id="kpi-pendientes" class="text-3xl font-extrabold text-white font-headline">0</p>
         <p class="text-xs text-slate-500 mt-1">Pendientes / Sin enviar</p>
       </div>
     </div>
@@ -223,11 +223,6 @@
             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Paciente</label>
             <select id="modal-paciente" class="field">
               <option value="">Seleccionar paciente...</option>
-              <option>Julián Restrepo</option>
-              <option>Elena Sofia Varga</option>
-              <option>Mateo Torres</option>
-              <option>Laura Pérez</option>
-              <option>Carlos Ruiz</option>
             </select>
           </div>
           <div>
@@ -360,11 +355,8 @@
 
 <script>
 /* ── DATOS ─────────────────────────────────────────────── */
-var CONSENTIMIENTOS = [
-  { id:1, paciente:'Julián Restrepo',   initiales:'JR', color:'#a78bfa', tipo:'Consentimiento Terapéutico', fecha:'12 Oct, 2023', estado:'firmado'    },
-  { id:2, paciente:'Elena Sofia Varga', initiales:'EV', color:'#818cf8', tipo:'Política de Privacidad (GDPR)', fecha:'14 Oct, 2023', estado:'pendiente' },
-  { id:3, paciente:'Mateo Torres',      initiales:'MT', color:'#64748b', tipo:'Contrato de Telesalud',      fecha:'—',            estado:'sin-enviar' },
-];
+// Consentimientos reales: los carga el módulo desde el backend (/api/consents).
+var CONSENTIMIENTOS = [];
 
 var NOTIFS_CON = [];
 
@@ -635,22 +627,20 @@ try {
   }
 } catch(_) {}
 
-// ── Cargar pacientes en el select ──────────────────────────────
+// ── Cargar pacientes reales en el select (los que gestiona el usuario) ──
 try {
-  const { data: psis } = await supabase.from('psicologos').select('id').eq('email', (await supabase.auth.getUser()).data.user?.email || '').single();
-  const qPac = psis
-    ? await supabase.from('pacientes').select('id, nombre').eq('psicologo_id', psis.id).eq('activo', true)
-    : await supabase.from('pacientes').select('id, nombre').eq('activo', true).limit(50);
-
+  const { data: pacs } = await supabase.from('pacientes')
+    .select('id, nombre, apellido')
+    .eq('psicologo_id', session.user.id)
+    .eq('activo', true)
+    .order('apellido');
   const sel = document.getElementById('modal-paciente');
-  if (sel && qPac.data?.length) {
-    qPac.data.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.id;
-      opt.textContent = p.nombre;
-      sel.appendChild(opt);
-    });
-  }
+  if (sel) (pacs || []).forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = ((p.nombre||'') + ' ' + (p.apellido||'')).trim();
+    sel.appendChild(opt);
+  });
 } catch(_) {}
 
 // ── Cargar consentimientos reales ──────────────────────────────
