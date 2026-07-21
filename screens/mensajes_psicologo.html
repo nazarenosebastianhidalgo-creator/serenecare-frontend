@@ -170,8 +170,8 @@
     <!-- Conversation list -->
     <div class="w-80 flex flex-col border-r border-slate-800/30" style="background:#05101f;">
 
-      <!-- Canal tabs -->
-      <div class="flex flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,0.06);">
+      <!-- Canal tabs — WhatsApp oculto hasta que la integración esté lista (ahora es mock) -->
+      <div class="flex flex-shrink-0" style="display:none;border-bottom:1px solid rgba(255,255,255,0.06);">
         <button id="tab-canal-equipo" onclick="cambiarCanal('equipo')" class="canal-tab tab-active">Equipo</button>
         <button id="tab-canal-wa" onclick="cambiarCanal('whatsapp')" class="canal-tab" style="position:relative;">
           WhatsApp
@@ -190,7 +190,7 @@
       <!-- Filter tabs (solo en canal equipo) -->
       <div id="equipo-filters" class="flex gap-1 p-3 border-b border-slate-800/30">
         <button class="flex-1 py-1.5 text-xs font-bold font-headline rounded-lg transition-all" id="tab-todos" onclick="setTabMsg(this,'todos')" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">Todos</button>
-        <button class="flex-1 py-1.5 text-xs font-bold font-headline rounded-lg transition-all" id="tab-no-leidos" onclick="setTabMsg(this,'no-leidos')" style="background:transparent;color:#64748b;border:1px solid transparent;">No leídos</button>
+        <button class="flex-1 py-1.5 text-xs font-bold font-headline rounded-lg transition-all" id="tab-equipo" onclick="setTabMsg(this,'equipo')" style="background:transparent;color:#64748b;border:1px solid transparent;">Equipo</button>
         <button class="flex-1 py-1.5 text-xs font-bold font-headline rounded-lg transition-all" id="tab-pacientes" onclick="setTabMsg(this,'pacientes')" style="background:transparent;color:#64748b;border:1px solid transparent;">Pacientes</button>
       </div>
 
@@ -382,12 +382,7 @@ document.getElementById('fecha-hoy').textContent = new Date().toLocaleDateString
 
 actualizarWaBadge();
 renderConversaciones(filtrarLista(tabActual, ''));
-seleccionarConv('c1');
-
-// URL param ?wa=1
-if (new URLSearchParams(location.search).get('wa') === '1') {
-  setTimeout(function(){ cambiarCanal('whatsapp'); }, 50);
-}
+// La conversación inicial la selecciona el módulo con datos reales (window.CONVERSACIONES[0]).
 
 // ── Canal ─────────────────────────────────────────────────────────────────────
 function cambiarCanal(canal) {
@@ -630,7 +625,7 @@ function autoResize(el) {
 // ── Filters ───────────────────────────────────────────────────────────────────
 function filtrarLista(tab, query) {
   var lista = CONVERSACIONES.slice();
-  if (tab === 'no-leidos') lista = lista.filter(function(c){ return c.noLeido > 0; });
+  if (tab === 'equipo')    lista = lista.filter(function(c){ return c.tipo !== 'Paciente'; });
   if (tab === 'pacientes') lista = lista.filter(function(c){ return c.tipo === 'Paciente'; });
   if (query) lista = lista.filter(function(c){ return c.nombre.toLowerCase().includes(query.toLowerCase()); });
   return lista;
@@ -646,7 +641,7 @@ function filtrarConversaciones(q) {
 
 function setTabMsg(btn, tab) {
   tabActual = tab;
-  ['tab-todos','tab-no-leidos','tab-pacientes'].forEach(function(id) {
+  ['tab-todos','tab-equipo','tab-pacientes'].forEach(function(id) {
     var el = document.getElementById(id);
     el.style.background = 'transparent';
     el.style.color = '#64748b';
