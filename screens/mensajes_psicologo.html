@@ -138,10 +138,6 @@
       <p id="fecha-hoy" class="text-slate-500 text-xs capitalize"></p>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="abrirNuevoMensaje()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:white;border:none;cursor:pointer;">
-        <span class="material-symbols-outlined text-base">edit_square</span>
-        Nuevo mensaje
-      </button>
       <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
       </button>
@@ -170,12 +166,11 @@
     <!-- Conversation list -->
     <div class="w-80 flex flex-col border-r border-slate-800/30" style="background:#05101f;">
 
-      <!-- Canal tabs — WhatsApp oculto hasta que la integración esté lista (ahora es mock) -->
-      <div class="flex flex-shrink-0" style="display:none;border-bottom:1px solid rgba(255,255,255,0.06);">
-        <button id="tab-canal-equipo" onclick="cambiarCanal('equipo')" class="canal-tab tab-active">Equipo</button>
+      <!-- Canal tabs: SereneCare (in-app, real) | WhatsApp (aún no conectado) -->
+      <div class="flex flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,0.06);">
+        <button id="tab-canal-equipo" onclick="cambiarCanal('equipo')" class="canal-tab tab-active">SereneCare</button>
         <button id="tab-canal-wa" onclick="cambiarCanal('whatsapp')" class="canal-tab" style="position:relative;">
           WhatsApp
-          <span id="wa-tab-badge" style="position:absolute;top:6px;right:8px;min-width:16px;height:16px;padding:0 3px;border-radius:99px;background:#25d366;color:#000;font-size:9px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;">3</span>
         </button>
       </div>
 
@@ -252,12 +247,8 @@
       </div>
       <div class="text-center">
         <p class="font-headline font-bold text-white">Selecciona una conversación</p>
-        <p class="text-sm text-slate-500 mt-1">Elige un paciente o colega para comenzar</p>
+        <p class="text-sm text-slate-500 mt-1">Elige un paciente, colega o el admin de la lista</p>
       </div>
-      <button onclick="abrirNuevoMensaje()" class="mt-2 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold" style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);">
-        <span class="material-symbols-outlined text-base">edit_square</span>
-        Nuevo mensaje
-      </button>
     </div>
 
   </div>
@@ -304,32 +295,6 @@
   </div>
 </div>
 
-<!-- MODAL: Nuevo mensaje -->
-<div id="modal-nuevo" class="hidden" style="position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);">
-  <div style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:440px;padding:28px;">
-    <div class="flex items-center justify-between mb-5">
-      <p class="font-headline font-bold text-white">Nuevo mensaje</p>
-      <button onclick="cerrarNuevoMensaje()" style="background:none;border:none;cursor:pointer;">
-        <span class="material-symbols-outlined text-slate-500">close</span>
-      </button>
-    </div>
-    <div class="mb-4">
-      <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Para</label>
-      <select id="nuevo-para" class="w-full px-4 py-2.5 rounded-xl text-sm text-slate-200" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);outline:none;">
-        <option value="">Seleccionar paciente o colega...</option>
-      </select>
-    </div>
-    <div class="mb-5">
-      <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Mensaje</label>
-      <textarea id="nuevo-texto" class="msg-input" rows="4" placeholder="Escribe tu mensaje..."></textarea>
-    </div>
-    <div class="flex justify-end gap-3">
-      <button onclick="cerrarNuevoMensaje()" class="px-4 py-2 rounded-xl text-sm font-bold text-slate-400 hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">Cancelar</button>
-      <button onclick="enviarNuevoMensaje()" class="px-5 py-2 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);border:none;cursor:pointer;">Enviar</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // ── Data — Equipo ─────────────────────────────────────────────────────────────
 // Conversaciones reales (pacientes + colegas): las carga el módulo de abajo en
@@ -339,39 +304,9 @@
 var CONVERSACIONES = [];
 
 // ── Data — WhatsApp ───────────────────────────────────────────────────────────
-const WHATSAPP_CONVS = [
-  {
-    id: 'wa1', nombre: 'Elena Pérez', iniciales: 'EP', tipo: 'Paciente WA',
-    noLeido: 2, hora: '11:05', color: '#25d366',
-    preview: 'Buenos días, ¿confirmamos la sesión del viernes?',
-    mensajes: [
-      { out: false, texto: 'Hola doctora, quería saber si la sesión del viernes sigue en pie 😊', hora: 'Hoy 10:48' },
-      { out: false, texto: 'Buenos días, ¿confirmamos la sesión del viernes?', hora: 'Hoy 11:05' },
-    ]
-  },
-  {
-    id: 'wa2', nombre: 'Marcos Gil', iniciales: 'MG', tipo: 'Paciente WA',
-    noLeido: 1, hora: 'Ayer', color: '#25d366',
-    preview: 'Gracias, hasta el martes entonces.',
-    mensajes: [
-      { out: true,  texto: 'Marcos, le recuerdo su cita del martes a las 10:00.', hora: 'Ayer 09:00' },
-      { out: false, texto: 'Gracias, hasta el martes entonces.', hora: 'Ayer 09:15' },
-      { out: false, texto: '¿Necesito llevar algo en particular?', hora: 'Ayer 18:32' },
-    ]
-  },
-  {
-    id: 'wa3', nombre: 'Sofía Ruiz', iniciales: 'SR', tipo: 'Paciente WA',
-    noLeido: 0, hora: 'Lun', color: '#25d366',
-    preview: 'Entendido, muchas gracias.',
-    mensajes: [
-      { out: false, texto: 'Hola, ¿puedo cambiar mi cita de esta semana?', hora: 'Lun 14:10' },
-      { out: true,  texto: 'Claro Sofía. ¿Qué día le viene mejor?', hora: 'Lun 14:25' },
-      { out: false, texto: 'El jueves a la tarde si hay lugar.', hora: 'Lun 14:28' },
-      { out: true,  texto: 'Perfecto, la agendo para el jueves a las 17:30.', hora: 'Lun 14:30' },
-      { out: false, texto: 'Entendido, muchas gracias.', hora: 'Lun 14:31' },
-    ]
-  },
-];
+// WhatsApp: la integración aún NO está conectada. Sin conversaciones falsas;
+// cuando se cablee la API de WhatsApp Business, se poblará desde el backend.
+const WHATSAPP_CONVS = [];
 
 let convActiva = null;
 let tabActual = 'todos';
@@ -410,32 +345,43 @@ function cambiarCanal(canal) {
     tabEq.className = 'canal-tab';
     tabWa.className = 'canal-tab tab-wa';
     filtros.style.display = 'none';
-    searchEl.placeholder = 'Buscar paciente...';
+    searchEl.placeholder = 'WhatsApp (próximamente)…';
     sendBtn.style.background = 'linear-gradient(135deg,#16a34a,#15803d)';
     renderWAConversaciones('');
-    // abrir primera conv automáticamente
-    if (WHATSAPP_CONVS.length) seleccionarWAConv(WHATSAPP_CONVS[0].id);
+    if (WHATSAPP_CONVS.length) {
+      seleccionarWAConv(WHATSAPP_CONVS[0].id);   // abrir primera conv cuando exista
+    } else {
+      // Sin integración aún: no mostrar un chat en blanco
+      document.getElementById('chat-area').classList.add('hidden');
+      document.getElementById('empty-state').classList.remove('hidden');
+    }
   }
 }
 
 // ── WA badge ─────────────────────────────────────────────────────────────────
 function actualizarWaBadge() {
-  var total = WHATSAPP_CONVS.reduce(function(s, c){ return s + c.noLeido; }, 0);
   var badge = document.getElementById('wa-tab-badge');
-  if (total > 0) {
-    badge.style.display = 'inline-flex';
-    badge.textContent = total;
-  } else {
-    badge.style.display = 'none';
-  }
+  if (!badge) return;
+  var total = WHATSAPP_CONVS.reduce(function(s, c){ return s + c.noLeido; }, 0);
+  badge.style.display = total > 0 ? 'inline-flex' : 'none';
+  if (total > 0) badge.textContent = total;
 }
 
 // ── Render WA conversations ───────────────────────────────────────────────────
 function renderWAConversaciones(query) {
+  var el = document.getElementById('conv-list');
+  // Integración de WhatsApp aún no conectada → estado "próximamente"
+  if (!WHATSAPP_CONVS.length) {
+    el.innerHTML = '<div style="text-align:center;padding:36px 20px;color:#64748b;">'
+      + '<span class="material-symbols-outlined" style="font-size:38px;color:#25d366;opacity:0.6;">chat</span>'
+      + '<p style="font-size:13px;font-weight:700;color:#94a3b8;margin-top:10px;">WhatsApp — próximamente</p>'
+      + '<p style="font-size:11px;margin-top:4px;line-height:1.5;">La integración con WhatsApp aún no está conectada. Cuando la activemos, aquí verás los mensajes de tus pacientes por WhatsApp.</p>'
+      + '</div>';
+    return;
+  }
   var lista = WHATSAPP_CONVS.filter(function(c){
     return !query || c.nombre.toLowerCase().includes(query.toLowerCase());
   });
-  var el = document.getElementById('conv-list');
   el.innerHTML = '';
   lista.forEach(function(c) {
     var div = document.createElement('div');
@@ -709,36 +655,6 @@ function toggleTema() {
   var t = localStorage.getItem('tp_tema') === 'claro' ? 'oscuro' : 'claro';
   localStorage.setItem('tp_tema', t);
   location.reload();
-}
-
-// ── Modal ─────────────────────────────────────────────────────────────────────
-function abrirNuevoMensaje() {
-  // Rellena el desplegable con los destinatarios REALES (pacientes + colegas)
-  var sel = document.getElementById('nuevo-para');
-  var convs = window.CONVERSACIONES || [];
-  sel.innerHTML = '<option value="">Seleccionar paciente o colega...</option>' +
-    convs.map(function(c){ return '<option value="' + c.id + '">' + c.nombre + ' — ' + c.tipo + '</option>'; }).join('');
-  document.getElementById('nuevo-texto').value = '';
-  var m = document.getElementById('modal-nuevo');
-  m.style.display = 'flex';
-  m.classList.remove('hidden');
-}
-function cerrarNuevoMensaje() {
-  var m = document.getElementById('modal-nuevo');
-  m.style.display = 'none';
-  m.classList.add('hidden');
-}
-function enviarNuevoMensaje() {
-  var id    = document.getElementById('nuevo-para').value;
-  var texto = document.getElementById('nuevo-texto').value.trim();
-  if (!id)    { document.getElementById('nuevo-para').focus(); return; }
-  if (!texto) { document.getElementById('nuevo-texto').focus(); return; }
-  cerrarNuevoMensaje();
-  canalActivo = 'equipo';                 // el envío real va por el canal equipo (Supabase)
-  seleccionarConv(id);                    // abre la conversación (carga mensajes reales)
-  var input = document.getElementById('msg-input');
-  input.value = texto;
-  enviarMensaje();                        // usa el override real del módulo (sbEnviar → tabla mensajes)
 }
 
 function iniciarVideo() {
