@@ -146,10 +146,6 @@
       <p class="text-xs text-slate-500 mt-0.5">Comunicación interna del equipo</p>
     </div>
     <div class="flex items-center gap-2">
-      <button onclick="abrirBroadcast()" class="broadcast-btn flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90">
-        <span class="material-symbols-outlined text-base">campaign</span>
-        Mensaje a todos
-      </button>
       <button id="btn-apps-main" type="button" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
       </button>
@@ -179,17 +175,16 @@
     <div class="w-80 flex-shrink-0 flex flex-col border-r border-slate-800/30" style="background:#0a1628;">
       <!-- Canal -->
       <div class="flex flex-shrink-0" style="border-bottom:1px solid rgba(255,255,255,0.06);">
-        <button id="tab-equipo" onclick="cambiarCanal('equipo')" class="canal-tab tab-active">Equipo</button>
+        <button id="tab-equipo" onclick="cambiarCanal('equipo')" class="canal-tab tab-active">SereneCare</button>
         <button id="tab-whatsapp" onclick="cambiarCanal('whatsapp')" class="canal-tab" style="position:relative;">
           WhatsApp
-          <span id="wa-tab-badge" style="position:absolute;top:6px;right:8px;min-width:16px;height:16px;padding:0 3px;border-radius:99px;background:#25d366;color:#000;font-size:9px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;">3</span>
         </button>
       </div>
       <!-- Buscador -->
       <div class="p-4 border-b border-slate-800/30">
         <div class="relative">
           <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-base">search</span>
-          <input type="text" id="search-conv" placeholder="Buscar terapeuta…" oninput="filtrarConvs()"
+          <input type="text" id="search-conv" placeholder="Buscar…" oninput="filtrarConvs()"
             class="w-full pl-9 pr-4 py-2 text-sm rounded-xl text-slate-300 placeholder-slate-600"
             style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);outline:none;"/>
         </div>
@@ -208,12 +203,8 @@
         </div>
         <div>
           <p class="text-white font-bold font-headline text-lg">Selecciona una conversación</p>
-          <p class="text-slate-500 text-sm mt-1">O envía un mensaje a todo el equipo</p>
+          <p class="text-slate-500 text-sm mt-1">Elige un paciente o un miembro del equipo de la lista</p>
         </div>
-        <button onclick="abrirBroadcast()" class="broadcast-btn px-5 py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-90">
-          <span class="material-symbols-outlined text-base align-middle mr-1">campaign</span>
-          Mensaje a todos
-        </button>
       </div>
 
       <!-- Chat activo -->
@@ -532,7 +523,7 @@ function cambiarCanal(canal) {
   if (canal === 'equipo') {
     tabEq.className = 'canal-tab tab-active'
     tabWa.className = 'canal-tab'
-    input.placeholder = 'Buscar terapeuta…'
+    input.placeholder = 'Buscar…'
   } else {
     tabEq.className = 'canal-tab'
     tabWa.className = 'canal-tab tab-wa'
@@ -936,45 +927,80 @@ if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.repla
 
 const perfil = await verificarSesion(['admin_clinica'])
 if (!perfil) { throw new Error('redirigiendo') }
-const session = { user: { id: perfil.id } }
+const { data: { session } } = await supabase.auth.getSession()
 
 const clinicaId = perfil.clinica_id
-const userId = session.user.id
+const userId = perfil.id
+adminNombre = ((perfil.nombre||'') + ' ' + (perfil.apellido||'')).trim() || 'Admin'
 
-// Actualizar info de usuario
-const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', userId).single()
-if (usu) {
-  const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = usu.nombre+' '+usu.apellido
-  const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = (usu.nombre[0]||'')+(usu.apellido[0]||'')
+// Info de usuario en la cabecera
+const _elN = document.getElementById('user-nombre'); if (_elN) _elN.textContent = adminNombre
+const _elA = document.getElementById('user-avatar'); if (_elA) _elA.textContent = ((perfil.nombre||'')[0]||'')+((perfil.apellido||'')[0]||'')
+
+// Fuera los mocks de inmediato (nada de conversaciones ni terapeutas falsos)
+TERAPEUTAS.length = 0
+WHATSAPP_CONVS.length = 0
+renderConvList('')
+
+// ── Contactos reales del admin: MIS pacientes + el personal de la clínica ──
+// (mismo criterio que el psicólogo: solo los pacientes que gestiona + el equipo)
+const COLS    = ['rgba(20,184,166,0.2)','rgba(99,102,241,0.2)','rgba(139,92,246,0.2)','rgba(52,211,153,0.15)','rgba(245,158,11,0.15)','rgba(96,165,250,0.2)']
+const COLS_TC = ['#2dd4bf','#818cf8','#a78bfa','#4ade80','#fbbf24','#60a5fa']
+const _ini2 = (n,a) => (((n||'')[0]||'')+((a||'')[0]||'')).toUpperCase()
+try {
+  const [staffRes, pacRes] = await Promise.all([
+    supabase.from('usuarios').select('id,nombre,apellido,rol')
+      .eq('clinica_id', clinicaId).in('rol', ['psicologo','admin_clinica']).eq('activo', true).neq('id', userId),
+    supabase.from('pacientes').select('id,nombre,apellido,usuario_id,psicologo_id')
+      .eq('clinica_id', clinicaId).eq('psicologo_id', userId),
+  ])
+  const staff = (staffRes.data||[]).map((c,i) => ({
+    id:c.id, nombre:((c.nombre||'')+' '+(c.apellido||'')).trim(), ini:_ini2(c.nombre,c.apellido),
+    rol: c.rol==='admin_clinica'?'Admin':'Psicólogo', col:COLS[i%COLS.length], tc:COLS_TC[i%COLS_TC.length],
+    estado:'offline', citas:0, mensajes:[], noLeidos:0, _sbId:c.id }))
+  const pacs = (pacRes.data||[]).filter(p => p.usuario_id).map((p,i) => ({
+    id:p.usuario_id, nombre:((p.nombre||'')+' '+(p.apellido||'')).trim(), ini:_ini2(p.nombre,p.apellido),
+    rol:'Paciente', col:COLS[(i+3)%COLS.length], tc:COLS_TC[(i+3)%COLS_TC.length],
+    estado:'offline', citas:0, mensajes:[], noLeidos:0, _sbId:p.usuario_id }))
+  staff.concat(pacs).forEach(x => TERAPEUTAS.push(x))
+  renderConvList('')
+} catch(e) { console.warn('Error cargando contactos:', e.message) }
+
+// ── Abrir conversación cargando mensajes REALES (tabla mensajes) ──
+const _origAbrirConv = window.abrirConv
+window.abrirConv = async function(id) {
+  const t = TERAPEUTAS.find(x => x.id === id) || WHATSAPP_CONVS.find(x => x.id === id)
+  if (t && t._sbId) {
+    try {
+      const msgs = await getMensajes(t._sbId)
+      t.mensajes = (msgs||[]).map(m => {
+        const d = new Date(m.created_at)
+        return { de: m.de_id === userId ? 'yo' : 'ellos', texto: m.texto,
+          hora: d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),
+          fecha: d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}) }
+      })
+    } catch(_) {}
+  }
+  _origAbrirConv(id)
+  if (t) { const st = document.getElementById('chat-status'); if (st) st.textContent = t.rol }
 }
 
-// Cargar psicólogos del equipo para mensajes internos
-const { data: colegas } = await supabase.from('usuarios').select('id, nombre, apellido, rol').eq('clinica_id', clinicaId).neq('id', userId)
-
-if (colegas && colegas.length && typeof window.CONVERSACIONES !== 'undefined') {
-  const COLS = ['rgba(20,184,166,0.2)','rgba(99,102,241,0.2)','rgba(139,92,246,0.2)','rgba(34,197,94,0.15)','rgba(245,158,11,0.15)']
-  const COLS_TC = ['#2dd4bf','#818cf8','#a78bfa','#4ade80','#fbbf24']
-  const extras = colegas.map(function(c, i) {
-    return { id: c.id, nombre: c.nombre+' '+c.apellido, iniciales: (c.nombre[0]||'')+(c.apellido[0]||''), tipo: 'equipo', noLeido: 0, hora: '', preview: '', color: COLS[i%COLS.length], tc: COLS_TC[i%COLS_TC.length], mensajes: [], _sbId: c.id }
-  })
-  window.CONVERSACIONES = (window.CONVERSACIONES||[]).filter(function(c){ return c.tipo !== 'equipo' }).concat(extras)
-  if (typeof window.renderConversaciones === 'function') window.renderConversaciones()
-}
-
-// Sobreescribir enviar para usar Supabase en conversaciones de equipo
-const origEnviar = window.enviarMensaje
+// ── Enviar mensaje REAL (sin auto-respuestas simuladas) ──
 window.enviarMensaje = async function() {
-  const conv = window.CONVERSACIONES && window.CONVERSACIONES[window._convActiva]
-  if (conv && conv.tipo === 'equipo' && conv._sbId) {
-    const input = document.getElementById('msg-input') || document.getElementById('input-mensaje')
-    const texto = input ? input.value.trim() : ''
-    if (!texto) return
-    await sbEnviar(conv._sbId, texto)
-    if (input) input.value = ''
-    const msgs = await getMensajes(conv._sbId)
-    conv.mensajes = msgs || []
-    if (typeof window.renderMensajes === 'function') window.renderMensajes(conv)
-  } else if (typeof origEnviar === 'function') { origEnviar() }
+  if (!convActiva || !convActiva._sbId) return
+  const input = document.getElementById('msg-input')
+  const texto = input ? input.value.trim() : ''
+  if (!texto) return
+  try {
+    await sbEnviar(convActiva._sbId, texto)
+    const d = new Date()
+    convActiva.mensajes.push({ de:'yo', texto,
+      hora: d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}),
+      fecha: d.toLocaleDateString('es-ES',{day:'numeric',month:'short'}) })
+    input.value=''; input.style.height='42px'
+    renderMensajes()
+    renderConvList(document.getElementById('search-conv').value)
+  } catch(e) { if (window.mostrarToast) mostrarToast('Error enviando: '+e.message) }
 }
 </script>
 </body>
