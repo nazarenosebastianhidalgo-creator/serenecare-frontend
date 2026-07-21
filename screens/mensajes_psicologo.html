@@ -704,7 +704,6 @@ try {
   // Contactos por rol:
   //  · Psicólogo → SUS pacientes + TODO el personal de su clínica (psicólogos + admin)
   //  · Admin de clínica → los pacientes de la clínica + el personal
-  const esPsico = _perfil.rol === 'psicologo';
   const [pacientesRaw, equipoRes] = await Promise.all([
     getPacientes(),                                     // ya filtra por clinica_id
     supabase.from('usuarios')                           // personal de la clínica (psicólogos + admin)
@@ -714,9 +713,8 @@ try {
       .eq('activo', true)
       .neq('id', userId),
   ]);
-  const pacientes = esPsico
-    ? (pacientesRaw || []).filter(p => p.psicologo_id === userId)   // el psicólogo, solo los suyos
-    : (pacientesRaw || []);                                          // el admin, todos los de la clínica
+  // Cada uno ve SOLO los pacientes que gestiona (psicologo_id = él), no los de otros del equipo.
+  const pacientes = (pacientesRaw || []).filter(p => p.psicologo_id === userId);
   const colegas = equipoRes.data || [];
 
   const convsPaciente = (pacientes || []).map((p, i) => ({
