@@ -632,7 +632,6 @@ try {
   const { data: pacs } = await supabase.from('pacientes')
     .select('id, nombre, apellido')
     .eq('psicologo_id', session.user.id)
-    .eq('activo', true)
     .order('apellido');
   const sel = document.getElementById('modal-paciente');
   if (sel) (pacs || []).forEach(p => {
