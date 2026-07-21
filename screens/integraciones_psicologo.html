@@ -127,7 +127,7 @@
         <h1 class="text-3xl font-extrabold font-headline text-white tracking-tight mb-2">Integraciones</h1>
         <p class="text-slate-400 max-w-lg text-sm leading-relaxed">Conecta tus herramientas para sincronizar tu agenda, comunicarte con pacientes y gestionar sesiones de telemedicina.</p>
       </div>
-      <span class="px-4 py-1.5 rounded-full text-sm font-bold w-fit" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:#a78bfa;">1 de 4 conectadas</span>
+      <span class="px-4 py-1.5 rounded-full text-sm font-bold w-fit" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);color:#a78bfa;">Conecta tus herramientas</span>
     </div>
 
     <!-- Cobros con tarjeta (Stripe Connect) -->
@@ -270,23 +270,13 @@
                 <p class="text-sm text-slate-400">Recordatorios automáticos a tus pacientes.</p>
               </div>
             </div>
-            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);">Conectado</span>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);">Próximamente</span>
           </div>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
-              <span class="text-sm text-slate-300">Recordatorios Automáticos</span>
-              <div class="w-10 h-5 rounded-full relative flex items-center px-1 cursor-pointer" style="background:rgba(167,139,250,0.8);">
-                <div class="h-3.5 w-3.5 bg-white rounded-full ml-auto"></div>
-              </div>
-            </div>
-            <div class="p-3 bg-white/5 rounded-xl" style="border-left:2px solid rgba(167,139,250,0.4);">
-              <p class="text-[10px] text-slate-500 mb-1 uppercase font-bold tracking-tighter">Plantilla Activa</p>
-              <p class="text-xs text-slate-300 italic leading-relaxed">"Hola <span style="color:#a78bfa;">{nombre}</span>, te recordamos tu cita para el <span style="color:#a78bfa;">{fecha}</span> a las <span style="color:#a78bfa;">{hora}</span>. Responde CONFIRMAR..."</p>
-            </div>
+          <div class="p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            La integración con WhatsApp Business aún no está disponible. Cuando la activemos, podrás enviar recordatorios automáticos a tus pacientes por WhatsApp.
           </div>
-          <div class="flex items-center justify-between pt-2">
-            <span class="text-[11px] text-slate-500 italic">Número: +34 612 ···· ·89</span>
-            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+          <div class="flex items-center justify-end pt-2">
+            <button disabled class="px-4 py-2 text-sm font-headline font-semibold text-slate-600 rounded-xl cursor-not-allowed" style="opacity:0.6;">Configurar</button>
           </div>
         </div>
         <!-- Email -->
@@ -304,7 +294,7 @@
             <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);">Conectado</span>
           </div>
           <div class="flex items-center justify-between pt-2">
-            <span class="text-[11px] text-slate-500 italic">Tasa de entrega: 99.8%</span>
+            <span class="text-[11px] text-slate-500 italic">Recordatorios y confirmaciones activos</span>
             <button onclick="abrirConfigEmail()" class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
           </div>
         </div>
