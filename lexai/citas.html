@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LexAI · Citas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = { darkMode: "class", theme: { extend: {
+        "colors": { "surface-container-highest": "#2d3449","surface-bright": "#31394d","secondary-fixed-dim": "#7bd0ff","surface-tint": "#4fdbc8","on-primary": "#003731","background": "#0b1326","surface-container-low": "#131b2e","on-surface": "#dae2fd","tertiary": "#ffb2b7","surface": "#0b1326","outline-variant": "#3c4947","on-surface-variant": "#bbcac6","error": "#ffb4ab","secondary-container": "#00a6e0","surface-container-lowest": "#060e20","secondary": "#7bd0ff","surface-container-high": "#222a3d","tertiary-container": "#ff7b88","primary": "#4fdbc8","surface-container": "#171f33","primary-container": "#14b8a6","surface-variant": "#2d3449","on-background": "#dae2fd","outline": "#859490","on-primary-container": "#00423b" },
+        "borderRadius": { "DEFAULT": "0.125rem","lg": "0.25rem","xl": "0.5rem","full": "0.75rem" },
+        "spacing": { "md": "16px","xs": "4px","sm": "8px","xxl": "48px","gutter": "20px","xl": "32px","lg": "24px","base": "4px" },
+        "fontFamily": { "label-caps": ["JetBrains Mono"],"headline-lg": ["Inter"],"body-sm": ["Inter"],"title-md": ["Inter"],"body-lg": ["Inter"],"stat-value": ["Inter"] },
+        "fontSize": { "label-caps": ["12px", {"lineHeight": "16px","letterSpacing": "0.05em","fontWeight": "500"}],"headline-lg": ["32px", {"lineHeight": "40px","letterSpacing": "-0.01em","fontWeight": "600"}],"body-sm": ["14px", {"lineHeight": "20px","fontWeight": "400"}],"title-md": ["20px", {"lineHeight": "28px","fontWeight": "600"}],"body-lg": ["16px", {"lineHeight": "24px","fontWeight": "400"}],"stat-value": ["28px", {"lineHeight": "32px","fontWeight": "700"}] }
+      } } }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .active-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background-color: #4fdbc8; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex overflow-hidden">
+<aside class="fixed left-0 top-0 h-full w-[260px] bg-background border-r border-surface-container flex flex-col py-lg z-50">
+<div class="px-xl mb-xxl flex items-center gap-sm">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">gavel</span></div>
+<div class="flex flex-col"><span class="font-headline-lg text-headline-lg font-bold text-primary">LexAI</span><span class="font-label-caps text-label-caps text-on-surface-variant">Silent Expert</span></div>
+</div>
+<nav class="flex-1 space-y-xs" id="side-nav">
+<div class="relative px-md" data-page="conversaciones"><a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer" href="conversaciones.html"><span class="material-symbols-outlined">chat</span><span class="font-body-lg text-body-lg">Conversaciones</span></a></div>
+<div class="relative px-md" data-page="citas"><a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer" href="citas.html"><span class="material-symbols-outlined">calendar_today</span><span class="font-body-lg text-body-lg">Citas</span></a></div>
+<div class="relative px-md" data-page="pagos"><a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer" href="pagos.html"><span class="material-symbols-outlined">payments</span><span class="font-body-lg text-body-lg">Pagos</span></a></div>
+<div class="relative px-md" data-page="ajustes"><a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer" href="ajustes.html"><span class="material-symbols-outlined">settings</span><span class="font-body-lg text-body-lg">Ajustes</span></a></div>
+</nav>
+<div class="mt-auto px-xl pt-lg border-t border-surface-container"><div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold">CA</div>
+<div class="flex flex-col overflow-hidden"><span class="font-body-lg text-body-lg font-bold truncate text-on-surface" id="negocio-nombre">Despacho</span><span class="font-label-caps text-label-caps text-on-surface-variant">Panel del despacho</span></div>
+</div></div>
+</aside>
+<main class="ml-[260px] flex-1 flex flex-col h-screen">
+<header class="flex justify-between items-center h-20 px-xl bg-background border-b border-surface-container">
+<div class="flex items-center gap-lg"><h1 class="font-headline-lg text-headline-lg text-on-surface font-bold">Citas</h1><p class="font-label-caps text-label-caps text-on-surface-variant" id="current-date"></p></div>
+<div class="flex items-center gap-lg">
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-xl custom-scrollbar space-y-xl max-w-[1600px] mx-auto w-full">
+<!-- KPIs -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="bg-surface-container border border-outline-variant p-lg"><div class="flex justify-between items-start"><span class="font-label-caps text-label-caps text-on-surface-variant">CITAS HOY</span><span class="material-symbols-outlined text-primary text-body-lg">event</span></div><div class="font-stat-value text-stat-value text-on-surface mt-md" id="k-hoy">—</div></div>
+<div class="bg-surface-container border border-outline-variant p-lg"><div class="flex justify-between items-start"><span class="font-label-caps text-label-caps text-on-surface-variant">ESTA SEMANA</span><span class="material-symbols-outlined text-secondary text-body-lg">date_range</span></div><div class="font-stat-value text-stat-value text-on-surface mt-md" id="k-semana">—</div></div>
+<div class="bg-surface-container border border-outline-variant p-lg"><div class="flex justify-between items-start"><span class="font-label-caps text-label-caps text-on-surface-variant">PENDIENTES PAGO</span><span class="material-symbols-outlined text-tertiary-container text-body-lg">schedule</span></div><div class="font-stat-value text-stat-value text-on-surface mt-md" id="k-pend">—</div></div>
+<div class="bg-surface-container border border-outline-variant p-lg"><div class="flex justify-between items-start"><span class="font-label-caps text-label-caps text-on-surface-variant">CANCELADAS / NO-SHOW</span><span class="material-symbols-outlined text-error text-body-lg">event_busy</span></div><div class="font-stat-value text-stat-value text-on-surface mt-md" id="k-canc">—</div></div>
+</div>
+<!-- Tabla -->
+<div class="bg-surface-container border border-outline-variant">
+<div class="p-lg flex flex-wrap gap-md justify-between items-center border-b border-outline-variant">
+<div class="flex gap-sm" id="filtros">
+<button data-filtro="todas" class="px-md py-xs bg-primary text-on-primary font-label-caps text-label-caps rounded-full">Todas</button>
+<button data-filtro="hoy" class="px-md py-xs bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps rounded-full">Hoy</button>
+<button data-filtro="semana" class="px-md py-xs bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps rounded-full">Esta semana</button>
+<button data-filtro="pendientes_pago" class="px-md py-xs bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps rounded-full">Pendientes de pago</button>
+</div>
+<div class="relative"><span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-body-lg">search</span><input id="buscar" class="bg-background border border-outline-variant pl-xl pr-md py-sm rounded-lg text-on-surface placeholder:text-on-surface-variant focus:border-primary focus:ring-0 outline-none" placeholder="Buscar cliente o expediente..." type="text"/></div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead><tr class="border-b border-outline-variant text-on-surface-variant font-label-caps text-label-caps">
+<th class="px-lg py-md">HORA Y FECHA</th><th class="px-lg py-md">CLIENTE</th><th class="px-lg py-md">TELÉFONO</th><th class="px-lg py-md">TIPO DE CONSULTA</th><th class="px-lg py-md">CANAL</th><th class="px-lg py-md">ESTADO</th><th class="px-lg py-md text-right">ACCIONES</th>
+</tr></thead>
+<tbody id="tbody"><tr><td colspan="7" class="px-lg py-xl text-on-surface-variant font-body-sm">Cargando citas…</td></tr></tbody>
+</table>
+</div>
+<div class="p-lg text-on-surface-variant font-label-caps text-label-caps" id="tabla-pie"></div>
+</div>
+</div>
+</main>
+<script>
+const API=''; let CITAS=[]; let filtroActual='todas';
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).toUpperCase();
+document.querySelector('#side-nav [data-page="citas"] a').classList.add('bg-surface-container','text-on-surface');
+document.querySelector('#side-nav [data-page="citas"]').insertAdjacentHTML('afterbegin','<div class="active-indicator"></div>');
+const initials=s=>(s||'—').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+const horaFmt=h=>(h||'').slice(0,5);
+function fechaFmt(f){const d=new Date(f+'T00:00:00'),hoy=new Date();hoy.setHours(0,0,0,0);const man=new Date(hoy);man.setDate(man.getDate()+1);if(d.getTime()===hoy.getTime())return'Hoy';if(d.getTime()===man.getTime())return'Mañana';return d.toLocaleDateString('es-ES',{day:'2-digit',month:'short'});}
+function badge(c){
+  if(c.estado==='cancelada')return{t:'Cancelada',c:'bg-error/10 text-error'};
+  if(c.pago_estado==='pendiente')return{t:'Pendiente pago',c:'bg-tertiary-container/20 text-tertiary-container'};
+  if(c.pago_estado==='pagado')return{t:'Pagada',c:'bg-primary/10 text-primary'};
+  const m={agendada:'Agendada',confirmada:'Confirmada',realizada:'Realizada'};
+  return{t:m[c.estado]||c.estado,c:'bg-surface-container-highest text-on-surface-variant'};
+}
+function canalCell(c){
+  if(c.canal==='whatsapp')return'<span class="flex items-center gap-xs" style="color:#25D366"><span class="material-symbols-outlined text-body-lg">chat</span>WhatsApp</span>';
+  if(c.canal==='telefono')return'<span class="flex items-center gap-xs text-primary"><span class="material-symbols-outlined text-body-lg">call</span>Teléfono</span>';
+  return'<span class="text-on-surface-variant">—</span>';
+}
+async function cargar(){
+  const q=document.getElementById('buscar').value.trim();
+  try{
+    const r=await fetch(`${API}/api/rec/citas?filtro=${filtroActual}&q=${encodeURIComponent(q)}`);const d=await r.json();
+    const k=d.kpis||{};
+    document.getElementById('k-hoy').textContent=k.citas_hoy??0;
+    document.getElementById('k-semana').textContent=k.esta_semana??0;
+    document.getElementById('k-pend').textContent=k.pendientes_pago??0;
+    document.getElementById('k-canc').textContent=k.canceladas??0;
+    CITAS=d.items||[];render();
+  }catch(e){document.getElementById('tbody').innerHTML='<tr><td colspan="7" class="px-lg py-xl text-error font-body-sm">No se pudo cargar.</td></tr>';}
+}
+function render(){
+  const tb=document.getElementById('tbody');
+  if(!CITAS.length){tb.innerHTML='<tr><td colspan="7" class="px-lg py-xl text-on-surface-variant font-body-sm">Sin citas.</td></tr>';document.getElementById('tabla-pie').textContent='';return;}
+  tb.innerHTML=CITAS.map(c=>{const b=badge(c);const ver=c.conversacion_id?`<a href="conversaciones.html" class="text-primary hover:underline font-body-sm">Ver conversación</a>`:'<span class="text-on-surface-variant font-body-sm">—</span>';
+    return `<tr class="border-b border-outline-variant hover:bg-surface-container-high transition-colors">
+      <td class="px-lg py-md"><div class="text-on-surface font-body-lg">${horaFmt(c.hora)}</div><div class="text-on-surface-variant font-label-caps text-label-caps">${fechaFmt(c.fecha)}</div></td>
+      <td class="px-lg py-md"><div class="flex items-center gap-sm"><div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-primary text-label-caps font-bold">${initials(c.cliente_nombre)}</div><span class="text-on-surface font-body-lg">${c.cliente_nombre||'—'}</span></div></td>
+      <td class="px-lg py-md text-on-surface-variant font-body-sm">${c.cliente_tel||'—'}</td>
+      <td class="px-lg py-md"><div class="text-on-surface font-body-lg">${c.tipo||'—'}</div>${c.importe!=null?`<div class="text-on-surface-variant font-label-caps text-label-caps">Honorarios: ${Number(c.importe).toLocaleString('es-ES',{minimumFractionDigits:2})}€</div>`:''}</td>
+      <td class="px-lg py-md font-body-sm">${canalCell(c)}</td>
+      <td class="px-lg py-md"><span class="inline-flex px-sm py-[3px] ${b.c} rounded-full text-[11px] font-bold">${b.t}</span></td>
+      <td class="px-lg py-md text-right">${ver}</td>
+    </tr>`;}).join('');
+  document.getElementById('tabla-pie').textContent=`Mostrando ${CITAS.length} cita${CITAS.length!==1?'s':''}`;
+}
+document.getElementById('filtros').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;filtroActual=b.dataset.filtro;document.querySelectorAll('#filtros button').forEach(x=>x.className=x.className.replace('bg-primary text-on-primary','bg-surface-container-high text-on-surface-variant'));b.className=b.className.replace('bg-surface-container-high text-on-surface-variant','bg-primary text-on-primary');cargar();});
+let t;document.getElementById('buscar').addEventListener('input',()=>{clearTimeout(t);t=setTimeout(cargar,300);});
+cargar();
+fetch(`${API}/api/rec/ajustes`).then(r=>r.json()).then(n=>{if(n&&n.nombre)document.getElementById('negocio-nombre').textContent=n.nombre;}).catch(()=>{});
+</script>
+</body></html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LexAI · Ajustes</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = { darkMode: "class", theme: { extend: {
+        "colors": { "surface-container-highest": "#2d3449","surface-tint": "#4fdbc8","on-primary": "#003731","background": "#0b1326","surface-container-low": "#131b2e","on-surface": "#dae2fd","tertiary": "#ffb2b7","surface": "#0b1326","outline-variant": "#3c4947","on-surface-variant": "#bbcac6","error": "#ffb4ab","secondary":"#7bd0ff","surface-container-high": "#222a3d","tertiary-container": "#ff7b88","primary": "#4fdbc8","surface-container": "#171f33","primary-container": "#14b8a6","on-background": "#dae2fd","outline": "#859490","on-primary-container": "#00423b" },
+        "borderRadius": { "DEFAULT": "0.125rem","lg": "0.25rem","xl": "0.5rem","full": "0.75rem" },
+        "spacing": { "md": "16px","xs": "4px","sm": "8px","xxl": "48px","gutter": "20px","xl": "32px","lg": "24px","base": "4px" },
+        "fontFamily": { "label-caps": ["JetBrains Mono"],"headline-lg": ["Inter"],"body-sm": ["Inter"],"title-md": ["Inter"],"body-lg": ["Inter"] },
+        "fontSize": { "label-caps": ["12px", {"lineHeight": "16px","letterSpacing": "0.05em","fontWeight": "500"}],"headline-lg": ["32px", {"lineHeight": "40px","letterSpacing": "-0.01em","fontWeight": "600"}],"body-sm": ["14px", {"lineHeight": "20px","fontWeight": "400"}],"title-md": ["20px", {"lineHeight": "28px","fontWeight": "600"}],"body-lg": ["16px", {"lineHeight": "24px","fontWeight": "400"}] }
+      } } }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300; }
+        .active-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background-color: #4fdbc8; }
+        .fld { width:100%; background:#0b1326; border:1px solid #3c4947; border-radius:.25rem; padding:.5rem .75rem; color:#dae2fd; font-size:14px; outline:none; }
+        .fld:focus { border-color:#4fdbc8; }
+        .lbl { font-size:12px; color:#bbcac6; margin-bottom:4px; display:block; }
+        .card { background:#171f33; border:1px solid #3c4947; padding:24px; display:flex; flex-direction:column; gap:16px; }
+        .toggle { width:44px; height:24px; border-radius:999px; background:#2d3449; position:relative; cursor:pointer; transition:.2s; flex:none; }
+        .toggle.on { background:#4fdbc8; }
+        .toggle::after { content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#dae2fd; transition:.2s; }
+        .toggle.on::after { left:23px; background:#003731; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<aside class="fixed left-0 top-0 h-full w-[260px] bg-background border-r border-surface-container flex flex-col py-lg z-50">
+<div class="px-xl mb-xxl flex items-center gap-sm">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">gavel</span></div>
+<div class="flex flex-col"><span class="font-headline-lg text-headline-lg font-bold text-primary">LexAI</span><span class="font-label-caps text-label-caps text-on-surface-variant">Silent Expert</span></div>
+</div>
+<nav class="flex-1 space-y-xs" id="side-nav">
+<div class="relative px-md" data-page="conversaciones"><a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer" href="conversaciones.html"><span class="material-symbols-outlined">chat</span><span class="font-body-lg text-body-lg">Conversaciones</span></a></div>
+<div class="relative px-md" data-page="citas"><a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer" href="citas.html"><span class="material-symbols-outlined">calendar_today</span><span class="font-body-lg text-body-lg">Citas</span></a></div>
+<div class="relative px-md" data-page="pagos"><a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer" href="pagos.html"><span class="material-symbols-outlined">payments</span><span class="font-body-lg text-body-lg">Pagos</span></a></div>
+<div class="relative px-md" data-page="ajustes"><a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors cursor-pointer" href="ajustes.html"><span class="material-symbols-outlined">settings</span><span class="font-body-lg text-body-lg">Ajustes</span></a></div>
+</nav>
+<div class="mt-auto px-xl pt-lg border-t border-surface-container"><div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold">CA</div>
+<div class="flex flex-col overflow-hidden"><span class="font-body-lg text-body-lg font-bold truncate text-on-surface" id="negocio-nombre">Despacho</span><span class="font-label-caps text-label-caps text-on-surface-variant">Panel del despacho</span></div>
+</div></div>
+</aside>
+<main class="ml-[260px] flex-1 flex flex-col min-h-screen">
+<header class="flex justify-between items-center h-20 px-xl bg-background border-b border-surface-container">
+<h1 class="font-headline-lg text-headline-lg text-on-surface font-bold">Ajustes</h1>
+<div class="flex items-center gap-lg">
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</header>
+<div class="flex-1 p-xl max-w-[1400px] mx-auto w-full">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter" id="cards">
+<!-- El Despacho -->
+<div class="card">
+<div><h2 class="font-title-md text-title-md text-on-surface flex items-center gap-sm"><span class="material-symbols-outlined text-primary">account_balance</span>El Despacho</h2><p class="font-body-sm text-on-surface-variant">Información pública del despacho.</p></div>
+<div><label class="lbl">Nombre del despacho</label><input id="f-nombre" class="fld"/></div>
+<div class="grid grid-cols-2 gap-md"><div><label class="lbl">Teléfono</label><input id="f-telefono" class="fld"/></div><div><label class="lbl">Email de contacto</label><input id="f-email" class="fld"/></div></div>
+<div><label class="lbl">Idiomas de atención</label><div id="f-idiomas" class="flex flex-wrap gap-sm"></div></div>
+<div class="text-right"><button onclick="guardar()" class="px-lg py-sm bg-primary text-on-primary font-body-lg font-bold rounded-lg inline-flex items-center gap-sm active:scale-95"><span class="material-symbols-outlined text-body-lg">save</span>Guardar</button></div>
+</div>
+<!-- El Asistente AI -->
+<div class="card">
+<div class="flex justify-between items-start"><div><h2 class="font-title-md text-title-md text-on-surface flex items-center gap-sm"><span class="material-symbols-outlined text-primary">smart_toy</span>El Asistente AI</h2><p class="font-body-sm text-on-surface-variant">Personalidad y voz de tu recepcionista.</p></div><span class="px-sm py-[2px] bg-primary/10 text-primary rounded-full text-[10px] font-bold uppercase">Activo</span></div>
+<div class="grid grid-cols-2 gap-md"><div><label class="lbl">Nombre del asistente</label><input id="f-asistente" class="fld"/></div><div><label class="lbl">Tono de voz</label><input id="f-tono" class="fld"/></div></div>
+<div><label class="lbl">Saludo inicial</label><textarea id="f-saludo" rows="2" class="fld"></textarea></div>
+<div><label class="lbl">Respuestas personalizadas</label><textarea id="f-respuestas" rows="3" class="fld"></textarea></div>
+<div><label class="lbl">Despedida</label><textarea id="f-despedida" rows="2" class="fld"></textarea></div>
+<div class="text-right"><button onclick="guardar()" class="px-lg py-sm bg-primary text-on-primary font-body-lg font-bold rounded-lg inline-flex items-center gap-sm active:scale-95"><span class="material-symbols-outlined text-body-lg">save</span>Guardar</button></div>
+</div>
+<!-- Servicios y Precios -->
+<div class="card lg:col-span-2">
+<h2 class="font-title-md text-title-md text-on-surface flex items-center gap-sm"><span class="material-symbols-outlined text-primary">sell</span>Servicios y Precios</h2>
+<p class="font-body-sm text-on-surface-variant">Los honorarios que el asistente comunica a los clientes.</p>
+<div class="overflow-x-auto"><table class="w-full text-left"><thead><tr class="text-on-surface-variant font-label-caps text-label-caps border-b border-outline-variant"><th class="py-sm">SERVICIO</th><th class="py-sm">DURACIÓN</th><th class="py-sm text-right">PRECIO</th></tr></thead><tbody id="f-servicios"></tbody></table></div>
+</div>
+<!-- Horarios y Agenda -->
+<div class="card">
+<h2 class="font-title-md text-title-md text-on-surface flex items-center gap-sm"><span class="material-symbols-outlined text-primary">event</span>Horarios y Agenda</h2>
+<div id="f-gcal" class="flex items-center justify-between p-md bg-surface-container-low border border-outline-variant rounded-lg"></div>
+<div id="f-disponibilidad" class="space-y-xs"></div>
+</div>
+<!-- Guardarraíles y FAQs -->
+<div class="card">
+<h2 class="font-title-md text-title-md text-on-surface flex items-center gap-sm"><span class="material-symbols-outlined text-primary">shield</span>Guardarraíles y FAQs</h2>
+<div><label class="lbl">Límites legales (qué NO responde)</label><textarea id="f-guardarrailes" rows="4" class="fld"></textarea></div>
+<div><label class="lbl">FAQs de referencia</label><div id="f-faqs" class="space-y-sm"></div></div>
+<div class="text-right"><button onclick="guardar()" class="px-lg py-sm bg-primary text-on-primary font-body-lg font-bold rounded-lg inline-flex items-center gap-sm active:scale-95"><span class="material-symbols-outlined text-body-lg">save</span>Guardar</button></div>
+</div>
+<!-- Derivación y Avisos -->
+<div class="card">
+<h2 class="font-title-md text-title-md text-on-surface flex items-center gap-sm"><span class="material-symbols-outlined text-primary">forward_to_inbox</span>Derivación y Avisos</h2>
+<div class="flex items-center justify-between"><div><div class="text-on-surface font-body-lg">Avisos por WhatsApp</div><div class="text-on-surface-variant font-body-sm">Aviso al despacho por cada cita/lead.</div></div><div id="t-wa" class="toggle"></div></div>
+<div class="flex items-center justify-between"><div><div class="text-on-surface font-body-lg">Resumen diario</div><div class="text-on-surface-variant font-body-sm">Resumen al final de la jornada.</div></div><div id="t-resumen" class="toggle"></div></div>
+<div><label class="lbl">Teléfonos de aviso (WhatsApp)</label><input id="f-avisos" class="fld"/></div>
+<div class="text-right"><button onclick="guardar()" class="px-lg py-sm bg-primary text-on-primary font-body-lg font-bold rounded-lg inline-flex items-center gap-sm active:scale-95"><span class="material-symbols-outlined text-body-lg">save</span>Guardar</button></div>
+</div>
+<!-- Pasarela de Pagos -->
+<div class="card lg:col-span-2">
+<h2 class="font-title-md text-title-md text-on-surface flex items-center gap-sm"><span class="material-symbols-outlined text-primary">credit_card</span>Pasarela de Pagos</h2>
+<div id="f-stripe" class="flex items-center justify-between p-md bg-surface-container-low border border-outline-variant rounded-lg"></div>
+<label class="flex items-center gap-sm text-on-surface font-body-sm cursor-pointer"><input type="checkbox" id="f-cobro" class="accent-primary w-4 h-4"/> Cobrar la consulta por adelantado al agendar (enlace de pago automático).</label>
+<div class="text-right"><button onclick="guardar()" class="px-lg py-sm bg-primary text-on-primary font-body-lg font-bold rounded-lg inline-flex items-center gap-sm active:scale-95"><span class="material-symbols-outlined text-body-lg">save</span>Guardar</button></div>
+</div>
+</div>
+</div>
+</main>
+<div id="toast" class="fixed bottom-6 right-6 bg-primary text-on-primary px-lg py-md rounded-lg font-body-lg font-bold shadow-lg opacity-0 pointer-events-none transition-opacity">Guardado ✓</div>
+<script>
+const API=''; let NEG={config:{}};
+document.querySelector('#side-nav [data-page="ajustes"] a').classList.add('bg-surface-container','text-on-surface');
+document.querySelector('#side-nav [data-page="ajustes"]').insertAdjacentHTML('afterbegin','<div class="active-indicator"></div>');
+const val=id=>document.getElementById(id);
+const eur=n=>Number(n||0).toLocaleString('es-ES',{minimumFractionDigits:2})+'€';
+function toast(msg,ok=true){const t=val('toast');t.textContent=msg;t.style.background=ok?'#4fdbc8':'#ff7b88';t.style.opacity='1';setTimeout(()=>t.style.opacity='0',2200);}
+
+async function cargar(){
+  try{
+    const r=await fetch(`${API}/api/rec/ajustes`);NEG=await r.json();const c=NEG.config||{};
+    val('negocio-nombre').textContent=NEG.nombre||'Despacho';
+    val('f-nombre').value=NEG.nombre||'';
+    val('f-telefono').value=NEG.telefono||'';
+    val('f-email').value=NEG.email_avisos||'';
+    val('f-idiomas').innerHTML=(c.idiomas||['Español']).map(i=>`<span class="px-sm py-xs bg-primary/10 text-primary rounded-full text-body-sm">${i}</span>`).join('');
+    val('f-asistente').value=c.asistente||'';
+    val('f-tono').value=c.tono||'';
+    val('f-saludo').value=c.saludo||'';
+    val('f-respuestas').value=c.respuestas||'';
+    val('f-despedida').value=c.despedida||'';
+    val('f-servicios').innerHTML=(c.servicios||[]).map(s=>`<tr class="border-b border-outline-variant"><td class="py-sm text-on-surface font-body-lg">${s.nombre}</td><td class="py-sm text-on-surface-variant font-body-sm">${s.duracion||''}</td><td class="py-sm text-right text-primary font-bold">${eur(s.precio)}</td></tr>`).join('')||'<tr><td class="py-sm text-on-surface-variant" colspan="3">Sin servicios.</td></tr>';
+    // Google Calendar
+    const conn=!!NEG.gcal_calendar_id;
+    val('f-gcal').innerHTML=`<div class="flex items-center gap-sm"><span class="material-symbols-outlined ${conn?'text-primary':'text-on-surface-variant'}">calendar_month</span><div><div class="text-on-surface font-body-lg">Google Calendar</div><div class="text-on-surface-variant font-body-sm">${conn?'Conectado ('+NEG.gcal_calendar_id+')':'No conectado'}</div></div></div><span class="${conn?'text-error':'text-primary'} font-body-sm font-bold cursor-pointer">${conn?'Desconectar':'Conectar'}</span>`;
+    val('f-disponibilidad').innerHTML=(c.disponibilidad||[]).map(d=>`<div class="flex justify-between py-xs border-b border-outline-variant/40"><span class="text-on-surface-variant font-body-sm">${d.dia}</span><span class="${/cerrad/i.test(d.horas)?'text-on-surface-variant':'text-primary'} font-label-caps text-label-caps">${d.horas}</span></div>`).join('');
+    val('f-guardarrailes').value=c.guardarrailes||'';
+    val('f-faqs').innerHTML=(c.faqs||[]).map(f=>`<div class="p-sm bg-surface-container-low border border-outline-variant rounded-lg"><div class="text-on-surface font-body-sm font-bold">${f.q}</div><div class="text-on-surface-variant font-body-sm">"${f.a}"</div></div>`).join('')||'<div class="text-on-surface-variant font-body-sm">Sin FAQs.</div>';
+    val('t-wa').classList.toggle('on',c.avisos_whatsapp!==false);
+    val('t-resumen').classList.toggle('on',c.resumen_diario!==false);
+    val('f-avisos').value=NEG.whatsapp_avisos||'';
+    // Stripe
+    const sc=!!c.stripe_conectado;
+    val('f-stripe').innerHTML=`<div class="flex items-center gap-sm"><span class="material-symbols-outlined ${sc?'text-primary':'text-on-surface-variant'}">${sc?'verified':'link_off'}</span><div><div class="text-on-surface font-body-lg">Stripe</div><div class="text-on-surface-variant font-body-sm">${sc?'Conectado':'No conectado'}</div></div></div><span class="${sc?'text-primary':'text-on-surface-variant'} font-body-sm font-bold ${sc?'':'cursor-pointer text-primary'}">${sc?'Verificado':'Conectar'}</span>`;
+    val('f-cobro').checked=!!c.cobro_online;
+  }catch(e){toast('No se pudo cargar',false);}
+}
+val('t-wa').addEventListener('click',()=>val('t-wa').classList.toggle('on'));
+val('t-resumen').addEventListener('click',()=>val('t-resumen').classList.toggle('on'));
+
+async function guardar(){
+  const config=Object.assign({},NEG.config||{},{
+    asistente:val('f-asistente').value, tono:val('f-tono').value,
+    saludo:val('f-saludo').value, respuestas:val('f-respuestas').value, despedida:val('f-despedida').value,
+    guardarrailes:val('f-guardarrailes').value,
+    avisos_whatsapp:val('t-wa').classList.contains('on'),
+    resumen_diario:val('t-resumen').classList.contains('on'),
+    cobro_online:val('f-cobro').checked
+  });
+  const body={ nombre:val('f-nombre').value, telefono:val('f-telefono').value, email_avisos:val('f-email').value, whatsapp_avisos:val('f-avisos').value, config };
+  try{
+    const r=await fetch(`${API}/api/rec/ajustes`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d=await r.json();
+    if(d.ok){ NEG=d.negocio; toast('Guardado ✓'); val('negocio-nombre').textContent=NEG.nombre||'Despacho'; }
+    else toast('No se pudo guardar',false);
+  }catch(e){toast('No se pudo guardar',false);}
+}
+cargar();
+</script>
+</body></html>
