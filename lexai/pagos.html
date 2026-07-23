@@ -22,6 +22,8 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .active-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background-color: #4fdbc8; }
     </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lexai-auth.js"></script>
 </head>
 <body class="bg-background text-on-background min-h-screen flex overflow-hidden">
 <aside class="fixed left-0 top-0 h-full w-[260px] bg-background border-r border-surface-container flex flex-col py-lg z-50">
@@ -45,7 +47,7 @@
 <div class="flex items-center gap-lg"><h1 class="font-headline-lg text-headline-lg text-on-surface font-bold">Pagos</h1><p class="font-label-caps text-label-caps text-on-surface-variant" id="current-date"></p></div>
 <div class="flex items-center gap-lg">
 <button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">notifications</span></button>
-<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">account_circle</span></button>
+<button onclick="lxLogout()" title="Cerrar sesión" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">logout</span></button>
 </div>
 </header>
 <div class="flex-1 overflow-y-auto p-xl custom-scrollbar space-y-xl max-w-[1600px] mx-auto w-full">
@@ -90,7 +92,7 @@ function chart(serie){const box=document.getElementById('chart');const max=Math.
 async function cargar(){
   const q=document.getElementById('buscar').value.trim();
   try{
-    const r=await fetch(`${API}/api/rec/pagos?filtro=${filtroActual}&q=${encodeURIComponent(q)}`);const d=await r.json();
+    const r=await lxApi(`${API}/api/rec/pagos?filtro=${filtroActual}&q=${encodeURIComponent(q)}`);const d=await r.json();
     const k=d.kpis||{};
     document.getElementById('k-hoy').textContent=eur0(k.cobrado_hoy);
     document.getElementById('k-mes').textContent=eur0(k.cobrado_mes);
@@ -117,7 +119,9 @@ function render(){
 }
 document.getElementById('filtros').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;filtroActual=b.dataset.filtro;document.querySelectorAll('#filtros button').forEach(x=>x.className=x.className.replace('bg-primary text-on-primary','bg-surface-container-high text-on-surface-variant'));b.className=b.className.replace('bg-surface-container-high text-on-surface-variant','bg-primary text-on-primary');cargar();});
 let t;document.getElementById('buscar').addEventListener('input',()=>{clearTimeout(t);t=setTimeout(cargar,300);});
-cargar();
-fetch(`${API}/api/rec/ajustes`).then(r=>r.json()).then(n=>{if(n&&n.nombre)document.getElementById('negocio-nombre').textContent=n.nombre;}).catch(()=>{});
+lxGuard().then(s=>{ if(!s) return;
+  cargar();
+  lxApi(`${API}/api/rec/ajustes`).then(r=>r.json()).then(n=>{if(n&&n.nombre)document.getElementById('negocio-nombre').textContent=n.nombre;}).catch(()=>{});
+});
 </script>
 </body></html>

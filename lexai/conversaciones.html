@@ -23,6 +23,8 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .active-indicator { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background-color: #4fdbc8; }
     </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lexai-auth.js"></script>
 </head>
 <body class="bg-background text-on-background min-h-screen flex overflow-hidden">
 <!-- SideNavBar -->
@@ -73,7 +75,7 @@
 </div>
 <div class="flex items-center gap-lg">
 <button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined">notifications</span></button>
-<button class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined">account_circle</span></button>
+<button onclick="lxLogout()" title="Cerrar sesión" class="text-on-surface-variant hover:text-primary transition-all"><span class="material-symbols-outlined">logout</span></button>
 </div>
 </header>
 <div class="flex-1 overflow-y-auto p-xl custom-scrollbar space-y-xl max-w-[1600px] mx-auto w-full">
@@ -163,7 +165,7 @@ async function cargar(){
   const q = document.getElementById('buscar').value.trim();
   const url = `${API}/api/rec/conversaciones?filtro=${filtroActual}&q=${encodeURIComponent(q)}`;
   try {
-    const r = await fetch(url); const data = await r.json();
+    const r = await lxApi(url); const data = await r.json();
     const k = data.kpis || {};
     document.getElementById('kpi-llamadas').textContent = k.llamadas_hoy ?? 0;
     document.getElementById('kpi-citas').textContent = k.citas_agendadas ?? 0;
@@ -219,7 +221,7 @@ async function abrir(id, el){
   const det = document.getElementById('detalle');
   det.innerHTML = '<div class="flex-1 flex items-center justify-center text-on-surface-variant font-body-sm">Cargando…</div>';
   try {
-    const r = await fetch(`${API}/api/rec/conversaciones/${id}`); const c = await r.json();
+    const r = await lxApi(`${API}/api/rec/conversaciones/${id}`); const c = await r.json();
     const canalTxt = c.canal === 'whatsapp' ? 'WhatsApp' : 'Teléfono';
     const audio = c.audio_url ? `<div class="px-lg py-md bg-surface-container-low border-b border-outline-variant flex items-center gap-md">
         <span class="material-symbols-outlined text-primary">graphic_eq</span>
@@ -262,8 +264,9 @@ document.getElementById('filtros').addEventListener('click', e => {
 });
 let t; document.getElementById('buscar').addEventListener('input', ()=>{ clearTimeout(t); t=setTimeout(cargar,300); });
 
-cargar();
-// nombre del negocio
-fetch(`${API}/api/rec/ajustes`).then(r=>r.json()).then(n=>{ if(n&&n.nombre){ document.getElementById('negocio-nombre').textContent = n.nombre; } }).catch(()=>{});
+lxGuard().then(s=>{ if(!s) return;
+  cargar();
+  lxApi(`${API}/api/rec/ajustes`).then(r=>r.json()).then(n=>{ if(n&&n.nombre){ document.getElementById('negocio-nombre').textContent = n.nombre; } }).catch(()=>{});
+});
 </script>
 </body></html>

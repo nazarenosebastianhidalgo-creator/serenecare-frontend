@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LexAI · Acceso</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lexai-auth.js"></script>
+<style>
+  body{font-family:'Inter',sans-serif;background:#0b1326;color:#dae2fd;}
+  .fld{width:100%;background:#0b1326;border:1px solid #3c4947;border-radius:.375rem;padding:.7rem .9rem;color:#dae2fd;outline:none;}
+  .fld:focus{border-color:#4fdbc8;}
+  .material-symbols-outlined{font-family:'Material Symbols Outlined';}
+</style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+<div class="w-full max-w-sm">
+<div class="flex items-center gap-3 mb-8 justify-center">
+<div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:#4fdbc8;color:#003731;"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">gavel</span></div>
+<div><div class="text-2xl font-bold" style="color:#4fdbc8;">LexAI</div><div class="text-xs tracking-widest" style="color:#bbcac6;font-family:'JetBrains Mono';">SILENT EXPERT</div></div>
+</div>
+<div class="p-8 rounded-xl border" style="background:#171f33;border-color:#3c4947;">
+<h1 class="text-xl font-semibold mb-1">Acceso al panel</h1>
+<p class="text-sm mb-6" style="color:#bbcac6;">Entra con las credenciales de tu despacho.</p>
+<form id="form" class="space-y-4">
+<div><label class="text-xs" style="color:#bbcac6;">Email</label><input id="email" type="email" class="fld mt-1" autocomplete="username" required/></div>
+<div><label class="text-xs" style="color:#bbcac6;">Contraseña</label><input id="password" type="password" class="fld mt-1" autocomplete="current-password" required/></div>
+<div id="err" class="text-sm hidden" style="color:#ffb4ab;"></div>
+<button id="btn" type="submit" class="w-full py-3 rounded-lg font-bold" style="background:#4fdbc8;color:#003731;">Entrar</button>
+</form>
+</div>
+<p class="text-center text-xs mt-6" style="color:#859490;">Recepcionista IA para despachos · LexAI</p>
+</div>
+<script>
+(async function(){
+  // si ya hay sesión, al panel
+  const { data:{session} } = await window.lxSb.auth.getSession();
+  if(session) location.replace('conversaciones.html');
+})();
+document.getElementById('form').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const btn=document.getElementById('btn'), err=document.getElementById('err');
+  err.classList.add('hidden'); btn.textContent='Entrando…'; btn.disabled=true;
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  const { error } = await window.lxSb.auth.signInWithPassword({ email, password });
+  if(error){ err.textContent='Email o contraseña incorrectos.'; err.classList.remove('hidden'); btn.textContent='Entrar'; btn.disabled=false; return; }
+  location.replace('conversaciones.html');
+});
+</script>
+</body></html>

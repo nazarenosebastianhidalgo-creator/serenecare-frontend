@@ -28,6 +28,8 @@
         .toggle::after { content:''; position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#dae2fd; transition:.2s; }
         .toggle.on::after { left:23px; background:#003731; }
     </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lexai-auth.js"></script>
 </head>
 <body class="bg-background text-on-background min-h-screen flex">
 <aside class="fixed left-0 top-0 h-full w-[260px] bg-background border-r border-surface-container flex flex-col py-lg z-50">
@@ -51,7 +53,7 @@
 <h1 class="font-headline-lg text-headline-lg text-on-surface font-bold">Ajustes</h1>
 <div class="flex items-center gap-lg">
 <button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">notifications</span></button>
-<button class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">account_circle</span></button>
+<button onclick="lxLogout()" title="Cerrar sesión" class="text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined">logout</span></button>
 </div>
 </header>
 <div class="flex-1 p-xl max-w-[1400px] mx-auto w-full">
@@ -121,7 +123,7 @@ function toast(msg,ok=true){const t=val('toast');t.textContent=msg;t.style.backg
 
 async function cargar(){
   try{
-    const r=await fetch(`${API}/api/rec/ajustes`);NEG=await r.json();const c=NEG.config||{};
+    const r=await lxApi(`${API}/api/rec/ajustes`);NEG=await r.json();const c=NEG.config||{};
     val('negocio-nombre').textContent=NEG.nombre||'Despacho';
     val('f-nombre').value=NEG.nombre||'';
     val('f-telefono').value=NEG.telefono||'';
@@ -162,12 +164,12 @@ async function guardar(){
   });
   const body={ nombre:val('f-nombre').value, telefono:val('f-telefono').value, email_avisos:val('f-email').value, whatsapp_avisos:val('f-avisos').value, config };
   try{
-    const r=await fetch(`${API}/api/rec/ajustes`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const r=await lxApi(`${API}/api/rec/ajustes`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
     const d=await r.json();
     if(d.ok){ NEG=d.negocio; toast('Guardado ✓'); val('negocio-nombre').textContent=NEG.nombre||'Despacho'; }
     else toast('No se pudo guardar',false);
   }catch(e){toast('No se pudo guardar',false);}
 }
-cargar();
+lxGuard().then(s=>{ if(s) cargar(); });
 </script>
 </body></html>
