@@ -135,9 +135,7 @@ async function cargar(){
     val('f-respuestas').value=c.respuestas||'';
     val('f-despedida').value=c.despedida||'';
     val('f-servicios').innerHTML=(c.servicios||[]).map(s=>`<tr class="border-b border-outline-variant"><td class="py-sm text-on-surface font-body-lg">${s.nombre}</td><td class="py-sm text-on-surface-variant font-body-sm">${s.duracion||''}</td><td class="py-sm text-right text-primary font-bold">${eur(s.precio)}</td></tr>`).join('')||'<tr><td class="py-sm text-on-surface-variant" colspan="3">Sin servicios.</td></tr>';
-    // Google Calendar
-    const conn=!!NEG.gcal_calendar_id;
-    val('f-gcal').innerHTML=`<div class="flex items-center gap-sm"><span class="material-symbols-outlined ${conn?'text-primary':'text-on-surface-variant'}">calendar_month</span><div><div class="text-on-surface font-body-lg">Google Calendar</div><div class="text-on-surface-variant font-body-sm">${conn?'Conectado ('+NEG.gcal_calendar_id+')':'No conectado'}</div></div></div><span class="${conn?'text-error':'text-primary'} font-body-sm font-bold cursor-pointer">${conn?'Desconectar':'Conectar'}</span>`;
+    renderGcal();
     val('f-disponibilidad').innerHTML=(c.disponibilidad||[]).map(d=>`<div class="flex justify-between py-xs border-b border-outline-variant/40"><span class="text-on-surface-variant font-body-sm">${d.dia}</span><span class="${/cerrad/i.test(d.horas)?'text-on-surface-variant':'text-primary'} font-label-caps text-label-caps">${d.horas}</span></div>`).join('');
     val('f-guardarrailes').value=c.guardarrailes||'';
     val('f-faqs').innerHTML=(c.faqs||[]).map(f=>`<div class="p-sm bg-surface-container-low border border-outline-variant rounded-lg"><div class="text-on-surface font-body-sm font-bold">${f.q}</div><div class="text-on-surface-variant font-body-sm">"${f.a}"</div></div>`).join('')||'<div class="text-on-surface-variant font-body-sm">Sin FAQs.</div>';
@@ -170,6 +168,25 @@ async function guardar(){
     else toast('No se pudo guardar',false);
   }catch(e){toast('No se pudo guardar',false);}
 }
+async function renderGcal(){
+  let connected=false;
+  try{ const r=await lxApi('/api/rec/google/status'); connected=(await r.json()).connected; }catch{}
+  val('f-gcal').innerHTML =
+    `<div class="flex items-center gap-sm"><span class="material-symbols-outlined ${connected?'text-primary':'text-on-surface-variant'}">calendar_month</span><div><div class="text-on-surface font-body-lg">Google Calendar</div><div class="text-on-surface-variant font-body-sm">${connected?'Conectado ✓ — Sofía agenda aquí':'No conectado'}</div></div></div>`
+    + `<button onclick="${connected?'desconectarGoogle()':'conectarGoogle()'}" class="${connected?'text-error':'text-primary'} font-body-sm font-bold cursor-pointer">${connected?'Desconectar':'Conectar'}</button>`;
+}
+async function conectarGoogle(){
+  try{ const r=await lxApi('/api/rec/google/auth-url'); const d=await r.json(); if(d.url) location.href=d.url; else toast('No se pudo iniciar',false); }
+  catch{ toast('No se pudo iniciar la conexión',false); }
+}
+async function desconectarGoogle(){
+  try{ await lxApi('/api/rec/google/disconnect',{method:'POST'}); toast('Google Calendar desconectado'); renderGcal(); }
+  catch{ toast('Error al desconectar',false); }
+}
+// Aviso al volver del consentimiento de Google
+const _p=new URLSearchParams(location.search);
+if(_p.get('gcal')==='ok') setTimeout(()=>toast('¡Google Calendar conectado! ✓'),600);
+if(_p.get('gcal')==='error') setTimeout(()=>toast('No se pudo conectar Google',false),600);
 lxGuard().then(s=>{ if(s) cargar(); });
 </script>
 </body></html>
