@@ -24,11 +24,8 @@
 <p class="text-sm mb-6" style="color:#bbcac6;">Pulsa, permite el micrófono y habla como si llamaras al despacho. Prueba: <em>"Hola, quería información para una consulta de divorcio."</em></p>
 
 <div class="mb-6">
-<div class="text-xs mb-2" style="color:#bbcac6;">Elige la voz a probar</div>
-<div class="inline-flex rounded-full p-1 border" style="border-color:#3c4947;background:#0b1326;">
-<button id="v-human" class="seg active px-4 py-2 rounded-full text-sm font-semibold">Humana (ElevenLabs)</button>
-<button id="v-azure" class="seg px-4 py-2 rounded-full text-sm font-semibold" style="color:#bbcac6;">Española (Azure)</button>
-</div>
+<div class="text-xs mb-2" style="color:#bbcac6;">Elige la voz a probar (todas más pausadas)</div>
+<div class="flex flex-wrap gap-2 justify-center" id="voces"></div>
 </div>
 
 <button id="btn" class="w-28 h-28 mx-auto rounded-full flex flex-col items-center justify-center gap-1 font-bold text-lg transition" style="background:#4fdbc8;color:#003731;">
@@ -44,27 +41,31 @@
 <script type="module">
 import Vapi from "https://esm.sh/@vapi-ai/web@2";
 const PUBLIC_KEY = "77bbbdc8-f5c0-4203-b43e-b7959803b497";
-const ASSISTANTS = {
-  human: "21d368e8-ba1d-4854-8b72-d807d4307784",
-  azure: "95a451c3-45a6-4dc4-b28f-cabeed5c8f19",
-};
-let voz = "human", enLlamada = false;
+// Candidatas de voz (todas con velocidad reducida). Prueba y quédate con una.
+const VOCES = [
+  { id: "cc7cbcd7-74ea-4bcc-8416-6b341f52102d", label: "Matilda 🌸 (cálida)" },
+  { id: "a264e981-d0d5-47e1-a70e-f4efb6475357", label: "Sarah (suave)" },
+  { id: "b76a49bd-684c-4485-a39e-e7693363c0f6", label: "Cartesia (ES natural)" },
+  { id: "95a451c3-45a6-4dc4-b28f-cabeed5c8f19", label: "Elvira (España)" },
+];
+let voz = VOCES[0].id, enLlamada = false;
 const vapi = new Vapi(PUBLIC_KEY);
 const btn = document.getElementById('btn'), btnTxt = document.getElementById('btn-txt'), estado = document.getElementById('estado');
 const setEstado = (t,c='#bbcac6') => { estado.textContent = t; estado.style.color = c; };
 
-document.getElementById('v-human').onclick = () => selVoz('human');
-document.getElementById('v-azure').onclick = () => selVoz('azure');
-function selVoz(v){ if(enLlamada) return; voz=v;
-  document.getElementById('v-human').classList.toggle('active', v==='human');
-  document.getElementById('v-azure').classList.toggle('active', v==='azure');
-  document.getElementById('v-human').style.color = v==='human' ? '#003731' : '#bbcac6';
-  document.getElementById('v-azure').style.color = v==='azure' ? '#003731' : '#bbcac6';
-}
+// Render selector de voces
+const vocesBox = document.getElementById('voces');
+vocesBox.innerHTML = VOCES.map((v,i) => `<button data-id="${v.id}" class="vbtn px-3 py-2 rounded-full text-sm font-semibold border" style="border-color:#3c4947;background:${i===0?'#4fdbc8':'#0b1326'};color:${i===0?'#003731':'#bbcac6'}">${v.label}</button>`).join('');
+vocesBox.addEventListener('click', e => {
+  const b = e.target.closest('.vbtn'); if(!b || enLlamada) return;
+  voz = b.dataset.id;
+  vocesBox.querySelectorAll('.vbtn').forEach(x => { x.style.background='#0b1326'; x.style.color='#bbcac6'; });
+  b.style.background='#4fdbc8'; b.style.color='#003731';
+});
 
 btn.onclick = async () => {
   if(!enLlamada){
-    try { setEstado('Conectando… permite el micrófono'); await vapi.start(ASSISTANTS[voz]); }
+    try { setEstado('Conectando… permite el micrófono'); await vapi.start(voz); }
     catch(e){ setEstado('No se pudo iniciar la llamada. Revisa el micrófono.', '#ffb4ab'); }
   } else { vapi.stop(); }
 };
