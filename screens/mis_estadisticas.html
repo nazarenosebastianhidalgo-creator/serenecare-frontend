@@ -138,9 +138,8 @@
             <p style="font-family:Manrope,sans-serif;font-size:13px;font-weight:800;color:#f1f5f9;">Notificaciones</p>
           </div>
           <div style="padding:8px;">
-            <div style="display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:12px;background:rgba(139,92,246,0.06);">
-              <span class="material-symbols-outlined" style="font-size:16px;color:#fbbf24;font-variation-settings:'FILL' 1;">pending_actions</span>
-              <div><p style="font-size:12px;font-weight:700;color:#e2e8f0;">3 notas SOAP pendientes</p><p style="font-size:11px;color:#475569;margin-top:2px;">Mateo, Carlos, Sofía</p></div>
+            <div style="padding:16px 10px;text-align:center;">
+              <p style="font-size:12px;color:#64748b;">No tienes notificaciones nuevas</p>
             </div>
           </div>
           <div style="padding:8px 16px 12px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
@@ -234,9 +233,9 @@
           <h4 class="font-headline font-bold text-white text-sm text-center">Estado de sesiones</h4>
           <p style="font-size:11px;color:#475569;margin-top:2px;text-align:center;">Este mes</p>
         </div>
-        <div class="donut" id="donut" style="background:conic-gradient(#a78bfa 0% 72%, #fbbf24 72% 84%, #f87171 84% 100%);">
+        <div class="donut" id="donut" style="background:conic-gradient(#1e293b 0% 100%);">
           <div class="donut-inner">
-            <p class="font-headline text-xl font-extrabold text-white">72%</p>
+            <p id="donut-pct" class="font-headline text-xl font-extrabold text-white">—</p>
             <p style="font-size:9px;color:#475569;">completadas</p>
           </div>
         </div>
@@ -246,21 +245,21 @@
               <div style="width:8px;height:8px;border-radius:2px;background:#a78bfa;flex-shrink:0;"></div>
               <span style="font-size:12px;color:#94a3b8;">Completadas</span>
             </div>
-            <span style="font-size:12px;font-weight:700;color:#e2e8f0;font-family:Manrope,sans-serif;">18</span>
+            <span id="donut-comp" style="font-size:12px;font-weight:700;color:#e2e8f0;font-family:Manrope,sans-serif;">0</span>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;">
             <div style="display:flex;align-items:center;gap:8px;">
               <div style="width:8px;height:8px;border-radius:2px;background:#fbbf24;flex-shrink:0;"></div>
               <span style="font-size:12px;color:#94a3b8;">Pendientes</span>
             </div>
-            <span style="font-size:12px;font-weight:700;color:#e2e8f0;font-family:Manrope,sans-serif;">3</span>
+            <span id="donut-pend" style="font-size:12px;font-weight:700;color:#e2e8f0;font-family:Manrope,sans-serif;">0</span>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;">
             <div style="display:flex;align-items:center;gap:8px;">
               <div style="width:8px;height:8px;border-radius:2px;background:#f87171;flex-shrink:0;"></div>
               <span style="font-size:12px;color:#94a3b8;">Canceladas</span>
             </div>
-            <span style="font-size:12px;font-weight:700;color:#e2e8f0;font-family:Manrope,sans-serif;">4</span>
+            <span id="donut-canc" style="font-size:12px;font-weight:700;color:#e2e8f0;font-family:Manrope,sans-serif;">0</span>
           </div>
         </div>
       </div>
@@ -376,81 +375,20 @@
 </div>
 
 <script>
-// ── DATA ──
-var DATA = {
-  mes: {
-    kpis: { sesiones:25, pacientes:8, horas:37, notas:22 },
-    deltas: { sesiones:'+3 vs mes anterior', pacientes:'+1 nuevo', horas:'+4.5h', notas:'3 pendientes' },
-    deltasColor: { sesiones:'#34d399', pacientes:'#34d399', horas:'#34d399', notas:'#fbbf24' },
-    bars: [4,6,3,5,7,4,6,5],
-    canceladas: [1,0,1,0,1,2,0,1],
+// ── DATA (se rellena con datos reales de Supabase; ver loader al final) ──
+function _periodoVacio() {
+  return {
+    kpis: { sesiones:0, pacientes:0, horas:0, notas:0 },
+    deltas: { sesiones:'—', pacientes:'—', horas:'—', notas:'—' },
+    deltasColor: { sesiones:'#64748b', pacientes:'#64748b', horas:'#64748b', notas:'#64748b' },
+    bars: [0,0,0,0,0,0,0,0], canceladas: [0,0,0,0,0,0,0,0],
     semanas: ['S-7','S-6','S-5','S-4','S-3','S-2','S-1','Actual'],
-    tipos: [
-      { label:'TCC', n:10, color:'#a78bfa' },
-      { label:'Terapia de pareja', n:6, color:'#60a5fa' },
-      { label:'Evaluación', n:4, color:'#34d399' },
-      { label:'TDAH / Infancia', n:3, color:'#fbbf24' },
-      { label:'Otro', n:2, color:'#f87171' },
-    ],
-    pacientesTop: [
-      { nombre:'Elena Rodríguez', iniciales:'ER', color:'#a78bfa', bg:'rgba(139,92,246,0.15)', sesiones:6, progreso:85 },
-      { nombre:'Mateo Sánchez',   iniciales:'MS', color:'#2dd4bf', bg:'rgba(20,184,166,0.15)',  sesiones:5, progreso:72 },
-      { nombre:'Sofía Martínez',  iniciales:'SM', color:'#fbbf24', bg:'rgba(245,158,11,0.15)',  sesiones:4, progreso:60 },
-      { nombre:'Lucía Ferreyra',  iniciales:'LF', color:'#f87171', bg:'rgba(248,113,113,0.15)', sesiones:4, progreso:58 },
-      { nombre:'Carlos Ruiz',     iniciales:'CR', color:'#60a5fa', bg:'rgba(96,165,250,0.15)',  sesiones:3, progreso:44 },
-    ],
-    sparkline: [18,21,19,24,22,25],
-    sparkLabels: ['Dic','Ene','Feb','Mar','Abr','May'],
-  },
-  trimestre: {
-    kpis: { sesiones:72, pacientes:8, horas:108, notas:65 },
-    deltas: { sesiones:'+12 vs trimestre anterior', pacientes:'+2 nuevos', horas:'+14h', notas:'7 pendientes' },
-    deltasColor: { sesiones:'#34d399', pacientes:'#34d399', horas:'#34d399', notas:'#fbbf24' },
-    bars: [22,21,25,20,23,24,18,25],
-    canceladas: [3,2,4,2,3,5,2,4],
-    semanas: ['Ene W1','Ene W2','Feb W1','Feb W2','Mar W1','Mar W2','Abr W1','Abr W2'],
-    tipos: [
-      { label:'TCC', n:30, color:'#a78bfa' },
-      { label:'Terapia de pareja', n:18, color:'#60a5fa' },
-      { label:'Evaluación', n:12, color:'#34d399' },
-      { label:'TDAH / Infancia', n:8, color:'#fbbf24' },
-      { label:'Otro', n:4, color:'#f87171' },
-    ],
-    pacientesTop: [
-      { nombre:'Elena Rodríguez', iniciales:'ER', color:'#a78bfa', bg:'rgba(139,92,246,0.15)', sesiones:18, progreso:90 },
-      { nombre:'Mateo Sánchez',   iniciales:'MS', color:'#2dd4bf', bg:'rgba(20,184,166,0.15)',  sesiones:15, progreso:78 },
-      { nombre:'Sofía Martínez',  iniciales:'SM', color:'#fbbf24', bg:'rgba(245,158,11,0.15)',  sesiones:13, progreso:68 },
-      { nombre:'Lucía Ferreyra',  iniciales:'LF', color:'#f87171', bg:'rgba(248,113,113,0.15)', sesiones:12, progreso:62 },
-      { nombre:'Carlos Ruiz',     iniciales:'CR', color:'#60a5fa', bg:'rgba(96,165,250,0.15)',  sesiones:9, progreso:47 },
-    ],
-    sparkline: [18,21,19,24,22,25],
-    sparkLabels: ['Dic','Ene','Feb','Mar','Abr','May'],
-  },
-  año: {
-    kpis: { sesiones:284, pacientes:12, horas:426, notas:261 },
-    deltas: { sesiones:'+47 vs año anterior', pacientes:'+4 nuevos', horas:'+63h', notas:'3 pendientes' },
-    deltasColor: { sesiones:'#34d399', pacientes:'#34d399', horas:'#34d399', notas:'#fbbf24' },
-    bars: [18,22,21,25,20,23,26,24],
-    canceladas: [3,4,3,5,3,4,6,3],
-    semanas: ['Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar'],
-    tipos: [
-      { label:'TCC', n:112, color:'#a78bfa' },
-      { label:'Terapia de pareja', n:68, color:'#60a5fa' },
-      { label:'Evaluación', n:54, color:'#34d399' },
-      { label:'TDAH / Infancia', n:32, color:'#fbbf24' },
-      { label:'Otro', n:18, color:'#f87171' },
-    ],
-    pacientesTop: [
-      { nombre:'Elena Rodríguez', iniciales:'ER', color:'#a78bfa', bg:'rgba(139,92,246,0.15)', sesiones:52, progreso:95 },
-      { nombre:'Mateo Sánchez',   iniciales:'MS', color:'#2dd4bf', bg:'rgba(20,184,166,0.15)',  sesiones:46, progreso:88 },
-      { nombre:'Sofía Martínez',  iniciales:'SM', color:'#fbbf24', bg:'rgba(245,158,11,0.15)',  sesiones:41, progreso:78 },
-      { nombre:'Lucía Ferreyra',  iniciales:'LF', color:'#f87171', bg:'rgba(248,113,113,0.15)', sesiones:38, progreso:73 },
-      { nombre:'Carlos Ruiz',     iniciales:'CR', color:'#60a5fa', bg:'rgba(96,165,250,0.15)',  sesiones:30, progreso:57 },
-    ],
-    sparkline: [18,22,20,24,23,25],
-    sparkLabels: ['Dic','Ene','Feb','Mar','Abr','May'],
-  },
-};
+    donut: { comp:0, pend:0, canc:0 },
+    tipos: [], pacientesTop: [],
+    sparkline: [0,0,0,0,0,0], sparkLabels: ['','','','','',''],
+  };
+}
+var DATA = { mes:_periodoVacio(), trimestre:_periodoVacio(), 'año':_periodoVacio() };
 
 var periodoActual = 'mes';
 
@@ -469,7 +407,7 @@ function render(periodo) {
   });
 
   // Bar chart
-  var max = Math.max.apply(null, d.bars);
+  var max = Math.max.apply(null, d.bars) || 1;
   var barChart = document.getElementById('bar-chart');
   barChart.innerHTML = d.bars.map(function(v, i) {
     var hComp = Math.round((v / max) * 110);
@@ -488,6 +426,9 @@ function render(periodo) {
 
   // Tipos de terapia
   var total = d.tipos.reduce(function(s,t){return s+t.n;}, 0);
+  if (!d.tipos.length) {
+    document.getElementById('tipos-list').innerHTML = '<p style="font-size:12px;color:#475569;">Aún no hay sesiones en este periodo.</p>';
+  } else
   document.getElementById('tipos-list').innerHTML = d.tipos.map(function(t) {
     var pct = Math.round((t.n / total) * 100);
     return '<div style="display:flex;flex-direction:column;gap:6px;">'
@@ -506,6 +447,9 @@ function render(periodo) {
   }).join('');
 
   // Pacientes top
+  if (!d.pacientesTop.length) {
+    document.getElementById('pacientes-top').innerHTML = '<p style="font-size:12px;color:#475569;">Aún no hay pacientes con sesiones en este periodo.</p>';
+  } else {
   var maxS = d.pacientesTop[0].sesiones;
   document.getElementById('pacientes-top').innerHTML = d.pacientesTop.map(function(p) {
     var pct = Math.round((p.sesiones / maxS) * 100);
@@ -520,11 +464,28 @@ function render(periodo) {
       + '</div>'
       + '</div>';
   }).join('');
+  }
+
+  // Donut — estado de sesiones
+  var dn = d.donut || { comp:0, pend:0, canc:0 };
+  var dTot = dn.comp + dn.pend + dn.canc;
+  var pComp = dTot ? (dn.comp / dTot) * 100 : 0;
+  var pPend = dTot ? (dn.pend / dTot) * 100 : 0;
+  var donutEl = document.getElementById('donut');
+  if (dTot) {
+    donutEl.style.background = 'conic-gradient(#a78bfa 0% ' + pComp + '%, #fbbf24 ' + pComp + '% ' + (pComp+pPend) + '%, #f87171 ' + (pComp+pPend) + '% 100%)';
+  } else {
+    donutEl.style.background = 'conic-gradient(#1e293b 0% 100%)';
+  }
+  document.getElementById('donut-pct').textContent = dTot ? Math.round(pComp) + '%' : '—';
+  document.getElementById('donut-comp').textContent = dn.comp;
+  document.getElementById('donut-pend').textContent = dn.pend;
+  document.getElementById('donut-canc').textContent = dn.canc;
 
   // Sparkline
   var spark = document.getElementById('sparkline');
   var labels = document.getElementById('sparkline-labels');
-  var maxSp = Math.max.apply(null, d.sparkline);
+  var maxSp = Math.max.apply(null, d.sparkline) || 1;
   spark.innerHTML = d.sparkline.map(function(v, i) {
     var h = Math.round((v / maxSp) * 70);
     var isLast = i === d.sparkline.length - 1;
@@ -627,34 +588,7 @@ function toggleTema() {
   <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
 </button>
 <style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
-<script>
-(function(){
-var CW_DATA=[
-  {id:'c1',nombre:'Elena Vidal',rol:'Paciente',dot:'online',unread:1,msgs:[{from:'them',text:'Buenos días, ¿podemos hablar del informe?',time:'10:14'},{from:'me',text:'Claro, ¿a las 11 te viene bien?',time:'10:16'}]},
-  {id:'c2',nombre:'Marcos Gil',rol:'Paciente',dot:'busy',unread:1,msgs:[{from:'them',text:'Necesito cancelar la sesión de mañana.',time:'09:30'},{from:'me',text:'Sin problema, ¿cuándo prefieres?',time:'09:32'}]},
-  {id:'c3',nombre:'Lucía Méndez',rol:'Secretaria',dot:'online',unread:0,msgs:[{from:'me',text:'¿Tienes el horario de la semana?',time:'Ayer'},{from:'them',text:'Sí, te lo mando ahora.',time:'Ayer'}]},
-  {id:'c4',nombre:'Ana Martínez',rol:'Admin',dot:'offline',unread:0,msgs:[{from:'them',text:'Reunión de equipo el viernes.',time:'Lun'}]}
-];
-var CW_DOT_COLOR={online:'#4ade80',busy:'#fbbf24',offline:'#475569'};
-var cwOpen=false,cwActive=null;
-window.toggleChatWidget=function(){
-  cwOpen=!cwOpen;
-  var panel=document.getElementById('cw-panel');
-  if(cwOpen){panel.style.pointerEvents='auto';panel.style.opacity='1';panel.style.transform='translateY(0) scale(1)';document.getElementById('fab-badge').style.display='none';document.getElementById('cw-fab-icon').textContent='close';cwMostrarLista();}
-  else{panel.style.opacity='0';panel.style.transform='translateY(14px) scale(0.97)';panel.style.pointerEvents='none';document.getElementById('cw-fab-icon').textContent='chat';}
-};
-function cwMostrarLista(){
-  document.getElementById('cw-lista-wrap').style.display='block';
-  document.getElementById('cw-chat-wrap').style.display='none';
-  var html=CW_DATA.map(function(c){var last=c.msgs[c.msgs.length-1];return '<div onclick="cwAbrirConv(\''+c.id+'\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'"><div style="position:relative;flex-shrink:0;"><div style="width:38px;height:38px;border-radius:50%;background:rgba(139,92,246,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#a78bfa;font-family:Manrope,sans-serif;">'+c.nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('')+'</div><span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:'+CW_DOT_COLOR[c.dot]+';border:2px solid #0d1b2e;"></span></div><div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;"><span style="font-family:Manrope,sans-serif;font-weight:700;font-size:12px;color:#e2e8f0;">'+c.nombre+'</span><span style="font-size:10px;color:#475569;">'+last.time+'</span></div><div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;">'+(last.from==='me'?'Tú: ':'')+last.text+'</span>'+(c.unread?'<span style="min-width:16px;height:16px;background:#a78bfa;border-radius:99px;font-size:9px;font-weight:800;color:#020617;display:flex;align-items:center;justify-content:center;padding:0 4px;margin-left:4px;flex-shrink:0;">'+c.unread+'</span>':'')+'</div></div></div>';}).join('');
-  document.getElementById('cw-conv-list').innerHTML=html;
-}
-window.cwAbrirConv=function(id){cwActive=CW_DATA.find(function(c){return c.id===id;});if(!cwActive)return;cwActive.unread=0;document.getElementById('cw-lista-wrap').style.display='none';var cw=document.getElementById('cw-chat-wrap');cw.style.display='flex';cw.style.flexDirection='column';document.getElementById('cw-chat-title').textContent=cwActive.nombre;document.getElementById('cw-chat-dot').style.background=CW_DOT_COLOR[cwActive.dot];cwRenderMsgs();setTimeout(function(){var m=document.getElementById('cw-messages');m.scrollTop=m.scrollHeight;},40);};
-window.cwVolverLista=function(){cwMostrarLista();};
-function cwRenderMsgs(){var html=cwActive.msgs.map(function(m){var me=m.from==='me';return '<div style="display:flex;justify-content:'+(me?'flex-end':'flex-start')+';animation:cwMsgIn 0.18s ease forwards;"><div style="max-width:80%;padding:8px 11px;border-radius:14px;'+(me?'background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.28);border-bottom-right-radius:4px;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;')+'"><p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">'+m.text+'</p><p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:'+(me?'right':'left')+';">'+m.time+'</p></div></div>';}).join('');document.getElementById('cw-messages').innerHTML=html;}
-window.cwEnviar=function(){if(!cwActive)return;var input=document.getElementById('cw-input');var text=(input.value||'').trim();if(!text)return;var t=new Date();var time=t.getHours()+':'+String(t.getMinutes()).padStart(2,'0');cwActive.msgs.push({from:'me',text:text,time:time});input.value='';cwRenderMsgs();setTimeout(function(){var m=document.getElementById('cw-messages');m.scrollTop=m.scrollHeight;},30);};
-})();
-</script>
+<script type="module">import { initChatWidget } from '../js/chat-widget.js'; initChatWidget();</script>
 <!-- WhatsApp Widget flotante -->
 <div id="wa-widget" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9999;">
   <div id="wa-panel" class="hidden" style="position:absolute;bottom:calc(100% + 12px);right:0;width:300px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
@@ -714,7 +648,97 @@ window._cerrarSesion = cerrarSesion;
     const { data } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single();
     const nc = document.getElementById('nombre-clinica'); if (nc && data) nc.textContent = data.nombre;
   }
+  cargarEstadisticas(perfil).catch(e => console.error('[estadisticas]', e));
 })();
+
+// ── Estadísticas REALES (citas, pacientes, notas SOAP del psicólogo) ──────────
+const PALETA = ['#a78bfa','#60a5fa','#34d399','#fbbf24','#f87171','#2dd4bf'];
+const PALETA_BG = ['rgba(139,92,246,0.15)','rgba(96,165,250,0.15)','rgba(52,211,153,0.15)','rgba(245,158,11,0.15)','rgba(248,113,113,0.15)','rgba(20,184,166,0.15)'];
+const LABEL_TIPO = { individual:'Individual', online:'Online', presencial:'Presencial', pareja:'Terapia de pareja', evaluacion:'Evaluación', grupo:'Grupo' };
+const inicialesDe = (nom) => (nom||'').split(/\s+/).map(w=>w[0]||'').slice(0,2).join('').toUpperCase() || '—';
+
+async function cargarEstadisticas(perfil) {
+  const uid = perfil.id;
+  const hace12 = new Date(); hace12.setMonth(hace12.getMonth()-12); hace12.setDate(1);
+  const desdeISO = hace12.toISOString().slice(0,10);
+  const [rc, rp, rn] = await Promise.all([
+    supabase.from('citas').select('fecha,duracion_min,tipo,estado,paciente_id').eq('psicologo_id', uid).gte('fecha', desdeISO),
+    supabase.from('pacientes').select('id,nombre,apellido').eq('clinica_id', perfil.clinica_id),
+    supabase.from('notas_soap').select('created_at').eq('psicologo_id', uid).gte('created_at', hace12.toISOString()),
+  ]);
+  const citas = rc.data||[], pacientes = rp.data||[], notas = rn.data||[];
+  const nombreDe = {}; pacientes.forEach(p => nombreDe[p.id] = ((p.nombre||'')+' '+(p.apellido||'')).trim());
+
+  const COMPLETADA = e => e==='completada';
+  const PENDIENTE  = e => e==='confirmada'||e==='pendiente'||e==='en_progreso';
+  const CANCELADA  = e => e==='cancelada'||e==='no_asistio';
+
+  const enRango = (fechaStr, ini, fin) => { const x = new Date(fechaStr); return x>=ini && x<fin; };
+
+  function metrics(ini, fin) {
+    const cr = citas.filter(c => enRango(c.fecha, ini, fin));
+    const comp = cr.filter(c=>COMPLETADA(c.estado));
+    const pend = cr.filter(c=>PENDIENTE(c.estado));
+    const canc = cr.filter(c=>CANCELADA(c.estado));
+    const horas = comp.reduce((s,c)=>s+(c.duracion_min||50),0)/60;
+    const notasN = notas.filter(x => { const d=new Date(x.created_at); return d>=ini && d<fin; }).length;
+    // tipos
+    const porTipo = {}; cr.forEach(c => { const k=c.tipo||'individual'; porTipo[k]=(porTipo[k]||0)+1; });
+    const tipos = Object.keys(porTipo).sort((a,b)=>porTipo[b]-porTipo[a]).map((k,i)=>({ label: LABEL_TIPO[k]||k, n: porTipo[k], color: PALETA[i%PALETA.length] }));
+    // pacientes top
+    const porPac = {}; cr.forEach(c => { if(c.paciente_id) porPac[c.paciente_id]=(porPac[c.paciente_id]||0)+1; });
+    const top = Object.keys(porPac).sort((a,b)=>porPac[b]-porPac[a]).slice(0,5);
+    const maxN = top.length ? porPac[top[0]] : 1;
+    const pacientesTop = top.map((id,i)=>({ nombre: nombreDe[id]||'Paciente', iniciales: inicialesDe(nombreDe[id]), color: PALETA[i%PALETA.length], bg: PALETA_BG[i%PALETA_BG.length], sesiones: porPac[id], progreso: Math.round(porPac[id]/maxN*100) }));
+    return { sesiones: comp.length+pend.length, pacientes: new Set(cr.map(c=>c.paciente_id)).size, horas: Math.round(horas), notas: notasN,
+             donut: { comp: comp.length, pend: pend.length, canc: canc.length }, tipos, pacientesTop };
+  }
+
+  const now = new Date();
+  function rango(p) {
+    if (p==='mes') return { ini:new Date(now.getFullYear(),now.getMonth(),1), fin:new Date(now.getFullYear(),now.getMonth()+1,1),
+                            pIni:new Date(now.getFullYear(),now.getMonth()-1,1), pFin:new Date(now.getFullYear(),now.getMonth(),1), lbl:'mes' };
+    if (p==='trimestre') return { ini:new Date(now.getFullYear(),now.getMonth()-2,1), fin:new Date(now.getFullYear(),now.getMonth()+1,1),
+                            pIni:new Date(now.getFullYear(),now.getMonth()-5,1), pFin:new Date(now.getFullYear(),now.getMonth()-2,1), lbl:'trimestre' };
+    return { ini:new Date(now.getFullYear(),0,1), fin:new Date(now.getFullYear()+1,0,1),
+             pIni:new Date(now.getFullYear()-1,0,1), pFin:new Date(now.getFullYear(),0,1), lbl:'año' };
+  }
+
+  // Bar chart: últimas 8 semanas (fijo). Sparkline: últimos 6 meses (fijo).
+  const MS_SEM = 7*864e5;
+  const lunes = new Date(now); lunes.setHours(0,0,0,0); lunes.setDate(lunes.getDate() - ((lunes.getDay()+6)%7));
+  const bars=[], canc8=[], semanas=[];
+  for (let i=7;i>=0;i--) {
+    const wIni = new Date(lunes.getTime() - i*MS_SEM), wFin = new Date(wIni.getTime()+MS_SEM);
+    const cr = citas.filter(c=>enRango(c.fecha,wIni,wFin));
+    bars.push(cr.filter(c=>COMPLETADA(c.estado)||PENDIENTE(c.estado)).length);
+    canc8.push(cr.filter(c=>CANCELADA(c.estado)).length);
+    semanas.push(i===0?'Actual':'S-'+i);
+  }
+  const MES_ABBR=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const sparkline=[], sparkLabels=[];
+  for (let i=5;i>=0;i--) {
+    const mIni=new Date(now.getFullYear(),now.getMonth()-i,1), mFin=new Date(now.getFullYear(),now.getMonth()-i+1,1);
+    sparkline.push(citas.filter(c=>COMPLETADA(c.estado)&&enRango(c.fecha,mIni,mFin)).length);
+    sparkLabels.push(MES_ABBR[mIni.getMonth()]);
+  }
+
+  ['mes','trimestre','año'].forEach(p => {
+    const r = rango(p);
+    const m = metrics(r.ini, r.fin), prev = metrics(r.pIni, r.pFin);
+    const delta = (cur, pr, suf) => { const dif=cur-pr; const s=dif>0?'+':''; return dif===0 ? 'igual que el '+r.lbl+' anterior' : s+dif+(suf||'')+' vs '+r.lbl+' anterior'; };
+    const col = (cur,pr) => cur>=pr ? '#34d399' : '#f87171';
+    DATA[p] = {
+      kpis: { sesiones:m.sesiones, pacientes:m.pacientes, horas:m.horas, notas:m.notas },
+      deltas: { sesiones:delta(m.sesiones,prev.sesiones), pacientes:delta(m.pacientes,prev.pacientes), horas:delta(m.horas,prev.horas,'h'), notas:delta(m.notas,prev.notas) },
+      deltasColor: { sesiones:col(m.sesiones,prev.sesiones), pacientes:col(m.pacientes,prev.pacientes), horas:col(m.horas,prev.horas), notas:col(m.notas,prev.notas) },
+      bars, canceladas:canc8, semanas,
+      donut:m.donut, tipos:m.tipos, pacientesTop:m.pacientesTop,
+      sparkline, sparkLabels,
+    };
+  });
+  window.render(periodoActual);
+}
 </script>
 </body>
 </html>

@@ -21,28 +21,47 @@ export async function initChatWidget() {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
   userId = session.user.id;
-  const clinicaId = localStorage.getItem('tp_clinica_id');
-
   // No rastreamos "no leídos" → ocultar los contadores fijos (eran mock "2")
   ['cw-total-badge', 'fab-badge'].forEach(id => { const el = $(id); if (el) el.style.display = 'none'; });
 
-  // Contactos reales: SUS pacientes + el personal de la clínica (psicólogos + admin)
+  // Rol del usuario para decidir qué contactos mostrar
+  let rol = null, clinicaId = localStorage.getItem('tp_clinica_id');
   try {
-    const [pacRes, staffRes] = await Promise.all([
-      supabase.from('pacientes').select('nombre, apellido, usuario_id, psicologo_id')
-        .eq('clinica_id', clinicaId).eq('psicologo_id', userId),
-      supabase.from('usuarios').select('id, nombre, apellido, rol')
-        .eq('clinica_id', clinicaId).in('rol', ['psicologo', 'admin_clinica']).eq('activo', true).neq('id', userId),
-    ]);
-    const pacs = (pacRes.data || []).filter(p => p.usuario_id).map(p => ({
-      _sbId: p.usuario_id, nombre: ((p.nombre||'') + ' ' + (p.apellido||'')).trim(),
-      rol: 'Paciente', dot: 'offline', msgs: [], cargado: false,
-    }));
-    const staff = (staffRes.data || []).map(c => ({
-      _sbId: c.id, nombre: ((c.nombre||'') + ' ' + (c.apellido||'')).trim(),
-      rol: c.rol === 'admin_clinica' ? 'Admin' : 'Colega', dot: 'offline', msgs: [], cargado: false,
-    }));
-    CONVS = [...staff, ...pacs].filter(c => c._sbId && c._sbId !== userId);
+    const { data: me } = await supabase.from('usuarios').select('rol, clinica_id').eq('id', userId).maybeSingle();
+    if (me) { rol = me.rol; clinicaId = me.clinica_id || clinicaId; }
+  } catch (_) { /* seguimos con lo que haya */ }
+
+  try {
+    if (rol === 'paciente') {
+      // Un paciente solo conversa con SU psicólogo (no con toda la clínica)
+      const { data: pac } = await supabase.from('pacientes').select('psicologo_id')
+        .eq('usuario_id', userId).maybeSingle();
+      if (pac && pac.psicologo_id) {
+        const { data: psi } = await supabase.from('usuarios').select('id, nombre, apellido')
+          .eq('id', pac.psicologo_id).maybeSingle();
+        if (psi) CONVS = [{
+          _sbId: psi.id, nombre: ((psi.nombre||'') + ' ' + (psi.apellido||'')).trim() || 'Mi psicólogo',
+          rol: 'Mi psicólogo', dot: 'offline', msgs: [], cargado: false,
+        }];
+      }
+    } else {
+      // Psicólogo / admin: SUS pacientes + el personal de la clínica
+      const [pacRes, staffRes] = await Promise.all([
+        supabase.from('pacientes').select('nombre, apellido, usuario_id, psicologo_id')
+          .eq('clinica_id', clinicaId).eq('psicologo_id', userId),
+        supabase.from('usuarios').select('id, nombre, apellido, rol')
+          .eq('clinica_id', clinicaId).in('rol', ['psicologo', 'admin_clinica']).eq('activo', true).neq('id', userId),
+      ]);
+      const pacs = (pacRes.data || []).filter(p => p.usuario_id).map(p => ({
+        _sbId: p.usuario_id, nombre: ((p.nombre||'') + ' ' + (p.apellido||'')).trim(),
+        rol: 'Paciente', dot: 'offline', msgs: [], cargado: false,
+      }));
+      const staff = (staffRes.data || []).map(c => ({
+        _sbId: c.id, nombre: ((c.nombre||'') + ' ' + (c.apellido||'')).trim(),
+        rol: c.rol === 'admin_clinica' ? 'Admin' : 'Colega', dot: 'offline', msgs: [], cargado: false,
+      }));
+      CONVS = [...staff, ...pacs].filter(c => c._sbId && c._sbId !== userId);
+    }
   } catch (e) { console.warn('chat-widget:', e.message); }
 
   // ── API global (la usa el HTML del widget por onclick) ──
