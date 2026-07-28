@@ -100,7 +100,30 @@ export async function upsertCita(cita) {
     .select()
     .single();
   if (error) throw error;
+  // Sincronizar con el Google Calendar del psicólogo (si lo tiene conectado).
+  // Fire-and-forget: no bloquea la UI; el backend crea/actualiza el evento.
+  syncCitaGCal(data.id);
   return data;
+}
+
+// ── Sincronización de la cita con Google Calendar (vía backend) ─────────────
+async function _accessToken() {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token || null;
+}
+// Crea o actualiza el evento en el Google del psicólogo (si está conectado).
+export async function syncCitaGCal(citaId) {
+  try {
+    const t = await _accessToken(); if (!t || !citaId) return;
+    await fetch(`/api/citas/${citaId}/gcal`, { method: 'POST', headers: { Authorization: `Bearer ${t}` } });
+  } catch (e) { /* no bloquear por fallo de sync */ }
+}
+// Borra el evento de Google. Llamar ANTES de borrar la cita de la BD.
+export async function deleteCitaGCal(citaId) {
+  try {
+    const t = await _accessToken(); if (!t || !citaId) return;
+    await fetch(`/api/citas/${citaId}/gcal`, { method: 'DELETE', headers: { Authorization: `Bearer ${t}` } });
+  } catch (e) { /* silencioso */ }
 }
 
 // ── Notas SOAP ─────────────────────────────────────────────────

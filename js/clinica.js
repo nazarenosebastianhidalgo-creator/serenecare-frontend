@@ -1,4 +1,4 @@
-import { supabase, callEdge } from './supabase-client.js'
+import { supabase, callEdge, deleteCitaGCal } from './supabase-client.js'
 import { verificarSesion } from './auth.js'
 
 const ROLES_CLINICA = ['admin_clinica', 'psicologo', 'secretario']
@@ -87,6 +87,8 @@ export async function actualizarEstadoCita(citaId, estado) {
 }
 
 export async function eliminarCita(citaId) {
+  // Borrar primero el evento de Google (necesita leer la cita antes de eliminarla).
+  await deleteCitaGCal(citaId)
   const { error } = await supabase.from('citas')
     .delete().eq('id', citaId).eq('clinica_id', clinicaId())
   if (error) throw new Error('No se pudo eliminar la cita.')
