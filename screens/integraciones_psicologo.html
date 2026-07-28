@@ -203,6 +203,22 @@
             <p class="text-sm font-mono" id="gcal-email" style="color:#a78bfa;">—</p>
           </div>
 
+          <!-- Nivel 2 (opcional): bloquear huecos con eventos personales de Google -->
+          <div id="gcal-bloqueo" class="hidden p-4 rounded-2xl flex items-start gap-4" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            <div class="flex-1">
+              <p class="text-sm font-headline font-bold text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-base" style="color:#a78bfa;">event_busy</span>
+                No ofrecer huecos donde ya tengo algo en Google
+              </p>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">Cuando lo actives, tus reservas online no mostrarán horas en las que ya tengas un evento en tu Google Calendar personal (médico, comida, otro compromiso). Opcional: si prefieres llevar dos agendas por separado, déjalo apagado.</p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0 mt-0.5">
+              <input type="checkbox" id="tog-bloqueo-gcal" class="sr-only peer" onchange="guardarBloqueoGcal(this.checked)">
+              <div class="w-11 h-6 rounded-full transition-all peer-checked:bg-violet-500" style="background:rgba(255,255,255,0.15);"></div>
+              <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full transition-transform peer-checked:translate-x-5"></div>
+            </label>
+          </div>
+
           <!-- Estado: no conectado -->
           <div id="gcal-disconnected" class="hidden p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
             Conecta tu cuenta de Google para que las citas se sincronicen automáticamente con tu calendario personal.
@@ -663,7 +679,10 @@ function renderGMeetStatus(connected) {
   }
 }
 
+const RAPI = 'https://serenecare-backend-production.up.railway.app/api/recepcion'
+
 function renderGCalStatus(connected) {
+  const bloqueoDiv = document.getElementById('gcal-bloqueo')
   if (connected) {
     gcalBadge.textContent = 'Conectado'
     gcalBadge.style.cssText = 'background:rgba(167,139,250,0.12);color:#a78bfa;border:1px solid rgba(167,139,250,0.25);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
@@ -673,6 +692,7 @@ function renderGCalStatus(connected) {
     gcalBtnDisc.classList.remove('hidden')
     const emailEl = document.getElementById('gcal-email')
     if (emailEl) emailEl.textContent = usu?.email || session.user.email
+    if (bloqueoDiv) { bloqueoDiv.classList.remove('hidden'); cargarBloqueoGcal() }
   } else {
     gcalBadge.textContent = 'No conectado'
     gcalBadge.style.cssText = 'background:rgba(100,116,139,0.15);color:#64748b;border:1px solid rgba(100,116,139,0.2);padding:4px 12px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;'
@@ -680,6 +700,35 @@ function renderGCalStatus(connected) {
     gcalDiscDiv.classList.remove('hidden')
     gcalBtnConnect.classList.remove('hidden')
     gcalBtnDisc.classList.add('hidden')
+    if (bloqueoDiv) bloqueoDiv.classList.add('hidden')
+  }
+}
+
+// Nivel 2: cargar el estado actual del bloqueo por Google (freeBusy)
+async function cargarBloqueoGcal() {
+  try {
+    const res = await fetch(`${RAPI}/mi-config`, { headers: { Authorization: 'Bearer ' + session.access_token } })
+    const { config } = await res.json()
+    const tog = document.getElementById('tog-bloqueo-gcal')
+    if (tog) tog.checked = !!(config && config.bloquear_con_gcal)
+  } catch (e) { console.warn('bloqueo-gcal load:', e.message) }
+}
+
+window.guardarBloqueoGcal = async function(activar) {
+  try {
+    await fetch(`${RAPI}/bloqueo-gcal`, {
+      method: 'PATCH',
+      headers: { Authorization: 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ activar })
+    })
+    const t = document.createElement('div')
+    t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#0d1b2e;border:1px solid rgba(167,139,250,0.35);border-radius:14px;padding:12px 20px;color:#a78bfa;font-weight:700;font-size:13px;z-index:9999;'
+    t.textContent = activar ? '✓ Bloquearé los huecos con tu Google' : '✓ Desactivado — solo cuentan tus citas de SereneCare'
+    document.body.appendChild(t)
+    setTimeout(() => t.remove(), 3500)
+  } catch (e) {
+    alert('No se pudo guardar la preferencia: ' + e.message)
+    const tog = document.getElementById('tog-bloqueo-gcal'); if (tog) tog.checked = !activar
   }
 }
 
