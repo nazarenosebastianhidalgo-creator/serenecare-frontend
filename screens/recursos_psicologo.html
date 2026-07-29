@@ -743,8 +743,7 @@ _nr.querySelector('#nr-guardar').addEventListener('click', async () => {
       archivo_tipo = _tipoArchivo(file.type)
     }
     const contenido_html = instr
-      ? '<!doctype html><meta charset="utf-8"><body style="font-family:sans-serif;max-width:700px;margin:2rem auto"><h1>' + titulo.replace(/</g,'&lt;') + '</h1><p>' + instr.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</p><script type="module">import { initCampana } from '../js/notif-bell.js'; initCampana();</script>
-</body>'
+      ? '<!doctype html><meta charset="utf-8"><body style="font-family:sans-serif;max-width:700px;margin:2rem auto"><h1>' + titulo.replace(/</g,'&lt;') + '</h1><p>' + instr.replace(/</g,'&lt;').replace(/\n/g,'<br>') + '</p></body>'
       : null
     const { data: recIns, error: recErr } = await supabase.from('recursos').insert({
       tipo: archivo_tipo === 'audio' ? 'audio' : 'ejercicio', titulo: titulo, descripcion: instr || null,
