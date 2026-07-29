@@ -235,10 +235,11 @@
           <h4 class="font-headline font-bold text-white text-sm text-center">Estado de sesiones</h4>
           <p style="font-size:11px;color:#475569;margin-top:2px;text-align:center;">Este mes</p>
         </div>
-        <div class="donut" id="donut" style="background:conic-gradient(#1e293b 0% 100%);">
+        <div class="donut" id="donut" style="background:transparent;">
+          <svg id="donut-svg" width="120" height="120" viewBox="0 0 120 120" style="position:absolute;inset:0;transform:rotate(-90deg);"></svg>
           <div class="donut-inner">
             <p id="donut-pct" class="font-headline text-xl font-extrabold text-white">—</p>
-            <p style="font-size:9px;color:#475569;">completadas</p>
+            <p id="donut-sublabel" style="font-size:9px;color:#475569;">completadas</p>
           </div>
         </div>
         <div style="width:100%;display:flex;flex-direction:column;gap:8px;">
@@ -468,18 +469,34 @@ function render(periodo) {
   }).join('');
   }
 
-  // Donut — estado de sesiones
+  // Donut — estado de sesiones (SVG con segmentos independientes + hover)
   var dn = d.donut || { comp:0, pend:0, canc:0 };
   var dTot = dn.comp + dn.pend + dn.canc;
   var pComp = dTot ? (dn.comp / dTot) * 100 : 0;
-  var pPend = dTot ? (dn.pend / dTot) * 100 : 0;
-  var donutEl = document.getElementById('donut');
+  var segsDn = [
+    { n:dn.comp, color:'#a78bfa', label:'completadas' },
+    { n:dn.pend, color:'#fbbf24', label:'pendientes' },
+    { n:dn.canc, color:'#f87171', label:'canceladas' },
+  ];
+  var svgDn = document.getElementById('donut-svg');
   if (dTot) {
-    donutEl.style.background = 'conic-gradient(#a78bfa 0% ' + pComp + '%, #fbbf24 ' + pComp + '% ' + (pComp+pPend) + '%, #f87171 ' + (pComp+pPend) + '% 100%)';
+    var cum = 0, circles = '';
+    segsDn.forEach(function(s) {
+      if (!s.n) return;
+      var L = s.n / dTot * 100;
+      circles += '<circle cx="60" cy="60" r="51" fill="none" stroke="' + s.color + '" stroke-width="18" pathLength="100"'
+        + ' stroke-dasharray="' + L + ' ' + (100 - L) + '" stroke-dashoffset="' + (-cum) + '"'
+        + ' style="cursor:pointer;transition:opacity 0.15s;"'
+        + ' onmouseover="donutSeg(' + s.n + ',\'' + s.label + '\',this)" onmouseout="donutSeg(null)"></circle>';
+      cum += L;
+    });
+    svgDn.innerHTML = circles;
   } else {
-    donutEl.style.background = 'conic-gradient(#1e293b 0% 100%)';
+    svgDn.innerHTML = '<circle cx="60" cy="60" r="51" fill="none" stroke="#1e293b" stroke-width="18"></circle>';
   }
-  document.getElementById('donut-pct').textContent = dTot ? Math.round(pComp) + '%' : '—';
+  window._donutPct = dTot ? Math.round(pComp) + '%' : '—';
+  document.getElementById('donut-pct').textContent = window._donutPct;
+  document.getElementById('donut-sublabel').textContent = 'completadas';
   document.getElementById('donut-comp').textContent = dn.comp;
   document.getElementById('donut-pend').textContent = dn.pend;
   document.getElementById('donut-canc').textContent = dn.canc;
@@ -502,6 +519,21 @@ function render(periodo) {
     var isLast = i === d.sparkLabels.length - 1;
     return '<span style="font-size:10px;color:'+(isLast?'#a78bfa':'#334155')+';font-weight:'+(isLast?'700':'600')+';">'+l+'</span>';
   }).join('');
+}
+
+// Hover sobre un segmento del donut: muestra su cifra+etiqueta en el centro.
+function donutSeg(n, label, el) {
+  var pct = document.getElementById('donut-pct'), sub = document.getElementById('donut-sublabel');
+  var circles = document.querySelectorAll('#donut-svg circle');
+  if (n === null) {
+    pct.textContent = window._donutPct || '—';
+    sub.textContent = 'completadas';
+    circles.forEach(function(c) { c.style.opacity = '1'; });
+    return;
+  }
+  pct.textContent = n;
+  sub.textContent = label;
+  circles.forEach(function(c) { c.style.opacity = (c === el) ? '1' : '0.3'; });
 }
 
 function setPeriodo(btn, periodo) {
