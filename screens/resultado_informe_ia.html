@@ -168,8 +168,8 @@
   <!-- Header sticky -->
   <header class="sticky top-0 h-16 flex items-center justify-between px-8 z-40 border-b border-slate-800/20" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(16px);">
     <div>
-      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Informe IA #7</h2>
-      <p class="text-slate-500 text-xs">Eleanor Vance · Evaluación Psicológica Progresiva</p>
+      <h2 class="font-headline text-xl font-extrabold text-white tracking-tight">Informe IA</h2>
+      <p id="informe-subtitulo" class="text-slate-500 text-xs">Evolución terapéutica</p>
     </div>
     <div class="flex items-center gap-2">
       <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
@@ -240,8 +240,8 @@
 <span class="w-1 h-6 bg-cyan-500 rounded-full"></span>
                         Resumen Ejecutivo
                     </h3>
-<p class="text-slate-300 leading-relaxed body-md">
-                        La paciente Eleanor Vance muestra una notable mejoría en la regulación emocional durante la última quincena. Se observa una reducción del 40% en los episodios reportados de ansiedad nocturna. La narrativa terapéutica ha pasado de una rumiación centrada en eventos pasados a una proyección más proactiva de estrategias de afrontamiento.
+<p id="informe-resumen" class="text-slate-300 leading-relaxed body-md" style="white-space:pre-wrap;">
+                        Cargando informe…
                     </p>
 </section>
 <section class="p-8 glass-card rounded-2xl">
@@ -452,18 +452,6 @@
           <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:22px;font-variation-settings:'FILL' 1;">bar_chart</span>
         </div>
         <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mis Estadísticas</span>
-      </a>
-      <a href="gestion_documentos_ia.html" class="app-card" onmouseover="this.style.background='rgba(139,92,246,0.1)';this.style.borderColor='rgba(139,92,246,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
-        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.25);">
-          <span class="material-symbols-outlined" style="color:#a78bfa;font-size:22px;font-variation-settings:'FILL' 1;">folder_special</span>
-        </div>
-        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Docs IA</span>
-      </a>
-      <a href="revisor_conversaciones_ia.html" class="app-card" onmouseover="this.style.background='rgba(239,68,68,0.08)';this.style.borderColor='rgba(239,68,68,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
-        <div style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);">
-          <span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">mark_chat_unread</span>
-        </div>
-        <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Revisor IA</span>
       </a>
     </div>
     <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
@@ -1076,6 +1064,27 @@ window._cerrarSesion = cerrarSesion;
   if (perfil.clinica_id) {
     const { data } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single();
     const nc = document.getElementById('nombre-clinica'); if (nc && data) nc.textContent = data.nombre;
+  }
+
+  // ── Cargar el informe IA real más reciente del paciente ──────────────────────
+  const pacienteId = new URLSearchParams(location.search).get('paciente_id');
+  const resumenEl = document.getElementById('informe-resumen');
+  if (pacienteId) {
+    const [{ data: inf }, { data: pac }] = await Promise.all([
+      supabase.from('informes_ia').select('contenido, created_at')
+        .eq('paciente_id', pacienteId).order('created_at', { ascending: false }).limit(1).maybeSingle(),
+      supabase.from('pacientes').select('nombre, apellido').eq('id', pacienteId).maybeSingle(),
+    ]);
+    const nombrePac = pac ? ((pac.nombre||'') + ' ' + (pac.apellido||'')).trim() : '';
+    const sub = document.getElementById('informe-subtitulo');
+    if (sub) sub.textContent = (nombrePac ? nombrePac + ' · ' : '') + 'Evolución terapéutica';
+    if (resumenEl) {
+      resumenEl.textContent = (inf && inf.contenido)
+        ? inf.contenido
+        : 'Aún no hay informe generado para este paciente. Vuelve a la ficha y pulsa "Generar informe IA".';
+    }
+  } else if (resumenEl) {
+    resumenEl.textContent = 'Abre un informe desde la ficha del paciente ("Generar informe IA").';
   }
 })();
 </script>

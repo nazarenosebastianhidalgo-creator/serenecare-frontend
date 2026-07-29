@@ -249,12 +249,12 @@ if (pacienteId) {
   const cid = perfil?.clinica_id
 
   const { data: notas } = await supabase.from('notas_soap')
-    .select('subjetivo, objetivo, valoracion, plan, created_at')
+    .select('subjetivo, objetivo, evaluacion, plan, created_at')
     .eq('paciente_id', pacienteId).eq('clinica_id', cid)
     .order('created_at', { ascending: false }).limit(5)
 
   if (notas?.length) {
-    const prompt = `Eres un psicólogo clínico experto. Genera un informe de evolución terapéutica basado en estas notas SOAP:\n${notas.map((n, i) => `Sesión ${i + 1}: S: ${n.subjetivo} O: ${n.objetivo} A: ${n.valoracion} P: ${n.plan}`).join('\n')}\nEl informe debe incluir: evolución del paciente, patrones detectados, recomendaciones y próximos objetivos terapéuticos.`
+    const prompt = `Eres un psicólogo clínico experto. Genera un informe de evolución terapéutica basado en estas notas SOAP:\n${notas.map((n, i) => `Sesión ${i + 1}: S: ${n.subjetivo} O: ${n.objetivo} A: ${n.evaluacion} P: ${n.plan}`).join('\n')}\nEl informe debe incluir: evolución del paciente, patrones detectados, recomendaciones y próximos objetivos terapéuticos.`
 
     setTimeout(async () => {
       clearInterval(timer)
@@ -273,7 +273,7 @@ if (pacienteId) {
 
         await supabase.from('informes_ia').insert({
           clinica_id: cid, paciente_id: pacienteId, psicologo_id: user.id,
-          contenido, tipo: 'evolucion', generado_en: new Date().toISOString()
+          contenido, tipo: 'evolucion'
         })
 
         window.location.href = `/screens/resultado_informe_ia.html?paciente_id=${pacienteId}`
