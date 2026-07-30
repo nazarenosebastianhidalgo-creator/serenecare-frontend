@@ -199,10 +199,10 @@
       <!-- Chat header -->
       <div class="h-16 flex items-center justify-between px-6 border-b border-slate-800/20" style="background:rgba(255,255,255,0.01);">
         <div class="flex items-center gap-3" id="chat-header-info">
-          <div id="chat-avatar" class="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold" style="background:rgba(139,92,246,0.2);color:#a78bfa;">ER</div>
+          <div id="chat-avatar" class="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold" style="background:rgba(139,92,246,0.2);color:#a78bfa;">—</div>
           <div>
-            <p id="chat-nombre" class="text-sm font-bold text-white font-headline">Elena Rodríguez</p>
-            <p id="chat-subtitulo" class="text-xs text-slate-500">Paciente · Última sesión hace 3 días</p>
+            <p id="chat-nombre" class="text-sm font-bold text-white font-headline">—</p>
+            <p id="chat-subtitulo" class="text-xs text-slate-500"></p>
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -740,6 +740,7 @@ try {
     renderConversaciones(filtrarLista(tabActual, ''));
     // Select first if exists
     if (window.CONVERSACIONES.length) seleccionarConv(window.CONVERSACIONES[0].id);
+    else { document.getElementById('chat-area').classList.add('hidden'); document.getElementById('empty-state').classList.remove('hidden'); }
   }
 } catch(e) { console.warn('Error cargando conversaciones:', e.message); }
 

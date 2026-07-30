@@ -197,21 +197,21 @@
         </div>
       </div>
 
-      <!-- Próxima sesión -->
-      <div style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(109,40,217,0.08));border:1px solid rgba(139,92,246,0.2);border-radius:20px;padding:1.25rem;position:relative;overflow:hidden;">
+      <!-- Próxima sesión (se rellena con la cita real más próxima) -->
+      <div id="proxima-sesion-card" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(109,40,217,0.08));border:1px solid rgba(139,92,246,0.2);border-radius:20px;padding:1.25rem;position:relative;overflow:hidden;display:none;">
         <div style="position:absolute;right:-20px;bottom:-20px;width:80px;height:80px;background:rgba(139,92,246,0.1);border-radius:50%;filter:blur(20px);pointer-events:none;"></div>
         <h4 class="font-headline font-bold text-white text-sm mb-3">Próxima sesión</h4>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#a78bfa;font-family:Manrope,sans-serif;flex-shrink:0;">ER</div>
+          <div id="ps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#a78bfa;font-family:Manrope,sans-serif;flex-shrink:0;">—</div>
           <div>
-            <p style="font-size:12px;font-weight:700;color:#e2e8f0;">Elena Rodríguez</p>
+            <p id="ps-nombre" style="font-size:12px;font-weight:700;color:#e2e8f0;">—</p>
             <p style="font-size:10px;color:#a78bfa;display:flex;align-items:center;gap:4px;">
-              <span class="material-symbols-outlined" style="font-size:12px;">schedule</span> 14:30 (hoy) Â· Videollamada
+              <span class="material-symbols-outlined" style="font-size:12px;">schedule</span> <span id="ps-hora">—</span>
             </p>
           </div>
         </div>
-        <p style="font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.5;">Terapia cognitivo-conductual — ansiedad social.</p>
-        <a href="telemedicina_psicologo.html?paciente=Elena+Rodríguez" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);border-radius:10px;color:#a78bfa;font-size:11px;font-weight:700;text-decoration:none;font-family:Manrope,sans-serif;">
+        <p id="ps-desc" style="font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.5;">—</p>
+        <a id="ps-btn" href="telemedicina_psicologo.html" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);border-radius:10px;color:#a78bfa;font-size:11px;font-weight:700;text-decoration:none;font-family:Manrope,sans-serif;">
           <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1;">videocam</span>
           Iniciar videollamada
         </a>
@@ -491,6 +491,28 @@ const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
 if (!_perfil) return
 const { data: { session } } = await supabase.auth.getSession()
 if (!session) { window.location.href = '../login.html' }
+// ── Próxima sesión REAL (cita más próxima del psicólogo) ──
+try {
+  const _hoyISO = new Date().toISOString().split('T')[0]
+  const { data: prox } = await supabase.from('citas')
+    .select('id, fecha, hora_inicio, tipo, paciente:paciente_id(nombre, apellido)')
+    .eq('psicologo_id', session.user.id).gte('fecha', _hoyISO)
+    .in('estado', ['pendiente', 'confirmada']).order('fecha').order('hora_inicio').limit(1).maybeSingle()
+  const card = document.getElementById('proxima-sesion-card')
+  if (prox && card) {
+    const nom = ((prox.paciente && prox.paciente.nombre || '') + ' ' + (prox.paciente && prox.paciente.apellido || '')).trim() || 'Paciente'
+    const online = /online|video|telemed/i.test(prox.tipo || '')
+    document.getElementById('ps-avatar').textContent = nom.split(' ').map(function(w){ return w[0] || '' }).slice(0,2).join('').toUpperCase() || '—'
+    document.getElementById('ps-nombre').textContent = nom
+    document.getElementById('ps-hora').textContent = (prox.hora_inicio || '').slice(0,5) + (prox.fecha === _hoyISO ? ' (hoy)' : ' · ' + prox.fecha) + ' · ' + (online ? 'Videollamada' : 'Presencial')
+    document.getElementById('ps-desc').textContent = online ? 'Sesión de telemedicina.' : 'Sesión presencial.'
+    const btn = document.getElementById('ps-btn')
+    if (online) { btn.href = 'telemedicina_psicologo.html?cita_id=' + prox.id; btn.style.display = '' }
+    else { btn.style.display = 'none' }
+    card.style.display = ''
+  }
+} catch (e) { /* sin próxima sesión: la tarjeta queda oculta */ }
+
 const { data: usu } = await supabase.from('usuarios').select('nombre, apellido, clinica_id').eq('id', session.user.id).single()
 if (usu) {
   const nombre = ((usu.nombre || '') + ' ' + (usu.apellido || '')).trim()
