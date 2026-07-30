@@ -766,6 +766,7 @@ if (_btnGuardar && _ta) {
     const _orig = _btnGuardar.textContent
     const fila = {
       sesion_id: citaId,
+      paciente_id: cita?.paciente_id || null,
       psicologo_id: userId,
       clinica_id: cita?.clinica_id || localStorage.getItem('tp_clinica_id'),
       subjetivo: _ta.value,
