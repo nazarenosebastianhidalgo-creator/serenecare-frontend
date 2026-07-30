@@ -260,23 +260,9 @@
 <!-- BOTTOM CONTROL BAR -->
 <footer class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
   <div class="px-8 py-3.5 rounded-full flex items-center gap-5" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);box-shadow:0 8px 40px rgba(0,0,0,0.6);">
-    <!-- Mic + Cam -->
-    <div class="flex items-center gap-2 pr-5" style="border-right:1px solid rgba(255,255,255,0.08);">
-      <button id="btn-mic" class="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-105" style="background:rgba(255,255,255,0.06);" title="Micrófono">
-        <span class="material-symbols-outlined text-slate-300">mic</span>
-      </button>
-      <button id="btn-cam" class="w-11 h-11 rounded-full flex items-center justify-center transition-all hover:scale-105" style="background:rgba(255,255,255,0.06);" title="Cámara">
-        <span class="material-symbols-outlined text-slate-300">videocam</span>
-      </button>
-    </div>
-    <!-- Tools -->
+    <!-- Mic/cámara/compartir: los aporta la barra nativa de Daily dentro del vídeo -->
+    <!-- Tools propios (que Daily no da) -->
     <div class="flex items-center gap-3">
-      <button id="btn-screen" onclick="compartirPantalla()" class="flex flex-col items-center gap-1 group" title="Compartir pantalla">
-        <div id="screen-btn-bg" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all group-hover:scale-105" style="background:rgba(255,255,255,0.05);">
-          <span id="screen-icon" class="material-symbols-outlined text-slate-400 group-hover:text-white">screen_share</span>
-        </div>
-        <span class="text-[9px] text-slate-500">Compartir</span>
-      </button>
       <button onclick="abrirRecursos()" class="flex flex-col items-center gap-1 group" title="Recursos compartidos">
         <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-all group-hover:scale-105" style="background:rgba(255,255,255,0.05);">
           <span class="material-symbols-outlined text-slate-400 group-hover:text-white">library_books</span>
@@ -329,31 +315,8 @@ var timerInterval = setInterval(function() {
   if (d2) d2.textContent = t;
 }, 1000);
 
-// Mic / Cam toggle
-document.getElementById('btn-mic').addEventListener('click', function() {
-  var icon = this.querySelector('.material-symbols-outlined');
-  if (icon.textContent === 'mic') {
-    icon.textContent = 'mic_off';
-    this.style.background = 'rgba(239,68,68,0.2)';
-    icon.style.color = '#f87171';
-  } else {
-    icon.textContent = 'mic';
-    this.style.background = 'rgba(255,255,255,0.06)';
-    icon.style.color = '';
-  }
-});
-document.getElementById('btn-cam').addEventListener('click', function() {
-  var icon = this.querySelector('.material-symbols-outlined');
-  if (icon.textContent === 'videocam') {
-    icon.textContent = 'videocam_off';
-    this.style.background = 'rgba(239,68,68,0.2)';
-    icon.style.color = '#f87171';
-  } else {
-    icon.textContent = 'videocam';
-    this.style.background = 'rgba(255,255,255,0.06)';
-    icon.style.color = '';
-  }
-});
+// Mic / cámara / compartir pantalla: los gestiona la barra nativa de Daily
+// (dentro del vídeo). Se quitaron los botones custom para no duplicar controles.
 
 // Finalizar
 function finalizarSesion() {
@@ -576,29 +539,8 @@ window._renderHistorial = function(sesiones) {
 };
 
 // ── COMPARTIR PANTALLA ──────────────────────────────────────────
-var _screenStream = null;
-window.compartirPantalla = async function() {
-  if (_screenStream) {
-    _screenStream.getTracks().forEach(function(t){ t.stop(); });
-    _screenStream = null;
-    document.getElementById('screen-btn-bg').style.background = 'rgba(255,255,255,0.05)';
-    document.getElementById('screen-icon').style.color = '';
-    document.getElementById('screen-icon').textContent = 'screen_share';
-    return;
-  }
-  try {
-    _screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-    document.getElementById('screen-btn-bg').style.background = 'rgba(139,92,246,0.25)';
-    document.getElementById('screen-icon').style.color = '#a78bfa';
-    document.getElementById('screen-icon').textContent = 'stop_screen_share';
-    _screenStream.getVideoTracks()[0].onended = function() {
-      _screenStream = null;
-      document.getElementById('screen-btn-bg').style.background = 'rgba(255,255,255,0.05)';
-      document.getElementById('screen-icon').style.color = '';
-      document.getElementById('screen-icon').textContent = 'screen_share';
-    };
-  } catch(e) { /* usuario canceló */ }
-};
+// (compartir pantalla eliminado: lo gestiona la barra nativa de Daily, que sí
+//  envía la pantalla al paciente; el custom capturaba local sin enviar nada.)
 
 // ── RECURSOS ────────────────────────────────────────────────────
 window.abrirRecursos = function() {
