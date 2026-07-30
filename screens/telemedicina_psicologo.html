@@ -210,12 +210,16 @@
     <div id="panel-chat" class="hidden flex-1 rounded-3xl flex flex-col overflow-hidden" style="background:rgba(10,15,28,0.8);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);">
       <div class="p-5" style="border-bottom:1px solid rgba(255,255,255,0.05);">
         <h2 class="font-headline font-bold text-base" style="color:#a78bfa;">Mensajes</h2>
+        <p id="chat-pac-nombre" class="text-xs text-slate-500 mt-0.5">Chat con el paciente</p>
       </div>
-      <div class="flex-1 p-4 flex flex-col items-center justify-center gap-4 text-center">
-        <span class="material-symbols-outlined text-5xl text-slate-600">forum</span>
-        <p class="text-sm text-slate-400">Abre la bandeja de mensajes<br>para chatear con el paciente.</p>
-        <a href="mensajes_psicologo.html" target="_blank" class="px-5 py-2.5 rounded-2xl font-bold text-sm text-white" style="background:rgba(139,92,246,0.4);border:1px solid rgba(139,92,246,0.4);">Abrir mensajes</a>
-        <button onclick="toggleChatWidget()" class="px-5 py-2 rounded-2xl text-sm text-slate-300 hover:bg-white/5 transition-colors" style="border:1px solid rgba(255,255,255,0.08);">Chat rápido aquí</button>
+      <div id="chat-msgs" class="flex-1 p-4 overflow-y-auto flex flex-col gap-2" style="min-height:0;">
+        <p class="text-xs text-slate-500 text-center my-6">—</p>
+      </div>
+      <div class="p-3 flex gap-2 items-center" style="border-top:1px solid rgba(255,255,255,0.05);">
+        <input id="chat-input" type="text" placeholder="Escribe un mensaje…" onkeydown="if(event.key==='Enter')window.enviarChatPsi&&window.enviarChatPsi()" class="flex-1 px-3 py-2 rounded-xl text-sm text-slate-200 placeholder-slate-600" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);outline:none;" />
+        <button onclick="window.enviarChatPsi&&window.enviarChatPsi()" class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:rgba(139,92,246,0.9);border:none;cursor:pointer;">
+          <span class="material-symbols-outlined" style="font-size:16px;color:#fff;font-variation-settings:'FILL' 1;">send</span>
+        </button>
       </div>
     </div>
 
@@ -652,7 +656,7 @@ const params = new URLSearchParams(location.search)
 let citaId = params.get('cita_id')
 let cita = null
 const hoy = new Date().toISOString().split('T')[0]
-const SELECT = 'id, fecha, hora_inicio, tipo, sala_video_url, clinica_id, paciente:paciente_id(nombre, apellido)'
+const SELECT = 'id, fecha, hora_inicio, tipo, sala_video_url, clinica_id, paciente_id, paciente:paciente_id(nombre, apellido)'
 
 if (citaId) {
   const { data } = await supabase.from('citas').select(SELECT).eq('id', citaId).maybeSingle()
@@ -700,6 +704,57 @@ if (cita) {
   const msg = document.getElementById('video-placeholder-msg')
   if (msg) msg.textContent = 'No tienes ninguna sesión de vídeo ahora mismo. Programa una cita online desde tu agenda y el enlace de vídeo se enviará al paciente.'
 }
+
+// ── Chat en tiempo real con el paciente durante la sesión ──
+;(async function initChatPsi() {
+  const cont = document.getElementById('chat-msgs')
+  const nom = document.getElementById('chat-pac-nombre')
+  if (!cont) return
+  if (!cita || !cita.paciente_id) {
+    cont.innerHTML = '<p class="text-xs text-slate-500 text-center my-6">El chat estará disponible durante una sesión con un paciente.</p>'
+    return
+  }
+  const { data: pac } = await supabase.from('pacientes').select('usuario_id').eq('id', cita.paciente_id).maybeSingle()
+  const pacUserId = pac && pac.usuario_id
+  const clinicaId = cita.clinica_id
+  const nombrePac = ((cita.paciente && cita.paciente.nombre || '') + ' ' + (cita.paciente && cita.paciente.apellido || '')).trim()
+  if (nom) nom.textContent = nombrePac ? ('Chat con ' + nombrePac) : 'Chat con el paciente'
+  if (!pacUserId) {
+    cont.innerHTML = '<p class="text-xs text-slate-500 text-center my-6">Este paciente aún no tiene cuenta activa para chatear.</p>'
+    return
+  }
+  const fmt = (d) => new Date(d).toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' })
+  window._chatPsiMsgs = []
+  window.renderChatPsi = function() {
+    if (!window._chatPsiMsgs.length) { cont.innerHTML = '<p class="text-xs text-slate-500 text-center my-6">Aún no hay mensajes. Escribe el primero.</p>'; return }
+    cont.innerHTML = window._chatPsiMsgs.map(function(m) {
+      var me = m.from === 'me'
+      return '<div style="display:flex;justify-content:' + (me ? 'flex-end' : 'flex-start') + ';">'
+        + '<div style="max-width:80%;padding:8px 11px;border-radius:14px;' + (me ? 'background:rgba(139,92,246,0.18);border:1px solid rgba(139,92,246,0.28);border-bottom-right-radius:4px;' : 'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;') + '">'
+        + '<p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">' + (m.text || '').replace(/</g, '&lt;') + '</p>'
+        + '<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:' + (me ? 'right' : 'left') + ';">' + m.time + '</p></div></div>'
+    }).join('')
+    cont.scrollTop = cont.scrollHeight
+  }
+  const { data: msgs } = await supabase.from('mensajes')
+    .select('de_id, texto, created_at')
+    .or('and(de_id.eq.' + userId + ',para_id.eq.' + pacUserId + '),and(de_id.eq.' + pacUserId + ',para_id.eq.' + userId + ')')
+    .order('created_at').limit(100)
+  window._chatPsiMsgs = (msgs || []).filter(function(m){ return !(m.texto || '').startsWith('🧘') })
+    .map(function(m){ return { from: m.de_id === userId ? 'me' : 'them', text: m.texto, time: fmt(m.created_at) } })
+  window.renderChatPsi()
+  window.enviarChatPsi = async function() {
+    const inp = document.getElementById('chat-input'); const texto = (inp.value || '').trim(); if (!texto) return
+    inp.value = ''
+    window._chatPsiMsgs.push({ from: 'me', text: texto, time: fmt(new Date()) }); window.renderChatPsi()
+    try { await supabase.from('mensajes').insert({ clinica_id: clinicaId, de_id: userId, para_id: pacUserId, texto }) } catch (e) {}
+  }
+  supabase.channel('psi-msgs-' + userId).on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'mensajes', filter: 'para_id=eq.' + userId }, function(payload) {
+    const m = payload.new; if (!m || m.de_id !== pacUserId) return
+    if ((m.texto || '').startsWith('🧘')) return
+    window._chatPsiMsgs.push({ from: 'them', text: m.texto, time: fmt(m.created_at) }); window.renderChatPsi()
+  }).subscribe()
+})();
 
 // ── Guardar nota SOAP ──
 const _ta = document.getElementById('nota-textarea')
