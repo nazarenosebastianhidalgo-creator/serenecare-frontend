@@ -716,6 +716,7 @@ if (cita) {
   }
   const { data: pac } = await supabase.from('pacientes').select('usuario_id').eq('id', cita.paciente_id).maybeSingle()
   const pacUserId = pac && pac.usuario_id
+  window._pacUserId = pacUserId  // compartido con el envío de ejercicios de calma
   const clinicaId = cita.clinica_id
   const nombrePac = ((cita.paciente && cita.paciente.nombre || '') + ' ' + (cita.paciente && cita.paciente.apellido || '')).trim()
   if (nom) nom.textContent = nombrePac ? ('Chat con ' + nombrePac) : 'Chat con el paciente'
@@ -799,15 +800,15 @@ window._cargarHistorialSupabase = async function() {
 
 // ── Calma: enviar como mensaje al paciente ──
 window._enviarCalmaSupabase = async function(nombre, instruccion) {
-  if (!citaId || !cita) return
-  const pacienteId = cita.paciente_id
-  if (!pacienteId) return
+  if (!cita) return
+  const pacUserId = window._pacUserId  // usuario_id real del paciente (lo resuelve el chat)
+  if (!pacUserId) return
   try {
     await supabase.from('mensajes').insert({
-      remitente_id: userId,
-      destinatario_id: pacienteId,
+      de_id: userId,
+      para_id: pacUserId,
       clinica_id: cita.clinica_id,
-      contenido: '🧘 Ejercicio de calma — ' + nombre + ': ' + instruccion,
+      texto: '🧘 Ejercicio de calma — ' + nombre + ': ' + instruccion,
     })
   } catch(e) { /* silencioso */ }
 }
