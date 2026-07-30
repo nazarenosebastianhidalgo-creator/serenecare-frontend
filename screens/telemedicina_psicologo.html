@@ -31,7 +31,7 @@
       <span class="text-xs font-bold uppercase tracking-widest text-slate-300">Sesión en vivo</span>
     </div>
     <div class="h-4 w-px bg-slate-800"></div>
-    <span id="top-paciente" class="text-sm font-semibold text-white">Elena Rodríguez</span>
+    <span id="top-paciente" class="text-sm font-semibold text-white">Sesión de vídeo</span>
     <span id="timer-display" class="text-xs font-mono text-slate-400 ml-1">00:00</span>
   </div>
   <div class="flex items-center gap-3">
@@ -83,22 +83,15 @@
 
   <!-- VIDEO AREA -->
   <div id="video-area" class="ml-20 flex-1 relative rounded-3xl overflow-hidden shadow-2xl" style="background:#0d1117;">
-    <img id="video-placeholder" alt="Video del paciente" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh8gB_Ra2d7zFCNQNYu0ykMcm7mlhkmH1YIJkPR5SdMSZK_YcG-zHHqaCljsxcvIKyEoo94bzsJoupLbWQTVSo1WsN-HXsjqh3bwO-PFiCJsBzWwHlXXKEZnlpS4GpSqebfLvhbJcYqGCDyIFKIDDkUQBK2Xmk9IClZjNJgH9NAewf255Izz6rNWenh0ZLaoDSgpKuk-9ZUlGcKXK3vQlnBAZOYPM2idyc5x_lwmWe-qakN5PZ5tb-ERBeh1COqTU2QdVazWvs-"/>
-    <!-- Patient name badge -->
-    <div class="absolute top-5 left-5 flex items-center gap-3 px-4 py-2 rounded-full" style="background:rgba(0,0,0,0.45);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);">
+    <!-- Placeholder (visible hasta que carga el vídeo real de Daily) -->
+    <div id="video-placeholder" class="w-full h-full flex flex-col items-center justify-center gap-4" style="text-align:center;padding:2rem;">
+      <span class="material-symbols-outlined" style="font-size:56px;color:#334155;">videocam</span>
+      <p id="video-placeholder-msg" style="font-size:14px;color:#64748b;max-width:360px;line-height:1.5;">Cargando tu sesión de vídeo…</p>
+    </div>
+    <!-- Badge con el nombre real del paciente (se muestra al cargar la cita) -->
+    <div id="video-badge" class="absolute top-5 left-5 flex items-center gap-3 px-4 py-2 rounded-full" style="background:rgba(0,0,0,0.45);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);display:none;z-index:5;">
       <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-      <span class="text-sm font-semibold text-white/90" id="video-paciente">Paciente: Elena Rodríguez</span>
-      <span class="text-xs text-white/40 ml-1" id="video-timer">42:15</span>
-    </div>
-    <!-- PiP (terapeuta) -->
-    <div class="absolute top-5 right-5 w-44 h-28 rounded-2xl overflow-hidden shadow-2xl z-20" style="border:2px solid rgba(139,92,246,0.35);">
-      <img alt="Tu cámara" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAElvidJ3MfkjpSgartAvMCdhU78NrBu73Wq3yrtLfSsjgQoNV_FN_3isHy0qQYmiK_2pcQ1ejnTnnB-BeDquGOod6TxAplIAsBc41XKQMGmBGv5QrAAVTuqlBRS7L25lAWvAbKeEyR9CFpYZouwlDClg-xRHpA7yT4pckaiVgs1e3O6CdsZjwnR5JS5PPQtUE8aGo6sR0JEL2hL5Yg8blhVs5l8Vo17U5gbzh17m1SX9775soGWtQL86b4-ubLVgTB_6G1Klh6PUzl"/>
-      <div class="absolute bottom-1.5 left-2 text-[10px] text-white/70 font-semibold px-1.5 rounded" style="background:rgba(0,0,0,0.5);">Tú</div>
-    </div>
-    <!-- Signal -->
-    <div class="absolute bottom-5 left-5 flex items-center gap-2 text-white/40">
-      <span class="material-symbols-outlined text-sm">signal_cellular_4_bar</span>
-      <span class="text-[10px] uppercase tracking-tighter">HD Â· Cifrado</span>
+      <span class="text-sm font-semibold text-white/90" id="video-paciente">Paciente</span>
     </div>
     <!-- Background glow -->
     <div class="absolute inset-0 pointer-events-none -z-10">
@@ -681,7 +674,8 @@ let notaId = cita?.notas_soap?.[0]?.id || null
 if (cita) {
   const pac = ((cita.pacientes?.nombre || '') + ' ' + (cita.pacientes?.apellido || '')).trim()
   const tp = document.getElementById('top-paciente'); if (tp && pac) tp.textContent = pac
-  const vp = document.getElementById('video-paciente'); if (vp && pac) vp.textContent = 'Paciente: ' + pac
+  const vp = document.getElementById('video-paciente'); if (vp) vp.textContent = pac || 'Paciente'
+  const badge = document.getElementById('video-badge'); if (badge) badge.style.display = 'flex'
 
   // Sala de video: usar la existente o crearla
   let url = cita.sala_video_url
@@ -702,6 +696,9 @@ if (cita) {
   // Prefill nota previa
   const _taPrev = document.querySelector('textarea')
   if (_taPrev && cita.notas_soap?.[0]?.subjetivo) _taPrev.value = cita.notas_soap[0].subjetivo
+} else {
+  const msg = document.getElementById('video-placeholder-msg')
+  if (msg) msg.textContent = 'No tienes ninguna sesión de vídeo ahora mismo. Programa una cita online desde tu agenda y el enlace de vídeo se enviará al paciente.'
 }
 
 // ── Guardar nota SOAP ──
