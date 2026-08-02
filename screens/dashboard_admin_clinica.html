@@ -476,12 +476,7 @@
    ============================================================ */
 var CITAS_HOY = []
 
-var EQUIPO = [
-  { nombre:'Ana Martínez',  ini:'AM', citas:4, activo:true,  col:'rgba(20,184,166,0.2)',  tc:'#2dd4bf' },
-  { nombre:'Pedro Sánchez', ini:'PS', citas:3, activo:true,  col:'rgba(99,102,241,0.2)',  tc:'#818cf8' },
-  { nombre:'Sofía Ruiz',    ini:'SR', citas:3, activo:true,  col:'rgba(139,92,246,0.2)', tc:'#a78bfa' },
-  { nombre:'Isabel López',  ini:'IL', citas:0, activo:false, col:'rgba(245,158,11,0.15)', tc:'#fbbf24' },
-]
+var EQUIPO = []
 
 var NOTIFS = []
 
@@ -847,7 +842,7 @@ document.addEventListener('DOMContentLoaded', function() {
     animarNum(document.getElementById('kpi-ter'),   5,   '', '')
   }, 100)
   setTimeout(function() {
-    document.getElementById('kpi-ing').textContent = '$6.2k'
+    document.getElementById('kpi-ing').textContent = '€0'  // lo real lo pone el módulo
   }, 700)
 
   // Sparklines (tras paint)
