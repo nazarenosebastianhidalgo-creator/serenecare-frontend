@@ -186,10 +186,6 @@
       </select>
       <select id="filter-terapeuta" class="field" style="width:auto;min-width:180px;cursor:pointer;">
         <option value="">Todos los terapeutas</option>
-        <option value="Ana Martínez">Ana Martínez</option>
-        <option value="Pedro Sánchez">Pedro Sánchez</option>
-        <option value="Sofía Ruiz">Sofía Ruiz</option>
-        <option value="Isabel López">Isabel López</option>
       </select>
     </div>
 
@@ -775,11 +771,18 @@ const clinicaId = perfil.clinica_id
 const hoy = new Date().toISOString().split('T')[0]
 const manana = new Date(Date.now()+86400000).toISOString().split('T')[0]
 
-const [{ data: pacientesDB }, { data: citasDB }, { data: consDB }] = await Promise.all([
-  supabase.from('pacientes').select('id, nombre, apellido, email, estado').eq('clinica_id', clinicaId).order('apellido'),
+const [{ data: pacientesDB }, { data: citasDB }, { data: consDB }, { data: psisDB }] = await Promise.all([
+  supabase.from('pacientes').select('id, nombre, apellido, email, estado, psicologo_id').eq('clinica_id', clinicaId).order('apellido'),
   supabase.from('citas').select('paciente_id, fecha, hora_inicio, estado, psicologo:psicologo_id(nombre,apellido)').eq('clinica_id', clinicaId).order('fecha').order('hora_inicio'),
   supabase.from('consentimientos').select('paciente_id, estado').eq('clinica_id', clinicaId),
+  supabase.from('usuarios').select('id, nombre, apellido').eq('clinica_id', clinicaId).eq('rol', 'psicologo').eq('activo', true).order('apellido'),
 ])
+
+// Psicólogos reales de la clínica -> mapa id→nombre + poblar el filtro de terapeutas
+const psiById = {}
+;(psisDB||[]).forEach(function(u){ psiById[u.id] = ((u.nombre||'')+' '+(u.apellido||'')).trim() })
+const _ft = document.getElementById('filter-terapeuta')
+if (_ft) _ft.innerHTML = '<option value="">Todos los terapeutas</option>' + (psisDB||[]).map(function(u){ const n=((u.nombre||'')+' '+(u.apellido||'')).trim(); return '<option value="'+n+'">'+n+'</option>' }).join('')
 
 {
   // Siempre sobreescribimos (aunque no haya pacientes) para limpiar los demos
@@ -808,7 +811,7 @@ const [{ data: pacientesDB }, { data: citasDB }, { data: consDB }] = await Promi
     return {
       nombre: p.nombre+' '+p.apellido,
       email: p.email||'—',
-      terapeuta: terByPac[p.id]||'—',
+      terapeuta: psiById[p.psicologo_id] || terByPac[p.id] || '—',
       proxima: nextByPac[p.id]||'—',
       sesiones: cntByPac[p.id]||0,
       estado: p.estado||'activo',
