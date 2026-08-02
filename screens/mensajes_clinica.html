@@ -917,9 +917,9 @@ TERAPEUTAS.length = 0
 WHATSAPP_CONVS.length = 0
 renderConvList('')
 
-// ── Contactos reales del admin: TODOS los pacientes de la clínica + el equipo ──
-// (el admin supervisa la clínica: ve a todos los psicólogos a su cargo y a todos
-//  los pacientes, no solo los suyos)
+// ── Contactos del admin en Mensajes: SUS pacientes (si ejerce) + el equipo ──
+// (la comunicación directa es con sus propios pacientes y con los psicólogos;
+//  los pacientes de otros psicólogos se supervisan en "Personal", no aquí)
 const COLS    = ['rgba(20,184,166,0.2)','rgba(99,102,241,0.2)','rgba(139,92,246,0.2)','rgba(52,211,153,0.15)','rgba(245,158,11,0.15)','rgba(96,165,250,0.2)']
 const COLS_TC = ['#2dd4bf','#818cf8','#a78bfa','#4ade80','#fbbf24','#60a5fa']
 const _ini2 = (n,a) => (((n||'')[0]||'')+((a||'')[0]||'')).toUpperCase()
@@ -928,7 +928,7 @@ try {
     supabase.from('usuarios').select('id,nombre,apellido,rol')
       .eq('clinica_id', clinicaId).in('rol', ['psicologo','admin_clinica']).eq('activo', true).neq('id', userId),
     supabase.from('pacientes').select('id,nombre,apellido,usuario_id,psicologo_id')
-      .eq('clinica_id', clinicaId),
+      .eq('clinica_id', clinicaId).eq('psicologo_id', userId),
   ])
   const staff = (staffRes.data||[]).map((c,i) => ({
     id:c.id, nombre:((c.nombre||'')+' '+(c.apellido||'')).trim(), ini:_ini2(c.nombre,c.apellido),
