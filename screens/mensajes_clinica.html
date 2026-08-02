@@ -436,8 +436,10 @@ function renderConvList(filtro) {
   })
   var totalNoLeidos = TERAPEUTAS.reduce(function(s,t){ return s + t.noLeidos }, 0)
   var nb = document.getElementById('nav-unread')
-  if (totalNoLeidos > 0) { nb.textContent = totalNoLeidos; nb.classList.remove('hidden') }
-  else nb.classList.add('hidden')
+  if (nb) {
+    if (totalNoLeidos > 0) { nb.textContent = totalNoLeidos; nb.classList.remove('hidden') }
+    else nb.classList.add('hidden')
+  }
   var waNl = WHATSAPP_CONVS.reduce(function(s,c){ return s + c.noLeidos }, 0)
   var waBadge = document.getElementById('wa-tab-badge')
   if (waBadge) { waBadge.style.display = waNl > 0 ? 'inline-flex' : 'none'; if (waNl > 0) waBadge.textContent = waNl }
