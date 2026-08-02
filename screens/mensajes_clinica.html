@@ -310,13 +310,7 @@
 /* ============================================================
    DATOS
    ============================================================ */
-var NOTIFS = [
-  { icon:'event_busy',  color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',   hora:'Hace 12 min', leida:false },
-  { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz', hora:'Hace 1 h',    leida:false },
-  { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',        hora:'Hace 2 h',    leida:false },
-  { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',   hora:'Hace 3 h',    leida:true  },
-  { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5★ de Laura Pérez',            hora:'Ayer',        leida:true  },
-]
+var NOTIFS = []
 
 var notifOpen = false
 
@@ -328,6 +322,7 @@ function toggleNotif() {
 function renderNotifs() {
   var unread = NOTIFS.filter(function(n){ return !n.leida }).length
   document.getElementById('notif-dot').style.display = unread ? 'block' : 'none'
+  if (!NOTIFS.length) { document.getElementById('notif-list').innerHTML = '<p style="padding:24px 20px;text-align:center;font-size:12px;color:#64748b;">No hay notificaciones nuevas</p>'; return }
   document.getElementById('notif-list').innerHTML = NOTIFS.map(function(n, i) {
     return '<div onclick="leerNotif(' + i + ')" style="padding:12px 20px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;" onmouseover="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseout="this.style.background=\'none\'">' +
       '<span class="material-symbols-outlined" style="font-size:16px;color:' + n.color + ';flex-shrink:0;margin-top:2px;">' + n.icon + '</span>' +
@@ -355,52 +350,7 @@ document.addEventListener('click', function(e) {
   }
 })
 
-var TERAPEUTAS = [
-  {
-    id: 'ana', nombre: 'Ana Martínez', ini: 'AM', rol: 'Psicóloga clínica',
-    col: 'rgba(20,184,166,0.2)', tc: '#2dd4bf', estado: 'online', citas: 4,
-    mensajes: [
-      { de:'ellos', texto:'Buenos días, ¿ya está confirmada la cita de las 12:00 con Carmen García?', hora:'09:02', fecha:'Hoy' },
-      { de:'yo',    texto:'Sí, acabo de confirmarla. Te llega el aviso en la agenda.', hora:'09:05', fecha:'Hoy' },
-      { de:'ellos', texto:'Perfecto, gracias. También quería comentarte que necesito reprogramar a Laura Pérez la semana que viene.', hora:'09:07', fecha:'Hoy' },
-      { de:'yo',    texto:'Sin problema, ¿qué día te viene mejor?', hora:'09:08', fecha:'Hoy' },
-      { de:'ellos', texto:'El miércoles a partir de las 15:00 estaría bien.', hora:'09:10', fecha:'Hoy' },
-    ],
-    noLeidos: 1,
-  },
-  {
-    id: 'pedro', nombre: 'Pedro Sánchez', ini: 'PS', rol: 'Psicólogo cognitivo-conductual',
-    col: 'rgba(99,102,241,0.2)', tc: '#818cf8', estado: 'ocupado', citas: 3,
-    mensajes: [
-      { de:'ellos', texto:'Hola, ¿podemos revisar el protocolo de evaluación para nuevos pacientes?', hora:'Ayer 17:30', fecha:'Ayer' },
-      { de:'yo',    texto:'Claro, esta tarde quedamos si quieres. ¿A las 18:00?', hora:'Ayer 17:45', fecha:'Ayer' },
-      { de:'ellos', texto:'Perfecto, nos vemos entonces.', hora:'Ayer 17:46', fecha:'Ayer' },
-      { de:'yo',    texto:'Genial 👍', hora:'Ayer 17:47', fecha:'Ayer' },
-    ],
-    noLeidos: 0,
-  },
-  {
-    id: 'sofia', nombre: 'Sofía Ruiz', ini: 'SR', rol: 'Psicóloga infantojuvenil',
-    col: 'rgba(139,92,246,0.2)', tc: '#a78bfa', estado: 'online', citas: 3,
-    mensajes: [
-      { de:'yo',    texto:'Sofía, el paciente de las 16:00 llegará 15 minutos tarde, aviso.', hora:'Hoy 08:50', fecha:'Hoy' },
-      { de:'ellos', texto:'Ok, sin problema. Gracias por avisar.', hora:'Hoy 08:52', fecha:'Hoy' },
-      { de:'ellos', texto:'Por cierto, ¿ya tenemos sala disponible para el grupo de los jueves?', hora:'Hoy 08:53', fecha:'Hoy' },
-    ],
-    noLeidos: 2,
-  },
-  {
-    id: 'isabel', nombre: 'Isabel López', ini: 'IL', rol: 'Psicóloga adultos',
-    col: 'rgba(245,158,11,0.15)', tc: '#fbbf24', estado: 'offline', citas: 0,
-    mensajes: [
-      { de:'yo',    texto:'Isabel, recuerda que mañana tienes evaluación de nuevo paciente a las 10:00.', hora:'Ayer 16:00', fecha:'Ayer' },
-      { de:'ellos', texto:'Anotado, gracias. ¿Ya tiene el formulario de intake completado?', hora:'Ayer 16:05', fecha:'Ayer' },
-      { de:'yo',    texto:'Sí, te lo reenvío por aquí.', hora:'Ayer 16:06', fecha:'Ayer' },
-      { de:'ellos', texto:'Perfecto, lo reviso esta tarde.', hora:'Ayer 16:08', fecha:'Ayer' },
-    ],
-    noLeidos: 0,
-  },
-]
+var TERAPEUTAS = []
 
 var TEMPLATES = [
   'Recuerda confirmar tus citas de mañana',
@@ -492,6 +442,18 @@ function renderConvList(filtro) {
   var waBadge = document.getElementById('wa-tab-badge')
   if (waBadge) { waBadge.style.display = waNl > 0 ? 'inline-flex' : 'none'; if (waNl > 0) waBadge.textContent = waNl }
 
+  if (isWa && !lista.length) {
+    document.getElementById('conv-list').innerHTML = '<div style="padding:36px 20px;text-align:center;">'
+      + '<span class="material-symbols-outlined" style="font-size:40px;color:#25d366;opacity:0.6;">chat</span>'
+      + '<p style="font-size:13px;font-weight:700;margin-top:10px;color:#94a3b8;font-family:Manrope,sans-serif;">WhatsApp — Próximamente</p>'
+      + '<p style="font-size:11px;margin-top:4px;color:#64748b;line-height:1.5;">La integración con WhatsApp aún no está conectada. Cuando la actives, aquí aparecerán las conversaciones de tus pacientes por WhatsApp.</p>'
+      + '</div>'
+    return
+  }
+  if (!isWa && !lista.length) {
+    document.getElementById('conv-list').innerHTML = '<div style="padding:32px 20px;text-align:center;color:#64748b;font-size:12px;">' + (filtro ? 'Sin resultados.' : 'Aún no hay contactos en tu clínica.') + '</div>'
+    return
+  }
   document.getElementById('conv-list').innerHTML = lista.map(function(t) {
     var ult = t.mensajes[t.mensajes.length - 1]
     var preview = ult ? (ult.de === 'yo' ? 'Tú: ' : '') + ult.texto : ''
@@ -953,8 +915,9 @@ TERAPEUTAS.length = 0
 WHATSAPP_CONVS.length = 0
 renderConvList('')
 
-// ── Contactos reales del admin: MIS pacientes + el personal de la clínica ──
-// (mismo criterio que el psicólogo: solo los pacientes que gestiona + el equipo)
+// ── Contactos reales del admin: TODOS los pacientes de la clínica + el equipo ──
+// (el admin supervisa la clínica: ve a todos los psicólogos a su cargo y a todos
+//  los pacientes, no solo los suyos)
 const COLS    = ['rgba(20,184,166,0.2)','rgba(99,102,241,0.2)','rgba(139,92,246,0.2)','rgba(52,211,153,0.15)','rgba(245,158,11,0.15)','rgba(96,165,250,0.2)']
 const COLS_TC = ['#2dd4bf','#818cf8','#a78bfa','#4ade80','#fbbf24','#60a5fa']
 const _ini2 = (n,a) => (((n||'')[0]||'')+((a||'')[0]||'')).toUpperCase()
@@ -963,7 +926,7 @@ try {
     supabase.from('usuarios').select('id,nombre,apellido,rol')
       .eq('clinica_id', clinicaId).in('rol', ['psicologo','admin_clinica']).eq('activo', true).neq('id', userId),
     supabase.from('pacientes').select('id,nombre,apellido,usuario_id,psicologo_id')
-      .eq('clinica_id', clinicaId).eq('psicologo_id', userId),
+      .eq('clinica_id', clinicaId),
   ])
   const staff = (staffRes.data||[]).map((c,i) => ({
     id:c.id, nombre:((c.nombre||'')+' '+(c.apellido||'')).trim(), ini:_ini2(c.nombre,c.apellido),
