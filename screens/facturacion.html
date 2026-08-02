@@ -285,26 +285,12 @@
           <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Paciente</label>
           <select id="m-paciente" class="field">
             <option value="">Seleccionar…</option>
-            <option>Laura Gómez</option>
-            <option>Carlos Mendoza</option>
-            <option>Marta Pérez</option>
-            <option>Juan Torres</option>
-            <option>Elena Ruiz</option>
-            <option>Andrés Vega</option>
-            <option>Sofía Castro</option>
-            <option>Miguel Ángel Díaz</option>
-            <option>Paula Hernández</option>
-            <option>Roberto Sanz</option>
           </select>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Terapeuta</label>
           <select id="m-terapeuta" class="field">
             <option value="">Seleccionar…</option>
-            <option>Ana Martínez</option>
-            <option>Pedro Sánchez</option>
-            <option>Sofía Ruiz</option>
-            <option>Isabel López</option>
           </select>
         </div>
       </div>
@@ -349,24 +335,7 @@
 </div>
 
 <script>
-var FACTURAS = [
-  { id:'FAC-2026-064', paciente:'Laura Gómez',       terapeuta:'Ana Martínez',  fecha:'07/05/2026', concepto:'Sesión individual (50 min)', importe:80,  estado:'pagada'    },
-  { id:'FAC-2026-063', paciente:'Carlos Mendoza',    terapeuta:'Pedro Sánchez', fecha:'07/05/2026', concepto:'Sesión individual (50 min)', importe:75,  estado:'pendiente' },
-  { id:'FAC-2026-062', paciente:'Marta Pérez',       terapeuta:'Sofía Ruiz',    fecha:'06/05/2026', concepto:'Sesión de pareja (80 min)',  importe:120, estado:'pagada'    },
-  { id:'FAC-2026-061', paciente:'Juan Torres',       terapeuta:'Ana Martínez',  fecha:'06/05/2026', concepto:'Sesión individual (50 min)', importe:80,  estado:'pagada'    },
-  { id:'FAC-2026-060', paciente:'Elena Ruiz',        terapeuta:'Isabel López',  fecha:'05/05/2026', concepto:'Evaluación inicial (90 min)',importe:150, estado:'pendiente' },
-  { id:'FAC-2026-059', paciente:'Andrés Vega',       terapeuta:'Pedro Sánchez', fecha:'05/05/2026', concepto:'Sesión individual (50 min)', importe:75,  estado:'pagada'    },
-  { id:'FAC-2026-058', paciente:'Sofía Castro',      terapeuta:'Sofía Ruiz',    fecha:'04/05/2026', concepto:'Sesión individual (50 min)', importe:80,  estado:'pagada'    },
-  { id:'FAC-2026-057', paciente:'Miguel Ángel Díaz', terapeuta:'Ana Martínez',  fecha:'04/05/2026', concepto:'Sesión individual (50 min)', importe:80,  estado:'pendiente' },
-  { id:'FAC-2026-056', paciente:'Paula Hernández',   terapeuta:'Isabel López',  fecha:'03/05/2026', concepto:'Sesión de grupo (60 min)',   importe:45,  estado:'pagada'    },
-  { id:'FAC-2026-055', paciente:'Roberto Sanz',      terapeuta:'Pedro Sánchez', fecha:'03/05/2026', concepto:'Sesión individual (50 min)', importe:75,  estado:'anulada'   },
-  { id:'FAC-2026-054', paciente:'Carmen López',      terapeuta:'Sofía Ruiz',    fecha:'02/05/2026', concepto:'Sesión individual (50 min)', importe:80,  estado:'pagada'    },
-  { id:'FAC-2026-053', paciente:'Fernando Blanco',   terapeuta:'Ana Martínez',  fecha:'02/05/2026', concepto:'Sesión de pareja (80 min)',  importe:120, estado:'pagada'    },
-  { id:'FAC-2026-052', paciente:'Ana Soria',         terapeuta:'Isabel López',  fecha:'01/05/2026', concepto:'Evaluación inicial (90 min)',importe:150, estado:'pendiente' },
-  { id:'FAC-2026-051', paciente:'Luis García',       terapeuta:'Pedro Sánchez', fecha:'01/05/2026', concepto:'Sesión individual (50 min)', importe:75,  estado:'pagada'    },
-  { id:'FAC-2026-050', paciente:'Natalia Mora',      terapeuta:'Sofía Ruiz',    fecha:'30/04/2026', concepto:'Sesión individual (50 min)', importe:80,  estado:'pagada'    },
-  { id:'FAC-2026-049', paciente:'David Fuentes',     terapeuta:'Ana Martínez',  fecha:'29/04/2026', concepto:'Sesión individual (50 min)', importe:80,  estado:'pendiente' },
-];
+var FACTURAS = [];
 
 var filtradas = FACTURAS.slice();
 var nextId = 65;
@@ -492,20 +461,20 @@ function mostrarToast(msg) {
   setTimeout(function(){ t.style.opacity = '0'; }, 2500);
 }
 
-var COBROS = [
-  { paciente:'Laura Gómez',  importe:80,  hora:'Hoy 10:15',  metodo:'Transferencia' },
-  { paciente:'Juan Torres',  importe:80,  hora:'Hoy 09:30',  metodo:'Tarjeta' },
-  { paciente:'Sofía Castro', importe:80,  hora:'Ayer 16:45', metodo:'Efectivo' },
-  { paciente:'Carmen López', importe:80,  hora:'Ayer 11:00', metodo:'Transferencia' },
-  { paciente:'Andrés Vega',  importe:75,  hora:'Ayer 09:15', metodo:'Tarjeta' },
-];
-document.getElementById('cobros-recientes').innerHTML = COBROS.map(function(c) {
-  return '<div class="flex items-center justify-between py-2.5 border-b border-slate-800/40 last:border-0">' +
-    '<div><p class="text-sm font-medium text-slate-200">' + c.paciente + '</p>' +
-    '<p class="text-xs text-slate-500">' + c.hora + ' · ' + c.metodo + '</p></div>' +
-    '<p class="text-sm font-bold" style="color:#2dd4bf;">+$' + c.importe + '</p>' +
-  '</div>';
-}).join('');
+var COBROS = [];
+window.renderCobrosRecientes = function() {
+  var cont = document.getElementById('cobros-recientes');
+  if (!cont) return;
+  if (!COBROS.length) { cont.innerHTML = '<p class="text-xs text-slate-500 text-center py-6">Aún no hay cobros registrados</p>'; return; }
+  cont.innerHTML = COBROS.map(function(c) {
+    return '<div class="flex items-center justify-between py-2.5 border-b border-slate-800/40 last:border-0">' +
+      '<div><p class="text-sm font-medium text-slate-200">' + c.paciente + '</p>' +
+      '<p class="text-xs text-slate-500">' + c.hora + ' · ' + c.metodo + '</p></div>' +
+      '<p class="text-sm font-bold" style="color:#2dd4bf;">+' + Number(c.importe).toFixed(2) + ' €</p>' +
+    '</div>';
+  }).join('');
+};
+window.renderCobrosRecientes();
 
 // Init
 (function() {
@@ -563,173 +532,7 @@ document.getElementById('cobros-recientes').innerHTML = COBROS.map(function(c) {
   <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
 </button>
 
-<script>
-(function(){
-var CW_DATA = [
-  { id:'c1', nombre:'Ana Martínez',  rol:'Terapeuta', dot:'online', unread:1, msgs:[
-    { from:'them', text:'Buenos días, ¿tienes disponibilidad para el paciente García mañana?', time:'10:14' },
-    { from:'me',   text:'Sí, a las 11:00 lo tengo libre.', time:'10:16' },
-    { from:'them', text:'Perfecto, le confirmo la cita.', time:'10:17' },
-  ]},
-  { id:'c2', nombre:'Pedro Sánchez', rol:'Terapeuta', dot:'busy', unread:1, msgs:[
-    { from:'them', text:'Necesito cambiar la cita de Marcos del jueves.', time:'09:30' },
-    { from:'me',   text:'¿A qué hora te viene bien?', time:'09:32' },
-  ]},
-  { id:'c3', nombre:'Lucía Méndez',  rol:'Secretaria', dot:'online', unread:0, msgs:[
-    { from:'me',   text:'¿Enviaste los recordatorios de mañana?', time:'Ayer' },
-    { from:'them', text:'Sí, ya los envié todos.', time:'Ayer' },
-  ]},
-  { id:'c4', nombre:'Sofía Ruiz',    rol:'Terapeuta', dot:'offline', unread:0, msgs:[
-    { from:'them', text:'Informe de Vidal listo para revisión.', time:'Lun' },
-  ]},
-];
-var CW_DOT_COLOR = { online:'#4ade80', busy:'#fbbf24', offline:'#475569' };
-var cwOpen = false, cwActive = null;
-
-window.toggleChatWidget = function() {
-  cwOpen = !cwOpen;
-  var panel = document.getElementById('cw-panel');
-  if (cwOpen) {
-    panel.style.pointerEvents = 'auto'; panel.style.opacity = '1'; panel.style.transform = 'translateY(0) scale(1)';
-    document.getElementById('fab-badge').style.display = 'none';
-    document.getElementById('cw-fab-icon').textContent = 'close';
-    cwMostrarLista();
-  } else {
-    panel.style.opacity = '0'; panel.style.transform = 'translateY(14px) scale(0.97)'; panel.style.pointerEvents = 'none';
-    document.getElementById('cw-fab-icon').textContent = 'chat';
-  }
-};
-
-function cwMostrarLista() {
-  document.getElementById('cw-lista-wrap').style.display = 'block';
-  document.getElementById('cw-chat-wrap').style.display = 'none';
-  var html = CW_DATA.map(function(c) {
-    var last = c.msgs[c.msgs.length - 1];
-    return '<div onclick="cwAbrirConv(\'' + c.id + '\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'">' +
-      '<div style="position:relative;flex-shrink:0;"><div style="width:38px;height:38px;border-radius:50%;background:rgba(20,184,166,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2dd4bf;font-family:Manrope,sans-serif;">' + c.nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('') + '</div>' +
-      '<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:' + CW_DOT_COLOR[c.dot] + ';border:2px solid #0d1b2e;"></span></div>' +
-      '<div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;"><span style="font-family:Manrope,sans-serif;font-weight:700;font-size:12px;color:#e2e8f0;">' + c.nombre + '</span><span style="font-size:10px;color:#475569;">' + last.time + '</span></div>' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;"><span style="font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;">' + (last.from==='me'?'Tú: ':'') + last.text + '</span>' +
-      (c.unread ? '<span style="min-width:16px;height:16px;background:#2dd4bf;border-radius:99px;font-size:9px;font-weight:800;color:#020617;display:flex;align-items:center;justify-content:center;padding:0 4px;margin-left:4px;flex-shrink:0;">' + c.unread + '</span>' : '') + '</div></div></div>';
-  }).join('');
-  document.getElementById('cw-conv-list').innerHTML = html;
-}
-
-window.cwAbrirConv = function(id) {
-  cwActive = CW_DATA.find(function(c){ return c.id === id; });
-  if (!cwActive) return;
-  cwActive.unread = 0;
-  document.getElementById('cw-lista-wrap').style.display = 'none';
-  var cw = document.getElementById('cw-chat-wrap'); cw.style.display = 'flex'; cw.style.flexDirection = 'column';
-  document.getElementById('cw-chat-title').textContent = cwActive.nombre;
-  document.getElementById('cw-chat-dot').style.background = CW_DOT_COLOR[cwActive.dot];
-  cwRenderMsgs();
-  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 40);
-};
-
-window.cwVolverLista = function() { cwMostrarLista(); };
-
-function cwRenderMsgs() {
-  var html = cwActive.msgs.map(function(m) {
-    var me = m.from === 'me';
-    return '<div style="display:flex;justify-content:' + (me?'flex-end':'flex-start') + ';animation:cwMsgIn 0.18s ease forwards;">' +
-      '<div style="max-width:80%;padding:8px 11px;border-radius:14px;' + (me?'background:rgba(20,184,166,0.18);border:1px solid rgba(20,184,166,0.28);border-bottom-right-radius:4px;':'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;') + '">' +
-      '<p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">' + m.text + '</p>' +
-      '<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:' + (me?'right':'left') + ';">' + m.time + '</p></div></div>';
-  }).join('');
-  document.getElementById('cw-messages').innerHTML = html;
-}
-
-window.cwEnviar = function() {
-  if (!cwActive) return;
-  var input = document.getElementById('cw-input');
-  var text = (input.value || '').trim(); if (!text) return;
-  var t = new Date(); var time = t.getHours() + ':' + String(t.getMinutes()).padStart(2,'0');
-  cwActive.msgs.push({ from:'me', text:text, time:time }); input.value = '';
-  cwRenderMsgs();
-  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 30);
-};
-})();
-
-// Apps overlay
-window.toggleAppsPanel = function() {
-  var o = document.getElementById('apps-overlay');
-  o.style.display = (o.style.display === 'none' || o.style.display === '') ? 'flex' : 'none';
-};
-window.cerrarApps = function(e) {
-  if (e && e.target && e.target.id !== 'apps-overlay') return;
-  document.getElementById('apps-overlay').style.display = 'none';
-};
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    var o = document.getElementById('apps-overlay'); if (o) o.style.display = 'none';
-    cerrarModal();
-  }
-});
-
-// User menu
-var userMenuOpen = false;
-window.toggleUserMenu = function() {
-  userMenuOpen = !userMenuOpen;
-  document.getElementById('user-menu').classList.toggle('hidden', !userMenuOpen);
-  document.getElementById('chevron-user').textContent = userMenuOpen ? 'expand_more' : 'expand_less';
-};
-window.toggleTema = function() {
-  var esClaro = localStorage.getItem('tp_tema') === 'claro';
-  if (esClaro) { localStorage.removeItem('tp_tema'); document.documentElement.style.filter = ''; }
-  else { localStorage.setItem('tp_tema', 'claro'); document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)'; }
-  var icon = document.getElementById('icon-tema'), label = document.getElementById('label-tema');
-  var nowClaro = localStorage.getItem('tp_tema') === 'claro';
-  if (icon) icon.textContent = nowClaro ? 'light_mode' : 'dark_mode';
-  if (label) label.textContent = nowClaro ? 'Modo oscuro' : 'Modo claro';
-  userMenuOpen = false;
-  document.getElementById('user-menu').classList.add('hidden');
-  document.getElementById('chevron-user').textContent = 'expand_less';
-};
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu') && userMenuOpen) {
-    userMenuOpen = false;
-    var um = document.getElementById('user-menu'); if (um) um.classList.add('hidden');
-    var ch = document.getElementById('chevron-user'); if (ch) ch.textContent = 'expand_less';
-  }
-});
-
-// Notificaciones
-var NOTIFS_FAC = [
-  { icon:'event_busy',  color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',    hora:'Hace 12 min', leida:false },
-  { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz',  hora:'Hace 1 h',    leida:false },
-  { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',          hora:'Hace 2 h',    leida:false },
-  { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',     hora:'Hace 3 h',    leida:true  },
-  { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5★ de Laura Pérez',              hora:'Ayer',        leida:true  },
-];
-var notifOpenFac = false;
-function renderNotifsFac() {
-  var unread = NOTIFS_FAC.filter(function(n){ return !n.leida; }).length;
-  var dot = document.getElementById('notif-dot-fac'); if (dot) dot.style.display = unread ? 'block' : 'none';
-  var list = document.getElementById('notif-list-fac'); if (!list) return;
-  list.innerHTML = NOTIFS_FAC.map(function(n,i){
-    return '<div onclick="leerNotifFac('+i+')" style="padding:12px 20px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;" onmouseover="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseout="this.style.background=\'none\'">' +
-      '<span class="material-symbols-outlined" style="font-size:16px;color:'+n.color+';flex-shrink:0;margin-top:2px;">'+n.icon+'</span>' +
-      '<div style="flex:1;min-width:0;"><p style="font-size:12px;color:#e2e8f0;margin:0;'+((!n.leida)?'font-weight:600;':'opacity:0.5;')+'">'+n.msg+'</p><p style="font-size:10px;color:#64748b;margin:4px 0 0;">'+n.hora+'</p></div>' +
-      ((!n.leida)?'<span style="width:6px;height:6px;border-radius:50%;background:#2dd4bf;flex-shrink:0;margin-top:6px;"></span>':'') + '</div>';
-  }).join('');
-}
-window.leerNotifFac = function(i){ NOTIFS_FAC[i].leida = true; renderNotifsFac(); };
-document.getElementById('btn-notif-fac').addEventListener('click', function(e){
-  e.stopPropagation();
-  notifOpenFac = !notifOpenFac;
-  document.getElementById('notif-panel-fac').classList.toggle('hidden', !notifOpenFac);
-});
-document.getElementById('btn-marcar-fac').addEventListener('click', function(){
-  NOTIFS_FAC.forEach(function(n){ n.leida = true; }); renderNotifsFac();
-});
-document.addEventListener('click', function(e){
-  if (!e.target.closest('#btn-notif-fac') && !e.target.closest('#notif-panel-fac')) {
-    notifOpenFac = false; var p = document.getElementById('notif-panel-fac'); if (p) p.classList.add('hidden');
-  }
-});
-renderNotifsFac();
-</script>
+<script type="module">import { initChatWidget } from '../js/chat-widget.js'; initChatWidget();</script>
 <style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
 
 <!-- APPS OVERLAY -->
@@ -877,6 +680,10 @@ window._cerrarSesion = cerrarSesion;
     }));
     window.filtrarFacturas();
     window.actualizarKPIs();
+    // Cobros recientes = últimas facturas pagadas reales
+    window.COBROS = window.FACTURAS.filter(function(f){ return f.estado === 'pagada'; }).slice(0, 6)
+      .map(function(f){ return { paciente: f.paciente, importe: f.importe, hora: f.fecha, metodo: 'Tarjeta' }; });
+    if (window.renderCobrosRecientes) window.renderCobrosRecientes();
   }
 
   // ── Override de render para soportar estados reales + acciones Stripe ──
