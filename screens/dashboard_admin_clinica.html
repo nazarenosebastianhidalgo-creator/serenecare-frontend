@@ -188,15 +188,6 @@
         </h1>
         <p class="text-slate-500 text-sm mt-0.5" id="sub-saludo">Aquí está el resumen de tu clínica hoy</p>
       </div>
-      <!-- Ocupación del día -->
-      <div class="card rounded-2xl px-5 py-3 min-w-48">
-        <div class="flex items-center justify-between mb-1.5">
-          <span class="text-xs text-slate-500">Ocupación hoy</span>
-          <span class="text-sm font-bold" style="color:#2dd4bf;" id="ocup-pct">75%</span>
-        </div>
-        <div class="prog"><div class="prog-fill" style="background:#2dd4bf;" id="ocup-bar" data-w="75"></div></div>
-        <p class="text-[10px] text-slate-600 mt-1.5">9 de 12 slots ocupados</p>
-      </div>
     </div>
 
     <!-- KPI Cards -->
@@ -207,11 +198,9 @@
           <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(20,184,166,0.12);">
             <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;">group</span>
           </div>
-          <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(34,197,94,0.1);color:#4ade80;">+3 este mes</span>
         </div>
         <p class="text-2xl font-headline font-bold text-white" id="kpi-pac">0</p>
-        <p class="text-xs text-slate-500 mt-0.5 mb-3">Pacientes activos</p>
-        <div class="spark-wrap" style="width:100%;overflow:hidden;height:28px;"><canvas class="spark" id="spark-pac" height="28" style="display:block;max-width:100%;"></canvas></div>
+        <p class="text-xs text-slate-500 mt-0.5">Pacientes activos</p>
       </div>
 
       <div class="card kpi-card rounded-2xl p-5" onclick="irA('agenda_clinica.html')">
@@ -231,11 +220,9 @@
           <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,0.12);">
             <span class="material-symbols-outlined text-lg" style="color:#a78bfa;">badge</span>
           </div>
-          <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(34,197,94,0.1);color:#4ade80;">4 activos hoy</span>
         </div>
         <p class="text-2xl font-headline font-bold text-white" id="kpi-ter">0</p>
-        <p class="text-xs text-slate-500 mt-0.5 mb-3">Terapeutas</p>
-        <div class="spark-wrap" style="width:100%;overflow:hidden;height:28px;"><canvas class="spark" id="spark-ter" height="28" style="display:block;max-width:100%;"></canvas></div>
+        <p class="text-xs text-slate-500 mt-0.5">Terapeutas</p>
       </div>
 
       <div class="card kpi-card rounded-2xl p-5" onclick="irA('facturacion.html')">
@@ -243,9 +230,8 @@
           <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(34,197,94,0.1);">
             <span class="material-symbols-outlined text-lg" style="color:#4ade80;">payments</span>
           </div>
-          <span class="text-xs font-bold px-2 py-0.5 rounded-full" style="background:rgba(34,197,94,0.1);color:#4ade80;">+8%</span>
         </div>
-        <p class="text-2xl font-headline font-bold text-white" id="kpi-ing">$0</p>
+        <p class="text-2xl font-headline font-bold text-white" id="kpi-ing">€0</p>
         <p class="text-xs text-slate-500 mt-0.5 mb-3">Ingresos este mes</p>
         <div class="spark-wrap" style="width:100%;overflow:hidden;height:28px;"><canvas class="spark" id="spark-ing" height="28" style="display:block;max-width:100%;"></canvas></div>
       </div>
@@ -279,32 +265,7 @@
           <div class="p-4 space-y-3" id="equipo-list"></div>
         </div>
 
-        <!-- Accesos rápidos -->
-        <div class="card rounded-2xl p-5">
-          <h3 class="font-headline font-bold text-white text-sm mb-3">Accesos rápidos</h3>
-          <div class="grid grid-cols-2 gap-2">
-            <button onclick="irA('pacientes_clinica.html')" class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors">
-              <span class="material-symbols-outlined text-xl" style="color:#2dd4bf;">person_add</span>
-              <span class="text-[10px] text-slate-400 font-semibold">Nuevo paciente</span>
-            </button>
-            <button onclick="abrirModalCita()" class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors">
-              <span class="material-symbols-outlined text-xl" style="color:#818cf8;">event_available</span>
-              <span class="text-[10px] text-slate-400 font-semibold">Nueva cita</span>
-            </button>
-            <button onclick="irA('facturacion.html')" class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors">
-              <span class="material-symbols-outlined text-xl" style="color:#4ade80;">receipt_long</span>
-              <span class="text-[10px] text-slate-400 font-semibold">Facturar</span>
-            </button>
-            <button onclick="irA('estadisticas_clinica.html')" class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors">
-              <span class="material-symbols-outlined text-xl" style="color:#fbbf24;">bar_chart</span>
-              <span class="text-[10px] text-slate-400 font-semibold">Estadísticas</span>
-            </button>
-            <button onclick="irA('telemedicina_psicologo.html')" class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors" style="grid-column:span 2;">
-              <span class="material-symbols-outlined text-xl" style="color:#a78bfa;">videocam</span>
-              <span class="text-[10px] text-slate-400 font-semibold">Iniciar videollamada</span>
-            </button>
-          </div>
-        </div>
+        
 
       </div>
     </div>
@@ -317,7 +278,7 @@
         <div class="flex items-center justify-between mb-5">
           <div>
             <h3 class="text-sm font-bold text-white font-headline">Ingresos — últimos 7 días</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Total: <span class="font-bold" style="color:#2dd4bf;">$1.840</span></p>
+            <p class="text-xs text-slate-500 mt-0.5">Total: <span class="font-bold" style="color:#2dd4bf;" id="ing-total-7d">€0</span></p>
           </div>
           <div class="flex gap-1">
             <button onclick="setIngView('bar')" id="ing-bar-btn" class="text-xs px-3 py-1.5 rounded-lg font-bold transition-all" style="background:rgba(20,184,166,0.12);color:#2dd4bf;">Barras</button>
@@ -793,6 +754,7 @@ function guardarCitaNueva() {
 function renderNotifs() {
   var leidas = NOTIFS.filter(function(n){ return !n.leida }).length
   document.getElementById('notif-dot').style.display = leidas ? 'block' : 'none'
+  if (!NOTIFS.length) { document.getElementById('notif-list').innerHTML = '<p class="px-5 py-6 text-center text-xs text-slate-500">No hay notificaciones nuevas</p>'; return }
   document.getElementById('notif-list').innerHTML = NOTIFS.map(function(n, i) {
     return '<div class="px-5 py-3.5 flex items-start gap-3 border-b border-slate-800/30 last:border-0 cursor-pointer hover:bg-white/[0.02] transition-colors" onclick="leerNotif(' + i + ')">' +
       '<span class="material-symbols-outlined text-base flex-shrink-0 mt-0.5" style="color:' + n.color + ';">' + n.icon + '</span>' +
@@ -835,6 +797,7 @@ function renderAlertas() {
     info:  { bg:'rgba(99,102,241,0.08)', bdr:'#6366f1', col:'#818cf8' },
   }
   document.getElementById('alertas-count').textContent = ALERTAS.length + ' alertas'
+  if (!ALERTAS.length) { document.getElementById('alertas-list').innerHTML = '<div class="alerta" style="background:rgba(34,197,94,0.08);border-left-color:#22c55e;"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm" style="color:#4ade80;">check_circle</span><p class="text-xs font-semibold" style="color:#4ade80;">Todo al día, sin alertas</p></div></div>'; return }
   document.getElementById('alertas-list').innerHTML = ALERTAS.map(function(a) {
     var c = cfg[a.tipo]
     return '<div class="alerta" style="background:' + c.bg + ';border-left-color:' + c.bdr + ';" onclick="irA(\'' + a.accion + '\')">' +
@@ -850,6 +813,7 @@ function renderAlertas() {
    ACTIVIDAD
    ============================================================ */
 function renderActividad() {
+  if (!ACTIVIDAD.length) { document.getElementById('actividad-list').innerHTML = '<p class="py-6 text-center text-xs text-slate-500">Sin actividad reciente</p>'; return }
   document.getElementById('actividad-list').innerHTML = ACTIVIDAD.map(function(a) {
     return '<div class="flex items-center gap-3 py-2.5 border-b border-slate-800/30 last:border-0">' +
       '<span class="material-symbols-outlined text-base flex-shrink-0" style="color:' + a.color + ';">' + a.icon + '</span>' +
@@ -1004,184 +968,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
 </button>
 
-<script>
-(function(){
-var CW_DATA = [
-  { id:'c1', nombre:'Ana Martínez', rol:'Terapeuta', dot:'online', unread:1, msgs:[
-    { from:'them', text:'Buenos días, ¿tienes disponibilidad para el paciente García mañana?', time:'10:14' },
-    { from:'me',   text:'Sí, a las 11:00 lo tengo libre.', time:'10:16' },
-    { from:'them', text:'Perfecto, le confirmo la cita.', time:'10:17' },
-  ]},
-  { id:'c2', nombre:'Pedro Sánchez', rol:'Terapeuta', dot:'busy', unread:1, msgs:[
-    { from:'them', text:'Necesito cambiar la cita de Marcos del jueves.', time:'09:30' },
-    { from:'me',   text:'¿A qué hora te viene bien?', time:'09:32' },
-  ]},
-  { id:'c3', nombre:'Lucía Méndez', rol:'Secretaria', dot:'online', unread:0, msgs:[
-    { from:'me',   text:'¿Enviaste los recordatorios de mañana?', time:'Ayer' },
-    { from:'them', text:'Sí, ya los envié todos.', time:'Ayer' },
-  ]},
-  { id:'c4', nombre:'Sofía Ruiz', rol:'Terapeuta', dot:'offline', unread:0, msgs:[
-    { from:'them', text:'Informe de Vidal listo para revisión.', time:'Lun' },
-  ]},
-];
-var CW_DOT_COLOR = { online:'#4ade80', busy:'#fbbf24', offline:'#475569' };
-var cwOpen = false, cwActive = null;
-
-window.toggleChatWidget = function() {
-  cwOpen = !cwOpen;
-  var panel = document.getElementById('cw-panel');
-  if (cwOpen) {
-    panel.style.pointerEvents = 'auto';
-    panel.style.opacity = '1';
-    panel.style.transform = 'translateY(0) scale(1)';
-    document.getElementById('fab-badge').style.display = 'none';
-    document.getElementById('cw-fab-icon').textContent = 'close';
-    cwMostrarLista();
-  } else {
-    panel.style.opacity = '0';
-    panel.style.transform = 'translateY(14px) scale(0.97)';
-    panel.style.pointerEvents = 'none';
-    document.getElementById('cw-fab-icon').textContent = 'chat';
-  }
-};
-
-function cwMostrarLista() {
-  document.getElementById('cw-lista-wrap').style.display = 'block';
-  document.getElementById('cw-chat-wrap').style.display = 'none';
-  var html = CW_DATA.map(function(c) {
-    var last = c.msgs[c.msgs.length - 1];
-    return '<div onclick="cwAbrirConv(\'' + c.id + '\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'">'+
-      '<div style="position:relative;flex-shrink:0;">'+
-        '<div style="width:38px;height:38px;border-radius:50%;background:rgba(20,184,166,0.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#2dd4bf;font-family:Manrope,sans-serif;">' + c.nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('') + '</div>'+
-        '<span style="position:absolute;bottom:0;right:0;width:9px;height:9px;border-radius:50%;background:' + CW_DOT_COLOR[c.dot] + ';border:2px solid #0d1b2e;"></span>'+
-      '</div>'+
-      '<div style="flex:1;min-width:0;">'+
-        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;">'+
-          '<span style="font-family:Manrope,sans-serif;font-weight:700;font-size:12px;color:#e2e8f0;">' + c.nombre + '</span>'+
-          '<span style="font-size:10px;color:#475569;">' + last.time + '</span>'+
-        '</div>'+
-        '<div style="display:flex;align-items:center;justify-content:space-between;">'+
-          '<span style="font-size:11px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px;">' + (last.from === 'me' ? 'Tú: ' : '') + last.text + '</span>'+
-          (c.unread ? '<span style="min-width:16px;height:16px;background:#2dd4bf;border-radius:99px;font-size:9px;font-weight:800;color:#020617;display:flex;align-items:center;justify-content:center;padding:0 4px;margin-left:4px;flex-shrink:0;">' + c.unread + '</span>' : '') +
-        '</div>'+
-      '</div>'+
-    '</div>';
-  }).join('');
-  document.getElementById('cw-conv-list').innerHTML = html;
-}
-
-window.cwAbrirConv = function(id) {
-  cwActive = CW_DATA.find(function(c){ return c.id === id; });
-  if (!cwActive) return;
-  cwActive.unread = 0;
-  document.getElementById('cw-lista-wrap').style.display = 'none';
-  var cw = document.getElementById('cw-chat-wrap');
-  cw.style.display = 'flex'; cw.style.flexDirection = 'column';
-  document.getElementById('cw-chat-title').textContent = cwActive.nombre;
-  document.getElementById('cw-chat-dot').style.background = CW_DOT_COLOR[cwActive.dot];
-  cwRenderMsgs();
-  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 40);
-};
-
-window.cwVolverLista = function() { cwMostrarLista(); };
-
-function cwRenderMsgs() {
-  var html = cwActive.msgs.map(function(m) {
-    var me = m.from === 'me';
-    return '<div style="display:flex;justify-content:' + (me ? 'flex-end' : 'flex-start') + ';animation:cwMsgIn 0.18s ease forwards;">'+
-      '<div style="max-width:80%;padding:8px 11px;border-radius:14px;' + (me ? 'background:rgba(20,184,166,0.18);border:1px solid rgba(20,184,166,0.28);border-bottom-right-radius:4px;' : 'background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-bottom-left-radius:4px;') + '">'+
-        '<p style="font-size:12px;color:#e2e8f0;line-height:1.5;word-break:break-word;margin:0;">' + m.text + '</p>'+
-        '<p style="font-size:10px;color:#475569;margin:3px 0 0;text-align:' + (me ? 'right' : 'left') + ';">' + m.time + '</p>'+
-      '</div></div>';
-  }).join('');
-  document.getElementById('cw-messages').innerHTML = html;
-}
-
-window.cwEnviar = function() {
-  if (!cwActive) return;
-  var input = document.getElementById('cw-input');
-  var text = (input.value || '').trim();
-  if (!text) return;
-  var t = new Date(); var time = t.getHours() + ':' + String(t.getMinutes()).padStart(2,'0');
-  cwActive.msgs.push({ from:'me', text:text, time:time });
-  input.value = '';
-  cwRenderMsgs();
-  setTimeout(function(){ var m = document.getElementById('cw-messages'); m.scrollTop = m.scrollHeight; }, 30);
-};
-})();
-
-  // Apps overlay
-
-  // Sync apps footer user info
-  (function syncAppsUser() {
-    var nombre = localStorage.getItem('tp_nombre') || 'Admin';
-    var av = document.getElementById('apps-avatar');
-    var nm = document.getElementById('apps-nombre');
-    if (av) av.textContent = nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
-    if (nm) nm.textContent = nombre;
-  })();
-  window.toggleAppsPanel = function() {
-    var o = document.getElementById('apps-overlay');
-    var isHidden = o.style.display === 'none' || o.style.display === '';
-    if (isHidden) {
-      o.style.display = 'flex';
-    } else {
-      o.style.display = 'none';
-    }
-  };
-  window.cerrarApps = function(e) {
-    if (e && e.target !== document.getElementById('apps-overlay')) return;
-    document.getElementById('apps-overlay').style.display = 'none';
-  };
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      var o = document.getElementById('apps-overlay');
-      if (o) o.style.display = 'none';
-    }
-  });
-
-  // User card popover
-  var userMenuOpen = false;
-  window.toggleUserMenu = function() {
-    userMenuOpen = !userMenuOpen;
-    document.getElementById('user-menu').classList.toggle('hidden', !userMenuOpen);
-    document.getElementById('chevron-user').textContent = userMenuOpen ? 'expand_more' : 'expand_less';
-  };
-  window.toggleTema = function() {
-    var esClaro = localStorage.getItem('tp_tema') === 'claro';
-    if (esClaro) {
-      localStorage.removeItem('tp_tema');
-      document.documentElement.style.filter = '';
-    } else {
-      localStorage.setItem('tp_tema', 'claro');
-      document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
-    }
-    actualizarLabelTema();
-    userMenuOpen = false;
-    document.getElementById('user-menu').classList.add('hidden');
-    document.getElementById('chevron-user').textContent = 'expand_less';
-  };
-  function actualizarLabelTema() {
-    var esClaro = localStorage.getItem('tp_tema') === 'claro';
-    var icon = document.getElementById('icon-tema');
-    var label = document.getElementById('label-tema');
-    if (icon) icon.textContent = esClaro ? 'light_mode' : 'dark_mode';
-    if (label) label.textContent = esClaro ? 'Modo oscuro' : 'Modo claro';
-  }
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu')) {
-      if (userMenuOpen) {
-        userMenuOpen = false;
-        var um = document.getElementById('user-menu');
-        if (um) um.classList.add('hidden');
-        var ch = document.getElementById('chevron-user');
-        if (ch) ch.textContent = 'expand_less';
-      }
-    }
-  });
-  actualizarLabelTema();
-
-</script>
+<script type="module">import { initChatWidget } from '../js/chat-widget.js'; initChatWidget();</script>
 <style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
 
 <!-- =============== APPS OVERLAY =============== -->
@@ -1418,25 +1205,15 @@ window.cwEnviar = function() {
    ============================================================ */
 (function() {
 
-  var PSICOLOGOS = [
-    { nombre:'Dra. Ana Martínez',  init:'AM', pacientes:18, sesiones:62, precio:75, retencion:91, altas:2, trend:+8  },
-    { nombre:'Dr. Luis Herrera',   init:'LH', pacientes:14, sesiones:48, precio:70, retencion:85, altas:1, trend:+3  },
-    { nombre:'Dra. Sara Palacios', init:'SP', pacientes:11, sesiones:37, precio:80, retencion:78, altas:3, trend:-5  },
-    { nombre:'Dr. Marcos Gil',     init:'MG', pacientes:8,  sesiones:24, precio:70, retencion:88, altas:0, trend:+12 },
-  ];
+  var PSICOLOGOS = [];
 
-  var MESES_HIST = [
-    { mes:'Feb', v:5820 },
-    { mes:'Mar', v:6340 },
-    { mes:'Abr', v:7100 },
-    { mes:'May', v:7650 },
-  ];
+  var MESES_HIST = [];
 
   // ── Rentabilidad ────────────────────────────────────────────
   function renderRentabilidad() {
     var cont = document.getElementById('rentabilidad-list');
     if (!cont) return;
-
+    if (!PSICOLOGOS.length) { cont.innerHTML = '<div class="px-6 py-8 text-center text-xs text-slate-500">Sin datos de facturación todavía.</div>'; return; }
     cont.innerHTML = PSICOLOGOS.map(function(p, idx) {
       var ingresos = p.sesiones * p.precio;
       var trendColor = p.trend >= 0 ? '#4ade80' : '#f87171';
@@ -1479,7 +1256,7 @@ window.cwEnviar = function() {
   // ── Predicción ───────────────────────────────────────────────
   function renderPrediccion() {
     var totalActual = PSICOLOGOS.reduce(function(acc, p){ return acc + p.sesiones * p.precio; }, 0);
-    var avgTrend    = PSICOLOGOS.reduce(function(acc, p){ return acc + p.trend; }, 0) / PSICOLOGOS.length;
+    var avgTrend    = PSICOLOGOS.length ? PSICOLOGOS.reduce(function(acc, p){ return acc + p.trend; }, 0) / PSICOLOGOS.length : 0;
     var prediccion  = Math.round(totalActual * (1 + avgTrend / 100));
 
     // Número grande
@@ -1653,6 +1430,56 @@ if (psicologosDB) {
 if (totalPac !== null && typeof window.animarNum === 'function') {
   window.animarNum(document.getElementById('kpi-pac'), totalPac, '', '')
 }
+
+// ── Datos reales: ingresos (facturas), tendencias, alertas, actividad ─────────
+try {
+  const _d = new Date()
+  const inicioMes = _d.getFullYear()+'-'+String(_d.getMonth()+1).padStart(2,'0')+'-01'
+  const dias7 = []; for (let i=6;i>=0;i--){ const x=new Date(); x.setDate(x.getDate()-i); dias7.push(x.toISOString().split('T')[0]) }
+  const [{ data: facts }, { data: citas7 }, { data: pacs }, { data: actCitas }] = await Promise.all([
+    supabase.from('facturas').select('importe, estado, created_at, fecha_pago').eq('clinica_id', clinicaId).gte('created_at', inicioMes),
+    supabase.from('citas').select('fecha, estado').eq('clinica_id', clinicaId).gte('fecha', dias7[0]),
+    supabase.from('pacientes').select('id, estado').eq('clinica_id', clinicaId),
+    supabase.from('citas').select('estado, created_at, pacientes(nombre,apellido)').eq('clinica_id', clinicaId).order('created_at',{ascending:false}).limit(6),
+  ])
+  const EUR = function(n){ return '€'+Math.round(n||0).toLocaleString('es-ES') }
+  const pagada = function(f){ return f.estado==='pagada' || !!f.fecha_pago }
+  // KPI ingresos del mes
+  const ingMes = (facts||[]).filter(pagada).reduce(function(s,f){ return s+(Number(f.importe)||0) },0)
+  const kIng = document.getElementById('kpi-ing'); if (kIng) kIng.textContent = EUR(ingMes)
+  // Tendencias 7 días
+  const porDiaCitas = dias7.map(function(dd){ return (citas7||[]).filter(function(c){ return c.fecha===dd && c.estado!=='cancelada' }).length })
+  const porDiaIng = dias7.map(function(dd){ return (facts||[]).filter(function(f){ return pagada(f) && (f.fecha_pago||f.created_at||'').slice(0,10)===dd }).reduce(function(s,f){ return s+(Number(f.importe)||0) },0) })
+  window.SPARK_CITAS = porDiaCitas
+  window.SPARK_ING = porDiaIng
+  const DOW = ['Do','Lu','Ma','Mi','Ju','Vi','Sá']
+  window.INGRESOS_7D = dias7.map(function(dd,i){ return { d: i===6?'Hoy':DOW[new Date(dd+'T00:00').getDay()], v: porDiaIng[i] } })
+  if (typeof drawSpark==='function'){ drawSpark('spark-citas', window.SPARK_CITAS, '#818cf8'); drawSpark('spark-ing', window.SPARK_ING, '#4ade80') }
+  if (typeof drawIngresos==='function') drawIngresos()
+  const totIng = document.getElementById('ing-total-7d'); if (totIng) totIng.textContent = EUR(porDiaIng.reduce(function(s,v){return s+v},0))
+  // Alertas reales
+  const AL = []
+  const sinConf = (citasDB||[]).filter(function(c){ return c.estado==='pendiente' }).length
+  const espera = (pacs||[]).filter(function(p){ return p.estado==='espera' }).length
+  const factPend = (facts||[]).filter(function(f){ return !pagada(f) }).length
+  if (sinConf) AL.push({ tipo:'warn', icon:'schedule', msg: sinConf+' cita(s) sin confirmar hoy', accion:'agenda_clinica.html' })
+  if (espera) AL.push({ tipo:'info', icon:'person_add', msg: espera+' paciente(s) en lista de espera', accion:'pacientes_clinica.html' })
+  if (factPend) AL.push({ tipo:'warn', icon:'payments', msg: factPend+' factura(s) pendientes de cobro', accion:'facturacion.html' })
+  window.ALERTAS = AL
+  if (typeof renderAlertas==='function') renderAlertas()
+  // Actividad reciente real
+  window.ACTIVIDAD = (actCitas||[]).map(function(c){
+    const nom = c.pacientes ? (c.pacientes.nombre+' '+c.pacientes.apellido) : 'Paciente'
+    const m = c.estado==='cancelada' ? {i:'event_busy',col:'#f87171',t:'Cita cancelada'}
+      : c.estado==='completada' ? {i:'check_circle',col:'#4ade80',t:'Sesión completada'}
+      : {i:'event_available',col:'#2dd4bf',t:'Cita agendada'}
+    return { icon:m.i, color:m.col, msg: m.t+' — '+nom, hora: c.created_at ? new Date(c.created_at).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit'}) : '' }
+  })
+  if (typeof renderActividad==='function') renderActividad()
+  // Campanita neutra
+  window.NOTIFS = []
+  if (typeof renderNotifs==='function') renderNotifs()
+} catch (e) { console.warn('[dashboard] datos reales:', e.message) }
 </script>
 
 </body>
