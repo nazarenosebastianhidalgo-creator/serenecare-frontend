@@ -474,13 +474,7 @@
 /* ============================================================
    DATOS
    ============================================================ */
-var CITAS_HOY = [
-  { hora:'09:00', paciente:'Laura Pérez',    terapeuta:'Ana Martínez',  tipo:'Sesión individual',  estado:'confirmada', color:'rgba(20,184,166,0.2)',  tc:'#2dd4bf' },
-  { hora:'10:30', paciente:'Marcos Ruiz',    terapeuta:'Pedro Sánchez', tipo:'Terapia cognitiva',  estado:'confirmada', color:'rgba(99,102,241,0.2)',  tc:'#818cf8' },
-  { hora:'12:00', paciente:'Carmen García',  terapeuta:'Ana Martínez',  tipo:'Evaluación inicial', estado:'pendiente',  color:'rgba(139,92,246,0.2)', tc:'#a78bfa' },
-  { hora:'16:00', paciente:'Jorge Morales',  terapeuta:'Sofía Ruiz',    tipo:'Seguimiento',        estado:'confirmada', color:'rgba(20,184,166,0.2)',  tc:'#2dd4bf' },
-  { hora:'17:30', paciente:'Beatriz Torres', terapeuta:'Pedro Sánchez', tipo:'Sesión individual',  estado:'cancelada',  color:'rgba(239,68,68,0.15)',  tc:'#f87171' },
-]
+var CITAS_HOY = []
 
 var EQUIPO = [
   { nombre:'Ana Martínez',  ini:'AM', citas:4, activo:true,  col:'rgba(20,184,166,0.2)',  tc:'#2dd4bf' },
@@ -489,36 +483,13 @@ var EQUIPO = [
   { nombre:'Isabel López',  ini:'IL', citas:0, activo:false, col:'rgba(245,158,11,0.15)', tc:'#fbbf24' },
 ]
 
-var NOTIFS = [
-  { icon:'event_busy',   color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',       hora:'Hace 12 min', leida:false },
-  { icon:'person_add',   color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz',      hora:'Hace 1 h',    leida:false },
-  { icon:'payments',     color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',             hora:'Hace 2 h',    leida:false },
-  { icon:'schedule',     color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',        hora:'Hace 3 h',    leida:true  },
-  { icon:'star',         color:'#2dd4bf', msg:'Nueva reseña 5â˜… de Laura Pérez',                 hora:'Ayer',        leida:true  },
-]
+var NOTIFS = []
 
-var ALERTAS = [
-  { tipo:'warn',  icon:'schedule',    msg:'2 citas sin confirmar hoy',             accion:'agenda_clinica.html' },
-  { tipo:'error', icon:'event_busy',  msg:'1 cancelación de última hora (17:30)',   accion:'agenda_clinica.html' },
-  { tipo:'info',  icon:'person_add',  msg:'1 paciente en lista de espera',          accion:'pacientes_clinica.html' },
-  { tipo:'warn',  icon:'payments',    msg:'3 facturas pendientes de cobro',          accion:'facturacion.html' },
-]
+var ALERTAS = []
 
-var ACTIVIDAD = [
-  { icon:'check_circle', color:'#4ade80', msg:'Cita confirmada — Laura Pérez 09:00',     hora:'Hace 5 min'  },
-  { icon:'receipt_long', color:'#818cf8', msg:'Factura emitida — Carmen García $80',     hora:'Hace 18 min' },
-  { icon:'event_busy',   color:'#f87171', msg:'Cita cancelada — Beatriz Torres 17:30',   hora:'Hace 32 min' },
-  { icon:'person_add',   color:'#2dd4bf', msg:'Nuevo paciente registrado — Roberto Díaz',hora:'Hace 1 h'    },
-  { icon:'payments',     color:'#4ade80', msg:'Cobro registrado — $75 Marcos Ruiz',      hora:'Hace 1.5 h'  },
-  { icon:'edit_note',    color:'#a78bfa', msg:'Nota SOAP guardada — Jorge Morales',      hora:'Hace 2 h'    },
-  { icon:'star',         color:'#fbbf24', msg:'Feedback recibido — Laura Pérez (5â˜…)',    hora:'Hace 3 h'    },
-  { icon:'badge',        color:'#2dd4bf', msg:'Ana Martínez marcada activa',             hora:'Hace 4 h'    },
-]
+var ACTIVIDAD = []
 
-var INGRESOS_7D = [
-  { d:'Lu', v:220 }, { d:'Ma', v:300 }, { d:'Mi', v:240 },
-  { d:'Ju', v:360 }, { d:'Vi', v:280 }, { d:'Sá', v:120 }, { d:'Ho', v:320 },
-]
+var INGRESOS_7D = []
 
 var SPARK_PAC   = [40,42,43,44,45,46,48]
 var SPARK_CITAS = [8,10,11,9,12,10,12]
