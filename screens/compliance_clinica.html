@@ -122,6 +122,9 @@
         <span class="material-symbols-outlined text-base">download</span>
         Exportar informe
       </button>
+      <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
+      </button>
       <button onclick="toggleNotif()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
         <span id="notif-dot" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500" style="display:none;"></span>
@@ -531,5 +534,6 @@ document.addEventListener('click', e => {
 });
 </script>
 <script type="module">import { initCampana } from "../js/notif-bell.js"; initCampana();</script>
+<script type="module">import { initAppsMenu } from "../js/apps-menu.js"; initAppsMenu();</script>
 </body>
 </html>
