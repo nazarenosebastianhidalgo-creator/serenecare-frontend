@@ -111,7 +111,7 @@
       </button>
       <button id="btn-notif-int" onclick="toggleNotifInt()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
-        <span id="notif-dot-int" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+        <span id="notif-dot-int" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500" style="display:none;"></span>
       </button>
     </div>
   </header>
@@ -120,11 +120,9 @@
   <div id="notif-panel-int" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:dropIn 0.2s ease forwards;">
     <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
       <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
-      <button class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+      <button data-notif-marcar class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
     </div>
-    <div class="px-5 py-8 text-center">
-      <p class="text-slate-500 text-sm">No hay notificaciones nuevas</p>
-    </div>
+    <div id="notif-list-int" data-notif-list class="max-h-72 overflow-y-auto"></div>
   </div>
 
   <!-- Content -->
@@ -136,7 +134,7 @@
         <h1 class="text-3xl font-extrabold font-headline text-white tracking-tight mb-2">Integraciones</h1>
         <p class="text-slate-400 max-w-lg text-sm leading-relaxed">Conecta tus herramientas favoritas para automatizar el flujo de trabajo de tu clínica y ofrecer una mejor experiencia a tus pacientes.</p>
       </div>
-      <span class="px-4 py-1.5 rounded-full text-sm font-bold w-fit" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">3 de 6 conectadas</span>
+      <span id="contador-integraciones" class="px-4 py-1.5 rounded-full text-sm font-bold w-fit" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">…</span>
     </div>
 
     <!-- Integrations Grid -->
@@ -235,26 +233,13 @@
                 <p class="text-sm text-slate-400">Recordatorios automáticos vía WA.</p>
               </div>
             </div>
-            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);">Conectado</span>
+            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(100,116,139,0.15);color:#64748b;border:1px solid rgba(100,116,139,0.2);">Próximamente</span>
           </div>
-          <div class="space-y-3">
-            <div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
-              <span class="text-sm text-slate-300">Recordatorios Automáticos</span>
-              <div class="w-10 h-5 rounded-full relative flex items-center px-1 cursor-pointer" style="background:rgba(20,184,166,0.8);">
-                <div class="h-3.5 w-3.5 bg-white rounded-full ml-auto"></div>
-              </div>
-            </div>
-            <div class="p-3 bg-white/5 rounded-xl" style="border-left:2px solid rgba(20,184,166,0.4);">
-              <p class="text-[10px] text-slate-500 mb-1 uppercase font-bold tracking-tighter">Plantilla Activa</p>
-              <p class="text-xs text-slate-300 italic leading-relaxed">"Hola <span style="color:#2dd4bf;">{nombre}</span>, te recordamos tu cita para el <span style="color:#2dd4bf;">{fecha}</span> a las <span style="color:#2dd4bf;">{hora}</span>. Responde CONFIRMAR..."</p>
-            </div>
-          </div>
-          <div class="flex items-center justify-between pt-2">
-            <span class="text-[11px] text-slate-500 italic">Número: +34 612 â€¢â€¢â€¢ â€¢89</span>
-            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+          <div class="p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            Estamos integrando WhatsApp Business para enviar recordatorios y confirmaciones automáticas. Te avisaremos en cuanto esté disponible.
           </div>
         </div>
-        <!-- Email SendGrid -->
+        <!-- Email Brevo -->
         <div class="glass-card p-6 rounded-3xl flex flex-col gap-5">
           <div class="flex justify-between items-start">
             <div class="flex items-center gap-4">
@@ -262,14 +247,14 @@
                 <span class="material-symbols-outlined text-3xl" style="color:#1A82E2;">mail</span>
               </div>
               <div>
-                <h3 class="text-base font-headline font-bold text-white">Email (SendGrid)</h3>
-                <p class="text-sm text-slate-400">Confirmaciones y notas clínicas.</p>
+                <h3 class="text-base font-headline font-bold text-white">Email (Brevo)</h3>
+                <p class="text-sm text-slate-400">Recordatorios, confirmaciones y avisos a pacientes.</p>
               </div>
             </div>
             <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);">Conectado</span>
           </div>
           <div class="flex items-center justify-between pt-2">
-            <span class="text-[11px] text-slate-500 italic">Tasa de entrega: 99.8%</span>
+            <span class="text-[11px] text-slate-500 italic">Envío transaccional activo</span>
             <button onclick="abrirConfigEmail()" class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
           </div>
         </div>
@@ -335,13 +320,11 @@
             </div>
             <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);">Conectado</span>
           </div>
-          <div class="flex gap-3">
-            <button class="flex-1 py-2 rounded-xl text-xs font-bold uppercase tracking-widest" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.3);color:#2dd4bf;">Producción</button>
-            <button class="flex-1 py-2 rounded-xl bg-slate-900 text-slate-500 text-xs font-bold uppercase tracking-widest hover:text-slate-300 transition-colors" style="border:1px solid rgba(255,255,255,0.05);">Sandbox</button>
+          <div class="p-3 rounded-xl text-sm text-slate-400" style="background:rgba(2,6,23,0.5);border:1px solid rgba(255,255,255,0.05);">
+            Cada psicólogo cobra a sus pacientes con su propia cuenta Stripe Connect. La activación y los cobros se gestionan en Facturación.
           </div>
-          <div class="flex items-center justify-between pt-2">
-            <span class="text-[11px] text-slate-500 italic">Ãšltimo cobro: Hoy, 09:41 AM</span>
-            <button class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Configurar</button>
+          <div class="flex items-center justify-end pt-2">
+            <a href="facturacion.html" class="px-4 py-2 text-sm font-headline font-semibold text-slate-300 hover:bg-white/5 rounded-xl transition-all">Ir a Facturación →</a>
           </div>
         </div>
       </div>
@@ -536,7 +519,7 @@ function actualizarLabelTema() {
       </a>
       <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
         <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">JL</div>
-        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Juan López</p><p class="text-xs text-slate-500 truncate">Confirmo asistencia ðŸ‘</p></div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Juan López</p><p class="text-xs text-slate-500 truncate">Confirmo asistencia</p></div>
         <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">09:15</span><span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">1</span></div>
       </a>
       <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;">
@@ -562,14 +545,27 @@ function actualizarLabelTema() {
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion, verificarSesion } from '../js/auth.js'
+import { initCampana } from '../js/notif-bell.js'
 window._cerrarSesion = cerrarSesion
+initCampana()
 
 const oldLogout = document.getElementById('btn-logout')
 if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.replaceChild(n, oldLogout) }
 
 const perfil = await verificarSesion(['admin_clinica'])
 if (!perfil) { throw new Error('redirigiendo') }
-const session = { user: { id: perfil.id } }
+const { data: { session } } = await supabase.auth.getSession()
+if (!session) { throw new Error('redirigiendo') }
+
+// Contador real de integraciones conectadas (Email vía Brevo siempre activo)
+const estado = { email: true, gcal: false, meet: false, ical: false, zapier: false }
+function updateContador() {
+  const total = Object.keys(estado).length
+  const conectadas = Object.values(estado).filter(Boolean).length
+  const el = document.getElementById('contador-integraciones')
+  if (el) el.textContent = conectadas + ' de ' + total + ' conectadas'
+}
+updateContador()
 
 const { data: usu } = await supabase.from('usuarios').select('nombre, apellido, email').eq('id', session.user.id).single()
 if (usu) {
@@ -596,6 +592,7 @@ const gcalBtnConnect  = document.getElementById('gcal-btn-connect')
 const gcalBtnDisc     = document.getElementById('gcal-btn-disconnect')
 
 function renderGMeetStatus(connected) {
+  estado.meet = !!connected; updateContador()
   const badge = document.getElementById('gmeet-badge')
   const conn  = document.getElementById('gmeet-connected')
   const disc  = document.getElementById('gmeet-disconnected')
@@ -615,6 +612,7 @@ function renderGMeetStatus(connected) {
 }
 
 function renderGCalStatus(connected) {
+  estado.gcal = !!connected; updateContador()
   if (connected) {
     gcalBadge.textContent = 'Conectado'
     gcalBadge.style.cssText = 'background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);'
@@ -703,6 +701,7 @@ async function cargarWebhookStatus() {
 }
 
 function renderWebhookStatus(url) {
+  estado.zapier = !!url; updateContador()
   const badge   = document.getElementById('zapier-badge')
   const input   = document.getElementById('zapier-url-input')
   const btnTest = document.getElementById('zapier-btn-test')
@@ -786,6 +785,7 @@ async function cargarIcalStatus() {
 }
 
 function renderIcalStatus(token) {
+  estado.ical = !!token; updateContador()
   const badge   = document.getElementById('ical-badge')
   const urlBox  = document.getElementById('ical-url-box')
   const disc    = document.getElementById('ical-disconnected')
