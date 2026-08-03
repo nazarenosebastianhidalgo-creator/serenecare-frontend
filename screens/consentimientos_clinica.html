@@ -613,7 +613,8 @@ window._cerrarSesion = cerrarSesion;
 const BACKEND = 'https://serenecare-backend-production.up.railway.app';
 const perfil = await verificarSesion(['admin_clinica']);
 if (!perfil) { throw new Error('redirigiendo'); }
-const session = { user: { id: perfil.id } };
+const { data: { session } } = await supabase.auth.getSession();
+if (!session) { throw new Error('redirigiendo'); }
 
 // ── Perfil ──────────────────────────────────────────────────────
 try {
