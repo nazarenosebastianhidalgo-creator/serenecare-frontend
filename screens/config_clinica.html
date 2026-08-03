@@ -27,10 +27,6 @@
   .slider::after { content:''; position: absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%; background:white; transition: transform 0.2s; }
   input:checked + .slider { background: #14b8a6; }
   input:checked + .slider::after { transform: translateX(18px); }
-  .section-tab { padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-  .section-tab.active { background: rgba(20,184,166,0.12); color: #2dd4bf; }
-  .section-tab:not(.active) { color: #64748b; }
-  .section-tab:not(.active):hover { color: #94a3b8; background: rgba(255,255,255,0.04); }
 </style>
 </head>
 <body class="text-slate-200 antialiased min-h-screen">
@@ -116,7 +112,7 @@
   <header class="sticky top-0 z-40 flex items-center justify-between px-8 py-4 border-b border-slate-800/50" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(12px);">
     <div>
       <h1 class="text-xl font-bold text-white font-headline">Configuración</h1>
-      <p class="text-xs text-slate-500 mt-0.5">Ajustes de la clínica y preferencias del portal</p>
+      <p class="text-xs text-slate-500 mt-0.5">Datos de contacto de la clínica y línea de crisis</p>
     </div>
     <div class="flex items-center gap-2">
       <button onclick="guardarConfig()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.3);color:#2dd4bf;">
@@ -147,17 +143,7 @@
 
   <div class="p-8">
 
-    <!-- Tabs -->
-    <div class="flex items-center gap-1 mb-8 p-1 rounded-xl w-fit" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
-      <button class="section-tab active" onclick="showTab('clinica', this)">Clínica</button>
-      <button class="section-tab" onclick="showTab('agenda', this)">Agenda</button>
-      <button class="section-tab" onclick="showTab('notificaciones', this)">Notificaciones</button>
-      <button class="section-tab" onclick="showTab('ia', this)">IA & Informes</button>
-      <button class="section-tab" onclick="showTab('facturacion', this)">Facturación</button>
-      <button class="section-tab" onclick="showTab('legal', this)">Legal / RGPD</button>
-    </div>
-
-    <!-- Tab: Clínica -->
+    <!-- Datos de la clínica -->
     <div id="tab-clinica">
       <div class="grid grid-cols-2 gap-6">
 
@@ -169,25 +155,25 @@
           <div class="space-y-4">
             <div>
               <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Nombre de la clínica</label>
-              <input type="text" class="field" value="Clínica Sol" id="cfg-nombre"/>
+              <input type="text" class="field" placeholder="Nombre de tu clínica" id="cfg-nombre"/>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Dirección</label>
-              <input type="text" class="field" value="Av. Corrientes 1234, CABA" id="cfg-direccion"/>
+              <input type="text" class="field" placeholder="Calle, número, ciudad" id="cfg-direccion"/>
             </div>
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Teléfono</label>
-                <input type="text" class="field" value="+54 11 4321-0000" id="cfg-tel"/>
+                <input type="text" class="field" placeholder="+34 600 000 000" id="cfg-tel"/>
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Email de contacto</label>
-                <input type="email" class="field" value="info@clinicasol.com" id="cfg-email"/>
+                <input type="email" class="field" placeholder="info@tuclinica.com" id="cfg-email"/>
               </div>
             </div>
             <div>
               <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Sitio web</label>
-              <input type="text" class="field" value="https://clinicasol.com" id="cfg-web"/>
+              <input type="text" class="field" placeholder="https://tuclinica.com" id="cfg-web"/>
             </div>
             <div class="pt-4 mt-1 border-t border-slate-800/40">
               <p class="text-xs font-bold uppercase tracking-widest mb-2" style="color:#f87171;">Línea de crisis (botón SOS del paciente)</p>
@@ -207,38 +193,6 @@
         </div>
 
         <div class="space-y-6">
-          <div class="card rounded-2xl p-6">
-            <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-              <span class="material-symbols-outlined text-base" style="color:#818cf8;">schedule</span>
-              Horario de atención
-            </h3>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-slate-300">Lunes a Viernes</span>
-                <div class="flex items-center gap-2">
-                  <input type="text" class="field text-center" value="09:00" style="width:70px;padding:6px 8px;"/>
-                  <span class="text-slate-600">—</span>
-                  <input type="text" class="field text-center" value="20:00" style="width:70px;padding:6px 8px;"/>
-                </div>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-slate-300">Sábados</span>
-                <div class="flex items-center gap-2">
-                  <input type="text" class="field text-center" value="09:00" style="width:70px;padding:6px 8px;"/>
-                  <span class="text-slate-600">—</span>
-                  <input type="text" class="field text-center" value="13:00" style="width:70px;padding:6px 8px;"/>
-                </div>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-slate-300">Domingos</span>
-                <label class="toggle">
-                  <input type="checkbox" id="tog-domingo"/>
-                  <span class="slider"></span>
-                </label>
-              </div>
-            </div>
-          </div>
-
           <div class="card rounded-2xl p-6">
             <h3 class="text-sm font-bold text-white font-headline mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined text-base" style="color:#fbbf24;">palette</span>
@@ -262,434 +216,12 @@
       </div>
     </div>
 
-    <!-- Tab: Agenda -->
-    <div id="tab-agenda" class="hidden">
-      <div class="grid grid-cols-2 gap-6">
-        <div class="card rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base" style="color:#2dd4bf;">calendar_month</span>
-            Preferencias de citas
-          </h3>
-          <div class="space-y-5">
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Duración por defecto</label>
-              <select class="field">
-                <option>30 minutos</option>
-                <option selected>50 minutos</option>
-                <option>60 minutos</option>
-                <option>90 minutos</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Intervalo entre citas</label>
-              <select class="field">
-                <option>Sin intervalo</option>
-                <option selected>10 minutos</option>
-                <option>15 minutos</option>
-                <option>20 minutos</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between py-2">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Confirmación automática</p>
-                <p class="text-xs text-slate-500">Las citas se confirman sin revisión manual</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Permitir reagendado online</p>
-                <p class="text-xs text-slate-500">El paciente puede mover su cita desde el portal</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Cancelación mínima con anticipación</label>
-              <select class="field">
-                <option>2 horas</option>
-                <option selected>24 horas</option>
-                <option>48 horas</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="card rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base" style="color:#818cf8;">videocam</span>
-            Telemedicina
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between py-2">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Habilitar sesiones online</p>
-                <p class="text-xs text-slate-500">Videoconferencia integrada en el portal</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Proveedor de video</label>
-              <select class="field">
-                <option selected>SereneCare Meet (integrado)</option>
-                <option>Zoom</option>
-                <option>Google Meet</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between py-2">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Grabación de sesiones</p>
-                <p class="text-xs text-slate-500">Requiere consentimiento del paciente</p>
-              </div>
-              <label class="toggle"><input type="checkbox"/><span class="slider"></span></label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab: Notificaciones -->
-    <div id="tab-notificaciones" class="hidden">
-      <div class="grid grid-cols-2 gap-6">
-        <div class="card rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base" style="color:#2dd4bf;">notifications</span>
-            Recordatorios a pacientes
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Recordatorio por email</p>
-                <p class="text-xs text-slate-500">24 h antes de la cita</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Recordatorio por WhatsApp</p>
-                <p class="text-xs text-slate-500">2 h antes de la cita</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Confirmación de cita</p>
-                <p class="text-xs text-slate-500">Tras reservar o confirmar</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Seguimiento post-sesión</p>
-                <p class="text-xs text-slate-500">Formulario de feedback tras la cita</p>
-              </div>
-              <label class="toggle"><input type="checkbox"/><span class="slider"></span></label>
-            </div>
-          </div>
-        </div>
-        <div class="card rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base" style="color:#818cf8;">admin_panel_settings</span>
-            Alertas internas
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Nuevas solicitudes de pacientes</p>
-                <p class="text-xs text-slate-500">Alerta inmediata al admin</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Cancelaciones de última hora</p>
-                <p class="text-xs text-slate-500">Menos de 2 h de antelación</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Resumen diario</p>
-                <p class="text-xs text-slate-500">Email con agenda del día a las 08:00</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab: IA -->
-    <div id="tab-ia" class="hidden">
-      <div class="grid grid-cols-2 gap-6">
-        <div class="card rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base" style="color:#2dd4bf;">psychology</span>
-            Módulo de IA
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Generación de informes SOAP</p>
-                <p class="text-xs text-slate-500">IA asiste al terapeuta en la redacción</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Asistente para pacientes</p>
-                <p class="text-xs text-slate-500">Chat de apoyo en el portal del paciente</p>
-              </div>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-              <div>
-                <p class="text-sm text-slate-200 font-medium">Análisis de evolución</p>
-                <p class="text-xs text-slate-500">Detecta patrones en historial clínico</p>
-              </div>
-              <label class="toggle"><input type="checkbox"/><span class="slider"></span></label>
-            </div>
-          </div>
-        </div>
-        <div class="card rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base" style="color:#a78bfa;">description</span>
-            Plantilla de informes
-          </h3>
-          <div class="space-y-4">
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Idioma de los informes</label>
-              <select class="field">
-                <option selected>Español</option>
-                <option>English</option>
-                <option>Português</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Encabezado del informe</label>
-              <input type="text" class="field" value="Clínica Sol — Informe Psicológico"/>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Pie de página</label>
-              <input type="text" class="field" value="Documento confidencial · uso clínico exclusivo"/>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab: Facturación -->
-    <div id="tab-facturacion" class="hidden">
-      <div class="grid grid-cols-2 gap-6">
-        <div class="card rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base" style="color:#2dd4bf;">payments</span>
-            Datos de facturación
-          </h3>
-          <div class="space-y-4">
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Razón social</label>
-              <input type="text" class="field" value="Clínica Sol S.R.L."/>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">CUIT / NIF</label>
-              <input type="text" class="field" value="30-12345678-9"/>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Moneda</label>
-              <select class="field">
-                <option selected>ARS — Peso argentino</option>
-                <option>USD — Dólar estadounidense</option>
-                <option>EUR — Euro</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">IVA por defecto</label>
-              <select class="field">
-                <option>Exento</option>
-                <option selected>21%</option>
-                <option>10.5%</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div class="card rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-            <span class="material-symbols-outlined text-base" style="color:#818cf8;">credit_card</span>
-            Métodos de pago habilitados
-          </h3>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <p class="text-sm text-slate-200 font-medium">Transferencia bancaria</p>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <p class="text-sm text-slate-200 font-medium">Tarjeta crédito/débito</p>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-              <p class="text-sm text-slate-200 font-medium">Efectivo</p>
-              <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-            </div>
-            <div class="flex items-center justify-between py-2.5">
-              <p class="text-sm text-slate-200 font-medium">Obra social / Seguro médico</p>
-              <label class="toggle"><input type="checkbox"/><span class="slider"></span></label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tab: Legal / RGPD -->
-    <div id="tab-legal" class="hidden">
-      <div class="space-y-6">
-
-        <!-- Stats consentimientos -->
-        <div class="grid grid-cols-3 gap-4">
-          <div class="card rounded-2xl p-5 flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(34,197,94,0.1);">
-              <span class="material-symbols-outlined text-base" style="color:#4ade80;font-variation-settings:'FILL' 1;">verified</span>
-            </div>
-            <div>
-              <p class="text-2xl font-headline font-bold text-white">9</p>
-              <p class="text-xs text-slate-500">Consentimientos firmados</p>
-            </div>
-          </div>
-          <div class="card rounded-2xl p-5 flex items-center gap-4" style="border-color:rgba(251,191,36,0.2);">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(251,191,36,0.1);">
-              <span class="material-symbols-outlined text-base" style="color:#fbbf24;">pending</span>
-            </div>
-            <div>
-              <p class="text-2xl font-headline font-bold text-white">3</p>
-              <p class="text-xs text-slate-500">Pendientes de firma</p>
-            </div>
-          </div>
-          <div class="card rounded-2xl p-5 flex items-center gap-4" style="border-color:rgba(248,113,113,0.2);">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(248,113,113,0.1);">
-              <span class="material-symbols-outlined text-base" style="color:#f87171;">error_outline</span>
-            </div>
-            <div>
-              <p class="text-2xl font-headline font-bold text-white">2</p>
-              <p class="text-xs text-slate-500">Expirados — requieren renovación</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-6">
-
-          <!-- Historial de versiones de política -->
-          <div class="card rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-5">
-              <h3 class="text-sm font-bold text-white font-headline flex items-center gap-2">
-                <span class="material-symbols-outlined text-base" style="color:#2dd4bf;">history</span>
-                Historial de políticas de privacidad
-              </h3>
-              <button onclick="mostrarToast('Función disponible en producción')" class="text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">
-                <span class="material-symbols-outlined text-xs">add</span>
-                Nueva versión
-              </button>
-            </div>
-            <div class="space-y-3">
-              <div class="flex items-center justify-between py-3 px-4 rounded-xl" style="background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.15);">
-                <div>
-                  <p class="text-sm font-semibold text-slate-200">v3.0 — Vigente</p>
-                  <p class="text-xs text-slate-500">Publicada el 15/01/2026 · 9 pacientes aceptaron</p>
-                </div>
-                <span class="text-xs font-bold px-2 py-1 rounded-full" style="background:rgba(34,197,94,0.1);color:#4ade80;">Activa</span>
-              </div>
-              <div class="flex items-center justify-between py-3 px-4 rounded-xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);">
-                <div>
-                  <p class="text-sm font-semibold text-slate-400">v2.1</p>
-                  <p class="text-xs text-slate-500">Publicada el 10/06/2025 · 38 pacientes aceptaron</p>
-                </div>
-                <button onclick="mostrarToast('Descarga disponible en producción')" class="text-xs font-bold" style="color:#64748b;background:none;border:none;cursor:pointer;">Descargar PDF</button>
-              </div>
-              <div class="flex items-center justify-between py-3 px-4 rounded-xl" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);">
-                <div>
-                  <p class="text-sm font-semibold text-slate-400">v2.0</p>
-                  <p class="text-xs text-slate-500">Publicada el 01/01/2025 · 12 pacientes aceptaron</p>
-                </div>
-                <button onclick="mostrarToast('Descarga disponible en producción')" class="text-xs font-bold" style="color:#64748b;background:none;border:none;cursor:pointer;">Descargar PDF</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Configuración RGPD -->
-          <div class="space-y-4">
-            <div class="card rounded-2xl p-6">
-              <h3 class="text-sm font-bold text-white font-headline mb-5 flex items-center gap-2">
-                <span class="material-symbols-outlined text-base" style="color:#818cf8;">admin_panel_settings</span>
-                Configuración de consentimientos
-              </h3>
-              <div class="space-y-4">
-                <div>
-                  <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Vigencia del consentimiento</label>
-                  <select class="field">
-                    <option>1 año</option>
-                    <option selected>2 años</option>
-                    <option>3 años</option>
-                    <option>Sin expiración</option>
-                  </select>
-                </div>
-                <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-                  <div>
-                    <p class="text-sm text-slate-200 font-medium">Recordatorio de renovación</p>
-                    <p class="text-xs text-slate-500">Email automático 30 días antes de expirar</p>
-                  </div>
-                  <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-                </div>
-                <div class="flex items-center justify-between py-2.5 border-b border-slate-800/40">
-                  <div>
-                    <p class="text-sm text-slate-200 font-medium">Firma digital en el portal</p>
-                    <p class="text-xs text-slate-500">El paciente acepta desde su cuenta</p>
-                  </div>
-                  <label class="toggle"><input type="checkbox" checked/><span class="slider"></span></label>
-                </div>
-                <div class="flex items-center justify-between py-2.5">
-                  <div>
-                    <p class="text-sm text-slate-200 font-medium">Bloquear citas sin consentimiento</p>
-                    <p class="text-xs text-slate-500">No se pueden agendar nuevas citas</p>
-                  </div>
-                  <label class="toggle"><input type="checkbox"/><span class="slider"></span></label>
-                </div>
-              </div>
-            </div>
-
-            <div class="card rounded-2xl p-6">
-              <h3 class="text-sm font-bold text-white font-headline mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-base" style="color:#fbbf24;">person_pin</span>
-                Delegado de Protección de Datos (DPO)
-              </h3>
-              <div class="space-y-3">
-                <div>
-                  <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Nombre</label>
-                  <input type="text" class="field" placeholder="Nombre del DPO (opcional)"/>
-                </div>
-                <div>
-                  <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Email de contacto</label>
-                  <input type="email" class="field" placeholder="dpo@tuClinica.com"/>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
   </div>
 </main>
 
 <div id="toast" class="fixed bottom-6 right-6 px-5 py-3 rounded-xl text-sm font-bold text-white opacity-0 transition-opacity pointer-events-none" style="background:rgba(20,184,166,0.9);z-index:999;">Guardado</div>
 
 <script>
-function showTab(tab, btn) {
-  ['clinica','agenda','notificaciones','ia','facturacion','legal'].forEach(function(t) {
-    document.getElementById('tab-' + t).classList.add('hidden');
-  });
-  document.querySelectorAll('.section-tab').forEach(function(b){ b.classList.remove('active'); });
-  document.getElementById('tab-' + tab).classList.remove('hidden');
-  btn.classList.add('active');
-}
-
 function guardarConfig() {
   mostrarToast('Configuración guardada');
 }
