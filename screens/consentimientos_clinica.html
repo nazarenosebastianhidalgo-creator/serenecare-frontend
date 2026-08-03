@@ -637,13 +637,13 @@ try {
 try {
   const { data: usu2 } = await supabase.from('usuarios').select('clinica_id').eq('id', session.user.id).single();
   if (usu2?.clinica_id) {
-    const { data: pacs } = await supabase.from('pacientes').select('id, nombre').eq('clinica_id', usu2.clinica_id).eq('activo', true).limit(100);
+    const { data: pacs } = await supabase.from('pacientes').select('id, nombre, apellido').eq('clinica_id', usu2.clinica_id).order('apellido').limit(200);
     const sel = document.getElementById('modal-paciente');
     if (sel && pacs?.length) {
       pacs.forEach(p => {
         const opt = document.createElement('option');
         opt.value = p.id;
-        opt.textContent = p.nombre;
+        opt.textContent = ((p.nombre||'') + ' ' + (p.apellido||'')).trim();
         sel.appendChild(opt);
       });
     }
