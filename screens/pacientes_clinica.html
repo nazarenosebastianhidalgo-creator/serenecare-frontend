@@ -189,6 +189,12 @@
       </select>
     </div>
 
+    <!-- Aviso de filtro activo (desde Compliance) -->
+    <div id="banner-sin-consent" class="hidden card rounded-2xl px-4 py-3 mt-3 flex items-center justify-between" style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);">
+      <span class="text-sm text-amber-300 flex items-center gap-2"><span class="material-symbols-outlined text-base">filter_alt</span>Mostrando solo pacientes <b>sin consentimiento firmado</b></span>
+      <a href="pacientes_clinica.html" class="text-xs font-bold text-amber-400 hover:text-amber-300">Ver todos ✕</a>
+    </div>
+
     <!-- Tabla -->
     <div class="card rounded-2xl overflow-hidden">
       <div class="px-6 py-4 border-b border-slate-800/30 flex items-center justify-between">
@@ -245,6 +251,7 @@ document.addEventListener('click', function(e) {
 })
 
 var PACIENTES = [];  // se rellena con los pacientes REALES de la clínica (módulo)
+var soloSinConsentimiento = new URLSearchParams(location.search).get('filtro') === 'sin_consentimiento';
 
 var ESTADO = {
   activo:   { bg:'rgba(34,197,94,0.1)',  color:'#4ade80',  label:'Activo'    },
@@ -294,7 +301,8 @@ function applyFilters() {
   filtered = PACIENTES.filter(function(p) {
     return (!q  || p.nombre.toLowerCase().includes(q) || p.email.toLowerCase().includes(q) || p.terapeuta.toLowerCase().includes(q)) &&
            (!es || p.estado === es) &&
-           (!te || p.terapeuta === te)
+           (!te || p.terapeuta === te) &&
+           (!soloSinConsentimiento || p.consentimiento !== 'firmado')
   })
   renderTabla()
 }
@@ -818,8 +826,11 @@ if (_ft) _ft.innerHTML = '<option value="">Todos los terapeutas</option>' + (psi
       consentimiento: consByPac[p.id]||'pendiente',
     }
   })
-  window.filtered = window.PACIENTES.slice()
-  if (typeof window.renderTabla === 'function') window.renderTabla()
+  if (soloSinConsentimiento) {
+    var _b = document.getElementById('banner-sin-consent'); if (_b) _b.classList.remove('hidden')
+  }
+  if (typeof window.applyFilters === 'function') { window.applyFilters() }
+  else { window.filtered = window.PACIENTES.slice(); if (typeof window.renderTabla === 'function') window.renderTabla() }
 
   // ── KPIs REALES ──
   const ps = pacientesDB || []

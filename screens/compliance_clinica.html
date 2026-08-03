@@ -152,15 +152,15 @@
             stroke-dasharray="213.6" stroke-dashoffset="53.4" transform="rotate(-90 40 40)"/>
         </svg>
         <div class="absolute inset-0 flex items-center justify-center">
-          <span id="score-val" class="font-headline text-2xl font-extrabold text-white">75%</span>
+          <span id="score-val" class="font-headline text-2xl font-extrabold text-white">…</span>
         </div>
       </div>
       <div>
         <p class="font-headline text-lg font-extrabold text-white mb-1">Nivel de cumplimiento</p>
-        <p class="text-slate-400 text-sm">Tu clínica tiene <span id="issues-count" class="text-amber-400 font-bold">3 puntos</span> pendientes para cumplimiento completo del RGPD.</p>
+        <p class="text-slate-400 text-sm">Tu clínica tiene <span id="issues-count" class="text-amber-400 font-bold">…</span> pendientes para cumplimiento completo del RGPD.</p>
         <div class="flex gap-2 mt-3">
-          <span class="badge-ok text-xs font-bold px-2.5 py-1 rounded-lg">5 cumplidos</span>
-          <span class="badge-warn text-xs font-bold px-2.5 py-1 rounded-lg">3 pendientes</span>
+          <span id="badge-cumplidos" class="badge-ok text-xs font-bold px-2.5 py-1 rounded-lg">—</span>
+          <span id="badge-pendientes" class="badge-warn text-xs font-bold px-2.5 py-1 rounded-lg">—</span>
         </div>
       </div>
     </div>
@@ -354,6 +354,37 @@ if (cid) {
     .then(({data}) => { if(data) document.getElementById('nombre-clinica').textContent = data.nombre; });
 }
 
+// ── Score de cumplimiento REAL (checklist de 6 ítems) ──
+let _consentOk = false;        // todos los pacientes activos con consentimiento firmado
+let _solicitudesPend = 0;      // solicitudes RGPD sin resolver
+function _toggleOn(id) { const el = document.getElementById(id); return !!el && el.classList.contains('toggle-on'); }
+window.recalcularScore = function() {
+  const items = [
+    _consentOk,
+    _toggleOn('toggle-registro'),
+    _toggleOn('toggle-retencion'),
+    _toggleOn('toggle-brechas'),
+    _toggleOn('toggle-auditoria'),
+    _solicitudesPend === 0,
+  ];
+  const total = items.length;
+  const cumplidos = items.filter(Boolean).length;
+  const pendientes = total - cumplidos;
+  const pct = Math.round((cumplidos / total) * 100);
+  const sv = document.getElementById('score-val'); if (sv) sv.textContent = pct + '%';
+  const arc = document.getElementById('score-arc');
+  if (arc) {
+    const C = 213.6; // 2·π·34
+    arc.setAttribute('stroke-dashoffset', (C * (1 - pct / 100)).toFixed(1));
+    arc.setAttribute('stroke', pct >= 80 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171');
+  }
+  const ic = document.getElementById('issues-count');
+  if (ic) ic.textContent = pendientes === 0 ? '0 puntos' : (pendientes + ' punto' + (pendientes > 1 ? 's' : ''));
+  const bc = document.getElementById('badge-cumplidos'); if (bc) bc.textContent = cumplidos + ' cumplido' + (cumplidos !== 1 ? 's' : '');
+  const bp = document.getElementById('badge-pendientes');
+  if (bp) { bp.textContent = pendientes + ' pendiente' + (pendientes !== 1 ? 's' : ''); bp.style.display = pendientes === 0 ? 'none' : ''; }
+};
+
 // Cargar consentimientos
 async function cargarConsentimientos() {
   if (!cid) return;
@@ -372,6 +403,8 @@ async function cargarConsentimientos() {
     badge.className = 'badge-warn text-xs font-bold px-3 py-1 rounded-lg';
     badge.textContent = `${pendientes} pendiente${pendientes>1?'s':''}`;
   }
+  _consentOk = (pendientes === 0);
+  window.recalcularScore();
 }
 
 // Log de auditoría REAL desde logs_acceso (RGPD)
@@ -406,6 +439,8 @@ const TIPOS_RGPD = { acceso:'Acceso', rectificacion:'Rectificación', supresion:
 async function cargarSolicitudes() {
   if (!cid) return;
   const { data } = await supabase.from('solicitudes_rgpd').select('*').eq('clinica_id', cid).order('created_at', { ascending:false });
+  _solicitudesPend = (data || []).filter(s => s.estado !== 'resuelta').length;
+  window.recalcularScore();
   const lista = document.getElementById('lista-solicitudes');
   if (!data || !data.length) {
     lista.innerHTML = '<div class="rounded-xl p-4 flex items-center justify-between" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);"><div class="flex items-center gap-3"><span class="material-symbols-outlined text-slate-500 text-lg">hourglass_empty</span><p class="text-slate-400 text-sm">No hay solicitudes pendientes</p></div></div>';
@@ -440,8 +475,10 @@ window.guardarToggleRGPD = async function(key, val) {
   const cfg = (data && data.config_rgpd) || {};
   const map = { rgpd_registro:'toggle-registro', rgpd_retencion:'toggle-retencion', rgpd_brechas:'toggle-brechas', rgpd_auditoria:'toggle-auditoria' };
   Object.entries(map).forEach(function(pair){ const k=pair[0], id=pair[1]; if (cfg[k] !== undefined) { const el=document.getElementById(id); if(el){ el.classList.toggle('toggle-on', !!cfg[k]); el.classList.toggle('toggle-off', !cfg[k]); } } });
+  window.recalcularScore();
 })();
 
+window.recalcularScore();  // baseline inmediato (los loaders lo recalculan al resolver)
 cargarConsentimientos();
 cargarSolicitudes();
 cargarLogs();
@@ -464,6 +501,7 @@ function toggleSwitch(id, key) {
   el.classList.toggle('toggle-on', !isOn);
   el.classList.toggle('toggle-off', isOn);
   if (window.guardarToggleRGPD) window.guardarToggleRGPD(key, !isOn);
+  if (window.recalcularScore) window.recalcularScore();
 }
 function verPacientesSinConsentimiento() {
   window.location.href = 'pacientes_clinica.html?filtro=sin_consentimiento';
@@ -490,13 +528,26 @@ async function guardarSolicitud() {
   }
 }
 function exportarInforme() {
+  const on = id => { const el = document.getElementById(id); return el && el.classList.contains('toggle-on') ? 'ACTIVADO' : 'DESACTIVADO'; };
+  const txt = id => { const el = document.getElementById(id); return el ? el.textContent.trim() : '—'; };
   const lines = [
     'INFORME DE COMPLIANCE RGPD — SereneCare',
     '========================================',
+    `Clínica: ${txt('nombre-clinica')}`,
     `Fecha: ${new Date().toLocaleDateString('es-ES')}`,
     '',
-    'CONSENTIMIENTOS: Ver panel',
-    'POLITICAS: Consentimiento en registro: ON | Retención 5 años: OFF | Notif. brechas: ON | Auditoría: ON',
+    `NIVEL DE CUMPLIMIENTO: ${txt('score-val')}  (${txt('issues-count')} pendientes)`,
+    '',
+    'CONSENTIMIENTOS INFORMADOS',
+    `  Firmados: ${txt('cnt-firmados')}`,
+    `  Pendientes: ${txt('cnt-pendientes')}`,
+    `  Total pacientes activos: ${txt('cnt-total')}`,
+    '',
+    'POLÍTICAS RGPD',
+    `  Consentimiento explícito en registro: ${on('toggle-registro')}`,
+    `  Retención de datos limitada a 5 años: ${on('toggle-retencion')}`,
+    `  Notificación de brechas de seguridad: ${on('toggle-brechas')}`,
+    `  Registro de actividad de acceso: ${on('toggle-auditoria')}`,
     '',
     'Generado automáticamente por SereneCare',
   ];
@@ -522,16 +573,7 @@ document.addEventListener('click', e => {
     menu.classList.add('hidden');
   }
 });
-// Cargar estado toggles desde localStorage
-['rgpd_registro','rgpd_retencion','rgpd_brechas','rgpd_auditoria'].forEach((k,i) => {
-  const ids = ['toggle-registro','toggle-retencion','toggle-brechas','toggle-auditoria'];
-  const val = localStorage.getItem(k);
-  if (val !== null) {
-    const el = document.getElementById(ids[i]);
-    el.classList.toggle('toggle-on', val==='true');
-    el.classList.toggle('toggle-off', val!=='true');
-  }
-});
+// (Los toggles RGPD cargan de clinicas.config_rgpd — fuente única, ver módulo arriba)
 </script>
 <script type="module">import { initCampana } from "../js/notif-bell.js"; initCampana();</script>
 <script type="module">import { initAppsMenu } from "../js/apps-menu.js"; initAppsMenu();</script>
