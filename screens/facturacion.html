@@ -124,7 +124,7 @@
       <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" title="Módulos" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
       </button>
-      <button id="btn-notif-fac" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+      <button id="btn-notif-fac" type="button" onclick="event.stopPropagation();document.getElementById('notif-panel-fac').classList.toggle('hidden')" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
         <span id="notif-dot-fac" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
       </button>
@@ -825,6 +825,7 @@ window._cerrarSesion = cerrarSesion;
   await recargarFacturas();
 })();
 </script>
+<script>document.addEventListener('click',function(e){var p=document.getElementById('notif-panel-fac');if(p&&!e.target.closest('#btn-notif-fac')&&!e.target.closest('#notif-panel-fac'))p.classList.add('hidden');});</script>
 <script type="module">import { initCampana } from "../js/notif-bell.js"; initCampana();</script>
 </body>
 </html>
