@@ -145,7 +145,7 @@
       </button>
       <button id="btn-notif" onclick="toggleNotif()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
-        <span id="notif-dot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+        <span id="notif-dot" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
       </button>
     </div>
   </header>
@@ -154,9 +154,9 @@
   <div id="notif-panel" class="notif-panel hidden">
     <div class="px-5 py-4 border-b border-slate-800/40 flex items-center justify-between">
       <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
-      <button onclick="marcarLeidas()" class="text-xs text-teal-400 font-bold" style="background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+      <button data-notif-marcar class="text-xs text-teal-400 font-bold" style="background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
     </div>
-    <div id="notif-list" class="max-h-72 overflow-y-auto"></div>
+    <div id="notif-list" data-notif-list class="max-h-72 overflow-y-auto"></div>
     <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
       <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones â†’</a>
     </div>
@@ -1127,4 +1127,5 @@ if (typeof window.renderCitasDia === 'function') window.renderCitasDia()
   if (pct) pct.textContent = total ? Math.round(conf / total * 100) + '%' : '—'
 })()
 </script>
+<script type="module">import { initCampana } from "../js/notif-bell.js"; initCampana();</script>
 </body></html>

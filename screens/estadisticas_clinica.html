@@ -156,7 +156,7 @@
       </button>
       <button id="btn-notif-est" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
-        <span id="notif-dot-est" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+        <span id="notif-dot-est" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
       </button>
     </div>
   </header>
@@ -165,9 +165,9 @@
   <div id="notif-panel-est" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
     <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
       <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
-      <button id="btn-marcar-est" class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+      <button id="btn-marcar-est" data-notif-marcar class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
     </div>
-    <div id="notif-list-est" class="max-h-72 overflow-y-auto"></div>
+    <div id="notif-list-est" data-notif-list class="max-h-72 overflow-y-auto"></div>
     <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
       <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones â†’</a>
     </div>
@@ -1504,5 +1504,6 @@ window.periodoActual = 'mes'
 window.selectedTerapeuta = null
 window.renderAll(window.PERIODOS['mes'])
 </script>
+<script type="module">import { initCampana } from "../js/notif-bell.js"; initCampana();</script>
 </body>
 </html>
