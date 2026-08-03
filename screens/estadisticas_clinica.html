@@ -182,9 +182,8 @@
           <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(20,184,166,0.12);">
             <span class="material-symbols-outlined text-lg" style="color:#2dd4bf;">event_available</span>
           </div>
-          <span id="delta-citas" class="text-xs font-bold px-2 py-0.5 rounded-full delta-pos">+8%</span>
         </div>
-        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-citas">186</p>
+        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-citas">0</p>
         <p class="text-xs text-slate-500 mt-1">Citas completadas</p>
       </div>
       <div class="card rounded-2xl p-5 cursor-pointer hover:border-indigo-500/30 transition-colors" onclick="resaltarChart('terapeutas')">
@@ -192,29 +191,26 @@
           <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(99,102,241,0.12);">
             <span class="material-symbols-outlined text-lg" style="color:#818cf8;">person_add</span>
           </div>
-          <span id="delta-pac" class="text-xs font-bold px-2 py-0.5 rounded-full delta-pos">+15%</span>
         </div>
-        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-pac">12</p>
+        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-pac">0</p>
         <p class="text-xs text-slate-500 mt-1">Nuevos pacientes</p>
       </div>
       <div class="card rounded-2xl p-5 cursor-pointer hover:border-purple-500/30 transition-colors" onclick="resaltarChart('donut')">
         <div class="flex items-center justify-between mb-3">
           <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(139,92,246,0.12);">
-            <span class="material-symbols-outlined text-lg" style="color:#a78bfa;">star</span>
+            <span class="material-symbols-outlined text-lg" style="color:#a78bfa;">groups</span>
           </div>
-          <span id="delta-sat" class="text-xs font-bold px-2 py-0.5 rounded-full delta-pos">+0.2</span>
         </div>
-        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-sat">4.7</p>
-        <p class="text-xs text-slate-500 mt-1">Satisfacción media</p>
+        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-activos">0</p>
+        <p class="text-xs text-slate-500 mt-1">Pacientes activos</p>
       </div>
       <div class="card rounded-2xl p-5 cursor-pointer hover:border-amber-500/30 transition-colors" onclick="resaltarChart('horarios')">
         <div class="flex items-center justify-between mb-3">
           <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:rgba(245,158,11,0.12);">
             <span class="material-symbols-outlined text-lg" style="color:#fbbf24;">event_busy</span>
           </div>
-          <span id="delta-canc" class="text-xs font-bold px-2 py-0.5 rounded-full delta-neg">+2%</span>
         </div>
-        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-canc">7%</p>
+        <p class="text-2xl font-bold text-white font-headline kpi-val" id="kpi-canc">0%</p>
         <p class="text-xs text-slate-500 mt-1">Tasa cancelación</p>
       </div>
     </div>
@@ -280,17 +276,17 @@
       <!-- Evolución pacientes activos -->
       <div class="card rounded-2xl p-6" id="card-evolucion">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-sm font-bold text-white font-headline">Pacientes activos</h3>
-          <span class="text-xs font-bold" style="color:#818cf8;" id="evol-total">48 activos</span>
+          <h3 class="text-sm font-bold text-white font-headline">Nuevos pacientes por mes</h3>
+          <span class="text-xs font-bold" style="color:#818cf8;" id="evol-total">0 este mes</span>
         </div>
         <div class="flex items-end gap-1.5 px-1" style="height:100px;" id="chart-evolucion"></div>
         <div class="flex justify-between mt-2 px-1" id="evol-labels"></div>
         <!-- Mini tabla detalle -->
         <div class="mt-4 pt-3 border-t border-slate-800/40">
           <div class="grid grid-cols-3 gap-2 text-center">
-            <div><p class="text-lg font-bold text-white font-headline" id="evol-altas">12</p><p class="text-[10px] text-slate-500">Altas</p></div>
-            <div><p class="text-lg font-bold text-white font-headline" id="evol-espera">6</p><p class="text-[10px] text-slate-500">En espera</p></div>
-            <div><p class="text-lg font-bold text-white font-headline" id="evol-alta">4</p><p class="text-[10px] text-slate-500">Alta clínica</p></div>
+            <div><p class="text-lg font-bold text-white font-headline" id="evol-altas">0</p><p class="text-[10px] text-slate-500">Activos</p></div>
+            <div><p class="text-lg font-bold text-white font-headline" id="evol-espera">0</p><p class="text-[10px] text-slate-500">Bajas</p></div>
+            <div><p class="text-lg font-bold text-white font-headline" id="evol-alta">0</p><p class="text-[10px] text-slate-500">Alta clínica</p></div>
           </div>
         </div>
       </div>
@@ -325,7 +321,6 @@
             <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Terapeuta</th>
             <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Sesiones</th>
             <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Asistencia</th>
-            <th class="text-left py-2 px-3 text-xs font-bold text-slate-500 uppercase tracking-widest">Satisfacción</th>
           </tr>
         </thead>
         <tbody id="tabla-top"></tbody>
@@ -478,6 +473,8 @@ var selectedTerapeuta = null;
    UTILIDADES
    ============================================================ */
 function animarNumero(el, destino, esDecimal) {
+  if (!el) return;
+  destino = Number(destino); if (isNaN(destino)) destino = 0;
   var start = 0;
   var dur = 500;
   var t0 = performance.now();
@@ -500,33 +497,10 @@ function deltaBadgeClass(neg) {
    ============================================================ */
 function renderKPIs(d) {
   var kpi = d.kpi;
-
-  // Citas
-  var elCitas = document.getElementById('kpi-citas');
-  animarNumero(elCitas, parseInt(kpi.citas), false);
-  var bCitas = document.getElementById('delta-citas');
-  bCitas.textContent = kpi.dCitas;
-  bCitas.className = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (kpi.dCitas.startsWith('-') ? 'delta-neg' : 'delta-pos');
-
-  // Pacientes
-  var elPac = document.getElementById('kpi-pac');
-  animarNumero(elPac, parseInt(kpi.pac), false);
-  var bPac = document.getElementById('delta-pac');
-  bPac.textContent = kpi.dPac;
-  bPac.className = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (kpi.dPac.startsWith('-') ? 'delta-neg' : 'delta-pos');
-
-  // Satisfacción
-  var elSat = document.getElementById('kpi-sat');
-  animarNumero(elSat, parseFloat(kpi.sat), true);
-  var bSat = document.getElementById('delta-sat');
-  bSat.textContent = kpi.dSat;
-  bSat.className = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (kpi.dSat.startsWith('-') ? 'delta-neg' : 'delta-pos');
-
-  // Cancelación
+  animarNumero(document.getElementById('kpi-citas'), parseInt(kpi.citas) || 0, false);
+  animarNumero(document.getElementById('kpi-pac'), parseInt(kpi.pac) || 0, false);
+  animarNumero(document.getElementById('kpi-activos'), parseInt(kpi.activos) || 0, false);
   document.getElementById('kpi-canc').textContent = kpi.canc;
-  var bCanc = document.getElementById('delta-canc');
-  bCanc.textContent = kpi.dCanc;
-  bCanc.className = 'text-xs font-bold px-2 py-0.5 rounded-full ' + (kpi.dCancNeg ? 'delta-neg' : 'delta-pos');
 }
 
 /* ============================================================
@@ -652,8 +626,13 @@ function renderLinea(d) {
    ============================================================ */
 function renderTerapeutas(d) {
   var items = d.terapeutas;
-  var maxC = Math.max.apply(null, items.map(function(t){ return t.citas; }));
   document.getElementById('teraps-sub').textContent = d.sub;
+  if (!items || !items.length) {
+    document.getElementById('chart-terapeutas').innerHTML = '<p class="text-xs text-slate-600 py-6 text-center">Sin citas en este período</p>';
+    document.getElementById('detalle-terapeuta').classList.add('hidden');
+    return;
+  }
+  var maxC = Math.max.apply(null, items.map(function(t){ return t.citas; }));
 
   document.getElementById('chart-terapeutas').innerHTML = items.map(function(t, idx) {
     var pct = Math.round(t.citas / maxC * 100);
@@ -713,9 +692,14 @@ function renderDetalleTerapeuta(t) {
    RENDER DONUT
    ============================================================ */
 function renderDonut(d) {
-  var tipos = d.tipos;
+  var tipos = d.tipos || [];
   var total = tipos.reduce(function(s, t){ return s + t.n; }, 0);
   document.getElementById('donut-center-val').textContent = total;
+  if (!total) {
+    document.getElementById('donut-svg').innerHTML = '';
+    document.getElementById('donut-leyenda').innerHTML = '<p class="text-xs text-slate-600">Sin sesiones</p>';
+    return;
+  }
 
   var svg = document.getElementById('donut-svg');
   svg.innerHTML = '';
@@ -814,9 +798,9 @@ function renderEvolucion(d) {
     return '<span class="text-[10px] text-slate-600 flex-1 text-center">' + i.m + '</span>';
   }).join('');
 
-  document.getElementById('evol-total').textContent = items[items.length-1].v + ' activos';
-  animarNumero(document.getElementById('evol-altas'), d.evolStats.altas, false);
-  animarNumero(document.getElementById('evol-espera'), d.evolStats.espera, false);
+  document.getElementById('evol-total').textContent = items[items.length-1].v + ' este mes';
+  animarNumero(document.getElementById('evol-altas'), d.evolStats.activos, false);
+  animarNumero(document.getElementById('evol-espera'), d.evolStats.bajas, false);
   animarNumero(document.getElementById('evol-alta'), d.evolStats.alta, false);
 }
 
@@ -876,11 +860,11 @@ function clickHorario(idx) {
    ============================================================ */
 function renderTabla(d) {
   document.getElementById('tabla-periodo-label').textContent = d.sub;
-  var stars = function(n) {
-    var s = '';
-    for (var i=0;i<5;i++) s += '<span style="color:' + (i < Math.round(n) ? '#fbbf24' : '#334155') + ';font-size:10px;">â˜…</span>';
-    return s + ' <span class="text-xs text-slate-400">' + n.toFixed(1) + '</span>';
-  };
+  if (!d.tabla || !d.tabla.length) {
+    document.getElementById('tabla-top').innerHTML =
+      '<tr><td colspan="5" class="py-8 text-center text-sm text-slate-600">Sin actividad de pacientes en este período</td></tr>';
+    return;
+  }
   document.getElementById('tabla-top').innerHTML = d.tabla.map(function(row, i) {
     var asisPct = parseInt(row.asis);
     var asisCol = asisPct >= 90 ? '#2dd4bf' : asisPct >= 70 ? '#fbbf24' : '#f87171';
@@ -890,7 +874,6 @@ function renderTabla(d) {
       '<td class="py-3 px-3 text-sm text-slate-400">' + row.terapeuta + '</td>' +
       '<td class="py-3 px-3"><span class="text-sm font-bold text-white">' + row.ses + '</span><span class="text-xs text-slate-600 ml-1">ses.</span></td>' +
       '<td class="py-3 px-3"><span class="text-sm font-bold" style="color:' + asisCol + ';">' + row.asis + '</span></td>' +
-      '<td class="py-3 px-3">' + stars(row.sat) + '</td>' +
     '</tr>';
   }).join('');
 }
@@ -1035,25 +1018,12 @@ renderAll(PERIODOS['mes']);
 
 <script>
 (function(){
-var CW_DATA = [
-  { id:'c1', nombre:'Ana Martínez', rol:'Terapeuta', dot:'online', unread:1, msgs:[
-    { from:'them', text:'Buenos días, ¿tienes disponibilidad para el paciente García mañana?', time:'10:14' },
-    { from:'me',   text:'Sí, a las 11:00 lo tengo libre.', time:'10:16' },
-    { from:'them', text:'Perfecto, le confirmo la cita.', time:'10:17' },
-  ]},
-  { id:'c2', nombre:'Pedro Sánchez', rol:'Terapeuta', dot:'busy', unread:1, msgs:[
-    { from:'them', text:'Necesito cambiar la cita de Marcos del jueves.', time:'09:30' },
-    { from:'me',   text:'¿A qué hora te viene bien?', time:'09:32' },
-  ]},
-  { id:'c3', nombre:'Lucía Méndez', rol:'Secretaria', dot:'online', unread:0, msgs:[
-    { from:'me',   text:'¿Enviaste los recordatorios de mañana?', time:'Ayer' },
-    { from:'them', text:'Sí, ya los envié todos.', time:'Ayer' },
-  ]},
-  { id:'c4', nombre:'Sofía Ruiz', rol:'Terapeuta', dot:'offline', unread:0, msgs:[
-    { from:'them', text:'Informe de Vidal listo para revisión.', time:'Lun' },
-  ]},
-];
+var CW_DATA = [];
 var CW_DOT_COLOR = { online:'#4ade80', busy:'#fbbf24', offline:'#475569' };
+// Sin conversaciones cargadas aquí: ocultar contadores falsos
+(function(){
+  ['fab-badge','cw-total-badge'].forEach(function(id){ var e=document.getElementById(id); if(e) e.style.display='none'; });
+})();
 var cwOpen = false, cwActive = null;
 
 window.toggleChatWidget = function() {
@@ -1077,6 +1047,10 @@ window.toggleChatWidget = function() {
 function cwMostrarLista() {
   document.getElementById('cw-lista-wrap').style.display = 'block';
   document.getElementById('cw-chat-wrap').style.display = 'none';
+  if (!CW_DATA.length) {
+    document.getElementById('cw-conv-list').innerHTML = '<div style="padding:32px 16px;text-align:center;color:#64748b;font-size:12px;">No hay mensajes.<br><a href="mensajes_clinica.html" style="color:#2dd4bf;text-decoration:none;font-weight:700;">Ir a Mensajes</a></div>';
+    return;
+  }
   var html = CW_DATA.map(function(c) {
     var last = c.msgs[c.msgs.length - 1];
     return '<div onclick="cwAbrirConv(\'' + c.id + '\')" style="padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\'\'">'+
@@ -1211,13 +1185,7 @@ window.cwEnviar = function() {
   actualizarLabelTema();
 
   // Notificaciones
-  var NOTIFS_EST = [
-    { icon:'event_busy',  color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',   hora:'Hace 12 min', leida:false },
-    { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz', hora:'Hace 1 h',    leida:false },
-    { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',        hora:'Hace 2 h',    leida:false },
-    { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',   hora:'Hace 3 h',    leida:true  },
-    { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5â˜… de Laura Pérez',            hora:'Ayer',        leida:true  },
-  ];
+  var NOTIFS_EST = [];
   var notifOpenEst = false;
   function renderNotifsEst() {
     var unread = NOTIFS_EST.filter(function(n){ return !n.leida }).length;
@@ -1225,6 +1193,10 @@ window.cwEnviar = function() {
     if (dot) dot.style.display = unread ? 'block' : 'none';
     var list = document.getElementById('notif-list-est');
     if (!list) return;
+    if (!NOTIFS_EST.length) {
+      list.innerHTML = '<div style="padding:28px 16px;text-align:center;color:#64748b;font-size:12px;">No hay notificaciones nuevas</div>';
+      return;
+    }
     list.innerHTML = NOTIFS_EST.map(function(n,i){
       return '<div onclick="leerNotifEst('+i+')" style="padding:12px 20px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;" onmouseover="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseout="this.style.background=\'none\'">'+
         '<span class="material-symbols-outlined" style="font-size:16px;color:'+n.color+';flex-shrink:0;margin-top:2px;">'+n.icon+'</span>'+
@@ -1365,26 +1337,172 @@ if (oldLogout) { const n = oldLogout.cloneNode(true); oldLogout.parentNode.repla
 
 const perfil = await verificarSesion(['admin_clinica'])
 if (!perfil) { throw new Error('redirigiendo') }
-const session = { user: { id: perfil.id } }
-
 const clinicaId = perfil.clinica_id
 
-const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', session.user.id).single()
+// ── Cabecera: nombre/avatar/clínica ──────────────────────────────
+const { data: usu } = await supabase.from('usuarios').select('nombre, apellido').eq('id', perfil.id).single()
 if (usu) {
-  const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = usu.nombre+' '+usu.apellido
-  const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = (usu.nombre[0]||'')+(usu.apellido[0]||'')
+  const elN = document.getElementById('user-nombre'); if (elN) elN.textContent = ((usu.nombre||'')+' '+(usu.apellido||'')).trim()
+  const elA = document.getElementById('user-avatar'); if (elA) elA.textContent = ((usu.nombre||'')[0]||'')+((usu.apellido||'')[0]||'')
+}
+try {
+  const { data: cli } = await supabase.from('clinicas').select('nombre').eq('id', clinicaId).single()
+  if (cli?.nombre) { const e = document.getElementById('nombre-clinica'); if (e) e.textContent = cli.nombre }
+} catch(_) {}
+
+// ── Traer datos reales de la clínica ─────────────────────────────
+const [citasRes, pacsRes, psisRes] = await Promise.all([
+  supabase.from('citas').select('fecha, hora_inicio, tipo, estado, psicologo_id, paciente_id').eq('clinica_id', clinicaId),
+  supabase.from('pacientes').select('id, nombre, apellido, estado, psicologo_id, created_at').eq('clinica_id', clinicaId),
+  supabase.from('usuarios').select('id, nombre, apellido').eq('clinica_id', clinicaId).eq('rol', 'psicologo'),
+])
+const CITAS = citasRes.data || []
+const PACS  = pacsRes.data || []
+const PSIS  = psisRes.data || []
+
+const psiNombre = {}; PSIS.forEach(p => { psiNombre[p.id] = ((p.nombre||'')+' '+(p.apellido||'')).trim() })
+const pacNombre = {}; PACS.forEach(p => { pacNombre[p.id] = ((p.nombre||'')+' '+(p.apellido||'')).trim() })
+
+const PALETA = ['#2dd4bf','#818cf8','#a78bfa','#fbbf24','#f87171','#34d399','#f472b6','#60a5fa']
+const TIPO_LABEL = { individual:'Individual', online:'Online', presencial:'Presencial' }
+const TIPO_COLOR = { individual:'#2dd4bf', online:'#818cf8', presencial:'#a78bfa' }
+const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+const DIASL = ['L','M','X','J','V','S','D']
+
+const parseFecha = f => { const p = (f||'').split('-'); return new Date(+p[0], (+p[1]||1)-1, +p[2]||1) }
+const horaNum = h => parseInt((h||'0').split(':')[0], 10) || 0
+
+function rango(p) {
+  const now = new Date(), y = now.getFullYear(), m = now.getMonth()
+  if (p === 'semana') { const dow = (now.getDay()+6)%7; const s = new Date(y, m, now.getDate()-dow); return [s, new Date(s.getFullYear(), s.getMonth(), s.getDate()+7)] }
+  if (p === 'mes')  return [new Date(y,m,1),   new Date(y,m+1,1)]
+  if (p === 'trim') return [new Date(y,m-2,1), new Date(y,m+1,1)]
+  return [new Date(y,0,1), new Date(y+1,0,1)]
+}
+const citasEnRango = (ini, fin) => CITAS.filter(c => { const d = parseFecha(c.fecha); return d >= ini && d < fin })
+
+function barrasDe(p, cs) {
+  const now = new Date(), m = now.getMonth()
+  if (p === 'semana') {
+    const arr = [{l:'Lun',v:0},{l:'Mar',v:0},{l:'Mié',v:0},{l:'Jue',v:0},{l:'Vie',v:0},{l:'Sáb',v:0},{l:'Dom',v:0}]
+    cs.forEach(c => { arr[(parseFecha(c.fecha).getDay()+6)%7].v++ })
+    return { title:'Citas por día', items:arr }
+  }
+  if (p === 'mes') {
+    const arr = [{l:'S1',v:0},{l:'S2',v:0},{l:'S3',v:0},{l:'S4',v:0},{l:'S5',v:0}]
+    cs.forEach(c => { arr[Math.min(Math.ceil(parseFecha(c.fecha).getDate()/7),5)-1].v++ })
+    if (arr[4].v === 0) arr.pop()
+    return { title:'Citas por semana', items:arr }
+  }
+  if (p === 'trim') {
+    const arr = []
+    for (let k=2;k>=0;k--){ const mm=(m-k+12)%12; arr.push({l:MESES[mm],v:0,_m:mm}) }
+    cs.forEach(c => { const it = arr.find(a => a._m === parseFecha(c.fecha).getMonth()); if (it) it.v++ })
+    return { title:'Citas por mes', items:arr.map(a => ({l:a.l,v:a.v})) }
+  }
+  const arr = []
+  for (let mm=0; mm<=m; mm++) arr.push({l:MESES[mm],v:0,_m:mm})
+  cs.forEach(c => { const it = arr.find(a => a._m === parseFecha(c.fecha).getMonth()); if (it) it.v++ })
+  return { title:'Citas por mes', items:arr.map(a => ({l:a.l,v:a.v})) }
 }
 
-const hoy = new Date()
-const inicioMes = hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-01'
+function terapeutasDe(cs) {
+  const by = {}
+  cs.forEach(c => {
+    const id = c.psicologo_id || '—'
+    if (!by[id]) by[id] = { citas:0, individual:0, online:0, presencial:0 }
+    by[id].citas++
+    if (by[id][c.tipo] !== undefined) by[id][c.tipo]++
+  })
+  return Object.keys(by).map((id, i) => ({
+    nombre: psiNombre[id] || 'Sin asignar',
+    citas: by[id].citas,
+    color: PALETA[i % PALETA.length],
+    detalle: { individual:by[id].individual, online:by[id].online, presencial:by[id].presencial },
+  })).sort((a,b) => b.citas - a.citas)
+}
 
-const [{ count: totalCitas }, { count: totalPac }] = await Promise.all([
-  supabase.from('citas').select('id', { count:'exact', head:true }).eq('clinica_id', clinicaId).gte('fecha', inicioMes),
-  supabase.from('pacientes').select('id', { count:'exact', head:true }).eq('clinica_id', clinicaId),
-])
+function tiposDe(cs) {
+  const cnt = {}
+  cs.forEach(c => { cnt[c.tipo] = (cnt[c.tipo]||0) + 1 })
+  return Object.keys(cnt).map(t => ({ t: TIPO_LABEL[t]||t, n: cnt[t], c: TIPO_COLOR[t]||'#64748b' }))
+}
 
-if (totalCitas !== null) { const el = document.getElementById('kpi-citas'); if (el) el.textContent = totalCitas }
-if (totalPac !== null)   { const el = document.getElementById('kpi-pac');   if (el) el.textContent = totalPac }
+function horariosDe(cs) {
+  const buckets = [{hora:'09–11h',min:9,max:11},{hora:'11–13h',min:11,max:13},{hora:'13–16h',min:13,max:16},{hora:'16–18h',min:16,max:18},{hora:'18–20h',min:18,max:21}]
+  const cnt = buckets.map(() => 0)
+  cs.forEach(c => { const h = horaNum(c.hora_inicio); const i = buckets.findIndex(b => h >= b.min && h < b.max); if (i >= 0) cnt[i]++ })
+  const max = Math.max(1, ...cnt)
+  return buckets.map((b, i) => ({ hora:b.hora, pct: Math.round(cnt[i]/max*100), citas: cnt[i] }))
+}
+
+function diasDe(cs) {
+  const cnt = [0,0,0,0,0,0,0]
+  cs.forEach(c => { cnt[(parseFecha(c.fecha).getDay()+6)%7]++ })
+  const max = Math.max(1, ...cnt)
+  return DIASL.map((d, i) => ({ d, pct: Math.round(cnt[i]/max*100) }))
+}
+
+function tablaDe(cs) {
+  const by = {}
+  cs.forEach(c => {
+    if (!c.paciente_id) return
+    if (!by[c.paciente_id]) by[c.paciente_id] = { ses:0, comp:0, psi:c.psicologo_id }
+    by[c.paciente_id].ses++
+    if (c.estado === 'completada') by[c.paciente_id].comp++
+  })
+  return Object.keys(by).map(id => ({
+    pac: pacNombre[id] || 'Paciente',
+    terapeuta: psiNombre[by[id].psi] || 'Sin asignar',
+    ses: by[id].ses,
+    asis: Math.round(by[id].comp / by[id].ses * 100) + '%',
+  })).sort((a,b) => b.ses - a.ses).slice(0, 8)
+}
+
+function evolucionMensual() {
+  const now = new Date(), items = []
+  for (let k=5;k>=0;k--){ const dt = new Date(now.getFullYear(), now.getMonth()-k, 1); items.push({ m:MESES[dt.getMonth()], v:0, _y:dt.getFullYear(), _m:dt.getMonth() }) }
+  PACS.forEach(p => { if (!p.created_at) return; const d = new Date(p.created_at); const it = items.find(i => i._y===d.getFullYear() && i._m===d.getMonth()); if (it) it.v++ })
+  return items.map(i => ({ m:i.m, v:i.v }))
+}
+
+const evolStats = {
+  activos: PACS.filter(p => p.estado === 'activo').length,
+  bajas:   PACS.filter(p => p.estado === 'baja').length,
+  alta:    PACS.filter(p => p.estado === 'alta').length,
+}
+const LABELS = {
+  semana: { label:'Esta semana',      sub:'Esta semana' },
+  mes:    { label:'Este mes',         sub:'Este mes' },
+  trim:   { label:'Últimos 3 meses',  sub:'Este trimestre' },
+  anio:   { label:'Este año',         sub:'Este año' },
+}
+
+function construirPeriodo(p) {
+  const [ini, fin] = rango(p)
+  const cs = citasEnRango(ini, fin)
+  const total = cs.length
+  const canc  = cs.filter(c => c.estado === 'cancelada').length
+  const comp  = cs.filter(c => c.estado === 'completada').length
+  const nuevosPac = PACS.filter(pc => { if (!pc.created_at) return false; const d = new Date(pc.created_at); return d >= ini && d < fin }).length
+  return {
+    label: LABELS[p].label, sub: LABELS[p].sub,
+    kpi: { citas: comp, pac: nuevosPac, activos: evolStats.activos, canc: total ? Math.round(canc/total*100) + '%' : '0%' },
+    barras: barrasDe(p, cs),
+    terapeutas: terapeutasDe(cs),
+    tipos: tiposDe(cs),
+    evolucion: evolucionMensual(),
+    evolStats: evolStats,
+    horarios: horariosDe(cs),
+    dias: diasDe(cs),
+    tabla: tablaDe(cs),
+  }
+}
+
+window.PERIODOS = { semana:construirPeriodo('semana'), mes:construirPeriodo('mes'), trim:construirPeriodo('trim'), anio:construirPeriodo('anio') }
+window.periodoActual = 'mes'
+window.selectedTerapeuta = null
+window.renderAll(window.PERIODOS['mes'])
 </script>
 </body>
 </html>
