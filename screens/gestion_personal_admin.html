@@ -133,7 +133,7 @@
     </div>
     <div id="notif-list-per" data-notif-list class="max-h-72 overflow-y-auto"></div>
     <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
-      <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones â†’</a>
+      <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones →</a>
     </div>
   </div>
 
@@ -304,7 +304,7 @@ function renderStaff() {
       '<td class="px-4 py-3.5"><div class="flex items-center gap-2">' +
         '<span class="w-2 h-2 rounded-full flex-shrink-0" style="background:' + (u.activo ? '#4ade80' : '#475569') + ';"></span>' +
         '<span class="text-xs text-slate-400">' + (u.activo ? 'Activo' : 'Inactivo') + '</span>' +
-        '<span class="text-[10px] text-slate-600">Â· ' + u.actividad + '</span>' +
+        '<span class="text-[10px] text-slate-600">· ' + u.actividad + '</span>' +
       '</div></td>' +
       '<td class="px-4 py-3.5 text-right"><div class="flex items-center justify-end gap-1">' +
         (u.rol === 'psicologo' ? '<button onclick="verPacientesPsi(\'' + u.id + '\',\'' + (u.nombre + ' ' + u.apellido).replace(/[\'"]/g,'') + '\')" class="text-xs font-bold px-2.5 py-1 rounded-lg transition-colors" style="background:rgba(20,184,166,0.12);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25);" title="Ver sus pacientes"><span class="material-symbols-outlined align-middle" style="font-size:14px;">group</span> Pacientes</button>' : '') +
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </button>
       <span id="cw-chat-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>
       <span id="cw-chat-title" style="flex:1;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
-      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;flex-shrink:0;">Expandir â†—</a>
+      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;flex-shrink:0;">Expandir ↗</a>
     </div>
     <div id="cw-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
     <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;flex-shrink:0;">
@@ -662,7 +662,7 @@ window.cwEnviar = function() {
     { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz', hora:'Hace 1 h',    leida:false },
     { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',        hora:'Hace 2 h',    leida:false },
     { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',   hora:'Hace 3 h',    leida:true  },
-    { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5â˜… de Laura Pérez',            hora:'Ayer',        leida:true  },
+    { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5★ de Laura Pérez',            hora:'Ayer',        leida:true  },
   ];
   var notifOpenPer = false;
   function renderNotifsPer() {
@@ -785,7 +785,7 @@ window.cwEnviar = function() {
         <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">JL</div>
         <div class="flex-1 overflow-hidden">
           <p class="text-sm font-semibold text-white truncate">Juan López</p>
-          <p class="text-xs text-slate-500 truncate">Confirmo asistencia ðŸ‘</p>
+          <p class="text-xs text-slate-500 truncate">Confirmo asistencia</p>
         </div>
         <div class="flex flex-col items-end gap-1 flex-shrink-0">
           <span class="text-[10px] text-slate-600">09:15</span>

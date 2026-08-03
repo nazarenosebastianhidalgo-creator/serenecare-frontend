@@ -143,7 +143,7 @@
   <header class="sticky top-0 z-40 flex items-center justify-between px-8 py-4 border-b border-slate-800/50" style="background:rgba(2,6,23,0.9);backdrop-filter:blur(12px);">
     <div>
       <h1 class="text-xl font-bold text-white font-headline">Estadísticas</h1>
-      <p class="text-xs text-slate-500 mt-0.5" id="header-sub">Métricas clínicas Â· Mayo 2026</p>
+      <p class="text-xs text-slate-500 mt-0.5" id="header-sub">Métricas clínicas · Mayo 2026</p>
     </div>
     <div class="flex items-center gap-2">
       <button onclick="setPeriodo('semana')" id="btn-semana" class="chart-tab">Semana</button>
@@ -169,7 +169,7 @@
     </div>
     <div id="notif-list-est" data-notif-list class="max-h-72 overflow-y-auto"></div>
     <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
-      <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones â†’</a>
+      <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones →</a>
     </div>
   </div>
 
@@ -339,7 +339,7 @@
    ============================================================ */
 var PERIODOS = {
   semana: {
-    label: 'Semana del 5â€“11 mayo 2026',
+    label: 'Semana del 5–11 mayo 2026',
     sub:   'Semana actual',
     kpi: { citas:47, pac:3, sat:4.8, canc:'5%', dCitas:'+3%', dPac:'+0', dSat:'+0.1', dCanc:'-1%', dCancNeg:false },
     barras: {
@@ -358,8 +358,8 @@ var PERIODOS = {
     evolucion: [{m:'S-5',v:44},{m:'S-4',v:45},{m:'S-3',v:46},{m:'S-2',v:45},{m:'S-1',v:47},{m:'Actual',v:47}],
     evolStats: {altas:3, espera:2, alta:1},
     horarios: [
-      {hora:'09â€“11h', pct:75, citas:18},{hora:'11â€“13h', pct:62, citas:14},{hora:'16â€“18h', pct:92, citas:22},
-      {hora:'18â€“20h', pct:55, citas:13},{hora:'13â€“16h', pct:28, citas:6},
+      {hora:'09–11h', pct:75, citas:18},{hora:'11–13h', pct:62, citas:14},{hora:'16–18h', pct:92, citas:22},
+      {hora:'18–20h', pct:55, citas:13},{hora:'13–16h', pct:28, citas:6},
     ],
     dias: [{d:'L',pct:72},{d:'M',pct:85},{d:'X',pct:78},{d:'J',pct:95},{d:'V',pct:68},{d:'S',pct:0},{d:'D',pct:0}],
     tabla: [
@@ -388,8 +388,8 @@ var PERIODOS = {
     evolucion: [{m:'Dic',v:34},{m:'Ene',v:36},{m:'Feb',v:39},{m:'Mar',v:41},{m:'Abr',v:45},{m:'May',v:48}],
     evolStats: {altas:12, espera:6, alta:4},
     horarios: [
-      {hora:'09â€“11h', pct:88, citas:72},{hora:'11â€“13h', pct:70, citas:58},{hora:'16â€“18h', pct:95, citas:78},
-      {hora:'18â€“20h', pct:60, citas:50},{hora:'13â€“16h', pct:30, citas:25},
+      {hora:'09–11h', pct:88, citas:72},{hora:'11–13h', pct:70, citas:58},{hora:'16–18h', pct:95, citas:78},
+      {hora:'18–20h', pct:60, citas:50},{hora:'13–16h', pct:30, citas:25},
     ],
     dias: [{d:'L',pct:80},{d:'M',pct:88},{d:'X',pct:76},{d:'J',pct:92},{d:'V',pct:72},{d:'S',pct:35},{d:'D',pct:0}],
     tabla: [
@@ -403,7 +403,7 @@ var PERIODOS = {
     ]
   },
   trim: {
-    label: 'Mar â€“ May 2026',
+    label: 'Mar – May 2026',
     sub:   'Este trimestre',
     kpi: { citas:521, pac:31, sat:4.6, canc:'8%', dCitas:'+11%', dPac:'+22%', dSat:'+0.1', dCanc:'+1%', dCancNeg:true },
     barras: {
@@ -420,8 +420,8 @@ var PERIODOS = {
     evolucion: [{m:'Oct',v:29},{m:'Nov',v:31},{m:'Dic',v:34},{m:'Ene',v:36},{m:'Feb',v:39},{m:'Mar',v:41},{m:'Abr',v:45},{m:'May',v:48}],
     evolStats: {altas:31, espera:10, alta:8},
     horarios: [
-      {hora:'09â€“11h', pct:84, citas:210},{hora:'11â€“13h', pct:68, citas:170},{hora:'16â€“18h', pct:97, citas:240},
-      {hora:'18â€“20h', pct:58, citas:145},{hora:'13â€“16h', pct:32, citas:80},
+      {hora:'09–11h', pct:84, citas:210},{hora:'11–13h', pct:68, citas:170},{hora:'16–18h', pct:97, citas:240},
+      {hora:'18–20h', pct:58, citas:145},{hora:'13–16h', pct:32, citas:80},
     ],
     dias: [{d:'L',pct:82},{d:'M',pct:90},{d:'X',pct:78},{d:'J',pct:94},{d:'V',pct:74},{d:'S',pct:40},{d:'D',pct:5}],
     tabla: [
@@ -433,7 +433,7 @@ var PERIODOS = {
     ]
   },
   anio: {
-    label: 'Enero â€“ Mayo 2026',
+    label: 'Enero – Mayo 2026',
     sub:   'Este año',
     kpi: { citas:892, pac:58, sat:4.5, canc:'9%', dCitas:'+18%', dPac:'+32%', dSat:'+0.3', dCanc:'+1%', dCancNeg:true },
     barras: {
@@ -450,8 +450,8 @@ var PERIODOS = {
     evolucion: [{m:'Ene',v:36},{m:'Feb',v:39},{m:'Mar',v:41},{m:'Abr',v:45},{m:'May',v:48}],
     evolStats: {altas:58, espera:12, alta:15},
     horarios: [
-      {hora:'09â€“11h', pct:82, citas:338},{hora:'11â€“13h', pct:66, citas:272},{hora:'16â€“18h', pct:96, citas:394},
-      {hora:'18â€“20h', pct:57, citas:234},{hora:'13â€“16h', pct:34, citas:140},
+      {hora:'09–11h', pct:82, citas:338},{hora:'11–13h', pct:66, citas:272},{hora:'16–18h', pct:96, citas:394},
+      {hora:'18–20h', pct:57, citas:234},{hora:'13–16h', pct:34, citas:140},
     ],
     dias: [{d:'L',pct:83},{d:'M',pct:91},{d:'X',pct:80},{d:'J',pct:95},{d:'V',pct:75},{d:'S',pct:42},{d:'D',pct:6}],
     tabla: [
@@ -762,7 +762,7 @@ function resaltarDonut(tipo) {
 }
 
 /* ============================================================
-   RENDER EVOLUCIÃ“N
+   RENDER EVOLUCIÓN
    ============================================================ */
 function renderEvolucion(d) {
   var items = d.evolucion;
@@ -938,7 +938,7 @@ function setPeriodo(p) {
     document.getElementById('btn-' + k).classList.toggle('active', k === p);
   });
   var d = PERIODOS[p];
-  document.getElementById('header-sub').textContent = 'Métricas clínicas Â· ' + d.label;
+  document.getElementById('header-sub').textContent = 'Métricas clínicas · ' + d.label;
   renderAll(d);
 }
 
@@ -953,7 +953,7 @@ function renderAll(d) {
 }
 
 /* ============================================================
-   SESIÃ“N
+   SESIÓN
    ============================================================ */
 (function() {
   var nombre = localStorage.getItem('tp_nombre') || 'Admin';
@@ -998,7 +998,7 @@ renderAll(PERIODOS['mes']);
       </button>
       <span id="cw-chat-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>
       <span id="cw-chat-title" style="flex:1;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
-      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;flex-shrink:0;">Expandir â†—</a>
+      <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;flex-shrink:0;">Expandir ↗</a>
     </div>
     <div id="cw-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
     <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;flex-shrink:0;">
@@ -1304,7 +1304,7 @@ window.cwEnviar = function() {
       </a>
       <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
         <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">JL</div>
-        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Juan López</p><p class="text-xs text-slate-500 truncate">Confirmo asistencia ðŸ‘</p></div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Juan López</p><p class="text-xs text-slate-500 truncate">Confirmo asistencia</p></div>
         <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">09:15</span><span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">1</span></div>
       </a>
       <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;">
