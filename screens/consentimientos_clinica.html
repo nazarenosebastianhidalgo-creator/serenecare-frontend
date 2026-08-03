@@ -229,11 +229,6 @@
             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Paciente</label>
             <select id="modal-paciente" class="field">
               <option value="">Seleccionar paciente...</option>
-              <option>Julián Restrepo</option>
-              <option>Elena Sofia Varga</option>
-              <option>Mateo Torres</option>
-              <option>Laura Pérez</option>
-              <option>Carlos Ruiz</option>
             </select>
           </div>
           <div>
@@ -366,17 +361,9 @@
 
 <script>
 /* ── DATOS ─────────────────────────────────────────────── */
-var CONSENTIMIENTOS = [
-  { id:1, paciente:'Julián Restrepo',   initiales:'JR', color:'#2dd4bf', tipo:'Consentimiento Terapéutico', fecha:'12 Oct, 2023', estado:'firmado'    },
-  { id:2, paciente:'Elena Sofia Varga', initiales:'EV', color:'#2dd4bf', tipo:'Política de Privacidad (GDPR)', fecha:'14 Oct, 2023', estado:'pendiente' },
-  { id:3, paciente:'Mateo Torres',      initiales:'MT', color:'#64748b', tipo:'Contrato de Telesalud',      fecha:'—',            estado:'sin-enviar' },
-];
+var CONSENTIMIENTOS = [];
 
-var NOTIFS_CON = [
-  { icon:'draw',          color:'#4ade80', msg:'Elena Sofia Varga firmó su consentimiento',      hora:'Hace 10 min', leida:false },
-  { icon:'pending_actions',color:'#fbbf24',msg:'Mateo Torres: consentimiento pendiente de envío',hora:'Hace 2 h',    leida:false },
-  { icon:'history_edu',   color:'#2dd4bf', msg:'Nuevo paciente requiere consentimiento GDPR',    hora:'Ayer',        leida:true  },
-];
+var NOTIFS_CON = [];
 
 /* ── TABLA ──────────────────────────────────────────────── */
 var filtroActual = 'todos';
@@ -511,6 +498,10 @@ function renderNotifs() {
   var dot = document.getElementById('notif-dot-con');
   var unread = NOTIFS_CON.filter(function(n){return !n.leida;}).length;
   dot.style.display = unread > 0 ? 'block' : 'none';
+  if (!NOTIFS_CON.length) {
+    document.getElementById('notif-list-con').innerHTML = '<div style="padding:28px 16px;text-align:center;color:#64748b;font-size:12px;">No hay notificaciones nuevas</div>';
+    return;
+  }
   document.getElementById('notif-list-con').innerHTML = NOTIFS_CON.map(function(n,i){
     var bg = n.leida ? 'transparent' : 'rgba(255,255,255,0.02)';
     return '<div onclick="leerNotif('+i+')" style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.04);background:'+bg+';transition:background 0.15s;" onmouseover="this.style.background=\'rgba(255,255,255,0.04)\'" onmouseout="this.style.background=\''+bg+'\'">'+
