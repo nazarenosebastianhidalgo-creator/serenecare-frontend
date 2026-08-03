@@ -154,8 +154,8 @@
           </div>
           <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Ingreso mes</p>
         </div>
-        <p id="kpi-ingreso" class="text-2xl font-bold text-white font-headline">$0</p>
-        <p class="text-xs text-teal-400 mt-1">+12% vs. mes anterior</p>
+        <p id="kpi-ingreso" class="text-2xl font-bold text-white font-headline">0 €</p>
+        <p id="kpi-ingreso-delta" class="text-xs text-slate-500 mt-1">— vs. mes anterior</p>
       </div>
       <div class="card rounded-2xl p-5">
         <div class="flex items-center gap-3 mb-3">
@@ -196,13 +196,11 @@
         <option value="">Todos los estados</option>
         <option value="pagada">Pagada</option>
         <option value="pendiente">Pendiente</option>
-        <option value="anulada">Anulada</option>
+        <option value="reembolsada">Reembolsada</option>
+        <option value="cancelada">Cancelada</option>
       </select>
       <select id="filter-mes" class="field" style="width:160px;" onchange="filtrarFacturas()">
         <option value="">Todos los meses</option>
-        <option value="/05/">Mayo 2026</option>
-        <option value="/04/">Abril 2026</option>
-        <option value="/03/">Marzo 2026</option>
       </select>
       <div class="ml-auto text-xs text-slate-500" id="contador">— facturas</div>
     </div>
@@ -229,29 +227,9 @@
     <!-- Bottom row -->
     <div class="grid grid-cols-2 gap-6">
       <div class="card rounded-2xl p-6">
-        <h3 class="text-sm font-bold text-white font-headline mb-5">Métodos de pago (mayo)</h3>
-        <div class="space-y-4">
-          <div>
-            <div class="flex justify-between mb-1.5">
-              <span class="text-sm text-slate-300 flex items-center gap-2"><span class="w-2 h-2 rounded-full inline-block" style="background:#2dd4bf;"></span>Transferencia</span>
-              <span class="text-sm font-bold text-white">$4.200 <span class="text-slate-500 font-normal text-xs">54%</span></span>
-            </div>
-            <div class="w-full rounded-full h-1.5" style="background:rgba(255,255,255,0.07);"><div class="h-1.5 rounded-full" style="width:54%;background:#2dd4bf;"></div></div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1.5">
-              <span class="text-sm text-slate-300 flex items-center gap-2"><span class="w-2 h-2 rounded-full inline-block" style="background:#818cf8;"></span>Tarjeta</span>
-              <span class="text-sm font-bold text-white">$2.680 <span class="text-slate-500 font-normal text-xs">34%</span></span>
-            </div>
-            <div class="w-full rounded-full h-1.5" style="background:rgba(255,255,255,0.07);"><div class="h-1.5 rounded-full" style="width:34%;background:#818cf8;"></div></div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-1.5">
-              <span class="text-sm text-slate-300 flex items-center gap-2"><span class="w-2 h-2 rounded-full inline-block" style="background:#fbbf24;"></span>Efectivo</span>
-              <span class="text-sm font-bold text-white">$960 <span class="text-slate-500 font-normal text-xs">12%</span></span>
-            </div>
-            <div class="w-full rounded-full h-1.5" style="background:rgba(255,255,255,0.07);"><div class="h-1.5 rounded-full" style="width:12%;background:#fbbf24;"></div></div>
-          </div>
+        <h3 class="text-sm font-bold text-white font-headline mb-5">Ingresos por terapeuta</h3>
+        <div class="space-y-4" id="ingresos-terapeuta">
+          <p class="text-xs text-slate-500 text-center py-6">Sin ingresos registrados</p>
         </div>
       </div>
 
@@ -672,19 +650,66 @@ window._cerrarSesion = cerrarSesion;
       ref: 'FAC-' + String(f.id).slice(0, 8).toUpperCase(),
       paciente: f.pacientes?.nombre || '—',
       terapeuta: f.psicologos?.nombre || '—',
+      fechaRaw: f.fecha_pago || f.created_at,
+      fechaISO: String(f.fecha_pago || f.created_at).slice(0, 7), // YYYY-MM
       fecha: new Date(f.fecha_pago || f.created_at).toLocaleDateString('es-ES'),
       concepto: f.concepto || 'Sesión',
       importe: Number(f.importe),
       estado: f.estado,
       checkout_url: f.checkout_url,
     }));
+    poblarFiltroMeses();
     window.filtrarFacturas();
     window.actualizarKPIs();
+    renderIngresosTerapeuta();
     // Cobros recientes = últimas facturas pagadas reales
     window.COBROS = window.FACTURAS.filter(function(f){ return f.estado === 'pagada'; }).slice(0, 6)
       .map(function(f){ return { paciente: f.paciente, importe: f.importe, hora: f.fecha, metodo: 'Tarjeta' }; });
     if (window.renderCobrosRecientes) window.renderCobrosRecientes();
   }
+
+  // ── Filtro de meses: se genera desde los meses reales presentes en facturas ──
+  function poblarFiltroMeses() {
+    const sel = document.getElementById('filter-mes');
+    if (!sel) return;
+    const prev = sel.value;
+    const meses = [...new Set((window.FACTURAS || []).map(f => f.fechaISO).filter(Boolean))].sort().reverse();
+    const NOMBRES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    sel.innerHTML = '<option value="">Todos los meses</option>' + meses.map(m => {
+      const [y, mm] = m.split('-');
+      const label = NOMBRES[parseInt(mm, 10) - 1].replace(/^\w/, c => c.toUpperCase()) + ' ' + y;
+      return `<option value="${m}">${label}</option>`;
+    }).join('');
+    if (prev && meses.includes(prev)) sel.value = prev;
+  }
+
+  // ── Ingresos por terapeuta: facturas pagadas agrupadas por psicólogo ──
+  const ING_COLORS = ['#2dd4bf', '#818cf8', '#fbbf24', '#34d399', '#f472b6', '#60a5fa', '#fb923c'];
+  function renderIngresosTerapeuta() {
+    const cont = document.getElementById('ingresos-terapeuta');
+    if (!cont) return;
+    const pagadas = (window.FACTURAS || []).filter(f => f.estado === 'pagada');
+    const mapa = {};
+    pagadas.forEach(f => { mapa[f.terapeuta] = (mapa[f.terapeuta] || 0) + Number(f.importe || 0); });
+    const filas = Object.keys(mapa).map(t => ({ nombre: t, total: mapa[t] }))
+      .sort((a, b) => b.total - a.total);
+    if (!filas.length) { cont.innerHTML = '<p class="text-xs text-slate-500 text-center py-6">Sin ingresos registrados</p>'; return; }
+    const totalGlobal = filas.reduce((s, r) => s + r.total, 0) || 1;
+    const maxTotal = filas[0].total || 1;
+    cont.innerHTML = filas.map((r, i) => {
+      const color = ING_COLORS[i % ING_COLORS.length];
+      const pctBar = Math.round((r.total / maxTotal) * 100);
+      const pctShare = Math.round((r.total / totalGlobal) * 100);
+      return '<div>' +
+        '<div class="flex justify-between mb-1.5">' +
+          '<span class="text-sm text-slate-300 flex items-center gap-2"><span class="w-2 h-2 rounded-full inline-block" style="background:' + color + ';"></span>' + r.nombre + '</span>' +
+          '<span class="text-sm font-bold text-white">' + r.total.toLocaleString('es') + ' € <span class="text-slate-500 font-normal text-xs">' + pctShare + '%</span></span>' +
+        '</div>' +
+        '<div class="w-full rounded-full h-1.5" style="background:rgba(255,255,255,0.07);"><div class="h-1.5 rounded-full" style="width:' + pctBar + '%;background:' + color + ';"></div></div>' +
+      '</div>';
+    }).join('');
+  }
+  window.renderIngresosTerapeuta = renderIngresosTerapeuta;
 
   // ── Override de render para soportar estados reales + acciones Stripe ──
   function badge(e) {
@@ -700,15 +725,38 @@ window._cerrarSesion = cerrarSesion;
   window.actualizarKPIs = function () {
     const F = window.FACTURAS || [];
     const suma = (arr) => arr.reduce((s, f) => s + Number(f.importe || 0), 0);
+    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+    // Claves de mes actual y anterior en formato YYYY-MM
+    const hoy = new Date();
+    const mesAct = hoy.toISOString().slice(0, 7);
+    const prevD = new Date(hoy.getFullYear(), hoy.getMonth() - 1, 1);
+    const mesPrev = prevD.toISOString().slice(0, 7);
+    const delMes = (arr, m) => arr.filter(f => f.fechaISO === m);
     const pagadas = F.filter(f => f.estado === 'pagada');
     const pend = F.filter(f => f.estado === 'pendiente');
     const reemb = F.filter(f => f.estado === 'reembolsada');
-    const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-    set('kpi-ingreso', suma(pagadas).toLocaleString('es') + ' €');
-    set('kpi-total', F.length);
+    // Ingreso del mes actual + delta real vs mes anterior
+    const ingActual = suma(delMes(pagadas, mesAct));
+    const ingPrev = suma(delMes(pagadas, mesPrev));
+    set('kpi-ingreso', ingActual.toLocaleString('es') + ' €');
+    const deltaEl = document.getElementById('kpi-ingreso-delta');
+    if (deltaEl) {
+      if (ingPrev > 0) {
+        const pct = Math.round(((ingActual - ingPrev) / ingPrev) * 100);
+        const up = pct >= 0;
+        deltaEl.textContent = (up ? '+' : '') + pct + '% vs. mes anterior';
+        deltaEl.className = 'text-xs mt-1 ' + (up ? 'text-teal-400' : 'text-red-400');
+      } else {
+        deltaEl.textContent = ingActual > 0 ? 'Primer mes con ingresos' : '— vs. mes anterior';
+        deltaEl.className = 'text-xs text-slate-500 mt-1';
+      }
+    }
+    // Facturas emitidas este mes + anuladas (reembolsadas) este mes
+    set('kpi-total', delMes(F, mesAct).length);
+    set('kpi-anuladas', delMes(reemb, mesAct).length);
+    // Pendiente de cobro = total pendiente (no es mensual)
     set('kpi-pendiente', suma(pend).toLocaleString('es') + ' €');
     set('kpi-pendiente-sub', pend.length + ' factura' + (pend.length !== 1 ? 's' : '') + ' sin pagar');
-    set('kpi-anuladas', reemb.length);
   };
   window.renderTabla = function () {
     const tbody = document.getElementById('tabla-body');
@@ -732,6 +780,19 @@ window._cerrarSesion = cerrarSesion;
         '<td class="px-5 py-3">' + acc + '</td>' +
       '</tr>';
     }).join('');
+  };
+
+  // ── Filtrado real (busca por paciente/ref, filtra mes por YYYY-MM) ──
+  window.filtrarFacturas = function () {
+    const q = (document.getElementById('search-input').value || '').toLowerCase();
+    const est = document.getElementById('filter-estado').value;
+    const mes = document.getElementById('filter-mes').value;
+    window.filtradas = (window.FACTURAS || []).filter(f =>
+      (!q || (f.paciente || '').toLowerCase().includes(q) || (f.ref || '').toLowerCase().includes(q)) &&
+      (!est || f.estado === est) &&
+      (!mes || f.fechaISO === mes)
+    );
+    window.renderTabla();
   };
 
   // ── Crear cobro real (genera enlace de pago Stripe) ──
