@@ -128,7 +128,7 @@
       </button>
       <button id="btn-notif-cfg" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
-        <span id="notif-dot-cfg" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+        <span id="notif-dot-cfg" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500" style="display:none;"></span>
       </button>
     </div>
   </header>
@@ -137,9 +137,9 @@
   <div id="notif-panel-cfg" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
     <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
       <h4 class="text-sm font-bold text-white font-headline">Notificaciones</h4>
-      <button id="btn-marcar-cfg" class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
+      <button id="btn-marcar-cfg" data-notif-marcar class="text-xs font-bold" style="color:#2dd4bf;background:none;border:none;cursor:pointer;">Marcar todas leídas</button>
     </div>
-    <div id="notif-list-cfg" class="max-h-72 overflow-y-auto"></div>
+    <div id="notif-list-cfg" data-notif-list class="max-h-72 overflow-y-auto"></div>
     <div style="padding:10px 20px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;">
       <a href="notificaciones.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;">Ver todas las notificaciones →</a>
     </div>
@@ -761,24 +761,8 @@ function mostrarToast(msg) {
 
 <script>
 (function(){
-var CW_DATA = [
-  { id:'c1', nombre:'Ana Martínez', rol:'Terapeuta', dot:'online', unread:1, msgs:[
-    { from:'them', text:'Buenos días, ¿tienes disponibilidad para el paciente García mañana?', time:'10:14' },
-    { from:'me',   text:'Sí, a las 11:00 lo tengo libre.', time:'10:16' },
-    { from:'them', text:'Perfecto, le confirmo la cita.', time:'10:17' },
-  ]},
-  { id:'c2', nombre:'Pedro Sánchez', rol:'Terapeuta', dot:'busy', unread:1, msgs:[
-    { from:'them', text:'Necesito cambiar la cita de Marcos del jueves.', time:'09:30' },
-    { from:'me',   text:'¿A qué hora te viene bien?', time:'09:32' },
-  ]},
-  { id:'c3', nombre:'Lucía Méndez', rol:'Secretaria', dot:'online', unread:0, msgs:[
-    { from:'me',   text:'¿Enviaste los recordatorios de mañana?', time:'Ayer' },
-    { from:'them', text:'Sí, ya los envié todos.', time:'Ayer' },
-  ]},
-  { id:'c4', nombre:'Sofía Ruiz', rol:'Terapeuta', dot:'offline', unread:0, msgs:[
-    { from:'them', text:'Informe de Vidal listo para revisión.', time:'Lun' },
-  ]},
-];
+// Datos mock retirados — el mini-chat real lo cablea js/chat-widget.js (initChatWidget)
+var CW_DATA = [];
 var CW_DOT_COLOR = { online:'#4ade80', busy:'#fbbf24', offline:'#475569' };
 var cwOpen = false, cwActive = null;
 
@@ -936,40 +920,12 @@ window.cwEnviar = function() {
   });
   actualizarLabelTema();
 
-  // Notificaciones
-  var NOTIFS_CFG = [
-    { icon:'event_busy',  color:'#f87171', msg:'Beatriz Torres canceló su cita de 17:30',   hora:'Hace 12 min', leida:false },
-    { icon:'person_add',  color:'#818cf8', msg:'Nueva solicitud de paciente: Roberto Díaz', hora:'Hace 1 h',    leida:false },
-    { icon:'payments',    color:'#4ade80', msg:'Factura FAC-2026-064 cobrada — $80',        hora:'Hace 2 h',    leida:false },
-    { icon:'schedule',    color:'#fbbf24', msg:'Carmen García sin confirmar (cita 12:00)',   hora:'Hace 3 h',    leida:true  },
-    { icon:'star',        color:'#2dd4bf', msg:'Nueva reseña 5★ de Laura Pérez',            hora:'Ayer',        leida:true  },
-  ];
+  // Notificaciones — abrir/cerrar el panel (el contenido lo carga js/notif-bell.js con el feed real)
   var notifOpenCfg = false;
-  function renderNotifsCfg() {
-    var unread = NOTIFS_CFG.filter(function(n){ return !n.leida }).length;
-    var dot = document.getElementById('notif-dot-cfg');
-    if (dot) dot.style.display = unread ? 'block' : 'none';
-    var list = document.getElementById('notif-list-cfg');
-    if (!list) return;
-    list.innerHTML = NOTIFS_CFG.map(function(n,i){
-      return '<div onclick="leerNotifCfg('+i+')" style="padding:12px 20px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;" onmouseover="this.style.background=\'rgba(255,255,255,0.02)\'" onmouseout="this.style.background=\'none\'">'+
-        '<span class="material-symbols-outlined" style="font-size:16px;color:'+n.color+';flex-shrink:0;margin-top:2px;">'+n.icon+'</span>'+
-        '<div style="flex:1;min-width:0;">'+
-          '<p style="font-size:12px;color:#e2e8f0;margin:0;'+((!n.leida)?'font-weight:600;':'opacity:0.5;')+'">'+n.msg+'</p>'+
-          '<p style="font-size:10px;color:#64748b;margin:4px 0 0;">'+n.hora+'</p>'+
-        '</div>'+
-        ((!n.leida)?'<span style="width:6px;height:6px;border-radius:50%;background:#2dd4bf;flex-shrink:0;margin-top:6px;"></span>':'')+
-      '</div>';
-    }).join('');
-  }
-  window.leerNotifCfg = function(i){ NOTIFS_CFG[i].leida = true; renderNotifsCfg(); };
   document.getElementById('btn-notif-cfg').addEventListener('click', function(e){
     e.stopPropagation();
     notifOpenCfg = !notifOpenCfg;
     document.getElementById('notif-panel-cfg').classList.toggle('hidden', !notifOpenCfg);
-  });
-  document.getElementById('btn-marcar-cfg').addEventListener('click', function(){
-    NOTIFS_CFG.forEach(function(n){ n.leida = true; }); renderNotifsCfg();
   });
   document.addEventListener('click', function(e){
     if (!e.target.closest('#btn-notif-cfg') && !e.target.closest('#notif-panel-cfg')) {
@@ -978,7 +934,6 @@ window.cwEnviar = function() {
       if (p) p.classList.add('hidden');
     }
   });
-  renderNotifsCfg();
 
 </script>
 <style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
@@ -1040,6 +995,8 @@ window.cwEnviar = function() {
 <script type="module">
 import { supabase } from '../js/supabase-client.js'
 import { cerrarSesion, verificarSesion } from '../js/auth.js'
+import { initCampana } from '../js/notif-bell.js'
+import { initChatWidget } from '../js/chat-widget.js'
 window._cerrarSesion = cerrarSesion
 
 const oldLogout = document.getElementById('btn-logout')
@@ -1088,6 +1045,10 @@ window.guardarConfig = async function() {
     if (typeof mostrarToast === 'function') mostrarToast('Configuración guardada')
   } catch (e) { if (typeof mostrarToast === 'function') mostrarToast('No se pudo guardar: ' + (e.message || '')) }
 }
+
+// Campana (feed real) + mini-chat (contactos reales de la clínica)
+initCampana()
+initChatWidget()
 </script>
 </body>
 </html>
