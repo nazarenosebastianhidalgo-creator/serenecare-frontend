@@ -102,13 +102,13 @@
 </head>
 <body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
 <!-- Sidebar Navigation Shell -->
-<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 sidebar-dark shadow-2xl shadow-slate-950/50 p-6 border-r border-slate-800/20 z-50">
-<div class="mb-10 flex items-center gap-3">
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark shadow-2xl shadow-slate-950/50 p-6 border-r border-slate-800/20 z-50">
+<div class="mb-8 flex items-center gap-3">
 <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
 <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">medical_services</span>
 </div>
 <div>
-<h1 class="text-2xl font-bold tracking-tighter text-slate-50">SereneCare</h1>
+<h1 class="text-xl font-bold tracking-tighter text-slate-50">SereneCare</h1>
 <p class="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">SaaS Enterprise</p>
 </div>
 </div>
@@ -170,11 +170,11 @@
 </div>
 </aside>
 <!-- Main Content Shell -->
-<main class="pl-72 min-h-screen">
+<main class="pl-64 min-h-screen">
 <!-- Top Navigation -->
 <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-8 z-40 border-b border-slate-800/10">
 <div class="flex flex-col">
-<h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Panel de Control</h2>
+<h2 class="font-headline text-xl font-extrabold text-slate-50 tracking-tighter">Panel de Control</h2>
 <p id="fecha-actual" class="text-slate-500 text-xs font-medium tracking-wide"></p>
 </div>
 <div class="flex items-center gap-2 relative">
@@ -205,64 +205,64 @@
       <span class="material-symbols-outlined text-slate-400">apps</span>
     </button>
     <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
-      <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+      <div id="apps-inner" class="apps-ov-glass w-full max-w-2xl mx-4 p-6 rounded-2xl border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
         <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
-          <span class="material-symbols-outlined text-3xl">close</span>
+          <span class="material-symbols-outlined text-2xl">close</span>
         </button>
-        <div class="text-center mb-10">
+        <div class="text-center mb-8">
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
             <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
             <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
           </div>
-          <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+          <h2 class="text-2xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
           <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
-              <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+              <span class="material-symbols-outlined text-2xl text-slate-400">terminal</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
           </a>
-          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
-              <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #3b82f6;">manage_accounts</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
           </a>
-          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
-              <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #14b8a6;">download</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
             <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
           </a>
-          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #22c55e;">monitor_heart</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
           </a>
-          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #ef4444;">security</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
           </a>
-          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #f59e0b;">history</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
           </a>
-          <a href="sugerencias_mejora.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="sugerencias_mejora.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(251,191,36,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #fbbf24;font-variation-settings:'FILL' 1;">lightbulb</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #fbbf24;font-variation-settings:'FILL' 1;">lightbulb</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Sugerencias</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Feedback de clínicas</span>
@@ -281,16 +281,16 @@
 
 </div>
 </header>
-<div class="p-8 max-w-7xl mx-auto space-y-8">
+<div class="p-6 max-w-7xl mx-auto space-y-8">
 <!-- Bento Grid Metrics -->
 <section class="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[140px]">
 <!-- Large Card: MRR Total -->
-<div class="md:col-span-7 md:row-span-2 bg-slate-900 rounded-3xl p-8 flex flex-col justify-between border border-slate-800/30 overflow-hidden relative group">
+<div class="md:col-span-7 md:row-span-2 bg-slate-900 rounded-2xl p-6 flex flex-col justify-between border border-slate-800/30 overflow-hidden relative group">
 <div class="relative z-10">
 <div class="flex justify-between items-start">
 <div>
 <p class="text-indigo-400 font-semibold tracking-wide text-xs uppercase mb-1">Total MRR</p>
-<h3 class="font-headline text-5xl font-extrabold text-white"><span id="stat-mrr">—</span><span class="text-slate-500 text-2xl font-medium">/mes</span></h3>
+<h3 class="font-headline text-3xl font-extrabold text-white"><span id="stat-mrr">—</span><span class="text-slate-500 text-xl font-medium">/mes</span></h3>
 </div>
 <div class="flex flex-col items-end">
 <span class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
@@ -304,10 +304,10 @@
 <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full"></div>
 </div>
 <!-- Card: Clínicas Activas -->
-<div class="md:col-span-5 md:row-span-1 bg-slate-900 rounded-3xl p-6 border border-slate-800/30 flex items-center justify-between">
+<div class="md:col-span-5 md:row-span-1 bg-slate-900 rounded-2xl p-6 border border-slate-800/30 flex items-center justify-between">
 <div>
 <p class="text-slate-500 text-sm font-medium mb-1">Clínicas activas</p>
-<h4 id="stat-clinicas-activas" class="text-3xl font-headline font-bold text-white tracking-tight">—</h4>
+<h4 id="stat-clinicas-activas" class="text-2xl font-headline font-bold text-white tracking-tight">—</h4>
 </div>
 <div class="bg-tertiary/10 p-4 rounded-2xl flex flex-col items-center">
 <span class="text-tertiary font-bold text-lg leading-none">+3</span>
@@ -315,10 +315,10 @@
 </div>
 </div>
 <!-- Card: Clínicas en Trial -->
-<div class="md:col-span-5 md:row-span-1 bg-slate-900 rounded-3xl p-6 border border-slate-800/30 flex items-center justify-between">
+<div class="md:col-span-5 md:row-span-1 bg-slate-900 rounded-2xl p-6 border border-slate-800/30 flex items-center justify-between">
 <div>
 <p class="text-slate-500 text-sm font-medium mb-1">En periodo Trial</p>
-<h4 id="stat-trial" class="text-3xl font-headline font-bold text-white tracking-tight">—</h4>
+<h4 id="stat-trial" class="text-2xl font-headline font-bold text-white tracking-tight">—</h4>
 </div>
 <div class="text-right">
 <p class="text-xs text-slate-400 font-medium">Promedio restante</p>
@@ -326,18 +326,18 @@
 </div>
 </div>
 <!-- Card: Suspendidas -->
-<div class="md:col-span-4 md:row-span-1 rounded-3xl p-6 border cursor-pointer hover:opacity-90 transition-opacity" style="background:rgba(103,4,13,.15);border-color:rgba(103,4,13,.3)" onclick="window.location.href='gestion_clinicas_super_admin.html'">
+<div class="md:col-span-4 md:row-span-1 rounded-2xl p-6 border cursor-pointer hover:opacity-90 transition-opacity" style="background:rgba(103,4,13,.15);border-color:rgba(103,4,13,.3)" onclick="window.location.href='gestion_clinicas_super_admin.html'">
 <p class="text-xs font-bold uppercase tracking-wider mb-1" style="color:#fa746f">Suspendidas</p>
 <div class="flex items-baseline gap-2">
-<h4 id="stat-suspendidas" class="text-4xl font-headline font-bold" style="color:#fa746f">—</h4>
+<h4 id="stat-suspendidas" class="text-2xl font-headline font-bold" style="color:#fa746f">—</h4>
 <span class="text-sm" style="color:rgba(250,116,111,.6)">clínicas</span>
 </div>
 </div>
 <!-- Card: Total Clínicas -->
-<div class="md:col-span-4 md:row-span-1 bg-slate-900 rounded-3xl p-6 border border-slate-800/30 group cursor-pointer hover:bg-slate-800/50 transition-colors" onclick="window.location.href='gestion_clinicas_super_admin.html'">
+<div class="md:col-span-4 md:row-span-1 bg-slate-900 rounded-2xl p-6 border border-slate-800/30 group cursor-pointer hover:bg-slate-800/50 transition-colors" onclick="window.location.href='gestion_clinicas_super_admin.html'">
 <p class="text-slate-500 text-sm font-medium mb-1">Total clínicas</p>
 <div class="flex items-center justify-between">
-<h4 id="stat-total-clinicas" class="text-4xl font-headline font-bold text-white">—</h4>
+<h4 id="stat-total-clinicas" class="text-2xl font-headline font-bold text-white">—</h4>
 <div class="w-10 h-10 rounded-full border border-slate-800 flex items-center justify-center group-hover:bg-slate-700 transition-colors">
 <span class="material-symbols-outlined text-indigo-400">arrow_outward</span>
 </div>
@@ -348,16 +348,16 @@
 </div>
 </div>
 <!-- Card: AI Config -->
-<div class="md:col-span-4 md:row-span-1 bg-indigo-600 rounded-3xl p-6 flex flex-col justify-center relative overflow-hidden cursor-pointer hover:bg-indigo-500 transition-colors" onclick="window.location.href='configuracion_ia_super_admin.html'">
+<div class="md:col-span-4 md:row-span-1 bg-indigo-600 rounded-2xl p-6 flex flex-col justify-center relative overflow-hidden cursor-pointer hover:bg-indigo-500 transition-colors" onclick="window.location.href='configuracion_ia_super_admin.html'">
 <p class="text-indigo-100 text-sm font-medium mb-1 z-10">Configuración IA</p>
-<h4 class="text-2xl font-headline font-bold text-white z-10">Ver ajustes →</h4>
+<h4 class="text-xl font-headline font-bold text-white z-10">Ver ajustes →</h4>
 <span class="material-symbols-outlined absolute -right-4 -bottom-4 text-white/10 text-8xl rotate-12">settings_input_component</span>
 </div>
 </section>
 <!-- Secondary Content Area -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 <!-- Recent Clinics Table -->
-<section class="lg:col-span-8 bg-slate-900 rounded-[2rem] p-8 border border-slate-800/20">
+<section class="lg:col-span-8 bg-slate-900 rounded-2xl p-6 border border-slate-800/20">
 <div class="flex justify-between items-center mb-8">
 <h3 class="font-headline text-xl font-bold text-white">Clínicas Recientes</h3>
 <button class="text-indigo-400 text-sm font-semibold flex items-center gap-2 hover:underline">Ver todas <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
@@ -380,7 +380,7 @@
 </div>
 </section>
 <!-- Monthly Revenue Chart -->
-<section class="lg:col-span-4 bg-slate-900 rounded-[2rem] p-8 border border-slate-800/20">
+<section class="lg:col-span-4 bg-slate-900 rounded-2xl p-6 border border-slate-800/20">
 <h3 class="font-headline text-xl font-bold text-white mb-8">Ingresos Mensuales</h3>
 <div id="chart-ingresos" class="h-64 flex items-end justify-between gap-1.5 relative"></div>
 <div id="chart-labels" class="mt-4 flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest px-1"></div>
