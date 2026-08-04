@@ -101,14 +101,15 @@
         @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
         .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
     </style>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
 </head>
 <body class="font-body selection:bg-primary/30">
 <!-- Sidebar Navigation -->
-<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 bg-slate-900 dark:bg-[#0f172a] font-manrope tracking-tight text-slate-200 shadow-2xl shadow-slate-950/50 z-50">
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 bg-slate-900 dark:bg-[#0f172a] font-manrope tracking-tight text-slate-200 shadow-2xl shadow-slate-950/50 z-50">
 <div class="flex flex-col h-full p-6 border-r border-slate-800/20">
 <!-- Brand Logo -->
-<div class="mb-10 px-4">
-<h1 class="text-2xl font-bold tracking-tighter text-slate-50 dark:text-white">SereneCare</h1>
+<div class="mb-8 px-4">
+<h1 class="text-xl font-bold tracking-tighter text-slate-50 dark:text-white">SereneCare</h1>
 <p class="text-xs font-medium text-slate-500 uppercase tracking-widest mt-1">SaaS Enterprise</p>
 </div>
 <!-- Main Tabs -->
@@ -172,7 +173,7 @@
 </div>
 </aside>
 <!-- Main Content Area -->
-<main class="pl-72 min-h-screen bg-[#020617]">
+<main class="pl-64 min-h-screen bg-[#020617]">
 <!-- Top Navigation Bar -->
 <header class="w-full h-20 sticky top-0 bg-slate-950/80 dark:bg-[#020617]/80 backdrop-blur-xl flex items-center justify-between pl-8 pr-8 w-full z-40 font-manrope text-slate-100">
 <div class="flex items-center flex-1 max-w-xl">
@@ -208,57 +209,57 @@
       <span class="material-symbols-outlined text-slate-400">apps</span>
     </button>
     <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
-      <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+      <div id="apps-inner" class="apps-ov-glass w-full max-w-2xl mx-4 p-6 rounded-2xl border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
         <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
-          <span class="material-symbols-outlined text-3xl">close</span>
+          <span class="material-symbols-outlined text-2xl">close</span>
         </button>
-        <div class="text-center mb-10">
+        <div class="text-center mb-8">
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
             <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
             <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
           </div>
-          <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+          <h2 class="text-2xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
           <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
-              <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+              <span class="material-symbols-outlined text-2xl text-slate-400">terminal</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
           </a>
-          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
-              <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #3b82f6;">manage_accounts</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
           </a>
-          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
-              <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #14b8a6;">download</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
             <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
           </a>
-          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #22c55e;">monitor_heart</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
           </a>
-          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #ef4444;">security</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
           </a>
-          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #f59e0b;">history</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
@@ -279,12 +280,12 @@
 </div>
 </header>
 <!-- Dashboard Content -->
-<div class="p-8 pb-20">
+<div class="p-6 pb-20">
 <!-- Page Header & Filters -->
-<div class="mb-10">
+<div class="mb-8">
 <div class="flex justify-between items-end mb-8">
 <div>
-<h2 class="text-4xl font-extrabold tracking-tight text-white mb-2 font-display">Gestión de Clínicas</h2>
+<h2 class="text-2xl font-extrabold tracking-tight text-white mb-2 font-display">Gestión de Clínicas</h2>
 <p class="text-slate-400 font-medium">Control centralizado de suscripciones, uso de IA y estados operativos.</p>
 </div>
 <button id="btn-nueva-clinica" class="bg-gradient-to-br from-primary to-primary-dim text-white px-6 py-3 rounded-xl font-semibold title-sm flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary/20">
@@ -314,7 +315,7 @@ Nueva Clínica
 </div>
 </div>
 <!-- Table Container -->
-<div class="bg-slate-900/20 rounded-3xl overflow-hidden backdrop-blur-sm">
+<div class="bg-slate-900/20 rounded-2xl overflow-hidden backdrop-blur-sm">
 <table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-slate-900/40">
@@ -492,7 +493,7 @@ CI
 </table>
 </div>
 <!-- Detail Panel (Slide-out Overlay) — oculto por defecto, se abre al hacer click en una fila -->
-<div id="panel-detalle" class="fixed top-0 right-0 h-screen w-[480px] bg-slate-900 shadow-[-20px_0_60px_rgba(0,0,0,0.8)] border-l border-slate-800/50 z-[60] flex-col p-8 overflow-y-auto" style="display:none;">
+<div id="panel-detalle" class="fixed top-0 right-0 h-screen w-[480px] bg-slate-900 shadow-[-20px_0_60px_rgba(0,0,0,0.8)] border-l border-slate-800/50 z-[60] flex-col p-6 overflow-y-auto" style="display:none;">
   <div class="flex items-center justify-between mb-8">
     <button id="btn-close-panel" class="w-10 h-10 rounded-full hover:bg-white/5 flex items-center justify-center transition-colors">
       <span class="material-symbols-outlined text-slate-400">close</span>
@@ -500,12 +501,12 @@ CI
     <span id="panel-status" class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border">—</span>
   </div>
   <!-- Header Info -->
-  <div class="flex items-center gap-6 mb-10">
+  <div class="flex items-center gap-6 mb-8">
     <div class="w-20 h-20 rounded-2xl bg-indigo-500/20 flex items-center justify-center">
-      <span id="panel-avatar" class="text-4xl font-extrabold text-indigo-400">—</span>
+      <span id="panel-avatar" class="text-2xl font-extrabold text-indigo-400">—</span>
     </div>
     <div>
-      <h3 id="panel-nombre" class="text-2xl font-extrabold text-white font-display">—</h3>
+      <h3 id="panel-nombre" class="text-xl font-extrabold text-white font-display">—</h3>
       <div class="mt-2 flex gap-2 flex-wrap">
         <span id="panel-plan" class="text-xs bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded font-bold">—</span>
         <span id="panel-desde" class="text-xs bg-slate-800 text-slate-500 px-2 py-0.5 rounded font-bold">—</span>
@@ -513,7 +514,7 @@ CI
     </div>
   </div>
   <!-- Bento Grid -->
-  <div class="grid grid-cols-2 gap-4 mb-10">
+  <div class="grid grid-cols-2 gap-4 mb-8">
     <div class="bg-slate-950/40 p-4 rounded-2xl">
       <p class="text-[10px] uppercase font-black text-slate-600 tracking-widest mb-1">Email contacto</p>
       <p id="panel-email" class="text-slate-200 font-bold text-sm truncate">—</p>

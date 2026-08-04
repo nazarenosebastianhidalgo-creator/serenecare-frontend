@@ -35,14 +35,15 @@
   @keyframes fadeIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
   .modal-enter { animation: fadeIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
 </style>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
 </head>
 <body class="min-h-screen overflow-hidden">
 
 <!-- Background layer (blurred dashboard placeholder) -->
 <div class="fixed inset-0 bg-grid z-0">
   <!-- Sidebar (visible through overlay for positioning context) -->
-  <aside class="w-72 bg-slate-900 border-r border-slate-800/30 flex flex-col px-6 py-8 fixed h-full z-10">
-    <div class="mb-10 flex items-center gap-3">
+  <aside class="w-64 bg-slate-900 border-r border-slate-800/30 flex flex-col px-6 py-8 fixed h-full z-10">
+    <div class="mb-8 flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
         <span class="material-symbols-outlined text-white filled">health_and_safety</span>
       </div>
@@ -99,16 +100,16 @@
 </div></aside>
 
   <!-- Dim background content (dashboard-like ghost) -->
-  <div class="ml-72 p-8 opacity-20 pointer-events-none select-none">
+  <div class="ml-72 p-6 opacity-20 pointer-events-none select-none">
     <div class="grid grid-cols-4 gap-6 mt-8">
-      <div class="bg-slate-800 rounded-3xl p-6 h-32"></div>
-      <div class="bg-slate-800 rounded-3xl p-6 h-32"></div>
-      <div class="bg-slate-800 rounded-3xl p-6 h-32"></div>
-      <div class="bg-slate-800 rounded-3xl p-6 h-32"></div>
+      <div class="bg-slate-800 rounded-2xl p-6 h-32"></div>
+      <div class="bg-slate-800 rounded-2xl p-6 h-32"></div>
+      <div class="bg-slate-800 rounded-2xl p-6 h-32"></div>
+      <div class="bg-slate-800 rounded-2xl p-6 h-32"></div>
     </div>
     <div class="grid grid-cols-3 gap-6 mt-6">
-      <div class="col-span-2 bg-slate-800 rounded-3xl h-72"></div>
-      <div class="bg-slate-800 rounded-3xl h-72"></div>
+      <div class="col-span-2 bg-slate-800 rounded-2xl h-72"></div>
+      <div class="bg-slate-800 rounded-2xl h-72"></div>
     </div>
   </div>
 </div>
@@ -117,22 +118,22 @@
 <div class="fixed inset-0 z-40 flex items-center justify-center" style="background: rgba(2,6,23,0.75); backdrop-filter: blur(6px);">
 
   <!-- Modal panel -->
-  <div class="glass-panel modal-enter w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative"
+  <div class="glass-panel modal-enter w-full max-w-2xl mx-4 p-6 rounded-2xl border relative"
        style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
 
     <!-- Close button -->
     <button id="btn-close" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
-      <span class="material-symbols-outlined text-3xl">close</span>
+      <span class="material-symbols-outlined text-2xl">close</span>
     </button>
 
     <!-- Header -->
-    <div class="text-center mb-10">
+    <div class="text-center mb-8">
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4"
            style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
         <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
         <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
       </div>
-      <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+      <h2 class="text-2xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
       <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
       <!-- Live stats pill -->
       <div class="flex items-center justify-center gap-6 mt-4">
@@ -155,10 +156,10 @@
 
       <!-- Gestor de Clínicas -->
       <button onclick="window.location.href='gestion_clinicas_super_admin.html'"
-              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              class="module-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
         <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
              style="background: rgba(99,102,241,0.15);">
-          <span class="material-symbols-outlined text-3xl text-indigo-400">medical_services</span>
+          <span class="material-symbols-outlined text-2xl text-indigo-400">medical_services</span>
         </div>
         <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestor de Clínicas</span>
         <span class="text-slate-500 text-xs mt-1 text-center">Infraestructura global</span>
@@ -167,10 +168,10 @@
 
       <!-- Métricas de Ingresos -->
       <button onclick="window.location.href='revenue_super_admin.html'"
-              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              class="module-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
         <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
              style="background: rgba(20,184,166,0.15);">
-          <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">payments</span>
+          <span class="material-symbols-outlined text-2xl" style="color: #14b8a6;">payments</span>
         </div>
         <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Métricas de Ingresos</span>
         <span class="text-slate-500 text-xs mt-1 text-center">Facturación y Planes</span>
@@ -179,10 +180,10 @@
 
       <!-- Configuración IA Global -->
       <button onclick="window.location.href='configuracion_ia_super_admin.html'"
-              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              class="module-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
         <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
              style="background: rgba(168,85,247,0.15);">
-          <span class="material-symbols-outlined text-3xl" style="color: #a855f7;">psychology</span>
+          <span class="material-symbols-outlined text-2xl" style="color: #a855f7;">psychology</span>
         </div>
         <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Configuración IA Global</span>
         <span class="text-slate-500 text-xs mt-1 text-center">Motores de Diagnóstico</span>
@@ -191,10 +192,10 @@
 
       <!-- Soporte Técnico -->
       <button onclick="window.location.href='soporte_super_admin.html'"
-              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              class="module-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
         <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
              style="background: rgba(245,158,11,0.12);">
-          <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">contact_support</span>
+          <span class="material-symbols-outlined text-2xl" style="color: #f59e0b;">contact_support</span>
         </div>
         <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Soporte Técnico</span>
         <span class="text-slate-500 text-xs mt-1 text-center">Tickets de Empresa</span>
@@ -202,10 +203,10 @@
 
       <!-- Logs del Sistema -->
       <button onclick="window.location.href='estado_sistema_super_admin.html#logs'"
-              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              class="module-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
         <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
              style="background: rgba(100,116,139,0.2);">
-          <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+          <span class="material-symbols-outlined text-2xl text-slate-400">terminal</span>
         </div>
         <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
         <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
@@ -213,10 +214,10 @@
 
       <!-- Gestión de Planes SaaS -->
       <button onclick="window.location.href='gestion_planes_super_admin.html'"
-              class="module-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              class="module-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
         <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
              style="background: rgba(34,197,94,0.12);">
-          <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">inventory_2</span>
+          <span class="material-symbols-outlined text-2xl" style="color: #22c55e;">inventory_2</span>
         </div>
         <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Planes SaaS</span>
         <span class="text-slate-500 text-xs mt-1 text-center">Paquetes y Límites</span>

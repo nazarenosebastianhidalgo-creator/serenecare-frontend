@@ -100,13 +100,14 @@
         @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
         .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
     </style>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
 </head>
 <body class="bg-[#020617] text-slate-100 min-h-screen selection:bg-indigo-500/30">
 <!-- SideNavBar Anchor -->
-<aside class="h-screen w-72 flex flex-col fixed left-0 top-0 bg-slate-900 dark:bg-[#0f172a] font-manrope tracking-tight text-slate-200 shadow-2xl shadow-slate-950/50 z-50">
+<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 bg-slate-900 dark:bg-[#0f172a] font-manrope tracking-tight text-slate-200 shadow-2xl shadow-slate-950/50 z-50">
 <div class="flex flex-col h-full p-6 border-r border-slate-800/20">
-<div class="mb-10 px-2">
-<span class="text-2xl font-bold tracking-tighter text-slate-50 dark:text-white">SereneCare</span>
+<div class="mb-8 px-2">
+<span class="text-xl font-bold tracking-tighter text-slate-50 dark:text-white">SereneCare</span>
 <p class="text-xs text-slate-500 font-medium tracking-widest mt-1 uppercase">SaaS Enterprise</p>
 </div>
 <nav class="flex-1 space-y-2">
@@ -168,7 +169,7 @@
 </div>
 </aside>
 <!-- Main Content Shell -->
-<main class="pl-72 pb-32">
+<main class="pl-64 pb-32">
 <!-- TopNavBar Anchor -->
 <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between pl-8 pr-8 w-full z-40">
 <div class="flex items-center gap-4 flex-1">
@@ -204,57 +205,57 @@
       <span class="material-symbols-outlined text-slate-400">apps</span>
     </button>
     <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
-      <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+      <div id="apps-inner" class="apps-ov-glass w-full max-w-2xl mx-4 p-6 rounded-2xl border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
         <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
-          <span class="material-symbols-outlined text-3xl">close</span>
+          <span class="material-symbols-outlined text-2xl">close</span>
         </button>
-        <div class="text-center mb-10">
+        <div class="text-center mb-8">
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
             <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
             <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
           </div>
-          <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+          <h2 class="text-2xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
           <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
-              <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+              <span class="material-symbols-outlined text-2xl text-slate-400">terminal</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
           </a>
-          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
-              <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #3b82f6;">manage_accounts</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
           </a>
-          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
-              <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #14b8a6;">download</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
             <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
           </a>
-          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #22c55e;">monitor_heart</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
           </a>
-          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #ef4444;">security</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
           </a>
-          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+          <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
             <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
-              <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+              <span class="material-symbols-outlined text-2xl" style="color: #f59e0b;">history</span>
             </div>
             <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
             <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
@@ -274,9 +275,9 @@
 </div>
 </header>
 <!-- Content Canvas -->
-<div class="px-12 py-10 max-w-7xl mx-auto">
+<div class="px-8 py-6">
 <div class="mb-12">
-<h1 class="text-4xl font-extrabold tracking-tight text-white mb-2">Configuración del Motor de IA</h1>
+<h1 class="text-2xl font-extrabold tracking-tight text-white mb-2">Configuración del Motor de IA</h1>
 <p class="text-slate-400 text-lg">Ajuste los parámetros del modelo lingüístico para optimizar la precisión clínica y los costes.</p>
 </div>
 <div class="grid grid-cols-12 gap-10 items-start">
@@ -332,7 +333,7 @@
 </div>
 </section>
 <!-- Advanced Sliders & Toggles -->
-<section class="space-y-8 bg-slate-900/30 p-8 rounded-3xl">
+<section class="space-y-8 bg-slate-900/30 p-6 rounded-2xl">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
 <!-- Temperature Slider -->
 <div class="space-y-4">
@@ -385,7 +386,7 @@
 <!-- Columna Derecha: Métricas -->
 <div class="col-span-12 lg:col-span-5 space-y-10">
 <!-- Metrics Overview -->
-<div class="glass-panel p-8 rounded-3xl space-y-8">
+<div class="glass-panel p-6 rounded-2xl space-y-8">
 <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
 <span class="material-symbols-outlined text-teal-400" data-icon="query_stats">query_stats</span>
                             Rendimiento Mensual
@@ -409,7 +410,7 @@
 </div>
 <span class="text-slate-300 font-medium">Coste Estimado</span>
 </div>
-<span class="text-2xl font-black text-white">428,50€</span>
+<span class="text-xl font-black text-white">428,50€</span>
 </div>
 <!-- Top Clinics Table -->
 <div class="space-y-4">

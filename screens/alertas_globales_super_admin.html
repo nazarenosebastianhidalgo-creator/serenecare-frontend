@@ -14,12 +14,13 @@
   .filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
   ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 </style>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
 </head>
 <body class="min-h-screen flex overflow-hidden">
 
 <!-- Sidebar -->
-<aside class="w-72 bg-slate-900 border-r border-slate-800/20 flex flex-col px-6 py-8 fixed h-full z-30">
-  <div class="mb-10 flex items-center gap-3">
+<aside class="w-64 bg-slate-900 border-r border-slate-800/20 flex flex-col px-6 py-8 fixed h-full z-30">
+  <div class="mb-8 flex items-center gap-3">
     <div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">
       <span class="material-symbols-outlined text-white filled">health_and_safety</span>
     </div>
@@ -81,7 +82,7 @@
 <!-- Header -->
 <header class="fixed top-0 left-72 right-0 h-20 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/10 flex items-center justify-between px-8 z-20">
   <div>
-    <h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Alertas Globales</h2>
+    <h2 class="font-headline text-xl font-extrabold text-slate-50 tracking-tighter">Alertas Globales</h2>
     <p class="text-slate-500 text-xs">Centro de notificaciones — Solo Super Admin</p>
   </div>
   <div class="flex items-center gap-3">
@@ -97,12 +98,12 @@
 <main class="ml-72 mt-20 flex flex-1 min-h-[calc(100vh-5rem)]">
 
   <!-- Background dimmed content -->
-  <div class="flex-1 p-10 opacity-30 pointer-events-none select-none">
-    <h2 class="text-4xl font-extrabold text-white mb-8 tracking-tighter font-headline">Plataforma Overview</h2>
-    <div class="grid grid-cols-3 gap-8">
-      <div class="bg-slate-900/50 aspect-video rounded-3xl"></div>
-      <div class="bg-slate-900/50 aspect-video rounded-3xl"></div>
-      <div class="bg-slate-900/50 aspect-video rounded-3xl"></div>
+  <div class="flex-1 p-6 opacity-30 pointer-events-none select-none">
+    <h2 class="text-2xl font-extrabold text-white mb-8 tracking-tighter font-headline">Plataforma Overview</h2>
+    <div class="grid grid-cols-3 gap-6">
+      <div class="bg-slate-900/50 aspect-video rounded-2xl"></div>
+      <div class="bg-slate-900/50 aspect-video rounded-2xl"></div>
+      <div class="bg-slate-900/50 aspect-video rounded-2xl"></div>
     </div>
   </div>
 
@@ -184,7 +185,7 @@
 
   function renderAlertas(alertas) {
     if (alertas.length === 0) {
-      lista.innerHTML = `<div class="text-center py-16"><span class="material-symbols-outlined text-4xl text-slate-700">notifications_off</span><p class="text-slate-500 mt-3 text-sm">Sin alertas en esta categoría</p></div>`
+      lista.innerHTML = `<div class="text-center py-16"><span class="material-symbols-outlined text-2xl text-slate-700">notifications_off</span><p class="text-slate-500 mt-3 text-sm">Sin alertas en esta categoría</p></div>`
       return
     }
     lista.innerHTML = alertas.map(a => {

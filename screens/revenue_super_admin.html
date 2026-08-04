@@ -20,12 +20,13 @@
   @keyframes appsOvIn { from { opacity:0; transform:scale(0.96) translateY(12px); } to { opacity:1; transform:scale(1) translateY(0); } }
   .apps-ov-enter { animation: appsOvIn 0.3s cubic-bezier(0.16,1,0.3,1) forwards; }
 </style>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
 </head>
 <body class="min-h-screen flex">
 
 <!-- Sidebar -->
-<aside class="w-72 bg-slate-950 border-r border-slate-800/50 flex flex-col px-6 py-8 fixed h-full z-30">
-  <div class="mb-10">
+<aside class="w-64 bg-slate-950 border-r border-slate-800/50 flex flex-col px-6 py-8 fixed h-full z-30">
+  <div class="mb-8">
     <h1 class="text-xl font-extrabold text-white font-headline tracking-tight">Therapeutic</h1>
     <p class="text-xs text-slate-500 font-medium tracking-widest mt-1 uppercase">SaaS Enterprise</p>
   </div>
@@ -81,10 +82,10 @@
 </aside>
 
 <!-- Main -->
-<main class="pl-72 min-h-screen w-full">
+<main class="pl-64 min-h-screen w-full">
   <header class="sticky top-0 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/10 h-20 flex items-center justify-between px-8 z-20">
     <div>
-      <h2 class="font-headline text-2xl font-extrabold text-slate-50 tracking-tighter">Revenue</h2>
+      <h2 class="font-headline text-xl font-extrabold text-slate-50 tracking-tighter">Revenue</h2>
       <p class="text-slate-500 text-xs">Ingresos y suscripciones activas</p>
     </div>
     <div class="flex items-center gap-2 relative">
@@ -152,57 +153,57 @@
           <span class="material-symbols-outlined text-slate-400">apps</span>
         </button>
         <div id="panel-apps" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background: rgba(2,6,23,0.82); backdrop-filter: blur(8px);">
-          <div id="apps-inner" class="apps-ov-glass w-full max-w-3xl mx-4 p-10 rounded-[3rem] border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
+          <div id="apps-inner" class="apps-ov-glass w-full max-w-2xl mx-4 p-6 rounded-2xl border relative" style="border-color: rgba(255,255,255,0.08); box-shadow: 0 40px 100px rgba(0,0,0,0.6);">
             <button id="btn-close-apps" class="absolute top-8 right-8 text-slate-500 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/5">
-              <span class="material-symbols-outlined text-3xl">close</span>
+              <span class="material-symbols-outlined text-2xl">close</span>
             </button>
-            <div class="text-center mb-10">
+            <div class="text-center mb-8">
               <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border mb-4" style="background: rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.2);">
                 <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
                 <span class="text-indigo-400 text-xs font-bold tracking-widest uppercase">Admin Toolkit</span>
               </div>
-              <h2 class="text-4xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
+              <h2 class="text-2xl font-extrabold text-white tracking-tighter font-headline">Central de Operaciones</h2>
               <p class="text-slate-400 mt-2 font-medium text-sm">Selecciona una herramienta maestra para gestionar el ecosistema SereneCare</p>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-              <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              <a href="estado_sistema_super_admin.html#logs" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(100,116,139,0.2);">
-                  <span class="material-symbols-outlined text-3xl text-slate-400">terminal</span>
+                  <span class="material-symbols-outlined text-2xl text-slate-400">terminal</span>
                 </div>
                 <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Logs del Sistema</span>
                 <span class="text-slate-500 text-xs mt-1 text-center">Eventos en tiempo real</span>
               </a>
-              <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              <a href="gestion_usuarios_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(59,130,246,0.15);">
-                  <span class="material-symbols-outlined text-3xl" style="color: #3b82f6;">manage_accounts</span>
+                  <span class="material-symbols-outlined text-2xl" style="color: #3b82f6;">manage_accounts</span>
                 </div>
                 <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Gestión de Usuarios</span>
                 <span class="text-slate-500 text-xs mt-1 text-center">Cuentas y permisos</span>
               </a>
-              <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              <a href="exportar_reportes_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(20,184,166,0.15);">
-                  <span class="material-symbols-outlined text-3xl" style="color: #14b8a6;">download</span>
+                  <span class="material-symbols-outlined text-2xl" style="color: #14b8a6;">download</span>
                 </div>
                 <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Exportar Reportes</span>
                 <span class="text-slate-500 text-xs mt-1 text-center">CSV y datos globales</span>
               </a>
-              <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              <a href="estado_sistema_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(34,197,94,0.12);">
-                  <span class="material-symbols-outlined text-3xl" style="color: #22c55e;">monitor_heart</span>
+                  <span class="material-symbols-outlined text-2xl" style="color: #22c55e;">monitor_heart</span>
                 </div>
                 <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Estado del Sistema</span>
                 <span class="text-slate-500 text-xs mt-1 text-center">Uptime y salud DB</span>
               </a>
-              <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              <a href="seguridad_accesos_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(239,68,68,0.12);">
-                  <span class="material-symbols-outlined text-3xl" style="color: #ef4444;">security</span>
+                  <span class="material-symbols-outlined text-2xl" style="color: #ef4444;">security</span>
                 </div>
                 <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Seguridad & Accesos</span>
                 <span class="text-slate-500 text-xs mt-1 text-center">Sesiones y auditoría</span>
               </a>
-              <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-3xl cursor-pointer">
+              <a href="auditoria_super_admin.html" class="apps-ov-card group flex flex-col items-center p-7 rounded-2xl cursor-pointer">
                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform" style="background: rgba(245,158,11,0.12);">
-                  <span class="material-symbols-outlined text-3xl" style="color: #f59e0b;">history</span>
+                  <span class="material-symbols-outlined text-2xl" style="color: #f59e0b;">history</span>
                 </div>
                 <span class="text-slate-100 font-bold tracking-tight text-center text-sm">Auditoría</span>
                 <span class="text-slate-500 text-xs mt-1 text-center">Registro de acciones</span>
@@ -221,28 +222,28 @@
     </div>
   </header>
 
-  <div class="p-8 space-y-8">
+  <div class="p-6 space-y-8">
 
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">MRR Total</p>
-        <p id="mrr" class="text-3xl font-extrabold text-white font-headline">—</p>
+        <p id="mrr" class="text-2xl font-extrabold text-white font-headline">—</p>
         <p class="text-xs text-emerald-400 mt-1">Mensual recurrente</p>
       </div>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">Clínicas Activas</p>
-        <p id="clinicas-activas" class="text-3xl font-extrabold text-white font-headline">—</p>
+        <p id="clinicas-activas" class="text-2xl font-extrabold text-white font-headline">—</p>
         <p class="text-xs text-slate-400 mt-1">De pago</p>
       </div>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">En Trial</p>
-        <p id="clinicas-trial" class="text-3xl font-extrabold text-amber-400 font-headline">—</p>
+        <p id="clinicas-trial" class="text-2xl font-extrabold text-amber-400 font-headline">—</p>
         <p class="text-xs text-slate-400 mt-1">Período de prueba</p>
       </div>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">Suspendidas</p>
-        <p id="clinicas-suspendidas" class="text-3xl font-extrabold text-rose-400 font-headline">—</p>
+        <p id="clinicas-suspendidas" class="text-2xl font-extrabold text-rose-400 font-headline">—</p>
         <p class="text-xs text-slate-400 mt-1">Sin pago activo</p>
       </div>
     </div>
