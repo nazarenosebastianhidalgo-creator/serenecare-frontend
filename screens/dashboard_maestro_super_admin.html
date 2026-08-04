@@ -148,13 +148,15 @@
     <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
     <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
   </button>
-  <button onclick="cerrarTodasSesiones()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">no_accounts</span>
-    <span class="text-sm font-semibold" style="color:#cbd5e1;">Cerrar todas las sesiones</span>
+  <button onclick="proximamente('Cerrar todas las sesiones')" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span class="material-symbols-outlined" style="color:#64748b;font-size:17px;">no_accounts</span>
+    <span class="text-sm font-semibold flex-1" style="color:#94a3b8;">Cerrar todas las sesiones</span>
+    <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px;">Pronto</span>
   </button>
-  <button onclick="toggleMantenimiento()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span id="icon-mant" class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">construction</span>
-    <span id="label-mant" class="text-sm font-semibold" style="color:#cbd5e1;">Modo mantenimiento</span>
+  <button onclick="proximamente('Modo mantenimiento')" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span class="material-symbols-outlined" style="color:#64748b;font-size:17px;">construction</span>
+    <span class="text-sm font-semibold flex-1" style="color:#94a3b8;">Modo mantenimiento</span>
+    <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px;">Pronto</span>
   </button>
   <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
   <a href="#" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
@@ -296,8 +298,8 @@
 <h3 class="font-headline text-3xl font-extrabold text-white"><span id="stat-mrr">—</span><span class="text-slate-500 text-xl font-medium">/mes</span></h3>
 </div>
 <div class="flex flex-col items-end">
-<span class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-<span class="material-symbols-outlined text-sm">trending_up</span> +12.5%
+<span id="badge-mrr-delta" class="bg-indigo-500/10 text-indigo-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span id="badge-mrr-icon" class="material-symbols-outlined text-sm">trending_up</span> <span id="badge-mrr-pct">—</span>
                                 </span>
 </div>
 </div>
@@ -313,7 +315,7 @@
 <h4 id="stat-clinicas-activas" class="text-2xl font-headline font-bold text-white tracking-tight">—</h4>
 </div>
 <div class="bg-tertiary/10 p-4 rounded-2xl flex flex-col items-center">
-<span class="text-tertiary font-bold text-lg leading-none">+3</span>
+<span id="stat-nuevas-mes" class="text-tertiary font-bold text-lg leading-none">—</span>
 <span class="text-[10px] text-tertiary-dim uppercase font-bold">Este mes</span>
 </div>
 </div>
@@ -325,7 +327,7 @@
 </div>
 <div class="text-right">
 <p class="text-xs text-slate-400 font-medium">Promedio restante</p>
-<p class="text-indigo-400 font-bold">12 días</p>
+<p id="stat-trial-restante" class="text-indigo-400 font-bold">—</p>
 </div>
 </div>
 <!-- Card: Suspendidas -->
@@ -625,6 +627,23 @@
     set('stat-suspendidas',      suspendidas.length)
     set('stat-total-clinicas',   clinicas.length)
 
+    // ── Nuevas clínicas este mes (real) ───────────────────────────────
+    const nuevasMes = clinicas.filter(c => {
+      const d = new Date(c.created_at)
+      return d.getFullYear() === hoy.getFullYear() && d.getMonth() === hoy.getMonth()
+    }).length
+    set('stat-nuevas-mes', '+' + nuevasMes)
+
+    // ── Promedio de días restantes de trial (trial de 14 días) ────────
+    const TRIAL_DIAS = 14
+    if (trial.length) {
+      const restantes = trial.map(c => Math.max(TRIAL_DIAS - Math.floor((hoy - new Date(c.created_at)) / 86400000), 0))
+      const prom = Math.round(restantes.reduce((s, d) => s + d, 0) / restantes.length)
+      set('stat-trial-restante', prom + (prom === 1 ? ' día' : ' días'))
+    } else {
+      set('stat-trial-restante', '—')
+    }
+
     // Barra de proporción activas
     const barActivas = document.getElementById('bar-activas')
     if (barActivas && clinicas.length > 0)
@@ -675,6 +694,24 @@
       const creado = new Date(c.created_at)
       meses.forEach(m => { if (creado <= m.hasta) m.val += Number(c.planes.precio_mensual) })
     })
+
+    // ── Crecimiento MRR: mes actual vs mes anterior (real) ────────────
+    const mrrActual = meses[11].val, mrrPrev = meses[10].val
+    const pctEl = document.getElementById('badge-mrr-pct')
+    const iconEl = document.getElementById('badge-mrr-icon')
+    const badgeEl = document.getElementById('badge-mrr-delta')
+    if (pctEl) {
+      if (mrrPrev > 0) {
+        const pct = Math.round(((mrrActual - mrrPrev) / mrrPrev) * 100)
+        const up = pct >= 0
+        pctEl.textContent = (up ? '+' : '') + pct + '%'
+        if (iconEl) iconEl.textContent = up ? 'trending_up' : 'trending_down'
+        if (badgeEl) badgeEl.className = 'px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 ' + (up ? 'bg-indigo-500/10 text-indigo-400' : 'bg-rose-500/10 text-rose-400')
+      } else {
+        pctEl.textContent = mrrActual > 0 ? 'Nuevo' : '0%'
+        if (iconEl) iconEl.textContent = 'trending_up'
+      }
+    }
 
     // Chart lateral 12 meses (256px de alto)
     dibujarBarras('chart-ingresos', meses, 256)
@@ -766,16 +803,7 @@ function toggleTema(){
   if(i)i.textContent=nuevo==='claro'?'light_mode':'dark_mode';
   if(l)l.textContent=nuevo==='claro'?'Modo oscuro':'Modo claro';
 }
-function cerrarTodasSesiones(){
-  if(!confirm('¿Cerrar todas las sesiones activas? Los usuarios serán desconectados.')) return;
-  alert('Sesiones cerradas (requiere Supabase service role)');
-}
-function toggleMantenimiento(){
-  var activo=localStorage.getItem('tp_mantenimiento')==='1';
-  var nuevo=activo?'0':'1';
-  localStorage.setItem('tp_mantenimiento',nuevo);
-  var i=document.getElementById('icon-mant'),l=document.getElementById('label-mant');
-  if(i)i.style.color=nuevo==='1'?'#ef4444':'#f59e0b';
-  if(l)l.textContent=nuevo==='1'?'Desactivar mantenimiento':'Modo mantenimiento';
+function proximamente(nombre){
+  alert(nombre + ' — próximamente.\n\nEsta acción global requiere el backend con service-role (aún por conectar). Te avisaremos cuando esté lista.');
 }
 </script></body></html>
