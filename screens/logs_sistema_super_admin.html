@@ -131,7 +131,7 @@
       <p class="text-xl font-bold text-amber-400" id="cnt-warns">0</p>
     </div>
     <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800/50">
-      <p class="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Clínicas con accesos</p>
+      <p class="text-[10px] uppercase tracking-widest text-slate-500 mb-1">Tipos de recurso</p>
       <p class="text-xl font-bold text-indigo-400" id="cnt-clinicas">0</p>
     </div>
   </div>
@@ -184,12 +184,27 @@
     return '#4ade80'
   }
 
-  function addLog(nivel, fuente, mensaje) {
+  function addLog(nivel, fuente, mensaje, time) {
     if (paused) return
-    const line = { nivel, fuente, mensaje, time: ts() }
+    const line = { nivel, fuente, mensaje, time: time || ts() }
     allLogs.push(line)
     renderLogs()
     actualizarContadores()
+  }
+
+  // Convierte una fila real de logs_acceso en una línea de log legible
+  const NIVEL_ACCION = { lectura:'DEBUG', creacion:'INFO', modificacion:'WARN', borrado:'ERROR', exportacion:'WARN', login:'INFO' }
+  const ACCION_TXT = { lectura:'consultó', creacion:'creó', modificacion:'modificó', borrado:'borró', exportacion:'exportó', login:'inició sesión en' }
+  const RECURSO_TXT = { pacientes:'una ficha de paciente', notas_soap:'una nota SOAP', evaluaciones:'una evaluación', citas:'una cita', consentimientos:'un consentimiento', usuarios:'una cuenta', clinicas:'una clínica' }
+  function logDeAcceso(l) {
+    const nivel = NIVEL_ACCION[l.accion] || 'INFO'
+    const quien = l.actor_rol || 'usuario'
+    const acc = ACCION_TXT[l.accion] || (l.accion || 'acción sobre')
+    const rec = RECURSO_TXT[l.recurso] || (l.recurso || 'un recurso')
+    const det = l.detalle ? ' — ' + l.detalle : ''
+    const ip = l.ip ? ' · IP ' + l.ip : ''
+    const hora = l.created_at ? new Date(l.created_at).toLocaleTimeString('es-ES', { hour12:false }) : ts()
+    return { nivel, fuente: 'audit.' + (l.recurso || 'sistema'), mensaje: `${quien} ${acc} ${rec}${det}${ip}`, time: hora }
   }
 
   const filtro = document.getElementById('filtro-nivel')
@@ -213,64 +228,38 @@
     document.getElementById('cnt-total').textContent = allLogs.length
     document.getElementById('cnt-errores').textContent = allLogs.filter(l => l.nivel === 'ERROR').length
     document.getElementById('cnt-warns').textContent = allLogs.filter(l => l.nivel === 'WARN').length
-    const clinicasUnicas = new Set(allLogs.filter(l => l.fuente.includes('clinica')).map(l => l.fuente)).size
-    document.getElementById('cnt-clinicas').textContent = clinicasUnicas
+    const recursos = new Set(allLogs.map(l => l.fuente)).size
+    document.getElementById('cnt-clinicas').textContent = recursos
   }
 
-  // Cargar logs reales de Supabase (logs_acceso si existe, sino eventos simulados)
+  // Carga los últimos accesos REALES de la tabla de auditoría logs_acceso
   async function cargarLogsReales() {
-    // Intentar tabla logs_acceso
     const { data: logs } = await supabase
       .from('logs_acceso')
       .select('*')
       .order('created_at', { ascending: false })
-      .limit(50)
+      .limit(80)
 
     if (logs && logs.length > 0) {
       logs.reverse().forEach(l => {
-        addLog(l.nivel || 'INFO', l.fuente || 'sistema', l.mensaje || JSON.stringify(l))
+        const x = logDeAcceso(l)
+        addLog(x.nivel, x.fuente, x.mensaje, x.time)
       })
+    } else {
+      addLog('INFO', 'audit.sistema', 'Sin eventos de acceso registrados todavía.')
     }
-
-    // Agregar eventos de sistema generados desde datos reales
-    const { data: clinicas } = await supabase
-      .from('clinicas')
-      .select('nombre, status, created_at')
-      .limit(10)
-
-    if (clinicas) {
-      clinicas.forEach(c => {
-        const ago = Math.floor((Date.now() - new Date(c.created_at)) / 3600000)
-        addLog('INFO', `clinica.${c.nombre?.substring(0,12)}`, `Clínica registrada. Estado: ${c.status}. Hace ${ago}h.`)
-      })
-    }
-
-    // Chequeo de conectividad
-    addLog('INFO', 'core.health', 'Health check completado — 0 nodos caídos')
-    addLog('INFO', 'auth.guard', 'Super admin autenticado correctamente')
-    addLog('DEBUG', 'db.pool', 'Connection pool: 8/20 conexiones activas')
   }
 
   await cargarLogsReales()
 
-  // Simular logs en tiempo real
-  const tiposLog = [
-    () => addLog('INFO', 'api.gateway', `Request completado en ${Math.floor(Math.random()*200+50)}ms`),
-    () => addLog('DEBUG', 'db.query', `Query ejecutado — ${Math.floor(Math.random()*50+5)} filas`),
-    () => addLog('INFO', 'auth.session', 'Sesión renovada para usuario activo'),
-    () => addLog('WARN', 'ai.tokens', `Uso de tokens al ${Math.floor(Math.random()*30+60)}% del límite mensual`),
-    () => addLog('INFO', 'stripe.webhook', 'Pago procesado correctamente'),
-    () => addLog('DEBUG', 'cache.hit', `Hit ratio: ${(Math.random()*20+75).toFixed(1)}%`),
-    () => addLog('INFO', 'realtime.broadcast', 'Evento difundido a suscriptores activos'),
-    () => addLog('WARN', 'rate.limit', 'Límite de requests próximo al umbral'),
-  ]
-
-  let liveInterval = setInterval(() => {
-    if (!paused) {
-      const fn = tiposLog[Math.floor(Math.random() * tiposLog.length)]
-      fn()
-    }
-  }, 2500)
+  // Stream EN VIVO REAL: nuevos accesos aparecen al instante (Supabase Realtime)
+  supabase.channel('logs-acceso-live')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'logs_acceso' }, (payload) => {
+      if (paused || !payload.new) return
+      const x = logDeAcceso(payload.new)
+      addLog(x.nivel, x.fuente, x.mensaje, x.time)
+    })
+    .subscribe()
 
   // Reloj
   setInterval(() => {
@@ -297,7 +286,6 @@
 
   // Logout
   document.getElementById('btn-logout').addEventListener('click', async () => {
-    clearInterval(liveInterval)
     await supabase.auth.signOut()
     localStorage.removeItem('tp_rol')
     localStorage.removeItem('tp_user_id')
