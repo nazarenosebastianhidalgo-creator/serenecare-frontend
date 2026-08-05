@@ -89,50 +89,20 @@
   <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
 </button>
 </div>
-        </div>
-      </div>
-            <div id="toggle-tema" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
-              <div id="toggle-tema-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
-            </div>
-          </div>
-          <div class="border-t border-slate-800 my-3"></div>
-          <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Notificaciones</p>
-          <div id="toggle-email-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
-            <div class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-blue-400">mail</span>
-              <div>
-                <p class="text-sm font-semibold text-slate-200">Alertas por email</p>
-                <p class="text-xs text-slate-500">Incidencias críticas</p>
-              </div>
-            </div>
-            <div id="toggle-email" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
-              <div id="toggle-email-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
-            </div>
-          </div>
-          <div class="border-t border-slate-800 my-3"></div>
-          <p class="text-xs text-slate-500 uppercase tracking-widest mb-2 font-semibold">Seguridad</p>
-          <button id="btn-cerrar-sesiones" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/10 transition-colors text-left">
-            <span class="material-symbols-outlined text-rose-400">no_accounts</span>
-            <div>
-              <p class="text-sm font-semibold text-slate-200">Cerrar todas las sesiones</p>
-              <p class="text-xs text-slate-500">Expira todos los tokens activos</p>
-            </div>
-          </button>
-          <div id="toggle-mantenimiento-row" class="flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-slate-800 transition-colors mt-1 cursor-pointer">
-            <div class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-amber-400">construction</span>
-              <div>
-                <p class="text-sm font-semibold text-slate-200">Modo mantenimiento</p>
-                <p class="text-xs text-slate-500">Bloquea acceso a clínicas</p>
-              </div>
-            </div>
-            <div id="toggle-mantenimiento" class="w-10 h-5 bg-slate-700 rounded-full relative transition-colors">
-              <div id="toggle-mantenimiento-dot" class="absolute top-0.5 left-0.5 w-4 h-4 bg-slate-400 rounded-full transition-all"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="relative">
+</aside>
+
+<!-- Header -->
+<header class="fixed top-0 left-64 right-0 h-20 flex items-center justify-between px-8 z-20 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/20">
+  <div>
+    <h2 class="font-headline text-xl font-extrabold text-white tracking-tighter">Planes SaaS</h2>
+    <p id="total-clinicas-badge" class="text-slate-500 text-xs">Gestiona los planes y su distribución</p>
+  </div>
+  <div class="flex items-center gap-3">
+    <button id="btn-notifications" class="relative p-2 rounded-full hover:bg-white/5 transition-colors">
+      <span class="material-symbols-outlined text-slate-400">notifications</span>
+      <span id="notif-dot" class="hidden absolute top-2 right-2 w-2 h-2 bg-indigo-500 rounded-full"></span>
+    </button>
+    <div class="relative">
         <button id="btn-apps" class="p-2 rounded-full hover:bg-white/5 transition-colors">
           <span class="material-symbols-outlined text-slate-400">apps</span>
         </button>
@@ -212,7 +182,7 @@
 </header>
 
 <!-- Main -->
-<main class="ml-72 mt-20 p-6 overflow-y-auto" style="max-height: calc(100vh - 5rem);">
+<main class="ml-64 mt-20 p-6 overflow-y-auto" style="max-height: calc(100vh - 5rem);">
 
   <!-- Loader -->
   <div id="loader" class="flex items-center justify-center py-20">
