@@ -331,20 +331,27 @@
   }
 
   async function cargar() {
+   try {
     // Dos consultas simples (evitamos el embed clinicas(...), que fallaba en algún contexto RLS)
-    const [{ data: planes, error }, { data: clins }] = await Promise.all([
+    const [rp, rc] = await Promise.all([
       supabase.from('planes').select('*').order('precio_mensual', { ascending: true }),
       supabase.from('clinicas').select('plan_id, status'),
     ])
+    const planes = rp.data, error = rp.error
 
     $('loader').classList.add('hidden')
     $('content').classList.remove('hidden')
 
-    if (error || !planes) {
-      $('planes-grid').innerHTML = `<p class="text-slate-500 col-span-3 text-center py-8">Sin datos de planes disponibles</p>`
+    if (error) {
+      $('planes-grid').innerHTML = `<p class="text-rose-400 col-span-3 text-center py-8">Error al leer planes: ${error.message}</p>`
+      return
+    }
+    if (!planes || !planes.length) {
+      $('planes-grid').innerHTML = `<p class="text-slate-500 col-span-3 text-center py-8">No hay planes (recibidos: ${planes ? planes.length : 'null'})</p>`
       return
     }
     // Join en JS: adjuntar a cada plan sus clínicas
+    const clins = rc.data
     const porPlan = {}
     ;(clins || []).forEach(c => { (porPlan[c.plan_id] = porPlan[c.plan_id] || []).push(c) })
     planes.forEach(p => { p.clinicas = porPlan[p.id] || [] })
@@ -447,6 +454,12 @@
     }).join('')
 
     window._planesData = planes
+   } catch (e) {
+    const l = $('loader'); if (l) l.classList.add('hidden')
+    const c = $('content'); if (c) c.classList.remove('hidden')
+    const g = $('planes-grid'); if (g) g.innerHTML = `<p class="text-rose-400 col-span-3 text-center py-8">⚠ Error al cargar: ${e && e.message ? e.message : e}</p>`
+    console.error('[planes] cargar:', e)
+   }
   }
 
   // Modal helpers
