@@ -314,12 +314,8 @@
       </div>
       <button id="mt-cerrar" class="p-2 rounded-full hover:bg-slate-800 transition-colors flex-shrink-0"><span class="material-symbols-outlined text-slate-400">close</span></button>
     </div>
-    <div class="px-6 py-5 space-y-5">
-      <div>
-        <p class="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-2">Mensaje</p>
-        <p id="mt-mensaje" class="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap bg-slate-950/50 border border-slate-800 rounded-xl p-4">—</p>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
+    <div class="px-6 py-4">
+      <div class="grid grid-cols-2 gap-3 mb-4">
         <div>
           <label class="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1.5 block">Estado</label>
           <select id="mt-estado" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
@@ -337,15 +333,15 @@
           </select>
         </div>
       </div>
-      <div>
-        <label class="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1.5 block">Tu respuesta (nota interna / seguimiento)</label>
-        <textarea id="mt-respuesta" rows="4" placeholder="Escribe la solución o el seguimiento…" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm resize-none focus:outline-none focus:border-indigo-500"></textarea>
-      </div>
-      <div id="mt-error" class="hidden text-rose-400 text-sm bg-rose-500/10 border border-rose-500/20 rounded-xl px-4 py-2.5"></div>
+      <!-- Hilo de conversación -->
+      <div id="mt-thread" class="flex flex-col gap-3 bg-slate-950/40 border border-slate-800 rounded-xl p-4 overflow-y-auto" style="max-height:340px;min-height:160px"></div>
+      <div id="mt-error" class="hidden mt-3 text-rose-400 text-sm bg-rose-500/10 border border-rose-500/20 rounded-xl px-4 py-2.5"></div>
     </div>
-    <div class="flex gap-3 px-6 pb-6">
-      <button id="mt-cancelar" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 text-slate-400 text-sm font-semibold hover:bg-slate-800 transition-colors">Cerrar</button>
-      <button id="mt-guardar" class="flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors">Guardar cambios</button>
+    <div class="flex gap-2 px-6 pb-6 items-center">
+      <input id="mt-input" type="text" placeholder="Escribe tu respuesta…" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"/>
+      <button id="mt-send" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined" style="font-size:16px">send</span>Enviar
+      </button>
     </div>
   </div>
 </div>
@@ -450,39 +446,87 @@
     })
   })
 
-  window.abrirTicket = (id) => {
+  const myUserId = (await supabase.auth.getUser()).data.user?.id
+  let canalTicket = null
+  const horaMsg = (ts) => new Date(ts).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+
+  function burbuja(rol, texto, ts) {
+    const soporte = rol === 'soporte'
+    return `<div style="display:flex;justify-content:${soporte ? 'flex-end' : 'flex-start'}">
+      <div style="max-width:80%;padding:9px 12px;border-radius:14px;${soporte ? 'background:rgba(79,70,229,.2);border:1px solid rgba(79,70,229,.35);border-bottom-right-radius:4px' : 'background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-bottom-left-radius:4px'}">
+        <p style="font-size:13px;color:#e2e8f0;line-height:1.5;white-space:pre-wrap;margin:0">${(texto || '').replace(/</g, '&lt;')}</p>
+        <p style="font-size:10px;color:#64748b;margin:4px 0 0;text-align:${soporte ? 'right' : 'left'}">${soporte ? 'Soporte' : (ticketActivo?.nombre || 'Cliente')} · ${horaMsg(ts)}</p>
+      </div></div>`
+  }
+
+  async function cargarHilo() {
+    const thread = document.getElementById('mt-thread')
+    // Primer "mensaje" = el propio ticket (del cliente); luego el hilo real
+    let html = burbuja('cliente', ticketActivo.mensaje, ticketActivo.created_at)
+    const { data: msgs } = await supabase.from('tickets_mensajes').select('*').eq('ticket_id', ticketActivo.id).order('created_at')
+    html += (msgs || []).map(m => burbuja(m.autor_rol, m.texto, m.created_at)).join('')
+    thread.innerHTML = html
+    thread.scrollTop = thread.scrollHeight
+  }
+
+  window.abrirTicket = async (id) => {
     ticketActivo = ticketsData.find(t => t.id === id)
     if (!ticketActivo) return
     document.getElementById('mt-asunto').textContent = ticketActivo.asunto
     document.getElementById('mt-meta').textContent = `${ticketActivo.nombre || '—'} · ${ticketActivo.email || ''} · ${ticketActivo.categoria || 'general'} · ${fechaCorta(ticketActivo.created_at)}`
-    document.getElementById('mt-mensaje').textContent = ticketActivo.mensaje
     document.getElementById('mt-estado').value = ticketActivo.estado
     document.getElementById('mt-prioridad').value = ticketActivo.prioridad || 'media'
-    document.getElementById('mt-respuesta').value = ticketActivo.respuesta || ''
     document.getElementById('mt-error').classList.add('hidden')
+    document.getElementById('mt-input').value = ''
     document.getElementById('modal-ticket').style.display = 'flex'
+    await cargarHilo()
+    // Realtime: nuevos mensajes de este ticket aparecen en vivo
+    if (canalTicket) supabase.removeChannel(canalTicket)
+    canalTicket = supabase.channel('ticket-' + id)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'tickets_mensajes', filter: 'ticket_id=eq.' + id }, () => cargarHilo())
+      .subscribe()
   }
 
-  const cerrarModalT = () => { document.getElementById('modal-ticket').style.display = 'none'; ticketActivo = null }
+  const cerrarModalT = () => {
+    document.getElementById('modal-ticket').style.display = 'none'
+    if (canalTicket) { supabase.removeChannel(canalTicket); canalTicket = null }
+    ticketActivo = null
+    cargarTickets()
+  }
   document.getElementById('mt-cerrar').addEventListener('click', cerrarModalT)
-  document.getElementById('mt-cancelar').addEventListener('click', cerrarModalT)
   document.getElementById('modal-ticket-overlay').addEventListener('click', cerrarModalT)
 
-  document.getElementById('mt-guardar').addEventListener('click', async () => {
+  // Cambiar estado / prioridad = auto-guardado
+  async function actualizarCampos() {
     if (!ticketActivo) return
     const nuevoEstado = document.getElementById('mt-estado').value
-    const patch = {
+    await supabase.from('tickets_soporte').update({
       estado: nuevoEstado,
       prioridad: document.getElementById('mt-prioridad').value,
-      respuesta: document.getElementById('mt-respuesta').value.trim() || null,
       updated_at: new Date().toISOString(),
       resuelto_at: nuevoEstado === 'resuelto' ? new Date().toISOString() : null,
-    }
-    const { error } = await supabase.from('tickets_soporte').update(patch).eq('id', ticketActivo.id)
-    if (error) { const e = document.getElementById('mt-error'); e.textContent = 'No se pudo guardar: ' + error.message; e.classList.remove('hidden'); return }
-    cerrarModalT()
-    await cargarTickets()
-  })
+    }).eq('id', ticketActivo.id)
+    ticketActivo.estado = nuevoEstado
+  }
+  document.getElementById('mt-estado').addEventListener('change', actualizarCampos)
+  document.getElementById('mt-prioridad').addEventListener('change', actualizarCampos)
+
+  // Enviar mensaje al hilo
+  async function enviarMsg() {
+    if (!ticketActivo) return
+    const input = document.getElementById('mt-input')
+    const texto = input.value.trim()
+    if (!texto) return
+    input.value = ''
+    const { error } = await supabase.from('tickets_mensajes').insert({
+      ticket_id: ticketActivo.id, autor_id: myUserId, autor_rol: 'soporte', texto,
+    })
+    if (error) { const e = document.getElementById('mt-error'); e.textContent = 'No se pudo enviar: ' + error.message; e.classList.remove('hidden'); input.value = texto; return }
+    if (document.getElementById('mt-estado').value === 'abierto') { document.getElementById('mt-estado').value = 'en_progreso'; }
+    await cargarHilo()
+  }
+  document.getElementById('mt-send').addEventListener('click', enviarMsg)
+  document.getElementById('mt-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') enviarMsg() })
 
   await cargarTickets()
 
