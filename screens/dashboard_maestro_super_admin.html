@@ -302,7 +302,15 @@
 </div>
 </div>
 </div>
-<div id="chart-mrr-mini" class="mt-6 h-32 w-full relative z-10 flex items-end gap-1"></div>
+<div class="flex items-center justify-between mt-4 relative z-10">
+  <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Últimos 6 meses</p>
+  <div class="flex gap-0.5 bg-white/5 rounded-lg p-0.5">
+    <button id="mrr-btn-barras" onclick="window.setMrrChart&&window.setMrrChart('barras')" title="Barras" style="padding:4px;border-radius:6px;color:#818cf8;background:rgba(99,102,241,0.15)"><span class="material-symbols-outlined" style="font-size:15px">bar_chart</span></button>
+    <button id="mrr-btn-linea" onclick="window.setMrrChart&&window.setMrrChart('linea')" title="Línea" style="padding:4px;border-radius:6px;color:#64748b"><span class="material-symbols-outlined" style="font-size:15px">show_chart</span></button>
+  </div>
+</div>
+<div id="chart-mrr-mini" class="mt-2 w-full relative z-10" style="height:92px"></div>
+<div id="chart-mrr-labels" class="flex justify-between mt-1 relative z-10 text-[9px] text-slate-600 font-bold"></div>
 <!-- Decorative Background Glow -->
 <div class="absolute -right-20 -bottom-20 w-64 h-64 bg-indigo-600/10 blur-[100px] rounded-full"></div>
 </div>
@@ -598,9 +606,27 @@
         const alpha  = 0.25 + (i / datos.length) * 0.75
         const bg     = esUlt ? '#6366f1' : d.val > 0 ? `rgba(99,102,241,${alpha.toFixed(2)})` : 'rgba(99,102,241,0.2)'
         return `<div style="flex:1;height:${px}px;background:${bg};border-radius:4px 4px 0 0;cursor:pointer;transition:filter .15s;min-width:6px"
-                     onmousemove="window._tt(event,'${d.label}: ${fmt(d.val)}')"
+                     onmousemove="window._tt(event,'${d.tip || (d.label + ': ' + fmt(d.val))}')"
                      onmouseleave="window._th()"></div>`
       }).join('')
+    }
+
+    // ── Gráfico de línea (SVG) con puntos y tooltip por mes ───────────
+    function dibujarLinea(containerId, datos, altoPx) {
+      const container = document.getElementById(containerId)
+      if (!container) return
+      container.style.display = 'block'
+      container.style.height = altoPx + 'px'
+      const w = container.clientWidth || 300, h = altoPx, n = datos.length, pad = 10
+      const maxVal = Math.max(...datos.map(d => d.val), 1)
+      const X = i => pad + (n <= 1 ? 0 : i * (w - 2 * pad) / (n - 1))
+      const Y = v => h - 8 - (v / maxVal) * (h - 18)
+      const pts = datos.map((d, i) => `${X(i).toFixed(1)},${Y(d.val).toFixed(1)}`).join(' ')
+      const dots = datos.map((d, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(d.val).toFixed(1)}" r="4" fill="${i === n - 1 ? '#6366f1' : '#818cf8'}" stroke="#0f172a" stroke-width="1.5" style="cursor:pointer" onmousemove="window._tt(event,'${d.tip || (d.label + ': ' + fmt(d.val))}')" onmouseleave="window._th()"/>`).join('')
+      container.innerHTML = `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="overflow:visible">`
+        + `<polyline points="${pad},${h} ${pts} ${(w - pad).toFixed(1)},${h}" fill="rgba(99,102,241,0.12)" stroke="none"/>`
+        + `<polyline points="${pts}" fill="none" stroke="#818cf8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`
+        + dots + `</svg>`
     }
 
     // ── Cargar datos de clínicas ──────────────────────────────────────
@@ -682,16 +708,19 @@
 
     // ── Calcular MRR por mes (últimos 12 meses) ───────────────────────
     const nombresMeses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']
+    const nombresMesesLargos = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
     const meses = []
     for (let i = 11; i >= 0; i--) {
       const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1)
-      meses.push({ label: nombresMeses[d.getMonth()], hasta: new Date(d.getFullYear(), d.getMonth() + 1, 0), val: 0 })
+      meses.push({ label: nombresMeses[d.getMonth()], mesNum: d.getMonth(), anio: d.getFullYear(), hasta: new Date(d.getFullYear(), d.getMonth() + 1, 0), val: 0 })
     }
     clinicas.forEach(c => {
       if (!c.planes?.precio_mensual || c.status !== 'activa') return
       const creado = new Date(c.created_at)
       meses.forEach(m => { if (creado <= m.hasta) m.val += Number(c.planes.precio_mensual) })
     })
+    // Tooltip por mes: "Junio 2026 — 99 €"
+    meses.forEach(m => { m.tip = nombresMesesLargos[m.mesNum] + ' ' + m.anio + ' — ' + fmt(m.val) })
 
     // ── Crecimiento MRR: mes actual vs mes anterior (real) ────────────
     const mrrActual = meses[11].val, mrrPrev = meses[10].val
@@ -725,8 +754,22 @@
     const barProm = document.getElementById('bar-promedio')
     if (barProm) barProm.style.width = Math.round((promedio / maxMrr) * 100) + '%'
 
-    // Chart mini 6 meses (128px de alto)
-    dibujarBarras('chart-mrr-mini', meses.slice(-6), 128)
+    // ── Chart MRR (últimos 6 meses) con toggle barras/línea ──────────
+    const mrrData = meses.slice(-6)
+    const labMrr = document.getElementById('chart-mrr-labels')
+    if (labMrr) labMrr.innerHTML = mrrData.map(m => `<span>${m.label}</span>`).join('')
+    window.setMrrChart = function (tipo) {
+      const bB = document.getElementById('mrr-btn-barras'), bL = document.getElementById('mrr-btn-linea')
+      const on = 'padding:4px;border-radius:6px;color:#818cf8;background:rgba(99,102,241,0.15)'
+      const off = 'padding:4px;border-radius:6px;color:#64748b'
+      if (bB) bB.style.cssText = tipo === 'barras' ? on : off
+      if (bL) bL.style.cssText = tipo === 'linea' ? on : off
+      const cont = document.getElementById('chart-mrr-mini')
+      if (cont) { cont.style.display = ''; cont.style.alignItems = ''; cont.style.gap = '' }
+      if (tipo === 'linea') dibujarLinea('chart-mrr-mini', mrrData, 92)
+      else dibujarBarras('chart-mrr-mini', mrrData, 92)
+    }
+    window.setMrrChart('barras')
 
     // ── Notificaciones: poblar lista con clínicas recientes ──────────
     // (los listeners de click los maneja el bloque no-módulo superior)
