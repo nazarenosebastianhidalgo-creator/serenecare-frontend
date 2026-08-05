@@ -143,13 +143,15 @@
     <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
     <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
   </button>
-  <button onclick="cerrarTodasSesiones()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">no_accounts</span>
-    <span class="text-sm font-semibold" style="color:#cbd5e1;">Cerrar todas las sesiones</span>
+  <button onclick="proximamente('Cerrar todas las sesiones')" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span class="material-symbols-outlined" style="color:#64748b;font-size:17px;">no_accounts</span>
+    <span class="text-sm font-semibold flex-1" style="color:#94a3b8;">Cerrar todas las sesiones</span>
+    <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px;">Pronto</span>
   </button>
-  <button onclick="toggleMantenimiento()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span id="icon-mant" class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">construction</span>
-    <span id="label-mant" class="text-sm font-semibold" style="color:#cbd5e1;">Modo mantenimiento</span>
+  <button onclick="proximamente('Modo mantenimiento')" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span class="material-symbols-outlined" style="color:#64748b;font-size:17px;">construction</span>
+    <span class="text-sm font-semibold flex-1" style="color:#94a3b8;">Modo mantenimiento</span>
+    <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px;">Pronto</span>
   </button>
   <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
   <a href="#" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
@@ -292,7 +294,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 <!-- Card Sonnet -->
 <label class="relative cursor-pointer group">
-<input checked="" class="peer sr-only" name="model" type="radio"/>
+<input checked value="llama-3.3-70b-versatile" class="peer sr-only" name="model" type="radio"/>
 <div class="p-6 rounded-2xl bg-slate-900/50 border-2 border-transparent peer-checked:border-indigo-500/50 peer-checked:bg-indigo-500/5 transition-all group-hover:bg-slate-900">
 <div class="flex justify-between items-start mb-4">
 <div class="h-12 w-12 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
@@ -302,17 +304,17 @@
 <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
 </div>
 </div>
-<h3 class="font-bold text-slate-100 text-lg">claude-sonnet</h3>
-<p class="text-slate-400 text-sm mt-2 leading-relaxed">Balance ideal entre velocidad y razonamiento clínico. Recomendado para uso diario.</p>
+<h3 class="font-bold text-slate-100 text-lg">Llama 3.3 70B</h3>
+<p class="text-slate-400 text-sm mt-2 leading-relaxed">Modelo principal (Groq). Equilibrio entre calidad clínica y velocidad. Recomendado.</p>
 <div class="mt-6 flex items-center justify-between">
 <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Coste</span>
-<span class="text-indigo-400 font-bold">$3.00 / 1M tokens</span>
+<span class="text-indigo-400 font-bold">Groq · potente</span>
 </div>
 </div>
 </label>
 <!-- Card Opus -->
 <label class="relative cursor-pointer group">
-<input class="peer sr-only" name="model" type="radio"/>
+<input value="llama-3.1-8b-instant" class="peer sr-only" name="model" type="radio"/>
 <div class="p-6 rounded-2xl bg-slate-900/50 border-2 border-transparent peer-checked:border-indigo-500/50 peer-checked:bg-indigo-500/5 transition-all group-hover:bg-slate-900">
 <div class="flex justify-between items-start mb-4">
 <div class="h-12 w-12 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400">
@@ -322,11 +324,11 @@
 <div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-opacity"></div>
 </div>
 </div>
-<h3 class="font-bold text-slate-100 text-lg">claude-opus</h3>
-<p class="text-slate-400 text-sm mt-2 leading-relaxed">Máxima capacidad analítica. Ideal para diagnósticos complejos y análisis profundo.</p>
+<h3 class="font-bold text-slate-100 text-lg">Llama 3.1 8B</h3>
+<p class="text-slate-400 text-sm mt-2 leading-relaxed">Modelo rápido y económico (Groq). Para respuestas cortas e instantáneas.</p>
 <div class="mt-6 flex items-center justify-between">
 <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Coste</span>
-<span class="text-amber-400 font-bold">$15.00 / 1M tokens</span>
+<span class="text-amber-400 font-bold">Groq · instantáneo</span>
 </div>
 </div>
 </label>
@@ -335,49 +337,61 @@
 <!-- Advanced Sliders & Toggles -->
 <section class="space-y-8 bg-slate-900/30 p-6 rounded-2xl">
 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-<!-- Temperature Slider -->
 <div class="space-y-4">
 <div class="flex justify-between items-end">
 <label class="text-sm font-semibold text-slate-300">Temperatura (Creatividad)</label>
-<span class="text-indigo-400 font-bold text-lg">0.2</span>
+<span id="cfg-temp-val" class="text-indigo-400 font-bold text-lg">0.3</span>
 </div>
-<input class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" max="1" min="0" step="0.1" type="range" value="0.2"/>
-<div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-widest">
-<span>Conservador</span>
-<span>Creativo</span>
+<input id="cfg-temp" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" max="1" min="0" step="0.1" type="range" value="0.3"/>
+<div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-widest"><span>Conservador</span><span>Creativo</span></div>
 </div>
-</div>
-<!-- Max Tokens Slider -->
 <div class="space-y-4">
 <div class="flex justify-between items-end">
-<label class="text-sm font-semibold text-slate-300">Máximo de tokens por informe</label>
-<span class="text-indigo-400 font-bold text-lg">4,096</span>
+<label class="text-sm font-semibold text-slate-300">Máximo de tokens por respuesta</label>
+<span id="cfg-tokens-val" class="text-indigo-400 font-bold text-lg">4096</span>
 </div>
-<input class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" max="8192" min="1024" step="512" type="range" value="4096"/>
-<div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-widest">
-<span>1K</span>
-<span>8K</span>
+<input id="cfg-tokens" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" max="8192" min="1024" step="512" type="range" value="4096"/>
+<div class="flex justify-between text-[10px] text-slate-600 font-bold uppercase tracking-widest"><span>1K</span><span>8K</span></div>
 </div>
-</div>
-<!-- Default Language -->
 <div class="space-y-3">
 <label class="text-sm font-semibold text-slate-300 block">Idioma por defecto</label>
-<select class="w-full bg-slate-950 border-none rounded-xl px-4 py-3 text-slate-200 focus:ring-2 focus:ring-indigo-500/50">
-<option selected="">Español (España)</option>
-<option>English (US)</option>
-<option>Português</option>
-<option>Français</option>
+<select id="cfg-idioma" class="w-full bg-slate-950 border-none rounded-xl px-4 py-3 text-slate-200 focus:ring-2 focus:ring-indigo-500/50">
+<option value="es">Español (España)</option>
+<option value="en">English (US)</option>
+<option value="pt">Português</option>
+<option value="fr">Français</option>
 </select>
 </div>
-<!-- Clinical Toggle -->
 <div class="flex items-center justify-between pt-4">
 <div class="space-y-1 pr-4">
-<label class="text-sm font-bold text-slate-100 block">Modo seguro clínico activado</label>
-<p class="text-xs text-slate-500">Filtra terminología inapropiada y asegura protocolos de privacidad HIPAA.</p>
+<label class="text-sm font-bold text-slate-100 block">Modo seguro clínico</label>
+<p class="text-xs text-slate-500">Refuerza privacidad y evita respuestas fuera de protocolo clínico.</p>
 </div>
 <label class="inline-flex relative items-center cursor-pointer">
-<input checked="" class="sr-only peer" type="checkbox"/>
+<input id="cfg-modo-seguro" checked class="sr-only peer" type="checkbox"/>
 <div class="w-12 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-500"></div>
+</label>
+</div>
+</div>
+<div class="space-y-3 pt-2">
+<label class="text-sm font-semibold text-slate-300 block">Prompt de sistema (contexto base para la IA)</label>
+<textarea id="cfg-prompt" rows="4" placeholder="Ej: Eres un asistente clínico especializado en psicología. Responde en español, con tono profesional y sin inventar datos clínicos." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm focus:ring-2 focus:ring-indigo-500/50 resize-none"></textarea>
+<p class="text-[11px] text-slate-500">Si lo dejas vacío, cada módulo usa su prompt por defecto.</p>
+</div>
+<div class="space-y-3 pt-2">
+<label class="text-sm font-semibold text-slate-300 block">Módulos de IA activos</label>
+<div class="space-y-2">
+<label class="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-slate-800 cursor-pointer">
+<span class="text-sm text-slate-200">Notas SOAP (dictado → borrador)</span>
+<input id="cfg-mod-soap" checked type="checkbox" class="w-5 h-5 accent-indigo-500 cursor-pointer"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-slate-800 cursor-pointer">
+<span class="text-sm text-slate-200">Generador de informes</span>
+<input id="cfg-mod-informes" checked type="checkbox" class="w-5 h-5 accent-indigo-500 cursor-pointer"/>
+</label>
+<label class="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-slate-800 cursor-pointer">
+<span class="text-sm text-slate-200">Asistente IA del paciente</span>
+<input id="cfg-mod-asistente" checked type="checkbox" class="w-5 h-5 accent-indigo-500 cursor-pointer"/>
 </label>
 </div>
 </div>
@@ -386,90 +400,15 @@
 <!-- Columna Derecha: Métricas -->
 <div class="col-span-12 lg:col-span-5 space-y-10">
 <!-- Metrics Overview -->
-<div class="glass-panel p-6 rounded-2xl space-y-8">
-<h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+<div class="glass-panel p-6 rounded-2xl">
+<h2 class="text-xl font-bold text-slate-100 flex items-center gap-2 mb-4">
 <span class="material-symbols-outlined text-teal-400" data-icon="query_stats">query_stats</span>
-                            Rendimiento Mensual
-                        </h2>
-<!-- Progress Bar Tokens -->
-<div class="space-y-4">
-<div class="flex justify-between items-center">
-<span class="text-slate-400 text-sm font-medium">Consumo de Tokens</span>
-<span class="text-slate-100 font-bold">12.4M / 20M</span>
-</div>
-<div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
-<div class="h-full bg-gradient-to-r from-teal-500 to-indigo-500 w-[62%] rounded-full"></div>
-</div>
-<p class="text-xs text-slate-500 italic">Quedan 7.6M tokens antes del límite de cuota.</p>
-</div>
-<!-- Estimated Cost -->
-<div class="p-6 rounded-2xl bg-white/5 flex items-center justify-between">
-<div class="flex items-center gap-4">
-<div class="h-10 w-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-<span class="material-symbols-outlined" data-icon="euro">euro</span>
-</div>
-<span class="text-slate-300 font-medium">Coste Estimado</span>
-</div>
-<span class="text-xl font-black text-white">428,50€</span>
-</div>
-<!-- Top Clinics Table -->
-<div class="space-y-4">
-<h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest">Top 5 Clínicas por Consumo</h3>
-<div class="space-y-2">
-<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">01</div>
-<span class="text-slate-200 text-sm font-medium">Clínica Dental Serenity</span>
-</div>
-<span class="text-indigo-400 font-bold text-sm">3.2M</span>
-</div>
-<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">02</div>
-<span class="text-slate-200 text-sm font-medium">Centro Médico Avanzado</span>
-</div>
-<span class="text-indigo-400 font-bold text-sm">2.8M</span>
-</div>
-<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">03</div>
-<span class="text-slate-200 text-sm font-medium">NeuroCare Integrativo</span>
-</div>
-<span class="text-indigo-400 font-bold text-sm">1.5M</span>
-</div>
-<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">04</div>
-<span class="text-slate-200 text-sm font-medium">PsicoSalud Global</span>
-</div>
-<span class="text-indigo-400 font-bold text-sm">1.1M</span>
-</div>
-<div class="flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">05</div>
-<span class="text-slate-200 text-sm font-medium">Rehab Pro BCN</span>
-</div>
-<span class="text-indigo-400 font-bold text-sm">0.9M</span>
-</div>
-</div>
-</div>
-<!-- Usage Chart Placeholder -->
-<div class="space-y-4">
-<h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest">Uso Diario (30 días)</h3>
-<div class="h-40 w-full flex items-end gap-1.5 px-2">
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 40%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 55%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 35%"></div>
-<div class="flex-1 bg-indigo-500/40 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 75%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 50%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 45%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 60%"></div>
-<div class="flex-1 bg-indigo-500/80 hover:bg-indigo-500 transition-colors rounded-t-sm" style="height: 90%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 30%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 65%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 80%"></div>
-<div class="flex-1 bg-slate-800 hover:bg-indigo-500/50 transition-colors rounded-t-sm" style="height: 40%"></div>
-</div>
+Rendimiento y consumo
+</h2>
+<div class="flex flex-col items-center justify-center text-center py-12 gap-2">
+<span class="material-symbols-outlined text-slate-600" style="font-size:40px">insights</span>
+<p class="text-slate-300 font-semibold text-sm">Métricas de consumo — próximamente</p>
+<p class="text-slate-500 text-xs max-w-xs">Cuando conectemos el medidor de tokens verás aquí el consumo real, el coste estimado y las clínicas que más usan la IA.</p>
 </div>
 </div>
 </div>
@@ -479,7 +418,7 @@
 <footer class="fixed bottom-0 right-0 left-72 bg-slate-950/90 backdrop-blur-2xl border-t border-slate-800/50 px-12 py-6 flex items-center justify-between z-40">
 <div class="flex items-center gap-4 text-slate-400 text-sm">
 <span class="material-symbols-outlined text-amber-500" data-icon="info">info</span>
-                Los cambios se aplicarán instantáneamente a todas las instancias activas.
+                Los cambios se guardan al instante y se aplican a las próximas generaciones de IA.
             </div>
 <div class="flex gap-4">
 <button class="px-8 py-3 rounded-xl border border-slate-700 font-semibold text-slate-300 hover:bg-white/5 transition-all">
@@ -641,102 +580,79 @@
   </script>
 
   <script type="module">
-    import { guardaSuperAdmin, obtenerConfigIA, guardarConfigIA } from '../js/admin.js'
-    import { mostrarError, setBotonCargando } from '../js/auth.js'
-    import { supabase } from '../js/supabase-client.js'
+  import { guardaSuperAdmin, obtenerConfigIA, guardarConfigIA } from '../js/admin.js'
+  import { mostrarError, setBotonCargando } from '../js/auth.js'
+  import { supabase } from '../js/supabase-client.js'
 
-    await guardaSuperAdmin()
+  await guardaSuperAdmin()
+  const $ = (id) => document.getElementById(id)
+  const config = await obtenerConfigIA()
 
-    // ── Cargar config actual ──────────────────────────────────────
-    const config = await obtenerConfigIA()
+  // Modelo (radios name="model" con value real de Groq)
+  document.querySelectorAll('input[name="model"]').forEach(r => { r.checked = (r.value === config.modelo) })
 
-    // Rellenar campos existentes en el HTML
-    const setInput = (selector, valor) => {
-      const el = document.querySelector(selector)
-      if (!el) return
-      if (el.type === 'checkbox') el.checked = Boolean(valor)
-      else if (el.tagName === 'SELECT') el.value = valor
-      else el.value = valor
-    }
+  // Temperatura
+  const temp = $('cfg-temp'), tempVal = $('cfg-temp-val')
+  if (temp) {
+    temp.value = config.temperatura
+    if (tempVal) tempVal.textContent = config.temperatura
+    temp.addEventListener('input', () => { if (tempVal) tempVal.textContent = temp.value })
+  }
 
-    // Temperatura (slider o input number)
-    const sliderTemp = document.querySelector('input[type="range"]')
-    if (sliderTemp) {
-      sliderTemp.value = config.temperatura
-      const tempLabel = document.querySelector('[data-temperatura]') 
-        || sliderTemp.nextElementSibling
-      if (tempLabel) tempLabel.textContent = config.temperatura
+  // Max tokens
+  const tok = $('cfg-tokens'), tokVal = $('cfg-tokens-val')
+  if (tok) {
+    tok.value = config.max_tokens
+    if (tokVal) tokVal.textContent = Number(config.max_tokens).toLocaleString('es')
+    tok.addEventListener('input', () => { if (tokVal) tokVal.textContent = Number(tok.value).toLocaleString('es') })
+  }
 
-      sliderTemp.addEventListener('input', () => {
-        if (tempLabel) tempLabel.textContent = sliderTemp.value
-      })
-    }
+  // Idioma / modo seguro / prompt / módulos
+  if ($('cfg-idioma'))       $('cfg-idioma').value = config.idioma || 'es'
+  if ($('cfg-modo-seguro'))  $('cfg-modo-seguro').checked = config.modo_seguro_clinico !== false
+  if ($('cfg-prompt'))       $('cfg-prompt').value = config.prompt_sistema || ''
+  if ($('cfg-mod-soap'))      $('cfg-mod-soap').checked = config.notas_soap_habilitado !== false
+  if ($('cfg-mod-informes'))  $('cfg-mod-informes').checked = config.informes_habilitado !== false
+  if ($('cfg-mod-asistente')) $('cfg-mod-asistente').checked = config.asistente_paciente_habilitado !== false
 
-    // Checkboxes de módulos
-    document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
-      const labelText = cb.closest('label')?.textContent?.toLowerCase() || ''
-      if (labelText.includes('soap') || labelText.includes('nota')) cb.checked = config.notas_soap_habilitado
-      if (labelText.includes('informe') || labelText.includes('report')) cb.checked = config.informes_habilitado
-      if (labelText.includes('paciente') || labelText.includes('asistente')) cb.checked = config.asistente_paciente_habilitado
+  // Guardar
+  const btnGuardar = Array.from(document.querySelectorAll('button')).find(b =>
+    b.textContent.toLowerCase().includes('guardar') || b.textContent.toLowerCase().includes('save'))
+  if (btnGuardar) {
+    btnGuardar.addEventListener('click', async () => {
+      const modeloSel = document.querySelector('input[name="model"]:checked')
+      const nueva = {
+        modelo:      modeloSel ? modeloSel.value : config.modelo,
+        temperatura: parseFloat(temp ? temp.value : config.temperatura),
+        max_tokens:  parseInt(tok ? tok.value : config.max_tokens, 10),
+        prompt_sistema: ($('cfg-prompt')?.value || '').trim(),
+        notas_soap_habilitado:         $('cfg-mod-soap') ? $('cfg-mod-soap').checked : true,
+        informes_habilitado:           $('cfg-mod-informes') ? $('cfg-mod-informes').checked : true,
+        asistente_paciente_habilitado: $('cfg-mod-asistente') ? $('cfg-mod-asistente').checked : true,
+        modo_seguro_clinico:           $('cfg-modo-seguro') ? $('cfg-modo-seguro').checked : true,
+        idioma:      $('cfg-idioma') ? $('cfg-idioma').value : 'es',
+      }
+      setBotonCargando(btnGuardar, true)
+      try {
+        await guardarConfigIA(nueva)
+        const ok = $('success-msg')
+        if (ok) { ok.textContent = 'Configuración guardada. Se aplicará a las próximas generaciones de IA.'; ok.classList.remove('hidden'); setTimeout(() => ok.classList.add('hidden'), 3500) }
+        else { alert('Configuración guardada.') }
+      } catch (err) {
+        mostrarError(err.message)
+      } finally {
+        setBotonCargando(btnGuardar, false)
+      }
     })
+  }
 
-    // Textarea del prompt de sistema
-    const textarea = document.querySelector('textarea')
-    if (textarea) textarea.value = config.prompt_sistema
-
-    // Select del modelo
-    const selectModelo = document.querySelector('select')
-    if (selectModelo) selectModelo.value = config.modelo
-
-    // ── Guardar configuración ─────────────────────────────────────
-    const btnGuardar = Array.from(document.querySelectorAll('button')).find(b =>
-      b.textContent.toLowerCase().includes('guardar') || b.textContent.toLowerCase().includes('save')
-    )
-
-    if (btnGuardar) {
-      btnGuardar.addEventListener('click', async () => {
-        const nuevaConfig = {
-          modelo:      selectModelo?.value || config.modelo,
-          temperatura: parseFloat(sliderTemp?.value || config.temperatura),
-          max_tokens:  config.max_tokens,
-          prompt_sistema: textarea?.value || config.prompt_sistema,
-          notas_soap_habilitado:       true,
-          informes_habilitado:         true,
-          asistente_paciente_habilitado: true,
-        }
-
-        // Leer checkboxes
-        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-          const label = cb.closest('label')?.textContent?.toLowerCase() || ''
-          if (label.includes('soap')) nuevaConfig.notas_soap_habilitado = cb.checked
-          if (label.includes('informe')) nuevaConfig.informes_habilitado = cb.checked
-          if (label.includes('paciente')) nuevaConfig.asistente_paciente_habilitado = cb.checked
-        })
-
-        setBotonCargando(btnGuardar, true)
-        try {
-          await guardarConfigIA(nuevaConfig)
-          const ok = document.getElementById('success-msg')
-          ok.textContent = 'Configuración guardada correctamente.'
-          ok.classList.remove('hidden')
-          setTimeout(() => ok.classList.add('hidden'), 3000)
-        } catch (err) {
-          mostrarError(err.message)
-        } finally {
-          setBotonCargando(btnGuardar, false)
-        }
-      })
-    }
-
-    document.getElementById('btn-logout')?.addEventListener('click', async (e) => {
-      e.preventDefault()
-      await supabase.auth.signOut()
-      localStorage.removeItem('tp_rol')
-      localStorage.removeItem('tp_user_id')
-      localStorage.removeItem('tp_email')
-      window.location.href = 'acceso_super_admin.html'
-    })
-  </script>
+  $('btn-logout')?.addEventListener('click', async (e) => {
+    e.preventDefault()
+    await supabase.auth.signOut()
+    localStorage.removeItem('tp_rol'); localStorage.removeItem('tp_user_id'); localStorage.removeItem('tp_email')
+    window.location.href = 'acceso_super_admin.html'
+  })
+</script>
 
 <script>
 (function(){
@@ -765,16 +681,7 @@ function toggleTema(){
   if(i)i.textContent=nuevo==='claro'?'light_mode':'dark_mode';
   if(l)l.textContent=nuevo==='claro'?'Modo oscuro':'Modo claro';
 }
-function cerrarTodasSesiones(){
-  if(!confirm('¿Cerrar todas las sesiones activas? Los usuarios serán desconectados.')) return;
-  alert('Sesiones cerradas (requiere Supabase service role)');
-}
-function toggleMantenimiento(){
-  var activo=localStorage.getItem('tp_mantenimiento')==='1';
-  var nuevo=activo?'0':'1';
-  localStorage.setItem('tp_mantenimiento',nuevo);
-  var i=document.getElementById('icon-mant'),l=document.getElementById('label-mant');
-  if(i)i.style.color=nuevo==='1'?'#ef4444':'#f59e0b';
-  if(l)l.textContent=nuevo==='1'?'Desactivar mantenimiento':'Modo mantenimiento';
+function proximamente(nombre){
+  alert(nombre + ' — próximamente.\n\nEsta acción global requiere el backend con service-role (aún por conectar). Te avisaremos cuando esté lista.');
 }
 </script></body></html>

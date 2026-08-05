@@ -98,33 +98,58 @@ export async function cambiarPlanClinica(clinicaId, planId) {
 }
 
 // ─── CONFIGURACIÓN GLOBAL DE IA ───────────────────────────────────
+// Config global de IA → tabla dedicada `config_sistema` (fila única id=1).
+// OJO: NO usar `clinicas.config_ia` — esa columna guarda los IDs de suscripción
+// de Lemon Squeezy (ls_subscription_id) y el webhook de facturación depende de ella.
+const CONFIG_IA_DEFAULT = {
+  modelo: 'llama-3.3-70b-versatile',
+  temperatura: 0.3,
+  max_tokens: 4096,
+  prompt_sistema: '',
+  notas_soap_habilitado: true,
+  informes_habilitado: true,
+  asistente_paciente_habilitado: true,
+  modo_seguro_clinico: true,
+  idioma: 'es',
+}
+
 export async function obtenerConfigIA() {
-  // La config global de IA se guarda en la clínica del super_admin (clinica_id = null)
-  // o en una tabla de configuración separada. Usamos localStorage como fallback.
-  const local = localStorage.getItem('tp_config_ia')
-  return local ? JSON.parse(local) : {
-    modelo: 'gpt-4o-mini',
-    temperatura: 0.7,
-    max_tokens: 2000,
-    prompt_sistema: 'Eres un asistente clínico especializado en psicología.',
-    notas_soap_habilitado: true,
-    informes_habilitado: true,
-    asistente_paciente_habilitado: true,
+  const { data, error } = await supabase
+    .from('config_sistema')
+    .select('*')
+    .eq('id', 1)
+    .maybeSingle()
+  if (error || !data) return { ...CONFIG_IA_DEFAULT }
+  return {
+    modelo:                        data.modelo ?? CONFIG_IA_DEFAULT.modelo,
+    temperatura:                   Number(data.temperatura ?? CONFIG_IA_DEFAULT.temperatura),
+    max_tokens:                    data.max_tokens ?? CONFIG_IA_DEFAULT.max_tokens,
+    prompt_sistema:                data.prompt_sistema ?? '',
+    notas_soap_habilitado:         data.notas_soap_habilitado !== false,
+    informes_habilitado:           data.informes_habilitado !== false,
+    asistente_paciente_habilitado: data.asistente_paciente_habilitado !== false,
+    modo_seguro_clinico:           data.modo_seguro_clinico !== false,
+    idioma:                        data.idioma ?? 'es',
   }
 }
 
 export async function guardarConfigIA(config) {
-  // Guardar en Supabase como metadata global (en tabla clinicas del super_admin)
-  // Por ahora también en localStorage para persistencia inmediata
-  localStorage.setItem('tp_config_ia', JSON.stringify(config))
-
-  // Actualizar config_ia en todas las clínicas activas
   const { error } = await supabase
-    .from('clinicas')
-    .update({ config_ia: config })
-    .eq('status', 'activa')
-
-  if (error) throw new Error('No se pudo guardar la configuración.')
+    .from('config_sistema')
+    .update({
+      modelo:                        config.modelo,
+      temperatura:                   config.temperatura,
+      max_tokens:                    config.max_tokens,
+      prompt_sistema:                config.prompt_sistema || null,
+      notas_soap_habilitado:         config.notas_soap_habilitado,
+      informes_habilitado:           config.informes_habilitado,
+      asistente_paciente_habilitado: config.asistente_paciente_habilitado,
+      modo_seguro_clinico:           config.modo_seguro_clinico,
+      idioma:                        config.idioma,
+      updated_at:                    new Date().toISOString(),
+    })
+    .eq('id', 1)
+  if (error) throw new Error('No se pudo guardar la configuración: ' + error.message)
 }
 
 // ─── OBTENER PLANES DISPONIBLES ──────────────────────────────────
