@@ -27,7 +27,7 @@
 <!-- Sidebar -->
 <aside class="w-64 bg-slate-950 border-r border-slate-800/50 flex flex-col px-6 py-8 fixed h-full z-30">
   <div class="mb-8">
-    <h1 class="text-xl font-extrabold text-white font-headline tracking-tight">Therapeutic</h1>
+    <h1 class="text-xl font-extrabold text-white font-headline tracking-tight">SereneCare</h1>
     <p class="text-xs text-slate-500 font-medium tracking-widest mt-1 uppercase">SaaS Enterprise</p>
   </div>
   <nav class="flex-1 space-y-2">
@@ -59,13 +59,15 @@
     <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
     <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
   </button>
-  <button onclick="cerrarTodasSesiones()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">no_accounts</span>
-    <span class="text-sm font-semibold" style="color:#cbd5e1;">Cerrar todas las sesiones</span>
+  <button onclick="proximamente('Cerrar todas las sesiones')" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span class="material-symbols-outlined" style="color:#64748b;font-size:17px;">no_accounts</span>
+    <span class="text-sm font-semibold flex-1" style="color:#94a3b8;">Cerrar todas las sesiones</span>
+    <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px;">Pronto</span>
   </button>
-  <button onclick="toggleMantenimiento()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span id="icon-mant" class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">construction</span>
-    <span id="label-mant" class="text-sm font-semibold" style="color:#cbd5e1;">Modo mantenimiento</span>
+  <button onclick="proximamente('Modo mantenimiento')" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span class="material-symbols-outlined" style="color:#64748b;font-size:17px;">construction</span>
+    <span class="text-sm font-semibold flex-1" style="color:#94a3b8;">Modo mantenimiento</span>
+    <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px;">Pronto</span>
   </button>
   <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
   <a href="#" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
@@ -228,7 +230,11 @@
   <div class="p-6 space-y-8">
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-slate-900 border rounded-2xl p-6" style="border-color:rgba(245,158,11,0.3)">
+        <p class="text-xs text-amber-400/80 uppercase tracking-widest mb-2">Tickets abiertos</p>
+        <p id="stat-tickets-abiertos" class="text-2xl font-extrabold text-amber-400 font-headline">—</p>
+      </div>
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">Total Clínicas</p>
         <p id="total-clinicas" class="text-2xl font-extrabold text-white font-headline">—</p>
@@ -241,6 +247,35 @@
         <p class="text-xs text-slate-500 uppercase tracking-widest mb-2">Total Pacientes</p>
         <p id="total-pacientes" class="text-2xl font-extrabold text-white font-headline">—</p>
       </div>
+    </div>
+
+    <!-- Bandeja de tickets de soporte -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between flex-wrap gap-3">
+        <h3 class="font-headline font-bold text-slate-100 flex items-center gap-2">
+          <span class="material-symbols-outlined text-indigo-400">support_agent</span>Tickets de soporte
+        </h3>
+        <div class="flex items-center gap-1 p-1 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+          <button data-filtro="abierto" class="filtro-ticket px-3 py-1.5 rounded-lg text-xs font-bold" style="background:rgba(20,184,166,0.12);color:#2dd4bf;">Abiertos</button>
+          <button data-filtro="en_progreso" class="filtro-ticket px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500">En progreso</button>
+          <button data-filtro="resuelto" class="filtro-ticket px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500">Resueltos</button>
+          <button data-filtro="" class="filtro-ticket px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500">Todos</button>
+        </div>
+      </div>
+      <table class="w-full">
+        <thead class="bg-slate-950/50">
+          <tr>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Asunto</th>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">De</th>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Prioridad</th>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Estado</th>
+            <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-widest">Fecha</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-tickets" class="divide-y divide-slate-800">
+          <tr><td colspan="5" class="text-center py-10 text-slate-500">Cargando...</td></tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- Directorio de contactos -->
@@ -267,6 +302,53 @@
 
   </div>
 </main>
+
+<!-- Modal detalle ticket -->
+<div id="modal-ticket" style="display:none" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="modal-ticket-overlay"></div>
+  <div class="relative bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-lg z-10 max-h-[90vh] overflow-y-auto">
+    <div class="flex items-start justify-between px-6 pt-6 pb-4 border-b border-slate-800">
+      <div class="pr-4">
+        <h3 id="mt-asunto" class="text-lg font-bold text-slate-100">—</h3>
+        <p id="mt-meta" class="text-xs text-slate-500 mt-1">—</p>
+      </div>
+      <button id="mt-cerrar" class="p-2 rounded-full hover:bg-slate-800 transition-colors flex-shrink-0"><span class="material-symbols-outlined text-slate-400">close</span></button>
+    </div>
+    <div class="px-6 py-5 space-y-5">
+      <div>
+        <p class="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-2">Mensaje</p>
+        <p id="mt-mensaje" class="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap bg-slate-950/50 border border-slate-800 rounded-xl p-4">—</p>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1.5 block">Estado</label>
+          <select id="mt-estado" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
+            <option value="abierto">Abierto</option>
+            <option value="en_progreso">En progreso</option>
+            <option value="resuelto">Resuelto</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1.5 block">Prioridad</label>
+          <select id="mt-prioridad" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-100">
+            <option value="baja">Baja</option>
+            <option value="media">Media</option>
+            <option value="alta">Alta</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="text-[10px] uppercase font-bold tracking-widest text-slate-500 mb-1.5 block">Tu respuesta (nota interna / seguimiento)</label>
+        <textarea id="mt-respuesta" rows="4" placeholder="Escribe la solución o el seguimiento…" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-slate-200 text-sm resize-none focus:outline-none focus:border-indigo-500"></textarea>
+      </div>
+      <div id="mt-error" class="hidden text-rose-400 text-sm bg-rose-500/10 border border-rose-500/20 rounded-xl px-4 py-2.5"></div>
+    </div>
+    <div class="flex gap-3 px-6 pb-6">
+      <button id="mt-cancelar" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 text-slate-400 text-sm font-semibold hover:bg-slate-800 transition-colors">Cerrar</button>
+      <button id="mt-guardar" class="flex-1 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition-colors">Guardar cambios</button>
+    </div>
+  </div>
+</div>
 
 <script type="module">
   import { guardaSuperAdmin } from '../js/admin.js'
@@ -318,6 +400,91 @@
     const q = e.target.value.toLowerCase()
     renderTabla(clinicasData.filter(c => c.nombre.toLowerCase().includes(q) || (c.email_contacto || '').toLowerCase().includes(q)))
   })
+
+  // ── Bandeja de tickets de soporte ─────────────────────────────
+  let ticketsData = []
+  let filtroTicket = 'abierto'
+  let ticketActivo = null
+
+  const badgePrio = (p) => {
+    const m = { alta: 'bg-rose-500/12 text-rose-400', media: 'bg-amber-500/12 text-amber-400', baja: 'bg-slate-500/12 text-slate-400' }
+    return `<span class="px-2 py-0.5 rounded-full text-xs font-semibold ${m[p] || m.media}">${p || 'media'}</span>`
+  }
+  const badgeEstadoT = (s) => {
+    const m = { abierto: ['Abierto', 'bg-teal-500/12 text-teal-400'], en_progreso: ['En progreso', 'bg-indigo-500/12 text-indigo-400'], resuelto: ['Resuelto', 'bg-emerald-500/12 text-emerald-400'] }
+    const [txt, cls] = m[s] || [s, '']
+    return `<span class="px-2 py-0.5 rounded-full text-xs font-semibold ${cls}">${txt}</span>`
+  }
+  const fechaCorta = (ts) => new Date(ts).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })
+
+  function renderTickets() {
+    const tbody = document.getElementById('tabla-tickets')
+    const lista = filtroTicket ? ticketsData.filter(t => t.estado === filtroTicket) : ticketsData
+    if (!lista.length) {
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-slate-500">Sin tickets ${filtroTicket ? 'en este estado' : ''}. 🎉</td></tr>`
+      return
+    }
+    tbody.innerHTML = lista.map(t => `
+      <tr class="hover:bg-slate-800/30 transition-colors cursor-pointer" onclick="window.abrirTicket('${t.id}')">
+        <td class="px-6 py-4 text-sm font-semibold text-slate-200">${t.asunto}</td>
+        <td class="px-6 py-4 text-sm text-slate-400">${t.nombre || '—'} <span class="text-slate-600">· ${t.rol === 'admin_clinica' ? 'Admin' : 'Psicólogo'}</span></td>
+        <td class="px-6 py-4">${badgePrio(t.prioridad)}</td>
+        <td class="px-6 py-4">${badgeEstadoT(t.estado)}</td>
+        <td class="px-6 py-4 text-sm text-slate-500">${fechaCorta(t.created_at)}</td>
+      </tr>`).join('')
+  }
+
+  async function cargarTickets() {
+    const { data } = await supabase.from('tickets_soporte').select('*').order('created_at', { ascending: false })
+    ticketsData = data || []
+    document.getElementById('stat-tickets-abiertos').textContent = ticketsData.filter(t => t.estado === 'abierto').length
+    renderTickets()
+  }
+
+  document.querySelectorAll('.filtro-ticket').forEach(btn => {
+    btn.addEventListener('click', () => {
+      filtroTicket = btn.getAttribute('data-filtro')
+      document.querySelectorAll('.filtro-ticket').forEach(b => { b.style.background = ''; b.classList.add('text-slate-500') })
+      btn.style.background = 'rgba(20,184,166,0.12)'; btn.style.color = '#2dd4bf'; btn.classList.remove('text-slate-500')
+      renderTickets()
+    })
+  })
+
+  window.abrirTicket = (id) => {
+    ticketActivo = ticketsData.find(t => t.id === id)
+    if (!ticketActivo) return
+    document.getElementById('mt-asunto').textContent = ticketActivo.asunto
+    document.getElementById('mt-meta').textContent = `${ticketActivo.nombre || '—'} · ${ticketActivo.email || ''} · ${ticketActivo.categoria || 'general'} · ${fechaCorta(ticketActivo.created_at)}`
+    document.getElementById('mt-mensaje').textContent = ticketActivo.mensaje
+    document.getElementById('mt-estado').value = ticketActivo.estado
+    document.getElementById('mt-prioridad').value = ticketActivo.prioridad || 'media'
+    document.getElementById('mt-respuesta').value = ticketActivo.respuesta || ''
+    document.getElementById('mt-error').classList.add('hidden')
+    document.getElementById('modal-ticket').style.display = 'flex'
+  }
+
+  const cerrarModalT = () => { document.getElementById('modal-ticket').style.display = 'none'; ticketActivo = null }
+  document.getElementById('mt-cerrar').addEventListener('click', cerrarModalT)
+  document.getElementById('mt-cancelar').addEventListener('click', cerrarModalT)
+  document.getElementById('modal-ticket-overlay').addEventListener('click', cerrarModalT)
+
+  document.getElementById('mt-guardar').addEventListener('click', async () => {
+    if (!ticketActivo) return
+    const nuevoEstado = document.getElementById('mt-estado').value
+    const patch = {
+      estado: nuevoEstado,
+      prioridad: document.getElementById('mt-prioridad').value,
+      respuesta: document.getElementById('mt-respuesta').value.trim() || null,
+      updated_at: new Date().toISOString(),
+      resuelto_at: nuevoEstado === 'resuelto' ? new Date().toISOString() : null,
+    }
+    const { error } = await supabase.from('tickets_soporte').update(patch).eq('id', ticketActivo.id)
+    if (error) { const e = document.getElementById('mt-error'); e.textContent = 'No se pudo guardar: ' + error.message; e.classList.remove('hidden'); return }
+    cerrarModalT()
+    await cargarTickets()
+  })
+
+  await cargarTickets()
 
   document.getElementById('btn-logout')?.addEventListener('click', async (e) => {
     e.preventDefault()
@@ -466,6 +633,9 @@
       syncEmail()
       _toastSeg(emailNotif ? 'Alertas por email activadas' : 'Alertas por email desactivadas', false)
     })
+  }
+  function proximamente(nombre){
+    alert(nombre + ' — próximamente.\n\nEsta acción global requiere el backend con service-role (aún por conectar). Te avisaremos cuando esté lista.');
   }
 </script>
 </body>
