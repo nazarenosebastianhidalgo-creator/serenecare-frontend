@@ -40,3 +40,24 @@ export async function comprobarMantenimiento() {
   } catch (_) { /* red caída → no bloquear */ }
   return false;
 }
+
+// Chequeo combinado para páginas logueadas de cliente (1 sola llamada al RPC):
+// (a) mantenimiento activo → pantalla de mantenimiento;
+// (b) corte de sesiones: si el login del usuario es anterior a `sesiones_validas_desde`
+//     → cierra su sesión y lo manda al login. El super admin queda exento de ambos.
+// Devuelve true si ha bloqueado/cerrado (para que la página aborte su carga).
+export async function comprobarAccesoCliente(sessionUser) {
+  try {
+    const { data, error } = await supabase.rpc('estado_mantenimiento');
+    if (error || !data || data.es_super_admin) return false;
+    if (data.activo) { pantallaMantenimiento(data.mensaje); return true; }
+    const corte = data.sesiones_validas_desde ? new Date(data.sesiones_validas_desde) : null;
+    const login = sessionUser && sessionUser.last_sign_in_at ? new Date(sessionUser.last_sign_in_at) : null;
+    if (corte && login && login < corte) {
+      try { await supabase.auth.signOut(); } catch (_) {}
+      window.location.href = '/login.html?motivo=sesion_cerrada';
+      return true;
+    }
+  } catch (_) { /* red caída → no bloquear */ }
+  return false;
+}

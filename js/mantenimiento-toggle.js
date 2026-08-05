@@ -49,4 +49,17 @@ window.toggleMantenimiento = async function () {
   }
 };
 
+// ── Cerrar todas las sesiones (blando + duro en un clic) ──
+// Llama al RPC cerrar_todas_sesiones() (SECURITY DEFINER): revoca los refresh-tokens
+// de todos menos super_admin (DURO) y pone sesiones_validas_desde=now() (BLANDO,
+// efecto inmediato al navegar via el gate). El super admin no se cierra a sí mismo.
+window.cerrarTodasSesiones = async function () {
+  if (!confirm('¿Cerrar TODAS las sesiones activas?\n\nClínicas, psicólogos y pacientes tendrán que volver a iniciar sesión. Tú (super admin) seguirás dentro. Úsalo en incidentes de seguridad o tras cambios importantes.')) return;
+  try {
+    const { data, error } = await supabase.rpc('cerrar_todas_sesiones');
+    if (error) return toast('No se pudo: ' + error.message, true);
+    toast('🔒 Sesiones cerradas — ' + (data ?? 0) + ' tokens revocados. Todos deberán volver a entrar.', false);
+  } catch (e) { toast('Error: ' + (e.message || e), true); }
+};
+
 export function initMantenimientoToggle() { sync(); }
