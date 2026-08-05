@@ -273,14 +273,13 @@
         <option value="">Todos los roles</option>
         <option value="super_admin">Super Admin</option>
         <option value="admin_clinica">Admin Clínica</option>
-        <option value="terapeuta">Terapeuta</option>
+        <option value="psicologo">Psicólogo</option>
         <option value="paciente">Paciente</option>
       </select>
       <select id="filter-estado" class="bg-slate-800/60 border border-slate-700/50 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:outline-none focus:border-indigo-500/50 transition-colors cursor-pointer">
         <option value="">Todos los estados</option>
         <option value="activo">Activo</option>
         <option value="inactivo">Inactivo</option>
-        <option value="suspendido">Suspendido</option>
       </select>
     </div>
 
@@ -403,37 +402,19 @@ document.addEventListener('DOMContentLoaded', function() {
   })
 
   // ── Simulated Users Data ────────────────────────────────────────────────────
-  var USERS = [
-    { nombre: 'Nazareno Hidalgo', email: 'nazareno@serenecare.io', rol: 'super_admin', clinica: 'Global', fecha: '2024-01-10', estado: 'activo' },
-    { nombre: 'María García', email: 'maria.garcia@clinicasol.com', rol: 'admin_clinica', clinica: 'Clínica Sol', fecha: '2024-02-15', estado: 'activo' },
-    { nombre: 'Carlos López', email: 'carlos.lopez@menteplus.com', rol: 'admin_clinica', clinica: 'MentePlus', fecha: '2024-03-01', estado: 'activo' },
-    { nombre: 'Ana Martínez', email: 'ana.martinez@clinicasol.com', rol: 'terapeuta', clinica: 'Clínica Sol', fecha: '2024-03-20', estado: 'activo' },
-    { nombre: 'Pedro Sánchez', email: 'pedro.sanchez@menteplus.com', rol: 'terapeuta', clinica: 'MentePlus', fecha: '2024-04-05', estado: 'activo' },
-    { nombre: 'Laura Fernández', email: 'laura.f@bienestarintegral.com', rol: 'terapeuta', clinica: 'Bienestar Integral', fecha: '2024-04-12', estado: 'activo' },
-    { nombre: 'Roberto Díaz', email: 'roberto.diaz@psicocare.com', rol: 'admin_clinica', clinica: 'PsicoCare', fecha: '2024-04-18', estado: 'inactivo' },
-    { nombre: 'Sofía Ruiz', email: 'sofia.ruiz@clinicasol.com', rol: 'terapeuta', clinica: 'Clínica Sol', fecha: '2024-05-02', estado: 'activo' },
-    { nombre: 'Javier Moreno', email: 'javier.moreno@psicocare.com', rol: 'terapeuta', clinica: 'PsicoCare', fecha: '2024-05-10', estado: 'suspendido' },
-    { nombre: 'Elena Torres', email: 'elena.torres@menteplus.com', rol: 'terapeuta', clinica: 'MentePlus', fecha: '2024-05-18', estado: 'activo' },
-    { nombre: 'Miguel Ramos', email: 'miguel.ramos@bienestarintegral.com', rol: 'admin_clinica', clinica: 'Bienestar Integral', fecha: '2024-06-01', estado: 'activo' },
-    { nombre: 'Isabel Vargas', email: 'isabel.vargas@clinicasol.com', rol: 'terapeuta', clinica: 'Clínica Sol', fecha: '2024-06-15', estado: 'activo' },
-    { nombre: 'Daniel Castro', email: 'daniel.castro@neurovida.com', rol: 'admin_clinica', clinica: 'NeuroVida', fecha: '2024-07-01', estado: 'activo' },
-    { nombre: 'Carmen Ortiz', email: 'carmen.ortiz@neurovida.com', rol: 'terapeuta', clinica: 'NeuroVida', fecha: '2024-07-10', estado: 'activo' },
-    { nombre: 'Andrés Molina', email: 'andres.molina@psicocare.com', rol: 'terapeuta', clinica: 'PsicoCare', fecha: '2024-07-20', estado: 'inactivo' },
-    { nombre: 'Lucía Herrera', email: 'lucia.herrera@menteplus.com', rol: 'terapeuta', clinica: 'MentePlus', fecha: '2024-08-05', estado: 'activo' },
-    { nombre: 'Francisco Gil', email: 'francisco.gil@bienestarintegral.com', rol: 'terapeuta', clinica: 'Bienestar Integral', fecha: '2024-08-15', estado: 'activo' },
-    { nombre: 'Valentina Reyes', email: 'v.reyes@neurovida.com', rol: 'terapeuta', clinica: 'NeuroVida', fecha: '2024-09-01', estado: 'activo' },
-  ]
+  var USERS = []   // se rellena con los usuarios REALES (el módulo llama a _reloadUsuarios)
 
   var ROL_COLORS = {
     super_admin:  { bg: 'rgba(99,102,241,0.15)', color: '#818cf8', label: 'Super Admin' },
     admin_clinica:{ bg: 'rgba(139,92,246,0.15)', color: '#a78bfa', label: 'Admin Clínica' },
-    terapeuta:    { bg: 'rgba(34,197,94,0.12)',  color: '#4ade80', label: 'Terapeuta' },
+    psicologo:    { bg: 'rgba(34,197,94,0.12)',  color: '#4ade80', label: 'Psicólogo' },
+    terapeuta:    { bg: 'rgba(34,197,94,0.12)',  color: '#4ade80', label: 'Psicólogo' },
+    secretario:   { bg: 'rgba(251,191,36,0.12)', color: '#fbbf24', label: 'Secretario' },
     paciente:     { bg: 'rgba(20,184,166,0.12)', color: '#2dd4bf', label: 'Paciente' },
   }
   var ESTADO_COLORS = {
     activo:     { bg: 'rgba(34,197,94,0.12)',  color: '#4ade80'  },
     inactivo:   { bg: 'rgba(100,116,139,0.15)',color: '#94a3b8'  },
-    suspendido: { bg: 'rgba(239,68,68,0.12)',  color: '#f87171'  },
   }
 
   document.getElementById('stat-total').textContent = USERS.length
@@ -463,6 +444,10 @@ document.addEventListener('DOMContentLoaded', function() {
       var rc = ROL_COLORS[u.rol] || { bg:'rgba(100,116,139,0.15)', color:'#94a3b8', label: u.rol }
       var ec = ESTADO_COLORS[u.estado] || ESTADO_COLORS.inactivo
       var initials = u.nombre.split(' ').map(function(n){ return n[0] }).slice(0,2).join('')
+      var accionBtn = (u.rol === 'super_admin' || u.esYo || !u.id) ? '' :
+        (u.estado === 'activo'
+          ? '<button onclick="window._toggleUsuarioActivo(\'' + u.id + '\', false)" class="text-xs font-semibold px-3 py-1 rounded-lg" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2)">Desactivar</button>'
+          : '<button onclick="window._toggleUsuarioActivo(\'' + u.id + '\', true)" class="text-xs font-semibold px-3 py-1 rounded-lg" style="background:rgba(34,197,94,0.1);color:#4ade80;border:1px solid rgba(34,197,94,0.2)">Activar</button>')
       return '<tr>' +
         '<td class="px-8 py-4">' +
           '<div class="flex items-center gap-3">' +
@@ -479,7 +464,10 @@ document.addEventListener('DOMContentLoaded', function() {
         '<td class="px-4 py-4 text-sm text-slate-400">' + u.clinica + '</td>' +
         '<td class="px-4 py-4 text-xs text-slate-500 font-mono">' + u.fecha + '</td>' +
         '<td class="px-4 py-4 text-right">' +
-          '<span class="role-badge" style="background:' + ec.bg + ';color:' + ec.color + '">' + u.estado + '</span>' +
+          '<div class="flex items-center justify-end gap-2">' +
+            '<span class="role-badge" style="background:' + ec.bg + ';color:' + ec.color + '">' + u.estado + '</span>' +
+            accionBtn +
+          '</div>' +
         '</td>' +
       '</tr>'
     }).join('')
@@ -528,23 +516,26 @@ import { guardaSuperAdmin } from '../js/admin.js'
 const session = await guardaSuperAdmin()
 if (!session) { throw new Error('redirigiendo') }
 
-const [{ data: usuarios }, { data: clinicas }] = await Promise.all([
-  supabase.from('usuarios').select('id, nombre, apellido, email, rol, clinica_id, activo, created_at').order('created_at'),
-  supabase.from('clinicas').select('id, nombre'),
-])
+const miId = session.id || (session.user && session.user.id)
 
-if (usuarios && usuarios.length) {
+async function cargarUsuarios() {
+  const [{ data: usuarios }, { data: clinicas }] = await Promise.all([
+    supabase.from('usuarios').select('id, nombre, apellido, email, rol, clinica_id, activo, created_at').order('created_at'),
+    supabase.from('clinicas').select('id, nombre'),
+  ])
   const clinicaMap = {}
   ;(clinicas || []).forEach(function(c) { clinicaMap[c.id] = c.nombre })
 
-  const realUsers = usuarios.map(function(u) {
+  const realUsers = (usuarios || []).map(function(u) {
     return {
-      nombre: u.nombre + ' ' + u.apellido,
+      id: u.id,
+      nombre: (u.nombre || '') + ' ' + (u.apellido || ''),
       email: u.email,
       rol: u.rol,
       clinica: u.clinica_id ? (clinicaMap[u.clinica_id] || 'Sin clínica') : (u.rol === 'super_admin' ? 'Global' : 'Sin clínica'),
       fecha: (u.created_at || '').split('T')[0],
       estado: u.activo ? 'activo' : 'inactivo',
+      esYo: u.id === miId,
     }
   })
 
@@ -555,6 +546,17 @@ if (usuarios && usuarios.length) {
 
   if (typeof window._reloadUsuarios === 'function') { window._reloadUsuarios(realUsers) }
 }
+
+// Activar/desactivar un usuario (RPC set_usuario_activo, solo super_admin)
+window._toggleUsuarioActivo = async function(id, activar) {
+  const accion = activar ? 'activar' : 'desactivar'
+  if (!confirm('¿Seguro que quieres ' + accion + ' esta cuenta?')) return
+  const { error } = await supabase.rpc('set_usuario_activo', { uid: id, activar: activar })
+  if (error) { alert('No se pudo ' + accion + ': ' + error.message); return }
+  await cargarUsuarios()
+}
+
+await cargarUsuarios()
 </script>
 
 <script>
