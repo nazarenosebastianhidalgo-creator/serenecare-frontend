@@ -234,6 +234,14 @@ export async function verificarSesion(rolesPermitidos = []) {
     return null
   }
 
+  // Modo mantenimiento: bloquea a todos menos super_admin (el gate pinta la pantalla)
+  if (perfil.rol !== 'super_admin') {
+    try {
+      const { comprobarMantenimiento } = await import('./mantenimiento-gate.js')
+      if (await comprobarMantenimiento()) return null
+    } catch { /* si el gate falla, no bloquear el acceso */ }
+  }
+
   return perfil
 }
 

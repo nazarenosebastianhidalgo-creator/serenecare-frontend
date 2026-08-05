@@ -61,10 +61,9 @@
     <span class="text-sm font-semibold flex-1" style="color:#94a3b8;">Cerrar todas las sesiones</span>
     <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px;">Pronto</span>
   </button>
-  <button onclick="proximamente('Modo mantenimiento')" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span class="material-symbols-outlined" style="color:#64748b;font-size:17px;">construction</span>
-    <span class="text-sm font-semibold flex-1" style="color:#94a3b8;">Modo mantenimiento</span>
-    <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#64748b;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px;">Pronto</span>
+  <button onclick="toggleMantenimiento()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+    <span id="icon-mant" class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">construction</span>
+    <span id="label-mant" class="text-sm font-semibold" style="color:#cbd5e1;">Modo mantenimiento</span>
   </button>
   <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
   <a href="#" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
@@ -507,5 +506,6 @@
     alert(nombre + ' — próximamente.\n\nEsta acción global requiere el backend con service-role (aún por conectar). Te avisaremos cuando esté lista.');
   }
 </script>
+<script type="module">import { initMantenimientoToggle } from "../js/mantenimiento-toggle.js"; initMantenimientoToggle();</script>
 </body>
 </html>
