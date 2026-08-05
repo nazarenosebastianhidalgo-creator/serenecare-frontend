@@ -331,10 +331,11 @@
   }
 
   async function cargar() {
-    const { data: planes, error } = await supabase
-      .from('planes')
-      .select('*, clinicas(id, status)')
-      .order('precio_mensual', { ascending: true })
+    // Dos consultas simples (evitamos el embed clinicas(...), que fallaba en algún contexto RLS)
+    const [{ data: planes, error }, { data: clins }] = await Promise.all([
+      supabase.from('planes').select('*').order('precio_mensual', { ascending: true }),
+      supabase.from('clinicas').select('plan_id, status'),
+    ])
 
     $('loader').classList.add('hidden')
     $('content').classList.remove('hidden')
@@ -343,6 +344,10 @@
       $('planes-grid').innerHTML = `<p class="text-slate-500 col-span-3 text-center py-8">Sin datos de planes disponibles</p>`
       return
     }
+    // Join en JS: adjuntar a cada plan sus clínicas
+    const porPlan = {}
+    ;(clins || []).forEach(c => { (porPlan[c.plan_id] = porPlan[c.plan_id] || []).push(c) })
+    planes.forEach(p => { p.clinicas = porPlan[p.id] || [] })
 
     const totalClinicas = planes.reduce((s, p) => s + (p.clinicas?.length || 0), 0)
     const mrrTotal = planes.reduce((s, p) => {
@@ -397,7 +402,7 @@
             </div>
             <div class="flex justify-between">
               <span class="text-slate-400">Tokens IA/mes</span>
-              <span class="text-slate-200 font-semibold">${p.max_tokens_ia ? (p.max_tokens_ia/1000).toFixed(0)+'k' : '∞'}</span>
+              <span class="text-slate-200 font-semibold">${p.limite_ia_tokens ? (p.limite_ia_tokens/1000).toFixed(0)+'k' : '∞'}</span>
             </div>
             <div class="flex justify-between">
               <span class="text-slate-400">Almacenamiento</span>
@@ -454,7 +459,7 @@
     $('plan-precio').value = p.precio_mensual || ''
     $('plan-max-pacientes').value = p.max_pacientes || ''
     $('plan-max-psicologos').value = p.max_psicologos || ''
-    $('plan-max-tokens').value = p.max_tokens_ia || ''
+    $('plan-max-tokens').value = p.limite_ia_tokens || ''
     $('plan-almacenamiento').value = p.almacenamiento_gb || ''
     $('form-error').classList.add('hidden')
     $('modal-plan').classList.remove('hidden')
@@ -488,7 +493,7 @@
       precio_mensual: parseFloat($('plan-precio').value) || 0,
       max_pacientes: parseInt($('plan-max-pacientes').value) || null,
       max_psicologos: parseInt($('plan-max-psicologos').value) || null,
-      max_tokens_ia: parseInt($('plan-max-tokens').value) || null,
+      limite_ia_tokens: parseInt($('plan-max-tokens').value) || null,
       almacenamiento_gb: parseFloat($('plan-almacenamiento').value) || null,
     }
     if (!datos.nombre) {
