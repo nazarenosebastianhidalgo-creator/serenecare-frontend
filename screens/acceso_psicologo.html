@@ -101,6 +101,7 @@
 
   <script type="module">
     import { supabase } from '../js/supabase-client.js'
+    import { registrarIntentoLogin } from '../js/auth.js'
 
     document.getElementById('toggle-pwd').addEventListener('click', () => {
       const pwd  = document.getElementById('password')
@@ -131,7 +132,7 @@
 
       try {
         const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })
-        if (authError) throw new Error('Credenciales incorrectas.')
+        if (authError) { await registrarIntentoLogin(email, false, 'credenciales'); throw new Error('Credenciales incorrectas.') }
 
         const { data: perfil, error: perfilError } = await supabase
           .from('usuarios')
@@ -152,6 +153,7 @@
         localStorage.setItem('tp_clinica_id', perfil.clinica_id || '')
         localStorage.setItem('tp_clinica',    perfil.clinicas?.nombre || 'Mi Clínica')
 
+        await registrarIntentoLogin(email, true, 'ok')
         window.location.href = 'dashboard_psicologo.html'
       } catch (err) {
         mostrarError(err.message)

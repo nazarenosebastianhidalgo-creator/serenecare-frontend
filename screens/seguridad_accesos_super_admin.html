@@ -104,7 +104,7 @@
   <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-8 z-40 border-b border-slate-800/10">
     <div class="flex flex-col">
       <h2 class="font-headline text-xl font-extrabold text-slate-50 tracking-tighter">Seguridad & Accesos</h2>
-      <p class="text-slate-500 text-xs font-medium tracking-wide">Sesiones activas, intentos fallidos y alertas de seguridad</p>
+      <p class="text-slate-500 text-xs font-medium tracking-wide">Accesos recientes, intentos fallidos y alertas de seguridad</p>
     </div>
     <div class="flex items-center gap-3">
       <div class="relative">
@@ -191,9 +191,9 @@
     <!-- Security Stats -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
-        <p class="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-500">Usuarios Activos</p>
+        <p class="text-xs font-semibold uppercase tracking-wider mb-1 text-slate-500">Accesos recientes</p>
         <p id="stat-sesiones" class="text-2xl font-headline font-bold text-white">—</p>
-        <p class="text-xs text-slate-600 mt-1">Cuentas habilitadas</p>
+        <p class="text-xs text-slate-600 mt-1">Inicios de sesión OK</p>
       </div>
       <div class="bg-slate-900 rounded-2xl p-5 border border-slate-800/30">
         <p class="text-xs font-semibold uppercase tracking-wider mb-1" style="color:#f87171;">Fallos de Login</p>
@@ -217,9 +217,12 @@
       <!-- Active Sessions Table -->
       <div class="lg:col-span-3 bg-slate-900 rounded-2xl border border-slate-800/20 overflow-hidden">
         <div class="px-8 py-6 border-b border-slate-800/30 flex items-center justify-between">
-          <h3 class="font-headline text-lg font-bold text-white">Sesiones Activas</h3>
-          <button id="btn-kill-all" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:opacity-80" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
-            <span class="material-symbols-outlined text-sm">no_accounts</span> Cerrar todas
+          <div>
+            <h3 class="font-headline text-lg font-bold text-white">Accesos recientes</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Inicios de sesión correctos registrados</p>
+          </div>
+          <button onclick="cerrarTodasSesiones()" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:opacity-80" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
+            <span class="material-symbols-outlined text-sm">no_accounts</span> Cerrar todas las sesiones
           </button>
         </div>
         <div class="overflow-x-auto">
@@ -228,8 +231,7 @@
               <tr class="text-slate-500 border-b border-slate-800/50">
                 <th class="px-8 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold">Usuario</th>
                 <th class="px-4 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold">IP</th>
-                <th class="px-4 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold">Inicio</th>
-                <th class="px-4 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold text-right">Acción</th>
+                <th class="px-4 pb-4 pt-4 text-xs uppercase tracking-widest font-semibold">Cuándo</th>
               </tr>
             </thead>
             <tbody id="tbody-sessions" class="divide-y divide-slate-800/30"></tbody>
@@ -324,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var sessions = SESSIONS.slice()
   function renderSessions() {
     if (!sessions.length) {
-      tbody.innerHTML = '<tr><td colspan="4" class="text-slate-500 text-xs text-center py-8">No hay usuarios activos que mostrar</td></tr>'
+      tbody.innerHTML = '<tr><td colspan="3" class="text-slate-500 text-xs text-center py-8">Sin accesos registrados todavía</td></tr>'
       return
     }
     tbody.innerHTML = sessions.map(function(s, i) {
@@ -338,31 +340,12 @@ document.addEventListener('DOMContentLoaded', function() {
         '</td>' +
         '<td class="px-4 py-3.5 text-xs font-mono text-slate-400">' + s.ip + '</td>' +
         '<td class="px-4 py-3.5 text-xs text-slate-500">' + s.inicio + '</td>' +
-        '<td class="px-4 py-3.5 text-right">' +
-          '<button data-idx="' + i + '" class="btn-kill text-xs px-3 py-1 rounded-lg hover:opacity-90 transition-all" style="background:rgba(239,68,68,0.1);color:#f87171;">Terminar</button>' +
-        '</td>' +
       '</tr>'
     }).join('')
-    tbody.querySelectorAll('.btn-kill').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var idx = parseInt(btn.getAttribute('data-idx'))
-        var u = sessions[idx].user
-        sessions.splice(idx, 1)
-        renderSessions()
-        toast('Sesión de ' + u + ' terminada')
-      })
-    })
   }
   window._reloadSessions = function(newSessions) { sessions = newSessions; renderSessions() }
 
   renderSessions()
-
-  document.getElementById('btn-kill-all').addEventListener('click', function() {
-    if (!confirm('¿Terminar TODAS las sesiones activas?')) return
-    sessions = []
-    renderSessions()
-    toast('Todas las sesiones han sido cerradas')
-  })
 
   // Failed logins (datos reales vía _reloadFailed)
   var failedDiv = document.getElementById('failed-logins')
@@ -431,40 +414,6 @@ import { guardaSuperAdmin } from '../js/admin.js'
 const session = await guardaSuperAdmin()
 if (!session) { throw new Error('redirigiendo') }
 
-// Mostrar usuarios activos como sesiones registradas
-const ROL_COLORS_SA = {
-  super_admin:   '#818cf8',
-  admin_clinica: '#a78bfa',
-  psicologo:     '#4ade80',
-  terapeuta:     '#4ade80',
-  paciente:      '#2dd4bf',
-}
-
-const { data: usuarios } = await supabase
-  .from('usuarios')
-  .select('id, nombre, apellido, email, rol, activo')
-  .eq('activo', true)
-  .order('nombre')
-  .limit(50)
-
-if (usuarios && usuarios.length && typeof window._reloadSessions === 'function') {
-  const mapped = usuarios.map(function(u) {
-    return {
-      user: u.nombre + ' ' + u.apellido,
-      email: u.email,
-      ip: '—',
-      inicio: 'registrado',
-      rol: u.rol,
-      color: ROL_COLORS_SA[u.rol] || '#94a3b8',
-    }
-  })
-  window._reloadSessions(mapped)
-}
-if (typeof window._setSecStats === 'function') {
-  window._setSecStats({ sesiones: usuarios ? usuarios.length : 0 })
-}
-
-// ── Intentos de login reales (últimas 24h) ────────────────────
 function haceCuanto(iso) {
   const diff = Date.now() - new Date(iso).getTime()
   const min = Math.floor(diff / 60000)
@@ -474,6 +423,30 @@ function haceCuanto(iso) {
   if (h < 24) return 'hace ' + h + 'h'
   return 'hace ' + Math.floor(h / 24) + 'd'
 }
+
+// ── Accesos recientes: logins CORRECTOS registrados (reales) ──
+try {
+  const { data: accesos } = await supabase
+    .from('intentos_login')
+    .select('email, ip, created_at')
+    .eq('exito', true)
+    .order('created_at', { ascending: false })
+    .limit(50)
+
+  if (typeof window._reloadSessions === 'function') {
+    const mapped = (accesos || []).map(function(a) {
+      return { user: a.email || '—', email: a.email || '—', ip: a.ip || '—', inicio: haceCuanto(a.created_at), rol: '', color: '#4ade80' }
+    })
+    window._reloadSessions(mapped)
+  }
+  if (typeof window._setSecStats === 'function') {
+    window._setSecStats({ sesiones: (accesos || []).length })
+  }
+} catch (e) {
+  console.warn('[seguridad] accesos recientes no disponibles:', e && e.message)
+}
+
+// ── Intentos de login FALLIDOS (últimas 24h) ──────────────────
 
 try {
   const desde24h = new Date(Date.now() - 24 * 3600 * 1000).toISOString()

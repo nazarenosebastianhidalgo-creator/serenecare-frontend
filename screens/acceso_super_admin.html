@@ -132,6 +132,7 @@
 
   <script type="module">
     import { supabase } from '../js/supabase-client.js'
+    import { registrarIntentoLogin } from '../js/auth.js'
 
     // ── Manejo de callback magic link (cuando el usuario hace clic en el email) ──
     const hash = window.location.hash
@@ -193,7 +194,7 @@
 
       try {
         const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password })
-        if (authError) throw new Error('Credenciales incorrectas.')
+        if (authError) { await registrarIntentoLogin(email, false, 'credenciales'); throw new Error('Credenciales incorrectas.') }
 
         const { data: perfil, error: perfilError } = await supabase
           .from('usuarios').select('rol,nombre').eq('id', authData.user.id).single()
@@ -209,6 +210,7 @@
         localStorage.setItem('tp_email', email)
         localStorage.setItem('tp_nombre', perfil.nombre || 'Super Admin')
 
+        await registrarIntentoLogin(email, true, 'ok')
         window.location.href = '/screens/dashboard_maestro_super_admin.html'
       } catch (err) {
         mostrarError(err.message)

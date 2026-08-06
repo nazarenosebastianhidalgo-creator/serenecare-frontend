@@ -15,9 +15,9 @@ async function obtenerIP() {
   } catch { return null }
 }
 
-async function registrarIntentoLogin(email, exito, motivo) {
+export async function registrarIntentoLogin(email, exito, motivo) {
   try {
-    const ip = exito ? null : await obtenerIP()  // solo gastamos la llamada IP en fallos
+    const ip = await obtenerIP()  // capturamos IP en fallos y en accesos correctos
     await supabase.rpc('registrar_intento_login', {
       p_email: email || null,
       p_exito: !!exito,
@@ -92,6 +92,7 @@ export async function loginClinica({ clinicaId, email, password }) {
   localStorage.setItem('tp_clinica_id', perfil.clinica_id)
   localStorage.setItem('tp_nombre', `${perfil.nombre} ${perfil.apellido}`)
 
+  await registrarIntentoLogin(email, true, 'ok')
   return perfil
 }
 
@@ -115,6 +116,7 @@ export async function loginPacientePassword({ email, password }) {
 
   localStorage.setItem('tp_rol', perfil.rol)
   localStorage.setItem('tp_nombre', `${perfil.nombre} ${perfil.apellido}`)
+  await registrarIntentoLogin(email, true, 'ok')
   return perfil
 }
 
@@ -152,6 +154,7 @@ export async function verificarOTP(token) {
   localStorage.setItem('tp_nombre', `${perfil.nombre} ${perfil.apellido}`)
   sessionStorage.removeItem('tp_otp_email')
 
+  await registrarIntentoLogin(email, true, 'ok')
   return perfil
 }
 
