@@ -87,8 +87,13 @@
       <div id="p-falta" class="hidden" style="color:#fbbf24;font-size:12px;margin:4px 0;"></div>
       <label>Ciudad / zona <span style="color:#64748b;font-weight:400;">(sale en Google: "psicólogo en …")</span></label>
       <input type="text" id="p-ciudad" placeholder="Ej: Madrid, Chamberí" />
-      <label>Foto (URL, opcional)</label>
-      <input type="url" id="p-foto" placeholder="https://…" />
+      <label>Foto (opcional)</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="url" id="p-foto" placeholder="Pega una URL o sube una imagen" style="flex:1;" />
+        <input type="file" id="p-foto-file" accept="image/*" style="display:none" />
+        <button type="button" class="mini" id="p-foto-btn" style="background:rgba(45,212,191,0.12);color:#5eead4;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Subir foto</button>
+      </div>
+      <div id="p-foto-msg" style="font-size:12px;color:#94a3b8;margin-top:4px;"></div>
       <button class="btn" id="p-save">Guardar página</button>
       <div id="pmsg"></div>
     </div>
@@ -262,6 +267,26 @@
       } else { $('p-falta').classList.add('hidden') }
     } catch {}
   }
+  // Subida de foto a Supabase Storage (bucket público fotos-perfil)
+  $('p-foto-btn').addEventListener('click', () => $('p-foto-file').click())
+  $('p-foto-file').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return
+    if (file.size > 5 * 1024 * 1024) { $('p-foto-msg').textContent = 'La imagen debe pesar menos de 5 MB.'; return }
+    $('p-foto-msg').textContent = 'Subiendo…'
+    try {
+      const uid = session.user.id
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '')
+      const path = `${uid}/${Date.now()}.${ext}`
+      const { error } = await supabase.storage.from('fotos-perfil').upload(path, file, { upsert: true, contentType: file.type })
+      if (error) throw error
+      const { data } = supabase.storage.from('fotos-perfil').getPublicUrl(path)
+      $('p-foto').value = data.publicUrl
+      $('p-foto-msg').textContent = '✓ Foto subida. Dale a "Guardar página" para aplicarla.'
+    } catch (err) {
+      $('p-foto-msg').textContent = 'No se pudo subir la foto.'
+    }
+  })
+
   $('p-copy').addEventListener('click', () => copiar($('p-url').value, $('p-copy')))
   $('p-pub').addEventListener('change', () => $('p-urlrow').classList.toggle('hidden', !$('p-pub').checked || !$('p-url').value))
   $('p-save').addEventListener('click', async () => {
