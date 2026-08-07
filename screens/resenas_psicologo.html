@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Reputación & Google</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#020617; font-family:'Inter',sans-serif; color:#e2e8f0; padding:32px 16px 60px; }
+  .wrap { max-width:660px; margin:0 auto; }
+  h1 { font-family:'Manrope',sans-serif; font-size:24px; font-weight:800; margin:0 0 4px; color:#f1f5f9; }
+  .sub { color:#94a3b8; font-size:14px; margin:0 0 22px; line-height:1.5; }
+  .sub b { color:#5eead4; }
+  .card { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:18px; margin-bottom:14px; }
+  h2 { font-family:'Manrope',sans-serif; font-size:13px; font-weight:800; color:#5eead4; margin:26px 0 10px; text-transform:uppercase; letter-spacing:.04em; }
+  h2.violet { color:#a78bfa; }
+  label { display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin:12px 0 5px; }
+  input[type=text], input[type=url], input[type=number], textarea { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:11px 13px; color:#e2e8f0; font-family:inherit; font-size:14px; outline:none; }
+  input:focus, textarea:focus { border-color:#2dd4bf; }
+  textarea { min-height:70px; resize:vertical; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+  @media(max-width:520px){ .stats{ grid-template-columns:repeat(2,1fr); } }
+  .stat { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:14px 10px; text-align:center; }
+  .stat .n { font-family:'Manrope',sans-serif; font-size:22px; font-weight:800; color:#f1f5f9; }
+  .stat .l { font-size:11px; color:#94a3b8; margin-top:2px; }
+  .row { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:10px 0; }
+  .row .t { font-size:13.5px; color:#cbd5e1; }
+  .switch { position:relative; width:44px; height:24px; flex:none; }
+  .switch input { opacity:0; width:0; height:0; }
+  .slider { position:absolute; inset:0; background:#334155; border-radius:24px; transition:.2s; cursor:pointer; }
+  .slider:before { content:""; position:absolute; height:18px; width:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
+  .switch input:checked + .slider { background:#2dd4bf; }
+  .switch input:checked + .slider:before { transform:translateX(20px); }
+  .btn { width:100%; margin-top:14px; background:linear-gradient(135deg,#059669,#047857); color:#fff; border:none; border-radius:12px; padding:13px; font-family:'Manrope',sans-serif; font-weight:800; font-size:14px; cursor:pointer; }
+  .btn.violet { background:linear-gradient(135deg,#7c3aed,#6d28d9); }
+  .btn:disabled { opacity:.6; cursor:default; }
+  .resena { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:14px; margin-bottom:10px; }
+  .resena.priv { border-color:rgba(251,191,36,0.25); background:rgba(251,191,36,0.04); }
+  .stars-s { color:#fbbf24; font-size:15px; letter-spacing:2px; }
+  .stars-s .off { color:#334155; }
+  .r-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
+  .r-name { font-weight:700; color:#f1f5f9; font-size:13.5px; }
+  .badge { font-size:10px; font-weight:700; text-transform:uppercase; padding:2px 8px; border-radius:8px; }
+  .b-pub { color:#5eead4; background:rgba(45,212,191,0.12); }
+  .b-priv { color:#fbbf24; background:rgba(251,191,36,0.12); }
+  .b-pend { color:#94a3b8; background:rgba(148,163,184,0.12); }
+  .r-txt { font-size:13.5px; color:#cbd5e1; line-height:1.5; margin:4px 0; }
+  .r-reply { margin-top:8px; }
+  .r-reply textarea { min-height:48px; font-size:13px; }
+  .r-reply .mini { background:rgba(255,255,255,0.06); color:#cbd5e1; border:none; border-radius:8px; padding:7px 12px; font-size:12px; font-weight:700; cursor:pointer; margin-top:6px; }
+  .item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:12px; padding:14px; margin-bottom:10px; position:relative; }
+  .item .tit { font-family:'Manrope',sans-serif; font-weight:700; color:#f1f5f9; font-size:13.5px; margin:0 0 4px; }
+  .item .txt { font-size:13.5px; color:#cbd5e1; margin:0; white-space:pre-line; line-height:1.5; }
+  .copy { position:absolute; top:10px; right:10px; background:rgba(255,255,255,0.06); border:none; color:#94a3b8; font-size:11px; font-weight:700; padding:5px 9px; border-radius:8px; cursor:pointer; }
+  .copy:hover { color:#5eead4; }
+  ul { margin:6px 0 0; padding-left:18px; } li { font-size:13.5px; color:#cbd5e1; margin-bottom:6px; }
+  #msg, #gmsg { text-align:center; font-size:13px; color:#94a3b8; margin:12px 0; min-height:16px; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>⭐ Reputación & Google</h1>
+    <p class="sub">Cuando un paciente mejora, le pedimos su opinión sola. Las buenas suman a tu reputación; las mejorables te llegan en privado. <b>Así se llena tu consulta sin mover un dedo.</b></p>
+
+    <div class="stats" id="stats">
+      <div class="stat"><div class="n" id="s-media">—</div><div class="l">Valoración media</div></div>
+      <div class="stat"><div class="n" id="s-pub">—</div><div class="l">Publicadas</div></div>
+      <div class="stat"><div class="n" id="s-priv">—</div><div class="l">Privadas</div></div>
+      <div class="stat"><div class="n" id="s-pend">—</div><div class="l">Pendientes</div></div>
+    </div>
+
+    <!-- Config -->
+    <div class="card">
+      <div class="row">
+        <span class="t">Pedir reseña automáticamente</span>
+        <label class="switch"><input type="checkbox" id="c-auto" /><span class="slider"></span></label>
+      </div>
+      <label>Pedirla al llegar a la sesión número</label>
+      <input type="number" id="c-num" min="1" max="20" value="4" />
+      <label>Enlace para dejar reseña en Google (tu ficha de Google Business)</label>
+      <input type="url" id="c-google" placeholder="https://g.page/r/…  o  https://search.google.com/local/writereview?placeid=…" />
+      <label>Mensaje del email (opcional, dejamos uno por defecto)</label>
+      <textarea id="c-texto" placeholder="Nos alegra ver cómo avanza tu proceso…"></textarea>
+      <button class="btn" id="btn-cfg">Guardar ajustes</button>
+      <div id="msg"></div>
+    </div>
+
+    <!-- Optimizador Google -->
+    <h2 class="violet">🚀 Optimizador de Google Business (IA)</h2>
+    <div class="card">
+      <p class="sub" style="margin:0 0 6px;">La IA te genera tu ficha perfecta lista para pegar en Google y rankear mejor cuando busquen un psicólogo en tu zona.</p>
+      <label>Tu ciudad / zona</label>
+      <input type="text" id="g-ciudad" placeholder="Ej: Madrid, Chamberí" />
+      <button class="btn violet" id="btn-google">✨ Optimizar mi ficha de Google</button>
+      <div id="gmsg"></div>
+      <div id="g-out" class="hidden"></div>
+    </div>
+
+    <!-- Reseñas -->
+    <h2>💬 Tus reseñas</h2>
+    <div id="lista"><p class="sub">Cargando…</p></div>
+  </div>
+
+<script type="module">
+  import { supabase } from '../js/supabase-client.js'
+  const API = ''
+  const $ = id => document.getElementById(id)
+  const esc = s => (s || '').replace(/</g, '&lt;')
+
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) { location.href = '../screens/acceso_psicologo.html'; }
+  const auth = { 'Authorization': 'Bearer ' + (session?.access_token || ''), 'Content-Type': 'application/json' }
+
+  function copiar(texto, btn) {
+    navigator.clipboard.writeText(texto).then(() => { const o = btn.textContent; btn.textContent = '✓'; setTimeout(() => btn.textContent = o, 1400); })
+  }
+  window.__copiar = copiar
+
+  function starsHTML(n) {
+    let h = ''
+    for (let i = 1; i <= 5; i++) h += `<span class="${i <= n ? '' : 'off'}">★</span>`
+    return `<span class="stars-s">${h}</span>`
+  }
+
+  function resenaHTML(r) {
+    const badge = r.estado === 'publicada' ? '<span class="badge b-pub">Publicada</span>'
+      : r.estado === 'privada' ? '<span class="badge b-priv">Feedback privado</span>'
+      : r.estado === 'solicitada' ? '<span class="badge b-pend">Pendiente</span>'
+      : '<span class="badge b-pend">Oculta</span>'
+    const nombre = r.anonima ? 'Anónima' : (r.paciente_nombre || 'Paciente')
+    const cuerpo = r.estado === 'solicitada'
+      ? '<p class="r-txt" style="color:#64748b;">Aún no ha respondido.</p>'
+      : `${r.puntuacion ? starsHTML(r.puntuacion) : ''}
+         ${r.texto ? `<p class="r-txt">${esc(r.texto)}</p>` : '<p class="r-txt" style="color:#64748b;">Sin comentario.</p>'}`
+    // Responder solo a las publicadas
+    const reply = r.estado === 'publicada'
+      ? `<div class="r-reply">
+           <textarea id="rep-${r.id}" placeholder="Responder públicamente (opcional)…">${esc(r.respuesta || '')}</textarea>
+           <button class="mini" onclick="__responder('${r.id}')">Guardar respuesta</button>
+         </div>` : ''
+    return `<div class="resena ${r.estado === 'privada' ? 'priv' : ''}">
+      <div class="r-head"><span class="r-name">${esc(nombre)}</span>${badge}</div>
+      ${cuerpo}${reply}
+    </div>`
+  }
+
+  async function responder(id) {
+    const ta = $('rep-' + id); if (!ta) return
+    const r = await fetch(API + '/api/resenas/' + id + '/responder', {
+      method: 'POST', headers: auth, body: JSON.stringify({ respuesta: ta.value })
+    })
+    const btn = ta.nextElementSibling
+    if (btn) { const o = btn.textContent; btn.textContent = r.ok ? '✓ Guardada' : 'Error'; setTimeout(() => btn.textContent = o, 1600) }
+  }
+  window.__responder = responder
+
+  async function cargar() {
+    try {
+      const r = await fetch(API + '/api/resenas', { headers: auth })
+      if (!r.ok) throw new Error(r.status)
+      const d = await r.json()
+      $('s-media').textContent = d.stats.media != null ? d.stats.media : '—'
+      $('s-pub').textContent = d.stats.publicadas
+      $('s-priv').textContent = d.stats.privadas
+      $('s-pend').textContent = d.stats.pendientes
+      $('c-auto').checked = !!d.config.auto_resena
+      $('c-num').value = d.config.resena_sesion_num || 4
+      $('c-google').value = d.config.google_business_url || ''
+      $('c-texto').value = d.config.texto_resena || ''
+      $('lista').innerHTML = (d.resenas && d.resenas.length)
+        ? d.resenas.map(resenaHTML).join('')
+        : '<p class="sub">Aún no tienes reseñas. En cuanto tus pacientes lleguen a la sesión configurada, se les pedirá automáticamente.</p>'
+    } catch (e) {
+      $('lista').innerHTML = '<p class="sub">No se pudieron cargar las reseñas.</p>'
+    }
+  }
+
+  $('btn-cfg').addEventListener('click', async () => {
+    $('btn-cfg').disabled = true; $('msg').textContent = 'Guardando…'
+    try {
+      const r = await fetch(API + '/api/resenas/config', {
+        method: 'POST', headers: auth, body: JSON.stringify({
+          auto_resena: $('c-auto').checked,
+          resena_sesion_num: Number($('c-num').value),
+          texto_resena: $('c-texto').value,
+          google_business_url: $('c-google').value,
+        })
+      })
+      $('msg').textContent = r.ok ? '✓ Guardado' : 'No se pudo guardar'
+    } catch { $('msg').textContent = 'No se pudo guardar' }
+    finally { $('btn-cfg').disabled = false; setTimeout(() => $('msg').textContent = '', 1800) }
+  })
+
+  $('btn-google').addEventListener('click', async () => {
+    $('btn-google').disabled = true; $('gmsg').textContent = '✨ Optimizando tu ficha…'; $('g-out').classList.add('hidden')
+    try {
+      const r = await fetch(API + '/api/resenas/google-optimizar', {
+        method: 'POST', headers: auth, body: JSON.stringify({ ciudad: $('g-ciudad').value.trim() })
+      })
+      if (!r.ok) throw new Error(r.status)
+      const d = await r.json()
+      const block = (tit, txt) => `<div class="item"><button class="copy" onclick="__copiar(${JSON.stringify(txt)}, this)">copiar</button><p class="tit">${esc(tit)}</p><p class="txt">${esc(txt)}</p></div>`
+      const list = (tit, arr) => `<div class="item"><p class="tit">${esc(tit)}</p><ul>${(arr||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`
+      let html = ''
+      if (d.categoria_principal) html += block('Categoría principal', d.categoria_principal)
+      if (d.categorias_secundarias?.length) html += list('Categorías secundarias', d.categorias_secundarias)
+      if (d.descripcion) html += block('Descripción optimizada', d.descripcion)
+      if (d.servicios?.length) html += list('Servicios a listar', d.servicios)
+      if (d.atributos?.length) html += list('Atributos', d.atributos)
+      if (d.ideas_fotos?.length) html += list('Fotos que subir', d.ideas_fotos)
+      if (d.posts?.length) { html += '<h2 class="violet" style="margin-top:14px;">Publicaciones para tu ficha</h2>'
+        html += d.posts.map(p => block(p.titulo || 'Publicación', (p.texto||'') + (p.cta ? '\n\n' + p.cta : ''))).join('') }
+      if (d.consejos?.length) html += list('Para subir en Google Maps', d.consejos)
+      $('g-out').innerHTML = html || '<p class="sub">—</p>'
+      $('g-out').classList.remove('hidden'); $('gmsg').textContent = ''
+    } catch (e) {
+      $('gmsg').textContent = 'No se pudo generar. Inténtalo de nuevo.'
+    } finally { $('btn-google').disabled = false }
+  })
+
+  cargar()
+</script>
+</body>
+</html>
