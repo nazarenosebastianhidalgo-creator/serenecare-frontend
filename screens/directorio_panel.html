@@ -68,7 +68,10 @@
       <div id="msg"></div>
     </div>
 
-    <h2>Tus pacientes interesados <span id="creditos-badge" style="font-size:11px;color:#5eead4;background:rgba(45,212,191,0.12);padding:2px 8px;border-radius:8px;margin-left:6px;">— créditos</span></h2>
+    <h2 style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">Tus pacientes interesados
+      <span id="creditos-badge" style="font-size:11px;color:#5eead4;background:rgba(45,212,191,0.12);padding:2px 8px;border-radius:8px;">— créditos</span>
+      <button id="btn-comprar" class="mini" style="background:rgba(45,212,191,0.14);color:#5eead4;text-transform:none;letter-spacing:normal;">Comprar créditos</button>
+    </h2>
     <div class="card">
       <div id="leads-list"><div class="empty">Cargando…</div></div>
     </div>
@@ -173,11 +176,28 @@
         : '<div class="empty">Aún no tienes pacientes interesados. En cuanto publiques tu ficha y el directorio esté abierto, aquí verás sus mensajes.</div>'
     } catch { $('leads-list').innerHTML = '<div class="empty">No se pudo cargar.</div>' }
   }
+  async function comprarCreditos() {
+    const btn = $('btn-comprar')
+    btn.disabled = true
+    try {
+      const r = await fetch(API + '/api/directorio/comprar-creditos', { headers: auth })
+      const d = await r.json()
+      if (d.disponible && d.url) { window.location.href = d.url; return }
+      alert('La compra de créditos estará disponible muy pronto. ¡Estamos ultimando el pago!')
+    } catch { alert('No se pudo abrir el pago. Inténtalo de nuevo.') }
+    finally { btn.disabled = false }
+  }
+  $('btn-comprar').addEventListener('click', comprarCreditos)
+
   window.__desbloquear = async function (id, btn) {
     btn.disabled = true; btn.textContent = 'Desbloqueando…'
     try {
       const r = await fetch(API + '/api/directorio/lead/' + id + '/desbloquear', { method: 'POST', headers: auth })
-      if (r.status === 402) { btn.textContent = 'Sin créditos'; alert('No te quedan créditos de lead. Compra un pack para desbloquear.'); btn.disabled = false; return }
+      if (r.status === 402) {
+        btn.textContent = 'Desbloquear (1 crédito)'; btn.disabled = false
+        if (confirm('No te quedan créditos de lead. ¿Comprar un pack ahora?')) comprarCreditos()
+        return
+      }
       if (!r.ok) throw new Error()
       await cargarLeads()
     } catch { btn.textContent = 'Error'; btn.disabled = false }
