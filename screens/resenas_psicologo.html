@@ -71,6 +71,28 @@
       <div class="stat"><div class="n" id="s-pend">—</div><div class="l">Pendientes</div></div>
     </div>
 
+    <!-- Mi página pública SEO -->
+    <h2>🌐 Mi página pública</h2>
+    <div class="card">
+      <p class="sub" style="margin:0 0 4px;">Tu mini-web para que te encuentren en Google y compartir (bio de Instagram, WhatsApp…). <b>Es tuya: la muestras u ocultas cuando quieras.</b></p>
+      <div class="row">
+        <span class="t">Página pública activa</span>
+        <label class="switch"><input type="checkbox" id="p-pub" /><span class="slider"></span></label>
+      </div>
+      <div id="p-urlrow" class="hidden" style="display:flex;gap:8px;align-items:center;margin:6px 0;">
+        <input type="text" id="p-url" readonly style="flex:1;font-size:12.5px;color:#5eead4;" />
+        <button class="mini" id="p-copy" style="background:rgba(255,255,255,0.06);color:#cbd5e1;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;">copiar</button>
+        <a id="p-open" target="_blank" rel="noopener" class="mini" style="background:rgba(45,212,191,0.12);color:#5eead4;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;text-decoration:none;">abrir</a>
+      </div>
+      <div id="p-falta" class="hidden" style="color:#fbbf24;font-size:12px;margin:4px 0;"></div>
+      <label>Ciudad / zona <span style="color:#64748b;font-weight:400;">(sale en Google: "psicólogo en …")</span></label>
+      <input type="text" id="p-ciudad" placeholder="Ej: Madrid, Chamberí" />
+      <label>Foto (URL, opcional)</label>
+      <input type="url" id="p-foto" placeholder="https://…" />
+      <button class="btn" id="p-save">Guardar página</button>
+      <div id="pmsg"></div>
+    </div>
+
     <!-- Config -->
     <div class="card">
       <div class="row">
@@ -220,7 +242,46 @@
     } finally { $('btn-google').disabled = false }
   })
 
+  // ── Mi página pública ──────────────────────────────────────────────
+  async function cargarPublica() {
+    try {
+      const r = await fetch(API + '/api/perfil/publica', { headers: auth })
+      if (!r.ok) return
+      const d = await r.json()
+      $('p-pub').checked = !!d.publicado
+      $('p-ciudad').value = d.ciudad || ''
+      $('p-foto').value = d.foto_url || ''
+      if (d.url) {
+        $('p-url').value = d.url
+        $('p-open').href = d.url
+        $('p-urlrow').classList.toggle('hidden', !d.publicado)
+      }
+      if (!d.completa && d.faltan && d.faltan.length) {
+        $('p-falta').textContent = 'Para una ficha completa, añade: ' + d.faltan.join(', ') + '.'
+        $('p-falta').classList.remove('hidden')
+      } else { $('p-falta').classList.add('hidden') }
+    } catch {}
+  }
+  $('p-copy').addEventListener('click', () => copiar($('p-url').value, $('p-copy')))
+  $('p-pub').addEventListener('change', () => $('p-urlrow').classList.toggle('hidden', !$('p-pub').checked || !$('p-url').value))
+  $('p-save').addEventListener('click', async () => {
+    $('p-save').disabled = true; $('pmsg').textContent = 'Guardando…'
+    try {
+      const r = await fetch(API + '/api/perfil/publica', {
+        method: 'POST', headers: auth, body: JSON.stringify({
+          publicado: $('p-pub').checked,
+          ciudad: $('p-ciudad').value,
+          foto_url: $('p-foto').value,
+        })
+      })
+      $('pmsg').textContent = r.ok ? '✓ Guardado' : 'No se pudo guardar'
+      if (r.ok) await cargarPublica()
+    } catch { $('pmsg').textContent = 'No se pudo guardar' }
+    finally { $('p-save').disabled = false; setTimeout(() => $('pmsg').textContent = '', 1800) }
+  })
+
   cargar()
+  cargarPublica()
 </script>
 </body>
 </html>
