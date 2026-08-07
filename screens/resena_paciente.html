@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Tu opinión</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#020617; font-family:'Inter',sans-serif; color:#e2e8f0; padding:28px 16px 60px; }
+  .wrap { max-width:460px; margin:0 auto; }
+  h1 { font-family:'Manrope',sans-serif; font-size:22px; font-weight:800; margin:0 0 6px; color:#f1f5f9; }
+  .sub { color:#94a3b8; font-size:14px; margin:0 0 20px; line-height:1.5; }
+  .sub b { color:#5eead4; }
+  .card { background:#0a1628; border:1px solid rgba(255,255,255,0.06); border-radius:16px; padding:22px; margin-bottom:14px; }
+  .stars { display:flex; gap:8px; justify-content:center; margin:10px 0 4px; }
+  .star { font-size:40px; cursor:pointer; color:#334155; transition:transform .1s, color .1s; user-select:none; line-height:1; }
+  .star:hover { transform:scale(1.12); }
+  .star.on { color:#fbbf24; }
+  .rate-txt { text-align:center; font-size:13px; color:#94a3b8; min-height:18px; margin-bottom:6px; }
+  label { display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin:14px 0 5px; }
+  textarea { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:11px 13px; color:#e2e8f0; font-family:inherit; font-size:14px; outline:none; min-height:90px; resize:vertical; }
+  textarea:focus { border-color:#2dd4bf; }
+  .check { display:flex; align-items:center; gap:9px; margin-top:14px; font-size:13px; color:#cbd5e1; cursor:pointer; }
+  .check input { width:17px; height:17px; accent-color:#2dd4bf; }
+  .btn { width:100%; margin-top:18px; background:linear-gradient(135deg,#059669,#047857); color:#fff; border:none; border-radius:12px; padding:14px; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; cursor:pointer; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  .btn-google { display:inline-block; width:100%; text-align:center; margin-top:14px; background:#fff; color:#1a1a1a; border-radius:12px; padding:14px; font-family:'Manrope',sans-serif; font-weight:800; font-size:15px; text-decoration:none; }
+  .center { text-align:center; padding:44px 16px; }
+  .big { font-size:52px; }
+  #msg { text-align:center; font-size:13px; color:#f87171; margin-top:10px; min-height:16px; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div id="cargando" class="center sub">Cargando…</div>
+
+    <!-- Formulario -->
+    <div id="app" class="hidden">
+      <h1 id="titulo">¿Cómo ha sido tu experiencia?</h1>
+      <p class="sub" id="intro">Tu opinión es totalmente opcional y nos ayuda muchísimo.</p>
+      <div class="card">
+        <div class="stars" id="stars">
+          <span class="star" data-v="1">★</span>
+          <span class="star" data-v="2">★</span>
+          <span class="star" data-v="3">★</span>
+          <span class="star" data-v="4">★</span>
+          <span class="star" data-v="5">★</span>
+        </div>
+        <div class="rate-txt" id="rate-txt">Toca una estrella</div>
+
+        <label>Cuéntanos un poco (opcional)</label>
+        <textarea id="f-texto" placeholder="Lo que quieras compartir sobre tu experiencia…"></textarea>
+
+        <label class="check"><input type="checkbox" id="f-anonima" /> Publicar de forma anónima (sin mi nombre)</label>
+
+        <button class="btn" id="btn-enviar" disabled>Enviar mi opinión</button>
+        <div id="msg"></div>
+      </div>
+      <p class="sub" style="font-size:12px;text-align:center;">Si prefieres no hacerlo, simplemente cierra esta página.</p>
+    </div>
+
+    <!-- Gracias: positiva -->
+    <div id="ok-pos" class="hidden center">
+      <div class="big">💚</div>
+      <h1>¡Gracias de corazón!</h1>
+      <p class="sub">Tu opinión significa mucho.</p>
+      <a id="btn-google" class="btn-google hidden" target="_blank" rel="noopener">⭐ Ayúdanos también en Google</a>
+    </div>
+
+    <!-- Gracias: privada (feedback bajo) -->
+    <div id="ok-priv" class="hidden center">
+      <div class="big">🙏</div>
+      <h1>Gracias por tu sinceridad</h1>
+      <p class="sub">Hemos hecho llegar tu opinión a tu profesional en privado para poder mejorar. Gracias por ayudarnos a hacerlo mejor.</p>
+    </div>
+
+    <!-- Ya respondida / enlace inválido -->
+    <div id="invalido" class="hidden center">
+      <div class="big">🌿</div>
+      <h1 id="inv-tit">Este enlace ya no está disponible</h1>
+      <p class="sub" id="inv-txt">Puede que ya hayas dejado tu opinión. ¡Gracias!</p>
+    </div>
+
+  </div>
+
+<script type="module">
+  import { supabase } from '../js/supabase-client.js'
+
+  const token = new URLSearchParams(location.search).get('token')
+  let rating = 0
+  let googleUrl = null
+
+  const show = (id) => ['cargando','app','ok-pos','ok-priv','invalido']
+    .forEach(s => document.getElementById(s).classList.toggle('hidden', s !== id))
+
+  async function init() {
+    if (!token) { show('invalido'); return }
+    const { data, error } = await supabase.rpc('resena_info', { p_token: token })
+    if (error || !data || !data.ok) { show('invalido'); return }
+    if (data.ya_respondida) {
+      document.getElementById('inv-tit').textContent = 'Ya recibimos tu opinión'
+      document.getElementById('inv-txt').textContent = '¡Gracias por tomarte el tiempo!'
+      show('invalido'); return
+    }
+    googleUrl = data.google_url || null
+    if (data.psicologo) {
+      document.getElementById('intro').innerHTML =
+        `Nos alegra ver cómo avanza tu proceso con <b>${data.psicologo}</b>. Tu opinión es opcional y nos ayuda muchísimo.`
+    }
+    show('app')
+  }
+
+  const LABELS = ['', 'Muy insatisfecho', 'Insatisfecho', 'Correcto', 'Satisfecho', '¡Excelente!']
+  const stars = [...document.querySelectorAll('.star')]
+  function paint(v) { stars.forEach(s => s.classList.toggle('on', Number(s.dataset.v) <= v)) }
+  stars.forEach(s => {
+    s.addEventListener('mouseenter', () => paint(Number(s.dataset.v)))
+    s.addEventListener('mouseleave', () => paint(rating))
+    s.addEventListener('click', () => {
+      rating = Number(s.dataset.v); paint(rating)
+      document.getElementById('rate-txt').textContent = LABELS[rating]
+      document.getElementById('btn-enviar').disabled = false
+    })
+  })
+
+  document.getElementById('btn-enviar').addEventListener('click', async () => {
+    if (!rating) return
+    const btn = document.getElementById('btn-enviar')
+    const msg = document.getElementById('msg')
+    msg.textContent = ''
+    btn.disabled = true; btn.textContent = 'Enviando…'
+    const { data, error } = await supabase.rpc('enviar_resena', {
+      p_token: token,
+      p_puntuacion: rating,
+      p_texto: document.getElementById('f-texto').value,
+      p_anonima: document.getElementById('f-anonima').checked,
+    })
+    if (error || !data || !data.ok) {
+      msg.textContent = 'No se pudo enviar. Inténtalo de nuevo.'
+      btn.disabled = false; btn.textContent = 'Enviar mi opinión'
+      return
+    }
+    if (data.publicada) {
+      const g = document.getElementById('btn-google')
+      if (data.google_url) { g.href = data.google_url; g.classList.remove('hidden') }
+      show('ok-pos')
+    } else {
+      show('ok-priv')
+    }
+  })
+
+  init()
+</script>
+</body>
+</html>
