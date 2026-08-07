@@ -409,6 +409,18 @@ Rendimiento y consumo
 <p class="text-slate-500 text-xs max-w-xs">Cuando conectemos el medidor de tokens verás aquí el consumo real, el coste estimado y las clínicas que más usan la IA.</p>
 </div>
 </div>
+
+<div class="glass-panel p-6 rounded-2xl">
+<h2 class="text-xl font-bold text-slate-100 flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-teal-400" data-icon="travel_explore">travel_explore</span>
+Directorio público
+</h2>
+<p class="text-slate-400 text-sm mb-4">Cuando esté <b>activado</b>, el buscador <code>/directorio</code> será visible e indexable en Google. Manténlo <b>apagado</b> hasta tener suficientes fichas publicadas.</p>
+<div class="flex items-center justify-between">
+<span id="dir-estado" class="text-sm font-semibold text-slate-300">Cargando…</span>
+<button id="dir-toggle" class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all" style="background:rgba(45,212,191,0.12);color:#5eead4;border:1px solid rgba(45,212,191,0.3);cursor:pointer;">—</button>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -650,6 +662,34 @@ Rendimiento y consumo
     localStorage.removeItem('tp_rol'); localStorage.removeItem('tp_user_id'); localStorage.removeItem('tp_email')
     window.location.href = 'acceso_super_admin.html'
   })
+
+  // ── Toggle Directorio público (config_sistema.directorio_publico, RLS super_admin) ──
+  ;(async function initDirectorioToggle() {
+    const estado = $('dir-estado'), btn = $('dir-toggle')
+    if (!estado || !btn) return
+    function pintar(on) {
+      estado.textContent = on ? 'Público (visible en Google)' : 'Oculto'
+      estado.style.color = on ? '#5eead4' : '#94a3b8'
+      btn.textContent = on ? 'Ocultar directorio' : 'Hacer público'
+      btn.style.background = on ? 'rgba(248,113,113,0.12)' : 'rgba(45,212,191,0.12)'
+      btn.style.color = on ? '#fca5a5' : '#5eead4'
+      btn.style.borderColor = on ? 'rgba(248,113,113,0.3)' : 'rgba(45,212,191,0.3)'
+    }
+    let on = false
+    try {
+      const { data } = await supabase.from('config_sistema').select('directorio_publico').eq('id', 1).maybeSingle()
+      on = !!(data && data.directorio_publico)
+    } catch {}
+    pintar(on)
+    btn.addEventListener('click', async () => {
+      const nuevo = !on
+      if (nuevo && !confirm('¿Hacer PÚBLICO el directorio?\n\nEl buscador /directorio será visible e indexable en Google. Hazlo solo cuando tengas suficientes fichas publicadas.')) return
+      btn.disabled = true
+      const { error } = await supabase.from('config_sistema').update({ directorio_publico: nuevo }).eq('id', 1)
+      btn.disabled = false
+      if (!error) { on = nuevo; pintar(on) } else { alert('No se pudo cambiar: ' + error.message) }
+    })
+  })()
 </script>
 
 <script>
