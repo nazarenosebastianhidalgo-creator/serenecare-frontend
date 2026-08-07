@@ -154,7 +154,13 @@
         localStorage.setItem('tp_clinica',    perfil.clinicas?.nombre || 'Mi Clínica')
 
         await registrarIntentoLogin(email, true, 'ok')
-        window.location.href = 'dashboard_psicologo.html'
+        // Los del plan "Solo Directorio" van a su mini-panel, no al dashboard completo
+        let destino = 'dashboard_psicologo.html'
+        try {
+          const { data: plan } = await supabase.rpc('mi_plan')
+          if (plan === 'directorio') destino = 'directorio_panel.html'
+        } catch (_) {}
+        window.location.href = destino
       } catch (err) {
         mostrarError(err.message)
         btn.disabled = false

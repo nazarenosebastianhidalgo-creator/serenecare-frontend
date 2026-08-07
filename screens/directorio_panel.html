@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SereneCare — Panel del directorio</title>
+<meta name="robots" content="noindex" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;} body{margin:0;background:#020617;color:#e2e8f0;font-family:'Inter',sans-serif;padding:32px 16px 60px;}
+  .wrap{max-width:600px;margin:0 auto;}
+  h1{font-family:'Manrope';font-size:24px;font-weight:800;margin:0 0 4px;color:#f1f5f9;}
+  .sub{color:#94a3b8;font-size:14px;margin:0 0 22px;line-height:1.5;} .sub b{color:#5eead4;}
+  h2{font-family:'Manrope';font-size:13px;font-weight:800;color:#5eead4;margin:24px 0 10px;text-transform:uppercase;letter-spacing:.04em;}
+  .card{background:#0a1628;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:18px;margin-bottom:14px;}
+  label{display:block;font-size:12px;font-weight:600;color:#cbd5e1;margin:12px 0 5px;}
+  input,textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 13px;color:#e2e8f0;font-family:inherit;font-size:14px;outline:none;}
+  input:focus,textarea:focus{border-color:#2dd4bf;} textarea{min-height:80px;resize:vertical;}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0;}
+  .switch{position:relative;width:44px;height:24px;flex:none;} .switch input{opacity:0;width:0;height:0;}
+  .slider{position:absolute;inset:0;background:#334155;border-radius:24px;transition:.2s;cursor:pointer;}
+  .slider:before{content:"";position:absolute;height:18px;width:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+  .switch input:checked + .slider{background:#2dd4bf;} .switch input:checked + .slider:before{transform:translateX(20px);}
+  .btn{width:100%;margin-top:14px;background:linear-gradient(135deg,#059669,#047857);color:#fff;border:none;border-radius:12px;padding:13px;font-family:'Manrope';font-weight:800;font-size:14px;cursor:pointer;}
+  .btn:disabled{opacity:.6;} .mini{background:rgba(255,255,255,0.06);color:#cbd5e1;border:none;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .urlrow{display:flex;gap:8px;align-items:center;margin:6px 0;}
+  #msg,#foto-msg{font-size:12px;color:#94a3b8;margin-top:6px;min-height:14px;text-align:center;}
+  .empty{text-align:center;color:#64748b;font-size:13px;padding:24px 10px;} .hidden{display:none;}
+  .logout{color:#64748b;font-size:12px;text-decoration:none;} .logout:hover{color:#94a3b8;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <h1>Panel del directorio</h1>
+      <a href="#" id="logout" class="logout">Salir</a>
+    </div>
+    <p class="sub" id="saludo">Completa tu ficha y publícala para que los pacientes te encuentren. <b>Es tuya: la muestras u ocultas cuando quieras.</b></p>
+
+    <h2>Tu ficha pública</h2>
+    <div class="card">
+      <div class="row">
+        <span style="font-size:13.5px;color:#cbd5e1;">Ficha pública activa</span>
+        <label class="switch"><input type="checkbox" id="p-pub" /><span class="slider"></span></label>
+      </div>
+      <div id="urlrow" class="urlrow hidden">
+        <input type="text" id="p-url" readonly style="flex:1;font-size:12.5px;color:#5eead4;" />
+        <button class="mini" id="p-copy">copiar</button>
+        <a id="p-open" target="_blank" rel="noopener" class="mini" style="background:rgba(45,212,191,0.12);color:#5eead4;text-decoration:none;">abrir</a>
+      </div>
+      <div id="faltan" class="hidden" style="color:#fbbf24;font-size:12px;margin:4px 0;"></div>
+
+      <label>Especialidad</label>
+      <input type="text" id="f-especialidad" placeholder="Ej: Ansiedad, TCC" />
+      <label>Ciudad</label>
+      <input type="text" id="f-ciudad" placeholder="Ej: Madrid" />
+      <label>Sobre ti (bio)</label>
+      <textarea id="f-bio" placeholder="Tu enfoque y experiencia…"></textarea>
+      <label>Foto</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="url" id="f-foto" placeholder="Pega una URL o sube una imagen" style="flex:1;" />
+        <input type="file" id="f-foto-file" accept="image/*" style="display:none" />
+        <button type="button" class="mini" id="foto-btn" style="background:rgba(45,212,191,0.12);color:#5eead4;">Subir foto</button>
+      </div>
+      <div id="foto-msg"></div>
+
+      <button class="btn" id="btn-save">Guardar ficha</button>
+      <div id="msg"></div>
+    </div>
+
+    <h2>Tus pacientes interesados</h2>
+    <div class="card">
+      <div class="empty">Aquí verás los pacientes que te contacten desde tu ficha. <br>Estará disponible cuando el directorio se abra al público.</div>
+    </div>
+  </div>
+
+<script type="module">
+  import { supabase } from '../js/supabase-client.js'
+  const API = ''
+  const $ = id => document.getElementById(id)
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) { location.href = 'acceso_psicologo.html' }
+  const auth = { 'Authorization': 'Bearer ' + (session?.access_token || ''), 'Content-Type': 'application/json' }
+
+  const nombre = localStorage.getItem('tp_nombre')
+  if (nombre) $('saludo').innerHTML = `Hola <b>${nombre}</b>. Completa tu ficha y publícala para que los pacientes te encuentren.`
+
+  async function cargar() {
+    try {
+      const [rp, rpr] = await Promise.all([
+        fetch(API + '/api/perfil/publica', { headers: auth }).then(r => r.json()),
+        fetch(API + '/api/perfil/profesional', { headers: auth }).then(r => r.json()),
+      ])
+      $('p-pub').checked = !!rp.publicado
+      $('f-ciudad').value = rp.ciudad || ''
+      $('f-foto').value = rp.foto_url || ''
+      if (rp.url) { $('p-url').value = rp.url; $('p-open').href = rp.url; $('urlrow').classList.toggle('hidden', !rp.publicado) }
+      if (!rp.completa && rp.faltan && rp.faltan.length) {
+        $('faltan').textContent = 'Para una ficha completa añade: ' + rp.faltan.join(', ') + '.'
+        $('faltan').classList.remove('hidden')
+      }
+      $('f-especialidad').value = rpr.especialidad || ''
+      $('f-bio').value = rpr.bio || ''
+    } catch (_) {}
+  }
+
+  $('p-pub').addEventListener('change', () => $('urlrow').classList.toggle('hidden', !$('p-pub').checked || !$('p-url').value))
+  $('p-copy').addEventListener('click', () => navigator.clipboard.writeText($('p-url').value).then(() => { $('p-copy').textContent = '✓'; setTimeout(() => $('p-copy').textContent = 'copiar', 1200) }))
+
+  $('foto-btn').addEventListener('click', () => $('f-foto-file').click())
+  $('f-foto-file').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return
+    if (file.size > 5 * 1024 * 1024) { $('foto-msg').textContent = 'Máx 5 MB.'; return }
+    $('foto-msg').textContent = 'Subiendo…'
+    try {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '')
+      const path = `${session.user.id}/${Date.now()}.${ext}`
+      const { error } = await supabase.storage.from('fotos-perfil').upload(path, file, { upsert: true, contentType: file.type })
+      if (error) throw error
+      $('f-foto').value = supabase.storage.from('fotos-perfil').getPublicUrl(path).data.publicUrl
+      $('foto-msg').textContent = '✓ Subida. Dale a "Guardar ficha".'
+    } catch { $('foto-msg').textContent = 'No se pudo subir.' }
+  })
+
+  $('btn-save').addEventListener('click', async () => {
+    $('btn-save').disabled = true; $('msg').textContent = 'Guardando…'
+    try {
+      await fetch(API + '/api/perfil/profesional', {
+        method: 'PUT', headers: auth,
+        body: JSON.stringify({ especialidad: $('f-especialidad').value.trim(), bio: $('f-bio').value.trim() })
+      })
+      const r = await fetch(API + '/api/perfil/publica', {
+        method: 'POST', headers: auth,
+        body: JSON.stringify({ publicado: $('p-pub').checked, ciudad: $('f-ciudad').value.trim(), foto_url: $('f-foto').value.trim() })
+      })
+      $('msg').textContent = r.ok ? '✓ Guardado' : 'No se pudo guardar'
+      if (r.ok) await cargar()
+    } catch { $('msg').textContent = 'No se pudo guardar' }
+    finally { $('btn-save').disabled = false; setTimeout(() => $('msg').textContent = '', 1800) }
+  })
+
+  $('logout').addEventListener('click', async (e) => {
+    e.preventDefault()
+    await supabase.auth.signOut()
+    localStorage.clear()
+    location.href = 'acceso_psicologo.html'
+  })
+
+  cargar()
+</script>
+</body>
+</html>

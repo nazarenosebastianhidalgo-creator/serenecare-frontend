@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aparece en el directorio | SereneCare</title>
+<meta name="robots" content="noindex" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;} body{margin:0;background:#f8fafc;color:#0f172a;font-family:'Inter',sans-serif;}
+  .wrap{max-width:480px;margin:0 auto;padding:32px 16px 64px;}
+  h1{font-family:'Manrope';font-size:24px;font-weight:800;margin:0 0 6px;}
+  .sub{color:#64748b;font-size:14px;margin:0 0 22px;line-height:1.5;}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:18px;padding:22px;}
+  label{display:block;font-size:12px;font-weight:600;color:#334155;margin:12px 0 5px;}
+  input,textarea{width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;outline:none;}
+  input:focus,textarea:focus{border-color:#0f766e;}
+  textarea{min-height:80px;resize:vertical;}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media(max-width:440px){.two{grid-template-columns:1fr;}}
+  .btn{width:100%;margin-top:18px;background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Manrope';font-weight:800;font-size:15px;cursor:pointer;}
+  .btn:disabled{opacity:.6;cursor:default;}
+  .hint{background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:12px 14px;font-size:13px;color:#0f766e;margin-bottom:18px;}
+  #msg{text-align:center;font-size:13px;color:#dc2626;margin-top:10px;min-height:16px;}
+  .ok{text-align:center;padding:40px 16px;}
+  .ok .big{font-size:52px;} .hidden{display:none;}
+  a.link{color:#0f766e;font-weight:700;text-decoration:none;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <div id="form-view">
+      <h1>Aparece en el directorio</h1>
+      <p class="sub">Crea tu ficha y deja que los pacientes te encuentren. <b>Gratis apuntarte</b> — solo pagas cuando te llega un paciente.</p>
+      <div class="hint">✨ Sin permanencia. Tu ficha, tu control: la muestras u ocultas cuando quieras.</div>
+      <div class="card">
+        <label>Nombre y apellidos *</label>
+        <input id="f-nombre" type="text" placeholder="Ej: Ana Martínez" />
+        <div class="two">
+          <div><label>Especialidad</label><input id="f-especialidad" type="text" placeholder="Ej: Ansiedad, TCC" /></div>
+          <div><label>Ciudad</label><input id="f-ciudad" type="text" placeholder="Ej: Madrid" /></div>
+        </div>
+        <label>Sobre ti (bio)</label>
+        <textarea id="f-bio" placeholder="Cuéntales a tus pacientes tu enfoque y experiencia…"></textarea>
+        <label>Email *</label>
+        <input id="f-email" type="email" placeholder="tu@email.com" />
+        <label>Contraseña * <span style="color:#94a3b8;font-weight:400;">(mín. 8 caracteres)</span></label>
+        <input id="f-password" type="password" placeholder="••••••••" />
+        <button class="btn" id="btn-alta">Crear mi ficha gratis</button>
+        <div id="msg"></div>
+      </div>
+      <p class="sub" style="text-align:center;margin-top:16px;">¿Ya tienes cuenta? <a class="link" href="acceso_psicologo.html">Entra aquí</a></p>
+    </div>
+
+    <div id="ok-view" class="hidden ok">
+      <div class="big">🌿</div>
+      <h1>¡Ficha creada!</h1>
+      <p class="sub">Tu perfil está listo (oculto de momento). Entra a tu panel para completarlo y publicarlo cuando quieras.</p>
+      <a class="btn" style="display:inline-block;text-decoration:none;max-width:280px;" href="acceso_psicologo.html">Entrar a mi panel</a>
+    </div>
+
+  </div>
+
+<script>
+  var API = '';
+  var $ = function(id){ return document.getElementById(id); };
+  $('btn-alta').addEventListener('click', async function(){
+    var msg = $('msg'); msg.textContent = '';
+    var payload = {
+      nombre: $('f-nombre').value.trim(),
+      especialidad: $('f-especialidad').value.trim(),
+      ciudad: $('f-ciudad').value.trim(),
+      bio: $('f-bio').value.trim(),
+      email: $('f-email').value.trim(),
+      password: $('f-password').value
+    };
+    if(!payload.nombre){ msg.textContent = 'Escribe tu nombre.'; return; }
+    if(!/.+@.+\..+/.test(payload.email)){ msg.textContent = 'Email no válido.'; return; }
+    if(payload.password.length < 8){ msg.textContent = 'La contraseña debe tener al menos 8 caracteres.'; return; }
+    var btn = $('btn-alta'); btn.disabled = true; btn.textContent = 'Creando…';
+    try {
+      var r = await fetch(API + '/api/directorio/alta', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+      });
+      var d = await r.json();
+      if(!r.ok){ msg.textContent = d.error || 'No se pudo crear la ficha.'; btn.disabled=false; btn.textContent='Crear mi ficha gratis'; return; }
+      $('form-view').classList.add('hidden');
+      $('ok-view').classList.remove('hidden');
+    } catch(e){
+      msg.textContent = 'Error de conexión. Inténtalo de nuevo.';
+      btn.disabled=false; btn.textContent='Crear mi ficha gratis';
+    }
+  });
+</script>
+</body>
+</html>
