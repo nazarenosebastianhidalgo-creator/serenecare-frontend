@@ -150,6 +150,7 @@
   })
 
   // ── Bandeja de leads ──────────────────────────────────────────────
+  let gratisAhora = 0
   function leadHTML(l) {
     const fecha = new Date(l.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
     const abierto = l.estado === 'desbloqueado'
@@ -162,7 +163,7 @@
         ? `<p style="font-size:13px;color:#5eead4;margin:4px 0 0;">📩 ${(l.contacto || '').replace(/</g, '&lt;')}</p>
            ${l.mensaje ? `<p style="font-size:13px;color:#cbd5e1;margin:4px 0 0;">${l.mensaje.replace(/</g, '&lt;')}</p>` : ''}`
         : `<p style="font-size:13px;color:#64748b;margin:4px 0;">Contacto oculto ${l.mensaje ? '· mensaje ' + l.mensaje : ''}</p>
-           <button class="mini" style="background:rgba(45,212,191,0.14);color:#5eead4;margin-top:2px;" onclick="__desbloquear('${l.id}', this)">Desbloquear (1 crédito)</button>`}
+           <button class="mini" style="background:rgba(45,212,191,0.14);color:#5eead4;margin-top:2px;" onclick="__desbloquear('${l.id}', this)">Desbloquear ${gratisAhora > 0 ? '(gratis)' : '(1 crédito)'}</button>`}
     </div>`
   }
   async function cargarLeads() {
@@ -170,7 +171,8 @@
       const r = await fetch(API + '/api/directorio/leads', { headers: auth })
       if (!r.ok) throw new Error()
       const d = await r.json()
-      $('creditos-badge').textContent = (d.creditos || 0) + ' créditos'
+      gratisAhora = d.gratis_restantes || 0
+      $('creditos-badge').textContent = gratisAhora + ' gratis · ' + (d.creditos || 0) + ' créditos'
       $('leads-list').innerHTML = (d.leads && d.leads.length)
         ? d.leads.map(leadHTML).join('')
         : '<div class="empty">Aún no tienes pacientes interesados. En cuanto publiques tu ficha y el directorio esté abierto, aquí verás sus mensajes.</div>'
