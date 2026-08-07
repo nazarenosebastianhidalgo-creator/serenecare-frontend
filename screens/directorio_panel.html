@@ -68,9 +68,9 @@
       <div id="msg"></div>
     </div>
 
-    <h2>Tus pacientes interesados</h2>
+    <h2>Tus pacientes interesados <span id="creditos-badge" style="font-size:11px;color:#5eead4;background:rgba(45,212,191,0.12);padding:2px 8px;border-radius:8px;margin-left:6px;">— créditos</span></h2>
     <div class="card">
-      <div class="empty">Aquí verás los pacientes que te contacten desde tu ficha. <br>Estará disponible cuando el directorio se abra al público.</div>
+      <div id="leads-list"><div class="empty">Cargando…</div></div>
     </div>
   </div>
 
@@ -146,7 +146,45 @@
     location.href = 'acceso_psicologo.html'
   })
 
+  // ── Bandeja de leads ──────────────────────────────────────────────
+  function leadHTML(l) {
+    const fecha = new Date(l.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+    const abierto = l.estado === 'desbloqueado'
+    return `<div style="border-top:1px solid rgba(255,255,255,0.05);padding:12px 0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+        <span style="font-weight:700;color:#f1f5f9;font-size:14px;">${(l.nombre || 'Paciente').replace(/</g, '&lt;')}</span>
+        <span style="font-size:11px;color:#64748b;">${fecha}</span>
+      </div>
+      ${abierto
+        ? `<p style="font-size:13px;color:#5eead4;margin:4px 0 0;">📩 ${(l.contacto || '').replace(/</g, '&lt;')}</p>
+           ${l.mensaje ? `<p style="font-size:13px;color:#cbd5e1;margin:4px 0 0;">${l.mensaje.replace(/</g, '&lt;')}</p>` : ''}`
+        : `<p style="font-size:13px;color:#64748b;margin:4px 0;">Contacto oculto ${l.mensaje ? '· mensaje ' + l.mensaje : ''}</p>
+           <button class="mini" style="background:rgba(45,212,191,0.14);color:#5eead4;margin-top:2px;" onclick="__desbloquear('${l.id}', this)">Desbloquear (1 crédito)</button>`}
+    </div>`
+  }
+  async function cargarLeads() {
+    try {
+      const r = await fetch(API + '/api/directorio/leads', { headers: auth })
+      if (!r.ok) throw new Error()
+      const d = await r.json()
+      $('creditos-badge').textContent = (d.creditos || 0) + ' créditos'
+      $('leads-list').innerHTML = (d.leads && d.leads.length)
+        ? d.leads.map(leadHTML).join('')
+        : '<div class="empty">Aún no tienes pacientes interesados. En cuanto publiques tu ficha y el directorio esté abierto, aquí verás sus mensajes.</div>'
+    } catch { $('leads-list').innerHTML = '<div class="empty">No se pudo cargar.</div>' }
+  }
+  window.__desbloquear = async function (id, btn) {
+    btn.disabled = true; btn.textContent = 'Desbloqueando…'
+    try {
+      const r = await fetch(API + '/api/directorio/lead/' + id + '/desbloquear', { method: 'POST', headers: auth })
+      if (r.status === 402) { btn.textContent = 'Sin créditos'; alert('No te quedan créditos de lead. Compra un pack para desbloquear.'); btn.disabled = false; return }
+      if (!r.ok) throw new Error()
+      await cargarLeads()
+    } catch { btn.textContent = 'Error'; btn.disabled = false }
+  }
+
   cargar()
+  cargarLeads()
 </script>
 </body>
 </html>
