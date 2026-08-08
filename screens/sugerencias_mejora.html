@@ -142,19 +142,19 @@
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
       <span class="material-symbols-outlined" style="color:#a5b4fc;font-size:20px;font-variation-settings:'FILL' 1;">auto_awesome</span>
       <p class="font-headline font-bold text-white" style="margin:0;font-size:15px;">Qué construir primero — score automático</p>
-      <span style="font-size:11px;color:#64748b;margin-left:4px;">crítico ×3 · importante ×2 · nice ×1 · tamaño solo×1 pequeña×1.5 mediana×2.5 grande×4 · clínicas distintas ×1.5</span>
+      <span style="font-size:11px;color:#64748b;margin-left:4px;">prioridad ×3/×2/×1 · tamaño ×1→×4 · clínicas distintas ×1.5 · actividad (capa 2) ×1.5 · clínica en riesgo (capa 3) ×1.5</span>
     </div>
     <div id="ranking-lista" class="space-y-2"></div>
     <div id="ranking-empty" class="hidden" style="font-size:13px;color:#475569;">Sin datos suficientes todavía — las sugerencias de las clínicas irán apareciendo aquí.</div>
-    <!-- Capa 2 y 3 pendientes -->
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:16px;">
-      <div style="display:flex;align-items:center;gap:6px;opacity:0.4;">
-        <span class="material-symbols-outlined" style="font-size:14px;color:#94a3b8;">timeline</span>
-        <span style="font-size:11px;color:#94a3b8;">Capa 2: comportamiento (activa con Vercel Analytics)</span>
+    <!-- Capas 2 y 3 activas -->
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="material-symbols-outlined" style="font-size:14px;color:#34d399;">timeline</span>
+        <span id="capa2-txt" style="font-size:11px;color:#94a3b8;">Capa 2 · comportamiento: activa (sube con el uso real)</span>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;opacity:0.4;">
-        <span class="material-symbols-outlined" style="font-size:14px;color:#94a3b8;">trending_up</span>
-        <span style="font-size:11px;color:#94a3b8;">Capa 3: retención por clínica (activa con Supabase)</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="material-symbols-outlined" style="font-size:14px;color:#34d399;">trending_up</span>
+        <span id="capa3-txt" style="font-size:11px;color:#94a3b8;">Capa 3 · retención: activa</span>
       </div>
     </div>
   </div>
@@ -221,24 +221,50 @@ function renderRanking() {
   if (!todas.length) { el.innerHTML = ''; empty.classList.remove('hidden'); return; }
   empty.classList.add('hidden');
 
-  // Score por categoría — capa 1: prioridad × tamaño clínica, bonus por clínicas distintas
+  // Score por categoría — 3 capas:
+  //  Capa 1: prioridad × tamaño clínica + bonus por clínicas distintas.
+  //  Capa 2 (comportamiento): la categoría más USADA pesa más (actividad real cross-tenant).
+  //  Capa 3 (retención): sugerencia de una clínica en RIESGO de fuga pesa ×1.5.
   var scores = {};
   var clinicasPorCat = {};
+  var riesgo = window.__riesgo || {};
   todas.forEach(function(s) {
     var cat  = s.categoria || 'otra';
     var pts  = PRIO_PTS[s.prioridad] || 1;
     var mult = TAM_MULT[s.tamano]    || 1;
-    scores[cat] = (scores[cat] || 0) + (pts * mult);
+    var c3   = (s.clinica && riesgo[s.clinica]) ? 1.5 : 1;   // Capa 3
+    scores[cat] = (scores[cat] || 0) + (pts * mult * c3);
     if (!clinicasPorCat[cat]) clinicasPorCat[cat] = new Set();
     if (s.clinica) clinicasPorCat[cat].add(s.clinica);
   });
 
-  // Bonus ×1.5 por cada clínica distinta adicional que lo pidió
+  // Capa 1: bonus ×1.5 por cada clínica distinta adicional que lo pidió
   Object.keys(scores).forEach(function(cat) {
     var clinicas = clinicasPorCat[cat] ? clinicasPorCat[cat].size : 1;
-    if (clinicas > 1) scores[cat] = Math.round(scores[cat] * (1 + (clinicas - 1) * 0.5));
-    else scores[cat] = Math.round(scores[cat]);
+    if (clinicas > 1) scores[cat] = scores[cat] * (1 + (clinicas - 1) * 0.5);
   });
+
+  // Capa 2: comportamiento — factor por actividad real de la categoría (hasta ×1.5)
+  var act = window.__actCat || {};
+  var maxAct = Math.max(1, act.agenda || 0, act.pacientes || 0, act.ia || 0, act.facturacion || 0);
+  Object.keys(scores).forEach(function(cat) {
+    var a = act[cat] || 0;
+    scores[cat] = Math.round(scores[cat] * (1 + 0.5 * (a / maxAct)));
+  });
+
+  // Texto en vivo de las capas (categoría más activa + clínicas en riesgo)
+  var c2el = document.getElementById('capa2-txt');
+  if (c2el) {
+    var topCat = Object.keys(act).sort(function(a,b){ return (act[b]||0) - (act[a]||0); })[0];
+    c2el.textContent = (maxAct > 1)
+      ? 'Capa 2 · comportamiento: más actividad en ' + (CAT_LABEL[topCat] || '—') + ' → sube su score'
+      : 'Capa 2 · comportamiento: activa (sube con el uso real)';
+  }
+  var c3el = document.getElementById('capa3-txt');
+  if (c3el) {
+    var nr = Object.keys(riesgo).length;
+    c3el.textContent = 'Capa 3 · retención: ' + nr + ' clínica' + (nr!==1?'s':'') + ' en riesgo → sus sugerencias ×1.5';
+  }
 
   var ranking = Object.keys(scores).sort(function(a,b){ return scores[b] - scores[a]; });
   var maxScore = scores[ranking[0]] || 1;
@@ -401,14 +427,35 @@ window.__sugDelete    = async function(id) { try { await supabase.from('sugerenc
 window.__sugDeleteAll = async function() { try { const ids = (window.__SUG || []).map(function(s){ return s.id; }); if (ids.length) await supabase.from('sugerencias_mejora').delete().in('id', ids); } catch(e) { console.warn('sug clear:', e.message); } };
 await _cargarSugerenciasDB();
 
-const btn = document.getElementById('btn-logout');
-if (btn) {
-  btn.addEventListener('click', async e => {
-    e.preventDefault();
-    await supabase.auth.signOut();
-    window.location.href = 'acceso_super_admin.html';
-  });
+// ── Capas 2 y 3: señales reales cross-tenant (super_admin) ──────────────────
+// Capa 2 (comportamiento): actividad por categoría en los últimos 30 días.
+// Capa 3 (retención): clínicas activas/trial SIN citas en los últimos 14 días = riesgo de fuga.
+async function _cargarCapas() {
+  const d30 = new Date(Date.now() - 30 * 864e5).toISOString();
+  const d14 = new Date(Date.now() - 14 * 864e5).toISOString();
+  const cnt = async (t) => {
+    try { const r = await supabase.from(t).select('id', { count: 'exact', head: true }).gte('created_at', d30); return r.count || 0; }
+    catch { return 0; }
+  };
+  window.__actCat = {
+    agenda:      await cnt('citas'),
+    pacientes:   await cnt('pacientes'),
+    ia:          await cnt('evaluaciones'),
+    facturacion: await cnt('facturas'),
+  };
+  const riesgo = {};
+  try {
+    const { data: cls } = await supabase.from('clinicas').select('id, nombre, status');
+    const { data: rec } = await supabase.from('citas').select('clinica_id').gte('created_at', d14);
+    const activos = new Set((rec || []).map(x => x.clinica_id));
+    (cls || []).forEach(cl => {
+      if (['activa', 'trial'].includes(cl.status) && cl.nombre && !activos.has(cl.id)) riesgo[cl.nombre] = true;
+    });
+  } catch (e) { console.warn('capa3:', e.message); }
+  window.__riesgo = riesgo;
+  if (window.renderSugerencias) window.renderSugerencias();
 }
+await _cargarCapas();
 </script>
 </body>
 </html>
