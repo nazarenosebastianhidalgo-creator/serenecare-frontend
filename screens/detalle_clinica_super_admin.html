@@ -184,17 +184,17 @@
 <!-- Header Section -->
 <section class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
 <div class="flex items-center gap-6">
-<div class="w-24 h-24 bg-surface-container-lowest rounded-2xl flex items-center justify-center shadow-sm text-2xl font-extrabold text-primary">
-CS
+<div id="dc-avatar" class="w-24 h-24 bg-surface-container-lowest rounded-2xl flex items-center justify-center shadow-sm text-2xl font-extrabold text-primary">
+—
 </div>
 <div>
 <div class="flex items-center gap-3 mb-1">
-<h2 class="text-2xl font-extrabold tracking-tight text-on-background">Clínica Serenity</h2>
-<span class="px-3 py-1 bg-tertiary-container text-on-tertiary-container text-xs font-bold rounded-full uppercase tracking-wider">Activa</span>
+<h2 id="dc-nombre" class="text-2xl font-extrabold tracking-tight text-on-background">—</h2>
+<span id="dc-estado" class="px-3 py-1 bg-tertiary-container text-on-tertiary-container text-xs font-bold rounded-full uppercase tracking-wider">—</span>
 </div>
 <p class="text-on-surface-variant flex items-center gap-2">
 <span class="material-symbols-outlined text-sm">location_on</span>
-                        Paseo de la Castellana 142, Madrid, España
+<span id="dc-direccion">—</span>
                     </p>
 </div>
 </div>
@@ -219,19 +219,19 @@ CS
 <div class="space-y-5">
 <div class="flex flex-col gap-1">
 <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest">Administrador</span>
-<span class="font-medium text-on-surface">Dr. Alejandro Méndez</span>
+<span id="dc-admin" class="font-medium text-on-surface">—</span>
 </div>
 <div class="flex flex-col gap-1">
 <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest">Email de contacto</span>
-<span class="font-medium text-on-surface">a.mendez@serenityclinic.es</span>
+<span id="dc-email" class="font-medium text-on-surface">—</span>
 </div>
 <div class="flex flex-col gap-1">
 <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest">Teléfono</span>
-<span class="font-medium text-on-surface">+34 912 345 678</span>
+<span id="dc-telefono" class="font-medium text-on-surface">—</span>
 </div>
 <div class="flex flex-col gap-1">
 <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest">Fecha Registro</span>
-<span class="font-medium text-on-surface">12 de Enero, 2023</span>
+<span id="dc-fecha" class="font-medium text-on-surface">—</span>
 </div>
 </div>
 </div>
@@ -244,17 +244,17 @@ CS
 <div class="flex justify-between items-center p-4 bg-primary-container/30 rounded-2xl">
 <div>
 <span class="text-xs font-bold text-on-primary-container uppercase block">Plan Actual</span>
-<span class="text-lg font-extrabold text-on-primary-container">Enterprise Pro</span>
+<span id="dc-plan" class="text-lg font-extrabold text-on-primary-container">—</span>
 </div>
 <span class="material-symbols-outlined text-primary text-2xl">workspace_premium</span>
 </div>
 <div class="flex justify-between border-b border-surface-container-high pb-4">
 <span class="text-on-surface-variant">Próxima Renovación</span>
-<span class="font-bold text-on-surface">12 Feb, 2024</span>
+<span id="dc-renovacion" class="font-bold text-on-surface">—</span>
 </div>
 <div class="flex justify-between items-center pt-2">
-<span class="text-on-surface-variant">MRR Acumulado</span>
-<span class="text-xl font-black text-primary">450.00€</span>
+<span class="text-on-surface-variant">MRR estimado</span>
+<span id="dc-mrr" class="text-xl font-black text-primary">—</span>
 </div>
 </div>
 </div>
@@ -268,51 +268,24 @@ CS
 <div class="grid grid-cols-2 gap-4 mb-8">
 <div class="p-4 rounded-2xl bg-surface-container-low border border-surface-container">
 <span class="material-symbols-outlined text-primary mb-2">groups</span>
-<p class="text-xl font-black text-on-surface">24</p>
+<p class="text-xl font-black text-on-surface" id="dc-psicologos">—</p>
 <p class="text-xs text-on-surface-variant font-medium">Psicólogos Activos</p>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low border border-surface-container">
 <span class="material-symbols-outlined text-primary mb-2">person</span>
-<p class="text-xl font-black text-on-surface">1.2k</p>
+<p class="text-xl font-black text-on-surface" id="dc-pacientes">—</p>
 <p class="text-xs text-on-surface-variant font-medium">Pacientes Totales</p>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low border border-surface-container">
 <span class="material-symbols-outlined text-primary mb-2">calendar_month</span>
-<p class="text-xl font-black text-on-surface">348</p>
+<p class="text-xl font-black text-on-surface" id="dc-sesiones">—</p>
 <p class="text-xs text-on-surface-variant font-medium">Sesiones este Mes</p>
 </div>
 <div class="p-4 rounded-2xl bg-surface-container-low border border-surface-container">
 <span class="material-symbols-outlined text-primary mb-2">psychology</span>
-<p class="text-xl font-black text-on-surface">156</p>
+<p class="text-xl font-black text-on-surface" id="dc-informes">—</p>
 <p class="text-xs text-on-surface-variant font-medium">Informes IA</p>
 </div>
-</div>
-<div class="space-y-6">
-<div>
-<div class="flex justify-between text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">
-<span>Tokens Consumidos</span>
-<span class="text-on-surface">78%</span>
-</div>
-<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
-<div class="h-full bg-primary w-[78%]"></div>
-</div>
-<p class="text-[10px] text-on-surface-variant mt-1">7.8M / 10M tokens mensuales</p>
-</div>
-<div>
-<div class="flex justify-between text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">
-<span>Almacenamiento Usado</span>
-<span class="text-on-surface">42%</span>
-</div>
-<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
-<div class="h-full bg-secondary w-[42%]"></div>
-</div>
-<p class="text-[10px] text-on-surface-variant mt-1">21GB / 50GB contratados</p>
-</div>
-</div>
-<div class="mt-10 p-6 bg-gradient-to-br from-secondary/5 to-primary/5 rounded-2xl border border-primary/10">
-<p class="text-sm font-medium text-on-surface-variant italic leading-relaxed">
-                        "La clínica ha mostrado un crecimiento del 15% en informes generados por IA comparado con el mes anterior."
-                    </p>
 </div>
 </div>
 <!-- Column 3: Historial de Pagos -->
@@ -331,7 +304,7 @@ CS
 <th class="pb-2 px-2 text-right"></th>
 </tr>
 </thead>
-<tbody>
+<tbody id="dc-facturas">
 <tr class="group hover:bg-surface-container-low transition-colors rounded-2xl">
 <td class="py-4 px-2 rounded-l-2xl">
 <p class="text-sm font-bold text-on-surface">Plan Enterprise Pro</p>
@@ -425,35 +398,56 @@ CS
     const clinicaId = params.get('id')
     if (!clinicaId) { window.location.href = 'gestion_clinicas_super_admin.html'; }
 
-    // ── Cargar datos ──────────────────────────────────────────────
-    let clinica
+    // ── Cargar datos REALES (por id de la URL) ────────────────────
+    const $ = id => document.getElementById(id)
+    const setT = (id, v) => { const e = $(id); if (e) e.textContent = (v == null || v === '') ? '—' : v }
+    const mes0 = new Date(); mes0.setDate(1); mes0.setHours(0, 0, 0, 0)
+    const cnt = async (t, extra) => {
+      let q = supabase.from(t).select('id', { count: 'exact', head: true }).eq('clinica_id', clinicaId)
+      if (extra) q = extra(q)
+      const { count } = await q
+      return count || 0
+    }
     try {
-      clinica = await obtenerClinica(clinicaId)
+      const { data: cl } = await supabase.from('clinicas').select('*').eq('id', clinicaId).maybeSingle()
+      if (!cl) { window.location.href = 'gestion_clinicas_super_admin.html'; }
 
-      // Rellenar campos con datos reales
-      const set = (sel, val) => { const el = document.querySelector(sel); if (el) el.textContent = val }
+      setT('dc-nombre', cl.nombre)
+      setT('dc-avatar', ((cl.nombre || '?').trim().split(/\s+/).map(w => w[0] || '').slice(0, 2).join('').toUpperCase()) || '?')
+      setT('dc-estado', cl.status)
+      setT('dc-direccion', cl.direccion)
+      setT('dc-email', cl.email_contacto || cl.email)
+      setT('dc-telefono', cl.telefono)
+      setT('dc-fecha', cl.created_at ? new Date(cl.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : '—')
+      setT('dc-plan', cl.plan)
+      setT('dc-renovacion', '—')
 
-      // Buscar elementos de texto y reemplazar por contexto
-      document.querySelectorAll('*').forEach(el => {
-        if (el.children.length > 0) return
-        const t = el.textContent.trim()
-        if (t === 'SereneCare' || t === 'Nombre de la Clínica') el.textContent = clinica.nombre
-        if (t === 'serencare@email.com' || t.includes('@') && t.includes('clinica')) el.textContent = clinica.email_contacto || '—'
-      })
+      const { data: adm } = await supabase.from('usuarios').select('nombre, apellido').eq('clinica_id', clinicaId).eq('rol', 'admin_clinica').limit(1).maybeSingle()
+      setT('dc-admin', adm ? ((adm.nombre || '') + ' ' + (adm.apellido || '')).trim() : '—')
 
-      // Badge de estado
-      const badgeEl = document.querySelector('[data-badge-status]') 
-        || Array.from(document.querySelectorAll('span')).find(s => ['Activa','Trial','Suspendida'].includes(s.textContent.trim()))
-      if (badgeEl) badgeEl.outerHTML = badgeEstado(clinica.status)
+      const nPsi = await cnt('psicologos')
+      setT('dc-psicologos', nPsi)
+      setT('dc-pacientes', await cnt('pacientes'))
+      setT('dc-sesiones', await cnt('citas', q => q.gte('fecha', mes0.toISOString().slice(0, 10))))
+      let nInf = 0; try { nInf = await cnt('notas_soap') } catch { nInf = 0 }
+      setT('dc-informes', nInf)
+      setT('dc-mrr', (nPsi * 29) + '€')
 
-      // Staff count
-      const staff = (clinica.usuarios || []).filter(u => u.rol !== 'paciente')
-      const psicoCount = staff.filter(u => u.rol === 'psicologo').length
-
-      document.querySelectorAll('*').forEach(el => {
-        if (el.children.length === 0 && el.textContent.trim() === '12') el.textContent = psicoCount
-      })
-
+      const { data: fact } = await supabase.from('facturas')
+        .select('concepto, importe, moneda, estado, created_at').eq('clinica_id', clinicaId)
+        .order('created_at', { ascending: false }).limit(12)
+      const tb = $('dc-facturas')
+      if (tb) {
+        const badge = e => (e === 'pagada' || e === 'pagado') ? '<span class="px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-black rounded-full">PAGADO</span>'
+          : (e === 'fallida' || e === 'fallido') ? '<span class="px-3 py-1 bg-error-container text-on-error-container text-[10px] font-black rounded-full">FALLIDO</span>'
+          : '<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant text-[10px] font-black rounded-full">PENDIENTE</span>'
+        tb.innerHTML = (fact && fact.length) ? fact.map(f => `<tr class="group hover:bg-surface-container-low transition-colors rounded-2xl">
+          <td class="py-4 px-2 rounded-l-2xl"><p class="text-sm font-bold text-on-surface">${(f.concepto || 'Factura').replace(/</g, '&lt;')}</p><p class="text-xs text-on-surface-variant">${f.created_at ? new Date(f.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}</p></td>
+          <td class="py-4 px-2 text-right"><span class="text-sm font-bold">${Number(f.importe || 0).toFixed(2)}${(!f.moneda || f.moneda === 'EUR') ? '€' : ' ' + f.moneda}</span></td>
+          <td class="py-4 px-2 text-center">${badge(f.estado)}</td>
+          <td class="py-4 px-2 text-right rounded-r-2xl"></td></tr>`).join('')
+          : '<tr><td colspan="4" class="py-8 text-center text-on-surface-variant text-sm">Sin facturas todavía.</td></tr>'
+      }
     } catch (err) {
       mostrarError(err.message)
     }
