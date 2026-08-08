@@ -53,6 +53,7 @@
   .export-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(20,184,166,0.3); transform: translateY(-2px); }
 </style>
 <style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
 <body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
 
@@ -266,7 +267,7 @@
           </div>
         </div>
         <p class="text-xs text-slate-600 font-mono" id="rep-clinicas-ts">Última actualización: —</p>
-        <button onclick="simulateDownload(this,'clinicas_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(99,102,241,0.2); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3);">
+        <button onclick="exportarTabla(this,'clinicas','clinicas_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(99,102,241,0.2); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3);">
           <span class="material-symbols-outlined dl-icon-anim">download</span>
           Descargar clinicas_serenecare.csv
         </button>
@@ -301,7 +302,7 @@
           </div>
         </div>
         <p class="text-xs text-slate-600 font-mono" id="rep-users-ts">Última actualización: —</p>
-        <button onclick="simulateDownload(this,'usuarios_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(59,130,246,0.15); color:#93c5fd; border:1px solid rgba(59,130,246,0.3);">
+        <button onclick="exportarTabla(this,'usuarios','usuarios_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(59,130,246,0.15); color:#93c5fd; border:1px solid rgba(59,130,246,0.3);">
           <span class="material-symbols-outlined dl-icon-anim">download</span>
           Descargar usuarios_serenecare.csv
         </button>
@@ -336,7 +337,7 @@
           </div>
         </div>
         <p class="text-xs text-slate-600 font-mono">Última actualización: hace 1 hora</p>
-        <button onclick="simulateDownload(this,'revenue_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(34,197,94,0.12); color:#86efac; border:1px solid rgba(34,197,94,0.25);">
+        <button onclick="exportarTabla(this,'facturas','revenue_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(34,197,94,0.12); color:#86efac; border:1px solid rgba(34,197,94,0.25);">
           <span class="material-symbols-outlined dl-icon-anim">download</span>
           Descargar revenue_serenecare.csv
         </button>
@@ -371,12 +372,41 @@
           </div>
         </div>
         <p class="text-xs text-slate-600 font-mono">Última actualización: en tiempo real</p>
-        <button onclick="simulateDownload(this,'logs_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(245,158,11,0.12); color:#fcd34d; border:1px solid rgba(245,158,11,0.25);">
+        <button onclick="exportarTabla(this,'logs_acceso','logs_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(245,158,11,0.12); color:#fcd34d; border:1px solid rgba(245,158,11,0.25);">
           <span class="material-symbols-outlined dl-icon-anim">download</span>
           Descargar logs_serenecare.csv
         </button>
       </div>
 
+    </div>
+
+    <!-- RGPD por sujeto -->
+    <div class="bg-slate-900 rounded-2xl p-6 border border-slate-800/30 mt-6">
+      <div class="flex items-center gap-3 mb-1">
+        <span class="material-symbols-outlined" style="color:#fbbf24;">gavel</span>
+        <h3 class="text-lg font-headline font-bold text-white">RGPD — Export por sujeto</h3>
+      </div>
+      <p class="text-sm text-slate-400 mb-5">Todos los datos de una clínica o un paciente en un .zip — para atender solicitudes de acceso/portabilidad o una inspección.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-slate-800/40 rounded-2xl p-4">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Por clínica</p>
+          <select id="rgpd-clinica" class="w-full bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2.5 mb-3">
+            <option value="">Elige una clínica…</option>
+          </select>
+          <button onclick="exportarClinica(this)" class="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm hover:opacity-90 active:scale-95" style="background:rgba(251,191,36,0.15);color:#fcd34d;border:1px solid rgba(251,191,36,0.3);">
+            <span class="material-symbols-outlined">folder_zip</span> Exportar datos de la clínica
+          </button>
+        </div>
+        <div class="bg-slate-800/40 rounded-2xl p-4">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Por paciente</p>
+          <select id="rgpd-paciente" class="w-full bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2.5 mb-3">
+            <option value="">Elige un paciente…</option>
+          </select>
+          <button onclick="exportarPaciente(this)" class="w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm hover:opacity-90 active:scale-95" style="background:rgba(251,191,36,0.15);color:#fcd34d;border:1px solid rgba(251,191,36,0.3);">
+            <span class="material-symbols-outlined">folder_zip</span> Exportar datos del paciente
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Full Export -->
@@ -391,7 +421,7 @@
           <p class="text-xs text-slate-600 font-mono mt-1">Estimado: ~2.8 MB • Incluye 4 archivos CSV</p>
         </div>
       </div>
-      <button onclick="simulateDownload(this,'serenecare_full_export.zip')" class="flex-shrink-0 flex items-center gap-2 px-8 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(99,102,241,0.2); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3);">
+      <button onclick="exportarCompleto(this)" class="flex-shrink-0 flex items-center gap-2 px-8 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(99,102,241,0.2); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3);">
         <span class="material-symbols-outlined">folder_zip</span>
         Descargar todo (.zip)
       </button>
@@ -506,6 +536,81 @@ if (usuarios) {
   el('rep-users-admins', admins)
   el('rep-users-ts', 'Actualizado: ' + ahora)
 }
+
+// ═══════════════ MOTOR DE EXPORT REAL (CSV + ZIP + RGPD por sujeto) ═══════════════
+// Columnas seguras por tabla (excluye tokens/códigos sensibles).
+const SAFE = { usuarios: 'id, clinica_id, nombre, apellido, email, rol, activo, telefono, telefono_verificado, created_at' }
+
+function _toCSV(rows) {
+  if (!rows || !rows.length) return ''
+  const cols = Object.keys(rows[0])
+  const esc = v => { if (v == null) return ''; v = (typeof v === 'object') ? JSON.stringify(v) : String(v); return /[",\n;]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v }
+  return cols.join(',') + '\n' + rows.map(r => cols.map(c => esc(r[c])).join(',')).join('\n')
+}
+function _dl(blob, filename) { const u = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = u; a.download = filename; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(u); a.remove() }, 1000) }
+function _toast(msg) { const t = document.getElementById('toast-dl'); if (!t) return; t.innerHTML = '<span class="material-symbols-outlined text-teal-400">download_done</span> <span>' + msg + '</span>'; t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 3500) }
+function _cargando(btn, on) { if (!btn) return; if (on) { btn.dataset.orig = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="animation:spin 1s linear infinite">progress_activity</span> Generando…' } else { btn.disabled = false; if (btn.dataset.orig) btn.innerHTML = btn.dataset.orig } }
+async function _fetch(tabla, cols, filtro) { let q = supabase.from(tabla).select(cols || '*'); if (filtro) q = q.eq(filtro.col, filtro.val); const { data } = await q; return data || [] }
+
+window.exportarTabla = async function(btn, tabla, filename) {
+  _cargando(btn, true)
+  try {
+    const rows = await _fetch(tabla, SAFE[tabla] || '*')
+    if (!rows.length) { _toast('Sin datos en ' + tabla); return }
+    _dl(new Blob([_toCSV(rows)], { type: 'text/csv;charset=utf-8' }), filename)
+    _toast(filename + ' · ' + rows.length + ' filas')
+  } catch (e) { _toast('Error al exportar'); console.error(e) } finally { _cargando(btn, false) }
+}
+
+const TABLAS_FULL = ['clinicas', 'usuarios', 'psicologos', 'pacientes', 'citas', 'evaluaciones', 'notas_soap', 'consentimientos', 'facturas', 'logs_acceso']
+window.exportarCompleto = async function(btn) {
+  _cargando(btn, true)
+  try {
+    const zip = new JSZip()
+    for (const t of TABLAS_FULL) { zip.file(t + '.csv', _toCSV(await _fetch(t, SAFE[t] || '*'))) }
+    _dl(await zip.generateAsync({ type: 'blob' }), 'serenecare_export_' + new Date().toISOString().slice(0, 10) + '.zip')
+    _toast('Export completo (.zip) descargado')
+  } catch (e) { _toast('Error al exportar'); console.error(e) } finally { _cargando(btn, false) }
+}
+
+window.exportarClinica = async function(btn) {
+  const cid = (document.getElementById('rgpd-clinica') || {}).value
+  if (!cid) { _toast('Elige una clínica'); return }
+  _cargando(btn, true)
+  try {
+    const zip = new JSZip()
+    for (const t of ['clinicas', 'usuarios', 'psicologos', 'pacientes', 'citas', 'evaluaciones', 'facturas', 'logs_acceso']) {
+      zip.file(t + '.csv', _toCSV(await _fetch(t, SAFE[t] || '*', { col: (t === 'clinicas' ? 'id' : 'clinica_id'), val: cid })))
+    }
+    _dl(await zip.generateAsync({ type: 'blob' }), 'rgpd_clinica_' + String(cid).slice(0, 8) + '.zip')
+    _toast('Datos de la clínica exportados (RGPD)')
+  } catch (e) { _toast('Error'); console.error(e) } finally { _cargando(btn, false) }
+}
+
+window.exportarPaciente = async function(btn) {
+  const pid = (document.getElementById('rgpd-paciente') || {}).value
+  if (!pid) { _toast('Elige un paciente'); return }
+  _cargando(btn, true)
+  try {
+    const zip = new JSZip()
+    zip.file('paciente.csv', _toCSV(await _fetch('pacientes', '*', { col: 'id', val: pid })))
+    for (const t of ['citas', 'evaluaciones', 'notas_soap', 'consentimientos']) {
+      zip.file(t + '.csv', _toCSV(await _fetch(t, '*', { col: 'paciente_id', val: pid })))
+    }
+    _dl(await zip.generateAsync({ type: 'blob' }), 'rgpd_paciente_' + String(pid).slice(0, 8) + '.zip')
+    _toast('Datos del paciente exportados (RGPD)')
+  } catch (e) { _toast('Error'); console.error(e) } finally { _cargando(btn, false) }
+}
+
+// Rellenar selectores RGPD (clínica / paciente)
+try {
+  const { data: cls } = await supabase.from('clinicas').select('id, nombre').order('nombre')
+  const selC = document.getElementById('rgpd-clinica')
+  if (selC && cls) cls.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.nombre || c.id; selC.appendChild(o) })
+  const { data: pac } = await supabase.from('pacientes').select('id, nombre, apellido').order('nombre').limit(500)
+  const selP = document.getElementById('rgpd-paciente')
+  if (selP && pac) pac.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = (((p.nombre || '') + ' ' + (p.apellido || '')).trim() || p.id); selP.appendChild(o) })
+} catch (e) { console.warn('selectores rgpd:', e.message) }
 </script>
 
 <script>
