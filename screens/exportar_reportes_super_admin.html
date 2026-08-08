@@ -235,6 +235,26 @@
       </div>
     </div>
 
+    <!-- Contabilidad: Ingresos SereneCare (SaaS + Directorio) -->
+    <div class="bg-slate-900 rounded-2xl p-6 border border-slate-800/30 mb-6">
+      <div class="flex items-center gap-3 mb-1">
+        <span class="material-symbols-outlined" style="color:#4ade80;">account_balance_wallet</span>
+        <h3 class="text-lg font-headline font-bold text-white">Ingresos SereneCare — SaaS + Directorio</h3>
+        <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full" style="background:rgba(34,197,94,0.1);color:#4ade80;">Contabilidad</span>
+      </div>
+      <p class="text-sm text-slate-400 mb-4">Libro de movimientos: suscripciones, renovaciones, packs de leads/vídeo y destacados. Todo tu ingreso en un CSV para el gestor/Hacienda. <span class="text-slate-500">(LexAI va aparte.)</span></p>
+      <div class="flex flex-wrap items-center gap-3">
+        <select id="trans-anio" class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2.5">
+          <option value="">Todos los años</option>
+          <option value="2026">2026</option>
+          <option value="2025">2025</option>
+        </select>
+        <button onclick="exportarTransacciones(this)" class="flex items-center gap-2 px-6 py-3 rounded-2xl font-bold text-sm hover:opacity-90 active:scale-95" style="background:rgba(34,197,94,0.15);color:#86efac;border:1px solid rgba(34,197,94,0.3);">
+          <span class="material-symbols-outlined">download</span> Descargar movimientos.csv
+        </button>
+      </div>
+    </div>
+
     <!-- Export Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -599,6 +619,22 @@ window.exportarPaciente = async function(btn) {
     }
     _dl(await zip.generateAsync({ type: 'blob' }), 'rgpd_paciente_' + String(pid).slice(0, 8) + '.zip')
     _toast('Datos del paciente exportados (RGPD)')
+  } catch (e) { _toast('Error'); console.error(e) } finally { _cargando(btn, false) }
+}
+
+// Ingresos SereneCare (SaaS + Directorio) — libro de movimientos, filtrable por año
+window.exportarTransacciones = async function(btn) {
+  _cargando(btn, true)
+  try {
+    const anio = (document.getElementById('trans-anio') || {}).value || ''
+    let q = supabase.from('transacciones')
+      .select('fecha, tipo, concepto, importe, moneda, email, clinica_id, psicologo_id, referencia, estado')
+      .order('fecha', { ascending: false })
+    if (anio) q = q.gte('fecha', anio + '-01-01').lte('fecha', anio + '-12-31T23:59:59')
+    const { data: rows } = await q
+    if (!rows || !rows.length) { _toast('Sin movimientos' + (anio ? ' en ' + anio : '')); return }
+    _dl(new Blob([_toCSV(rows)], { type: 'text/csv;charset=utf-8' }), 'movimientos_serenecare' + (anio ? '_' + anio : '') + '.csv')
+    _toast('Movimientos · ' + rows.length + ' filas')
   } catch (e) { _toast('Error'); console.error(e) } finally { _cargando(btn, false) }
 }
 
