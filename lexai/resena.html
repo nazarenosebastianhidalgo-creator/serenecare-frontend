@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tu opinión</title>
+<meta name="robots" content="noindex"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;} body{margin:0;background:#f8fafc;color:#0f172a;font-family:'Inter',sans-serif;padding:28px 16px 60px;}
+  .wrap{max-width:460px;margin:0 auto;}
+  h1{font-family:'Manrope';font-size:22px;font-weight:800;margin:0 0 6px;}
+  .sub{color:#64748b;font-size:14px;margin:0 0 20px;line-height:1.5;} .sub b{color:#0f766e;}
+  .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:22px;}
+  .stars{display:flex;gap:8px;justify-content:center;margin:10px 0 4px;}
+  .star{font-size:40px;cursor:pointer;color:#cbd5e1;transition:transform .1s,color .1s;user-select:none;}
+  .star:hover{transform:scale(1.12);} .star.on{color:#fbbf24;}
+  .rate{text-align:center;font-size:13px;color:#64748b;min-height:18px;margin-bottom:6px;}
+  label{display:block;font-size:12px;font-weight:600;color:#334155;margin:14px 0 5px;}
+  textarea{width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:11px 13px;font-size:14px;font-family:inherit;min-height:90px;outline:none;}
+  textarea:focus{border-color:#0f766e;}
+  .chk{display:flex;align-items:center;gap:9px;margin-top:14px;font-size:13px;color:#334155;cursor:pointer;}
+  .btn{width:100%;margin-top:18px;background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Manrope';font-weight:800;font-size:15px;cursor:pointer;}
+  .btn:disabled{opacity:.5;} .btn-g{display:block;text-align:center;width:100%;margin-top:14px;background:#fff;color:#1a1a1a;border:1px solid #e2e8f0;border-radius:12px;padding:14px;font-weight:800;text-decoration:none;}
+  .center{text-align:center;padding:44px 16px;} .big{font-size:52px;} .hidden{display:none;} #msg{text-align:center;font-size:13px;color:#dc2626;margin-top:10px;min-height:16px;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div id="cargando" class="center sub">Cargando…</div>
+
+    <div id="app" class="hidden">
+      <h1>¿Cómo ha sido tu experiencia?</h1>
+      <p class="sub" id="intro">Tu opinión es opcional y nos ayuda muchísimo.</p>
+      <div class="card">
+        <div class="stars" id="stars">
+          <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span><span class="star" data-v="3">★</span><span class="star" data-v="4">★</span><span class="star" data-v="5">★</span>
+        </div>
+        <div class="rate" id="rate">Toca una estrella</div>
+        <label>Cuéntanos (opcional)</label>
+        <textarea id="texto" placeholder="Lo que quieras compartir…"></textarea>
+        <label class="chk"><input type="checkbox" id="anon"/> Publicar de forma anónima</label>
+        <button class="btn" id="enviar" disabled>Enviar mi opinión</button>
+        <div id="msg"></div>
+      </div>
+    </div>
+
+    <div id="ok-pos" class="hidden center"><div class="big">💚</div><h1>¡Gracias!</h1><p class="sub">Tu opinión significa mucho.</p><a id="btn-g" class="btn-g hidden" target="_blank" rel="noopener">⭐ Ayúdanos también en Google</a></div>
+    <div id="ok-priv" class="hidden center"><div class="big">🙏</div><h1>Gracias por tu sinceridad</h1><p class="sub">Hemos hecho llegar tu opinión en privado para mejorar.</p></div>
+    <div id="invalido" class="hidden center"><div class="big">🌿</div><h1 id="inv-t">Enlace no disponible</h1><p class="sub" id="inv-x">Puede que ya hayas dejado tu opinión. ¡Gracias!</p></div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="lexai-auth.js"></script>
+<script>
+(async function(){
+  const sb = window.lxSb;
+  const $ = id => document.getElementById(id);
+  const token = new URLSearchParams(location.search).get('token');
+  let rating = 0, googleUrl = null;
+  const show = id => ['cargando','app','ok-pos','ok-priv','invalido'].forEach(s=>$(s).classList.toggle('hidden', s!==id));
+
+  if(!token){ show('invalido'); return; }
+  const { data, error } = await sb.rpc('rec_resena_info', { p_token: token });
+  if(error || !data || !data.ok){ show('invalido'); return; }
+  if(data.ya_respondida){ $('inv-t').textContent='Ya recibimos tu opinión'; $('inv-x').textContent='¡Gracias por tu tiempo!'; show('invalido'); return; }
+  googleUrl = data.google_url || null;
+  if(data.negocio) $('intro').innerHTML = `Gracias por confiar en <b>${(data.negocio||'').replace(/</g,'&lt;')}</b>. Tu opinión es opcional y ayuda mucho.`;
+  show('app');
+
+  const LBL=['','Muy insatisfecho','Insatisfecho','Correcto','Satisfecho','¡Excelente!'];
+  const stars=[...document.querySelectorAll('.star')];
+  const paint=v=>stars.forEach(s=>s.classList.toggle('on', Number(s.dataset.v)<=v));
+  stars.forEach(s=>{
+    s.addEventListener('mouseenter',()=>paint(Number(s.dataset.v)));
+    s.addEventListener('mouseleave',()=>paint(rating));
+    s.addEventListener('click',()=>{ rating=Number(s.dataset.v); paint(rating); $('rate').textContent=LBL[rating]; $('enviar').disabled=false; });
+  });
+
+  $('enviar').addEventListener('click', async ()=>{
+    if(!rating) return;
+    const b=$('enviar'); b.disabled=true; b.textContent='Enviando…'; $('msg').textContent='';
+    const { data:d, error:e } = await sb.rpc('rec_enviar_resena', { p_token:token, p_puntuacion:rating, p_texto:$('texto').value, p_anonima:$('anon').checked });
+    if(e || !d || !d.ok){ $('msg').textContent='No se pudo enviar. Inténtalo de nuevo.'; b.disabled=false; b.textContent='Enviar mi opinión'; return; }
+    if(d.publicada){ if(d.google_url){ $('btn-g').href=d.google_url; $('btn-g').classList.remove('hidden'); } show('ok-pos'); }
+    else show('ok-priv');
+  });
+})();
+</script>
+</body>
+</html>
