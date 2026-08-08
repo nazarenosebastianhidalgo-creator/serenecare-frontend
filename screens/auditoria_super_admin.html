@@ -227,22 +227,7 @@
 </main>
 
 <script>
-var AUDIT_LOG = [
-  { time: '07/05/2026 14:32', tipo: 'config', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Cambió modelo IA global', resource: 'claude-opus-4-7', detail: 'Antes: claude-sonnet-4-6', icon: 'settings_input_component', color: '#818cf8', bg: 'rgba(99,102,241,0.15)' },
-  { time: '07/05/2026 14:18', tipo: 'update', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Activó clínica suspendida', resource: 'PsicoCare SL', detail: 'Estado: suspendida → activa', icon: 'check_circle', color: '#4ade80', bg: 'rgba(34,197,94,0.12)' },
-  { time: '07/05/2026 13:55', tipo: 'login', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Inicio de sesión exitoso', resource: 'Panel Super Admin', detail: 'IP: 190.2.14.88 · Chrome 124', icon: 'login', color: '#60a5fa', bg: 'rgba(59,130,246,0.12)' },
-  { time: '07/05/2026 11:44', tipo: 'create', actor: 'admin_clinica', user: 'María García', action: 'Creó nueva clínica', resource: 'NeuroVida Centro', detail: 'Plan: Professional · Trial: 14 días', icon: 'add_circle', color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
-  { time: '07/05/2026 10:20', tipo: 'update', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Modificó plan SaaS', resource: 'Plan Professional', detail: 'Precio: $89 → $99/mes', icon: 'edit', color: '#fbbf24', bg: 'rgba(245,158,11,0.12)' },
-  { time: '06/05/2026 18:33', tipo: 'delete', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Eliminó terapeuta inactivo', resource: 'Javier Moreno', detail: 'Cuenta inactiva 90+ días', icon: 'delete', color: '#f87171', bg: 'rgba(239,68,68,0.12)' },
-  { time: '06/05/2026 16:10', tipo: 'config', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Actualizó prompt del sistema', resource: 'IA Config Global', detail: 'Modificó instrucción de contexto clínico', icon: 'psychology', color: '#818cf8', bg: 'rgba(99,102,241,0.15)' },
-  { time: '06/05/2026 14:45', tipo: 'create', actor: 'admin_clinica', user: 'Carlos López', action: 'Invitó nuevo terapeuta', resource: 'elena.torres@menteplus.com', detail: 'Rol: Terapeuta · Clínica: MentePlus', icon: 'person_add', color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
-  { time: '06/05/2026 12:01', tipo: 'login', actor: 'admin_clinica', user: 'Roberto Díaz', action: 'Intento de acceso fallido', resource: 'Panel Admin Clínica', detail: 'IP: 200.45.88.12 · Cuenta inactiva', icon: 'lock', color: '#f87171', bg: 'rgba(239,68,68,0.12)' },
-  { time: '06/05/2026 09:30', tipo: 'update', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Renovó suscripción manualmente', resource: 'Clínica Sol', detail: 'Extendió vigencia 30 días adicionales', icon: 'autorenew', color: '#4ade80', bg: 'rgba(34,197,94,0.12)' },
-  { time: '05/05/2026 20:15', tipo: 'config', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Activó modo mantenimiento', resource: 'Sistema Global', detail: 'Duración: 12 minutos · Motivo: migración BD', icon: 'construction', color: '#fbbf24', bg: 'rgba(245,158,11,0.12)' },
-  { time: '05/05/2026 19:58', tipo: 'config', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Desactivó modo mantenimiento', resource: 'Sistema Global', detail: 'Migración completada exitosamente', icon: 'check_circle', color: '#4ade80', bg: 'rgba(34,197,94,0.12)' },
-  { time: '05/05/2026 15:22', tipo: 'delete', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Suspendió clínica por impago', resource: 'Consultas Modernas SL', detail: 'Factura vencida 30 días · Automático', icon: 'pause_circle', color: '#f87171', bg: 'rgba(239,68,68,0.12)' },
-  { time: '04/05/2026 11:05', tipo: 'create', actor: 'super_admin', user: 'Nazareno Hidalgo', action: 'Creó plan SaaS nuevo', resource: 'Plan Enterprise+', detail: '$299/mes · Usuarios ilimitados', icon: 'add_box', color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
-]
+var AUDIT_LOG = []  // se llena desde logs_acceso (BD real) vía _reloadAudit
 
 var filtered = AUDIT_LOG.slice()
 
@@ -347,40 +332,57 @@ const session = await guardaSuperAdmin()
 if (!session) { throw new Error('redirigiendo') }
 
 try {
-  const { data: logs, error } = await supabase
-    .from('audit_logs')
+  // Tabla REAL de auditoría (antes apuntaba a audit_logs, que no existe).
+  const { data: logs } = await supabase
+    .from('logs_acceso')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(200)
+  const rows = logs || []
 
-  if (!error && logs && logs.length) {
-    const TIPO_MAP = { login: 'login', logout: 'login', create: 'create', update: 'update', delete: 'delete', config: 'config' }
-    const COLOR_MAP = {
-      login:  { icon: 'login',    color: '#60a5fa', bg: 'rgba(59,130,246,0.12)'  },
-      create: { icon: 'add_circle', color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
-      update: { icon: 'edit',     color: '#fbbf24', bg: 'rgba(245,158,11,0.12)'  },
-      delete: { icon: 'delete',   color: '#f87171', bg: 'rgba(239,68,68,0.12)'   },
-      config: { icon: 'settings_input_component', color: '#818cf8', bg: 'rgba(99,102,241,0.15)' },
-    }
-    const mapped = logs.map(function(l) {
-      const tipo = TIPO_MAP[l.action_type] || 'config'
-      const style = COLOR_MAP[tipo] || COLOR_MAP.config
-      return {
-        time: (l.created_at || '').replace('T', ' ').slice(0, 16),
-        tipo: tipo,
-        actor: l.actor_role || 'super_admin',
-        user: l.actor_name || l.actor_email || 'Sistema',
-        action: l.description || l.action_type,
-        resource: l.resource || '—',
-        detail: l.detail || '',
-        icon: style.icon,
-        color: style.color,
-        bg: style.bg,
-      }
-    })
-    if (typeof window._reloadAudit === 'function') { window._reloadAudit(mapped) }
+  // Nombres reales de los actores (logs_acceso guarda actor_id, no el nombre)
+  const ids = [...new Set(rows.map(r => r.actor_id).filter(Boolean))]
+  const nombres = {}
+  if (ids.length) {
+    const { data: us } = await supabase.from('usuarios').select('id, nombre, apellido').in('id', ids)
+    ;(us || []).forEach(u => { nombres[u.id] = ((u.nombre || '') + ' ' + (u.apellido || '')).trim() })
   }
-} catch(e) { /* mantiene datos de demostración */ }
+
+  const COLOR_MAP = {
+    login:  { icon: 'login',       color: '#60a5fa', bg: 'rgba(59,130,246,0.12)' },
+    create: { icon: 'add_circle',  color: '#2dd4bf', bg: 'rgba(20,184,166,0.12)' },
+    update: { icon: 'edit',        color: '#fbbf24', bg: 'rgba(245,158,11,0.12)' },
+    delete: { icon: 'delete',      color: '#f87171', bg: 'rgba(239,68,68,0.12)'  },
+    config: { icon: 'settings_input_component', color: '#818cf8', bg: 'rgba(99,102,241,0.15)' },
+  }
+  const tipoDe = (a) => {
+    a = (a || '').toLowerCase()
+    if (/borr|elimin|delete/.test(a)) return 'delete'
+    if (/cre|alta|nuevo|insert/.test(a)) return 'create'
+    if (/actualiz|modific|edit|update|cambi/.test(a)) return 'update'
+    if (/login|acces|sesion|entr/.test(a)) return 'login'
+    return 'config'
+  }
+
+  const mapped = rows.map(function(l) {
+    const tipo = tipoDe(l.accion)
+    const style = COLOR_MAP[tipo] || COLOR_MAP.config
+    const detalle = [l.detalle, l.ip ? 'IP: ' + l.ip : ''].filter(Boolean).join(' · ')
+    return {
+      time: (l.created_at || '').replace('T', ' ').slice(0, 16),
+      tipo: tipo,
+      actor: l.actor_rol || 'sistema',
+      user: nombres[l.actor_id] || l.actor_rol || 'Sistema',
+      action: l.accion || '—',
+      resource: l.recurso || '—',
+      detail: detalle,
+      icon: style.icon,
+      color: style.color,
+      bg: style.bg,
+    }
+  })
+  if (typeof window._reloadAudit === 'function') { window._reloadAudit(mapped) }
+} catch(e) { console.warn('auditoria:', e.message) }
 </script>
 
 <script>
