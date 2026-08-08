@@ -228,19 +228,51 @@
       })
       if (!r.ok) throw new Error(r.status)
       const d = await r.json()
-      const block = (tit, txt) => `<div class="item"><button class="copy" onclick="__copiar(${JSON.stringify(txt)}, this)">copiar</button><p class="tit">${esc(tit)}</p><p class="txt">${esc(txt)}</p></div>`
-      const list = (tit, arr) => `<div class="item"><p class="tit">${esc(tit)}</p><ul>${(arr||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`
-      let html = ''
-      if (d.categoria_principal) html += block('Categoría principal', d.categoria_principal)
-      if (d.categorias_secundarias?.length) html += list('Categorías secundarias', d.categorias_secundarias)
-      if (d.descripcion) html += block('Descripción optimizada', d.descripcion)
-      if (d.servicios?.length) html += list('Servicios a listar', d.servicios)
-      if (d.atributos?.length) html += list('Atributos', d.atributos)
-      if (d.ideas_fotos?.length) html += list('Fotos que subir', d.ideas_fotos)
-      if (d.posts?.length) { html += '<h2 class="violet" style="margin-top:14px;">Publicaciones para tu ficha</h2>'
-        html += d.posts.map(p => block(p.titulo || 'Publicación', (p.texto||'') + (p.cta ? '\n\n' + p.cta : ''))).join('') }
-      if (d.consejos?.length) html += list('Para subir en Google Maps', d.consejos)
+      const cp = (txt) => `<button onclick="__copiar(${JSON.stringify(txt)}, this)" style="background:rgba(255,255,255,0.06);border:none;color:#94a3b8;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;cursor:pointer;margin-left:6px;">copiar</button>`
+      const ul = (arr) => `<ul>${(arr||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`
+
+      // ── G1: pasos guiados ──
+      const steps = []
+      if (d.categoria_principal) steps.push({ t: 'Pon la categoría correcta', c:
+        `<p class="txt">Principal: <b>${esc(d.categoria_principal)}</b>${cp(d.categoria_principal)}</p>${d.categorias_secundarias?.length ? `<p class="txt" style="margin-top:6px;">Secundarias: ${esc(d.categorias_secundarias.join(', '))}</p>` : ''}` })
+      if (d.descripcion) steps.push({ t: 'Pega esta descripción', c: `<p class="txt">${esc(d.descripcion)}</p>${cp(d.descripcion)}` })
+      if (d.servicios?.length) steps.push({ t: 'Añade estos servicios', c: ul(d.servicios) + cp(d.servicios.join('\n')) })
+      if (d.atributos?.length) steps.push({ t: 'Marca estos atributos', c: ul(d.atributos) })
+      // ── G2: plan de fotos ──
+      if (d.plan_fotos?.length) steps.push({ t: '📸 Sube estas fotos', c:
+        d.plan_fotos.map(f => `<div style="border-top:1px solid rgba(255,255,255,0.05);padding:8px 0;">
+          <p class="txt"><b>${esc(f.foto || '')}</b></p>
+          ${f.nombre_archivo ? `<p class="txt" style="color:#5eead4;">📁 ${esc(f.nombre_archivo)}${cp(f.nombre_archivo)}</p>` : ''}
+          ${f.descripcion ? `<p class="txt" style="color:#94a3b8;">${esc(f.descripcion)}</p>` : ''}
+        </div>`).join('') + `<p class="txt" style="color:#94a3b8;margin-top:8px;">💡 Sube 2-3 fotos nuevas <b>cada semana</b>: Google premia las fichas activas. (Renómbralas con esos nombres antes de subirlas.)</p>` })
+      // ── G3: post de la semana ──
+      if (d.posts?.length) steps.push({ t: '📅 Publica un post esta semana', c:
+        `<p class="txt" style="color:#94a3b8;margin-bottom:6px;">Copia uno y pégalo como "novedad" en tu ficha. Repite cada semana.</p>` +
+        d.posts.map(p => `<div style="background:rgba(255,255,255,0.03);border-radius:10px;padding:10px;margin-bottom:8px;"><p class="txt"><b>${esc(p.titulo || 'Post')}</b></p><p class="txt">${esc(p.texto || '')}</p>${cp((p.titulo ? p.titulo + '\n\n' : '') + (p.texto || '') + (p.cta ? '\n\n' + p.cta : ''))}</div>`).join('') })
+      if (d.consejos?.length) steps.push({ t: 'Para subir en Google Maps', c: ul(d.consejos) })
+
+      const KEY = 'sc_gseo_'
+      let html = `<div id="g-prog" style="font-size:13px;color:#5eead4;font-weight:800;margin-bottom:10px;"></div>`
+      steps.forEach((s, i) => {
+        const done = localStorage.getItem(KEY + i) === '1'
+        html += `<div class="item" style="border-color:${done ? 'rgba(45,212,191,0.35)' : 'rgba(255,255,255,0.07)'}">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:6px;">
+            <input type="checkbox" data-step="${i}" ${done ? 'checked' : ''} style="width:16px;height:16px;accent-color:#2dd4bf;flex:none;"/>
+            <span class="tit" style="margin:0;">${i + 1}. ${esc(s.t)}</span>
+          </label>${s.c}</div>`
+      })
       $('g-out').innerHTML = html || '<p class="sub">—</p>'
+      const updProg = () => {
+        const cbs = [...$('g-out').querySelectorAll('input[data-step]')]
+        const done = cbs.filter(x => x.checked).length
+        const pg = $('g-prog'); if (pg) pg.textContent = `✅ ${done}/${cbs.length} pasos completados`
+      }
+      $('g-out').querySelectorAll('input[data-step]').forEach(cb => cb.addEventListener('change', () => {
+        localStorage.setItem(KEY + cb.dataset.step, cb.checked ? '1' : '0')
+        cb.closest('.item').style.borderColor = cb.checked ? 'rgba(45,212,191,0.35)' : 'rgba(255,255,255,0.07)'
+        updProg()
+      }))
+      updProg()
       $('g-out').classList.remove('hidden'); $('gmsg').textContent = ''
     } catch (e) {
       $('gmsg').textContent = 'No se pudo generar. Inténtalo de nuevo.'
