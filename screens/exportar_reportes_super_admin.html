@@ -242,7 +242,7 @@
         <h3 class="text-lg font-headline font-bold text-white">Ingresos SereneCare — SaaS + Directorio</h3>
         <span class="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full" style="background:rgba(34,197,94,0.1);color:#4ade80;">Contabilidad</span>
       </div>
-      <p class="text-sm text-slate-400 mb-4">Libro de movimientos: suscripciones, renovaciones, packs de leads/vídeo y destacados. Todo tu ingreso en un CSV para el gestor/Hacienda. <span class="text-slate-500">(LexAI va aparte.)</span></p>
+      <p class="text-sm text-slate-400 mb-4">Libro de movimientos: suscripciones, renovaciones, packs de leads/vídeo y destacados. Todo tu ingreso en un CSV para el gestor/Hacienda.</p>
       <div class="flex flex-wrap items-center gap-3">
         <select id="trans-anio" class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl px-3 py-2.5">
           <option value="">Todos los años</option>
@@ -344,19 +344,19 @@
         </div>
         <div class="grid grid-cols-3 gap-3 mt-1">
           <div class="bg-slate-800/40 rounded-xl p-3 text-center">
-            <p class="text-xs text-slate-500 mb-1">MRR Total</p>
-            <p class="text-xl font-bold text-white font-headline">$42k</p>
+            <p class="text-xs text-slate-500 mb-1">Facturas</p>
+            <p class="text-xl font-bold text-white font-headline" id="rep-rev-count">—</p>
           </div>
           <div class="bg-slate-800/40 rounded-xl p-3 text-center">
-            <p class="text-xs text-slate-500 mb-1">Crecimiento</p>
-            <p class="text-xl font-bold font-headline" style="color:#4ade80">+12%</p>
+            <p class="text-xs text-slate-500 mb-1">Importe</p>
+            <p class="text-xl font-bold font-headline" style="color:#4ade80" id="rep-rev-importe">—</p>
           </div>
           <div class="bg-slate-800/40 rounded-xl p-3 text-center">
-            <p class="text-xs text-slate-500 mb-1">Pagos</p>
-            <p class="text-xl font-bold font-headline" style="color:#a3e635">21</p>
+            <p class="text-xs text-slate-500 mb-1">Comisión</p>
+            <p class="text-xl font-bold font-headline" style="color:#a3e635" id="rep-rev-comision">—</p>
           </div>
         </div>
-        <p class="text-xs text-slate-600 font-mono">Última actualización: hace 1 hora</p>
+        <p class="text-xs text-slate-600 font-mono" id="rep-rev-ts">Actualizado: —</p>
         <button onclick="exportarTabla(this,'facturas','revenue_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(34,197,94,0.12); color:#86efac; border:1px solid rgba(34,197,94,0.25);">
           <span class="material-symbols-outlined dl-icon-anim">download</span>
           Descargar revenue_serenecare.csv
@@ -379,19 +379,19 @@
         </div>
         <div class="grid grid-cols-3 gap-3 mt-1">
           <div class="bg-slate-800/40 rounded-xl p-3 text-center">
+            <p class="text-xs text-slate-500 mb-1">Total</p>
+            <p class="text-xl font-bold text-white font-headline" id="rep-logs-total">—</p>
+          </div>
+          <div class="bg-slate-800/40 rounded-xl p-3 text-center">
             <p class="text-xs text-slate-500 mb-1">Hoy</p>
-            <p class="text-xl font-bold text-white font-headline">2.4k</p>
+            <p class="text-xl font-bold font-headline" style="color:#4ade80" id="rep-logs-hoy">—</p>
           </div>
           <div class="bg-slate-800/40 rounded-xl p-3 text-center">
-            <p class="text-xs text-slate-500 mb-1">Errores</p>
-            <p class="text-xl font-bold font-headline" style="color:#f87171">3</p>
-          </div>
-          <div class="bg-slate-800/40 rounded-xl p-3 text-center">
-            <p class="text-xs text-slate-500 mb-1">Warnings</p>
-            <p class="text-xl font-bold font-headline" style="color:#fbbf24">12</p>
+            <p class="text-xs text-slate-500 mb-1">Últimos 7d</p>
+            <p class="text-xl font-bold font-headline" style="color:#fbbf24" id="rep-logs-7d">—</p>
           </div>
         </div>
-        <p class="text-xs text-slate-600 font-mono">Última actualización: en tiempo real</p>
+        <p class="text-xs text-slate-600 font-mono" id="rep-logs-ts">Actualizado: —</p>
         <button onclick="exportarTabla(this,'logs_acceso','logs_serenecare.csv')" class="mt-auto w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(245,158,11,0.12); color:#fcd34d; border:1px solid rgba(245,158,11,0.25);">
           <span class="material-symbols-outlined dl-icon-anim">download</span>
           Descargar logs_serenecare.csv
@@ -438,7 +438,7 @@
         <div>
           <h3 class="text-lg font-headline font-bold text-white">Exportación Completa</h3>
           <p class="text-sm text-slate-400 mt-0.5">Todos los reportes empaquetados en un único archivo ZIP</p>
-          <p class="text-xs text-slate-600 font-mono mt-1">Estimado: ~2.8 MB • Incluye 4 archivos CSV</p>
+          <p class="text-xs text-slate-600 font-mono mt-1">Incluye todas las tablas del sistema en CSV</p>
         </div>
       </div>
       <button onclick="exportarCompleto(this)" class="flex-shrink-0 flex items-center gap-2 px-8 py-3 rounded-2xl font-bold text-sm transition-all hover:opacity-90 active:scale-95" style="background: rgba(99,102,241,0.2); color:#a5b4fc; border:1px solid rgba(99,102,241,0.3);">
@@ -556,6 +556,33 @@ if (usuarios) {
   el('rep-users-admins', admins)
   el('rep-users-ts', 'Actualizado: ' + ahora)
 }
+
+// Stats reales de Revenue (facturas) y Logs
+try {
+  const { data: fact } = await supabase.from('facturas').select('importe, comision')
+  if (fact) {
+    const sum = k => fact.reduce((a, f) => a + (Number(f[k]) || 0), 0)
+    const el = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v }
+    el('rep-rev-count', fact.length)
+    el('rep-rev-importe', Math.round(sum('importe')) + '€')
+    el('rep-rev-comision', Math.round(sum('comision')) + '€')
+    el('rep-rev-ts', 'Actualizado: ' + ahora)
+  }
+} catch (e) { /* stats revenue */ }
+try {
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0)
+  const d7 = new Date(Date.now() - 7 * 864e5).toISOString()
+  const [tot, hy, s7] = await Promise.all([
+    supabase.from('logs_acceso').select('id', { count: 'exact', head: true }),
+    supabase.from('logs_acceso').select('id', { count: 'exact', head: true }).gte('created_at', hoy.toISOString()),
+    supabase.from('logs_acceso').select('id', { count: 'exact', head: true }).gte('created_at', d7),
+  ])
+  const el = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v }
+  el('rep-logs-total', tot.count || 0)
+  el('rep-logs-hoy', hy.count || 0)
+  el('rep-logs-7d', s7.count || 0)
+  el('rep-logs-ts', 'Actualizado: ' + ahora)
+} catch (e) { /* stats logs */ }
 
 // ═══════════════ MOTOR DE EXPORT REAL (CSV + ZIP + RGPD por sujeto) ═══════════════
 // Columnas seguras por tabla (excluye tokens/códigos sensibles).
