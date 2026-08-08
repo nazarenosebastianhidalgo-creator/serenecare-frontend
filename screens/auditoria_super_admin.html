@@ -274,6 +274,10 @@ function applyFilters() {
   renderAudit()
 }
 
+// Definido a nivel global (no dentro de DOMContentLoaded) para que el módulo
+// deferred SIEMPRE lo encuentre al terminar la carga de la BD.
+window._reloadAudit = function(logs) { AUDIT_LOG = logs || []; filtered = AUDIT_LOG.slice(); renderAudit() }
+
 document.addEventListener('DOMContentLoaded', function() {
   var panelApps = document.getElementById('panel-apps')
   document.body.appendChild(panelApps)
@@ -340,13 +344,16 @@ try {
     .limit(200)
   const rows = logs || []
 
-  // Nombres reales de los actores (logs_acceso guarda actor_id, no el nombre)
-  const ids = [...new Set(rows.map(r => r.actor_id).filter(Boolean))]
-  const nombres = {}
-  if (ids.length) {
-    const { data: us } = await supabase.from('usuarios').select('id, nombre, apellido').in('id', ids)
-    ;(us || []).forEach(u => { nombres[u.id] = ((u.nombre || '') + ' ' + (u.apellido || '')).trim() })
-  }
+  // Nombres reales de los actores (logs_acceso guarda actor_id, no el nombre).
+  // Aislado: si el lookup falla, renderizamos igual los logs (sin nombre).
+  let nombres = {}
+  try {
+    const ids = [...new Set(rows.map(r => r.actor_id).filter(Boolean))]
+    if (ids.length) {
+      const { data: us } = await supabase.from('usuarios').select('id, nombre, apellido').in('id', ids)
+      ;(us || []).forEach(u => { nombres[u.id] = ((u.nombre || '') + ' ' + (u.apellido || '')).trim() })
+    }
+  } catch (_) { /* seguimos sin nombres */ }
 
   const COLOR_MAP = {
     login:  { icon: 'login',       color: '#60a5fa', bg: 'rgba(59,130,246,0.12)' },
