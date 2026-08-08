@@ -98,12 +98,24 @@
 <main class="ml-72 mt-20 flex flex-1 min-h-[calc(100vh-5rem)]">
 
   <!-- Background dimmed content -->
-  <div class="flex-1 p-6 opacity-30 pointer-events-none select-none">
+  <div class="flex-1 p-6">
     <h2 class="text-2xl font-extrabold text-white mb-8 tracking-tighter font-headline">Plataforma Overview</h2>
     <div class="grid grid-cols-3 gap-6">
-      <div class="bg-slate-900/50 aspect-video rounded-2xl"></div>
-      <div class="bg-slate-900/50 aspect-video rounded-2xl"></div>
-      <div class="bg-slate-900/50 aspect-video rounded-2xl"></div>
+      <div class="bg-slate-900/50 rounded-2xl p-6 border border-slate-800/40">
+        <div class="flex items-center gap-3 mb-4"><span class="material-symbols-outlined" style="color:#818cf8;">medical_services</span><span class="text-sm font-semibold text-slate-400">Clínicas</span></div>
+        <p class="text-4xl font-extrabold text-white font-headline" id="ov-clinicas-total">—</p>
+        <p class="text-xs text-slate-500 mt-2"><span id="ov-clinicas-activas" style="color:#4ade80">—</span> activas · <span id="ov-clinicas-trial" style="color:#facc15">—</span> trial</p>
+      </div>
+      <div class="bg-slate-900/50 rounded-2xl p-6 border border-slate-800/40">
+        <div class="flex items-center gap-3 mb-4"><span class="material-symbols-outlined" style="color:#60a5fa;">group</span><span class="text-sm font-semibold text-slate-400">Usuarios</span></div>
+        <p class="text-4xl font-extrabold text-white font-headline" id="ov-users-total">—</p>
+        <p class="text-xs text-slate-500 mt-2"><span id="ov-users-psi" style="color:#4ade80">—</span> psicólogos · <span id="ov-users-adm" style="color:#60a5fa">—</span> admins</p>
+      </div>
+      <div class="bg-slate-900/50 rounded-2xl p-6 border border-slate-800/40">
+        <div class="flex items-center gap-3 mb-4"><span class="material-symbols-outlined" style="color:#4ade80;">payments</span><span class="text-sm font-semibold text-slate-400">MRR estimado</span></div>
+        <p class="text-4xl font-extrabold text-white font-headline" id="ov-mrr">—</p>
+        <p class="text-xs text-slate-500 mt-2"><span id="ov-mrr-subs">—</span> suscripciones activas</p>
+      </div>
     </div>
   </div>
 
@@ -225,8 +237,24 @@
 
     const [{ data: clinicas }, { data: usuarios }] = await Promise.all([
       supabase.from('clinicas').select('id, nombre, status, created_at, plan_id, planes(nombre, precio_mensual)').order('created_at', { ascending: false }),
-      supabase.from('usuarios').select('id, rol, created_at').eq('rol', 'admin_clinica'),
+      supabase.from('usuarios').select('id, rol, created_at'),
     ])
+
+    // ── Plataforma Overview (stats reales) ──
+    const _cl = clinicas || [], _us = usuarios || []
+    const ovActivas = _cl.filter(c => c.status === 'activa').length
+    const ovTrial = _cl.filter(c => c.status === 'trial').length
+    const ovPsi = _us.filter(u => u.rol === 'psicologo' || u.rol === 'terapeuta').length
+    const ovAdm = _us.filter(u => u.rol === 'admin_clinica').length
+    const setTxt = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v }
+    setTxt('ov-clinicas-total', _cl.length)
+    setTxt('ov-clinicas-activas', ovActivas)
+    setTxt('ov-clinicas-trial', ovTrial)
+    setTxt('ov-users-total', _us.length)
+    setTxt('ov-users-psi', ovPsi)
+    setTxt('ov-users-adm', ovAdm)
+    setTxt('ov-mrr', (ovActivas * 29) + '€')
+    setTxt('ov-mrr-subs', ovActivas)
 
     todasAlertas = []
 
@@ -256,12 +284,12 @@
     })
 
     // ── Alertas de pagos ───────────────────────────────────────────
-    const activas = (clinicas || []).filter(c => c.status === 'activa' && c.planes?.precio_mensual > 0)
+    const activas = (clinicas || []).filter(c => c.status === 'activa')
     if (activas.length > 0) {
       todasAlertas.push({
         categoria: 'pagos',
         titulo: `${activas.length} suscripciones activas generando MRR`,
-        descripcion: `MRR total: $${activas.reduce((s, c) => s + Number(c.planes.precio_mensual), 0).toFixed(0)}. Pagos al corriente.`,
+        descripcion: `MRR estimado: ${activas.length * 29}€ (${activas.length} × 29€). Pagos al corriente.`,
         fecha: new Date(ahora - 3600000).toISOString(),
         urgencia: 0,
       })
