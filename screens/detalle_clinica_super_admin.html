@@ -381,6 +381,16 @@
                 </button>
 </div>
 </div>
+<!-- Psicólogos del equipo -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/10 mt-6">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">groups</span>
+                    Psicólogos del equipo
+                </h3>
+<div id="dc-equipo" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<p class="text-on-surface-variant text-sm">Cargando…</p>
+</div>
+</div>
 <!-- Floating Action Button for Specific Logic (Not rendered here as per suppression rule for Details) -->
 </main>
 
@@ -447,6 +457,24 @@
           <td class="py-4 px-2 text-center">${badge(f.estado)}</td>
           <td class="py-4 px-2 text-right rounded-r-2xl"></td></tr>`).join('')
           : '<tr><td colspan="4" class="py-8 text-center text-on-surface-variant text-sm">Sin facturas todavía.</td></tr>'
+      }
+
+      // Psicólogos del equipo (nombres reales)
+      const { data: psis } = await supabase.from('psicologos').select('nombre, email, especialidad, activo').eq('clinica_id', clinicaId).order('nombre')
+      const eq = $('dc-equipo')
+      if (eq) {
+        eq.innerHTML = (psis && psis.length) ? psis.map(p => `
+          <div class="bg-surface-container-low border border-surface-container rounded-2xl p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center font-bold text-primary text-sm">${((p.nombre || '?').charAt(0)).toUpperCase()}</div>
+              <div class="min-w-0">
+                <p class="font-bold text-on-surface text-sm truncate">${(p.nombre || '—').replace(/</g, '&lt;')}</p>
+                <p class="text-xs text-on-surface-variant truncate">${(p.especialidad || 'Psicología').replace(/</g, '&lt;')}</p>
+              </div>
+            </div>
+            <p class="text-xs text-on-surface-variant mt-2 truncate">${(p.email || '—').replace(/</g, '&lt;')}</p>
+          </div>`).join('')
+          : '<p class="text-on-surface-variant text-sm">Esta clínica aún no tiene psicólogos.</p>'
       }
     } catch (err) {
       mostrarError(err.message)
