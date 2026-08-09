@@ -49,7 +49,7 @@ export async function obtenerClinicas({ plan = null, status = null } = {}) {
     .select(`
       id, nombre, logo_url, status, email_contacto, created_at,
       planes(nombre, precio_mensual),
-      usuarios(count)
+      usuarios!usuarios_clinica_id_fkey(count)
     `)
     .order('created_at', { ascending: false })
 
@@ -68,7 +68,7 @@ export async function obtenerClinica(clinicaId) {
     .select(`
       *,
       planes(nombre, precio_mensual, max_psicologos, max_pacientes),
-      usuarios(id, nombre, apellido, rol, activo)
+      usuarios!usuarios_clinica_id_fkey(id, nombre, apellido, rol, activo)
     `)
     .eq('id', clinicaId)
     .single()
