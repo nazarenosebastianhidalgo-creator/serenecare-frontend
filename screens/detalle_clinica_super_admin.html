@@ -94,6 +94,23 @@
         }
     </style>
 <style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
+<style>
+/* Paridad tema oscuro: el /css/tailwind.css precompilado define los tokens Material en CLARO.
+   Los forzamos a oscuro (como bg-slate-* de las pantallas hermanas). El loader de tp_tema='claro' los invierte. */
+.bg-surface{background-color:#020617!important}
+.bg-surface-container-lowest{background-color:#0f172a!important}
+.bg-surface-container-low{background-color:#0f172a!important}
+.bg-surface-container{background-color:#1e293b!important}
+.bg-surface-container-high{background-color:#1e293b!important}
+.bg-surface-container-highest{background-color:#334155!important}
+.border-surface-container{border-color:#1e293b!important}
+.border-surface-container-high{border-color:#334155!important}
+.border-outline-variant\/10{border-color:rgba(148,163,184,.12)!important}
+.border-outline-variant\/20{border-color:rgba(148,163,184,.2)!important}
+.text-on-surface{color:#e2e8f0!important}
+.text-on-surface-variant{color:#94a3b8!important}
+.text-on-background{color:#e2e8f0!important}
+</style>
 </head>
 <body class="bg-surface text-on-surface min-h-screen">
 <!-- Shell Layout: SideNavBar -->
