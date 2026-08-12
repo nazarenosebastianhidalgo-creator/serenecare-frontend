@@ -970,8 +970,10 @@ function renderAll(d) {
   });
 })();
 
-/* INIT */
-renderAll(PERIODOS['mes']);
+/* INIT — solo en modo demo pintamos los datos de ejemplo; a un usuario real
+   NO se le muestran (el módulo de abajo reasigna PERIODOS con datos reales de
+   Supabase y re-renderiza). Evita el flash de nombres de ejemplo. */
+if (localStorage.getItem('tp_demo') === 'true') renderAll(PERIODOS['mes']);
 </script>
 
 <!-- MINI CHAT WIDGET -->
