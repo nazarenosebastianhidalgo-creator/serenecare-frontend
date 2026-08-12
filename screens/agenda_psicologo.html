@@ -548,7 +548,7 @@ function addApptBlock(grid, c, leftPct, widthPct){
   const nom=((c.pacientes&&c.pacientes.nombre||'')+' '+(c.pacientes&&c.pacientes.apellido||'')).trim()||'Paciente';
   const el=document.createElement('div'); el.className='appt-block';
   el.style.cssText='top:'+top+'px;left:'+leftPct+'%;width:'+widthPct+'%;height:'+(durH*80)+'px;';
-  el.onclick=function(){ if(on) location.href='telemedicina_psicologo.html'; else if(typeof mostrarToast==='function') mostrarToast(nom+' · '+(c.hora_inicio||'').slice(0,5)); };
+  el.onclick=function(){ abrirCitaModal(c); };
   el.innerHTML='<div class="appt-inner" style="background:'+bg+';border-left:3px solid '+ac+';"><div><p style="font-size:9px;font-weight:700;color:'+ac+';opacity:0.8;text-transform:uppercase;margin-bottom:2px;">'+(c.hora_inicio||'').slice(0,5)+'</p><p style="font-family:Manrope,sans-serif;font-size:11px;font-weight:700;color:#e2e8f0;line-height:1.3;">'+nom+'</p></div><div style="display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:11px;color:'+ac+';font-variation-settings:&#39;FILL&#39; 1;">'+(on?'videocam':'person')+'</span><span style="font-size:9px;font-weight:600;color:'+ac+';">'+(on?'Online':'Presencial')+'</span></div></div>';
   grid.appendChild(el);
 }
@@ -664,7 +664,59 @@ try {
   _set('res-sesiones', semAct.length); _set('res-ocup', ocup); _set('res-comp', comp); _set('res-pend', pend); _set('res-libres', libres);
 } catch(e) { console.warn('agenda tendencia/resumen:', e.message); }
 
+// ── Modal de cita: reprogramar (mover fecha/hora) + unirse a vídeo si online ──
+let _citaSel = null;
+function abrirCitaModal(c){
+  _citaSel = c;
+  const on = esOnline(c);
+  const nom = ((c.pacientes&&c.pacientes.nombre||'')+' '+(c.pacientes&&c.pacientes.apellido||'')).trim()||'Paciente';
+  document.getElementById('cm-titulo').textContent = nom;
+  document.getElementById('cm-info').textContent = 'Cita actual: '+c.fecha+' a las '+String(c.hora_inicio||'').slice(0,5)+' · '+(on?'Online':'Presencial');
+  document.getElementById('cm-fecha').value = c.fecha;
+  document.getElementById('cm-hora').value = String(c.hora_inicio||'').slice(0,5);
+  document.getElementById('cm-msg').textContent = '';
+  const vb = document.getElementById('cm-video');
+  if (on) { vb.style.display='block'; vb.onclick=function(){ location.href='telemedicina_psicologo.html'; }; } else { vb.style.display='none'; }
+  document.getElementById('cita-modal').style.display = 'flex';
+}
+window.cerrarCitaModal = function(){ document.getElementById('cita-modal').style.display='none'; };
+document.getElementById('cm-guardar').addEventListener('click', async function(){
+  if(!_citaSel) return;
+  const fecha = document.getElementById('cm-fecha').value, hora = document.getElementById('cm-hora').value;
+  const msg = document.getElementById('cm-msg');
+  if(!fecha || !hora){ msg.style.color='#f87171'; msg.textContent='Elige fecha y hora'; return; }
+  const btn = this; btn.disabled = true; msg.style.color='#94a3b8'; msg.textContent='Moviendo…';
+  try{
+    const { data: { session: s } } = await supabase.auth.getSession();
+    const r = await fetch('/api/recepcion/cita/'+_citaSel.id+'/mover', { method:'POST', headers:{ 'Authorization':'Bearer '+s.access_token, 'Content-Type':'application/json' }, body: JSON.stringify({ fecha, hora }) });
+    const j = await r.json();
+    if(r.ok && j.ok){ msg.style.color='#5eead4'; msg.textContent='✅ '+j.message; setTimeout(function(){ window.cerrarCitaModal(); renderVista(); }, 900); }
+    else { msg.style.color='#f87171'; msg.textContent = j.error || 'No se pudo mover la cita'; btn.disabled=false; }
+  }catch(e){ msg.style.color='#f87171'; msg.textContent='Error al mover la cita'; btn.disabled=false; }
+});
+
 })();</script>
+<!-- MODAL CITA (reprogramar) -->
+<div id="cita-modal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(2,6,23,0.72);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;max-width:400px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <h3 id="cm-titulo" style="font-family:Manrope,sans-serif;font-weight:800;color:#fff;font-size:16px;margin:0;">Cita</h3>
+      <button onclick="window.cerrarCitaModal()" style="background:none;border:none;color:#64748b;cursor:pointer;display:flex;"><span class="material-symbols-outlined" style="font-size:20px;">close</span></button>
+    </div>
+    <p id="cm-info" style="color:#94a3b8;font-size:13px;margin:0 0 16px;"></p>
+    <button id="cm-video" style="display:none;width:100%;background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);border-radius:10px;padding:10px;font-weight:700;cursor:pointer;margin-bottom:16px;font-family:Manrope,sans-serif;">Unirse a la videollamada</button>
+    <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;">
+      <p style="font-size:11px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:0.05em;margin:0 0 10px;">Reprogramar</p>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input id="cm-fecha" type="date" style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;border-radius:10px;padding:10px;font-size:13px;outline:none;">
+        <input id="cm-hora" type="time" style="width:112px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;border-radius:10px;padding:10px;font-size:13px;outline:none;">
+      </div>
+      <button id="cm-guardar" style="width:100%;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;border-radius:10px;padding:12px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif;font-size:14px;">Mover cita y avisar al paciente</button>
+      <p id="cm-msg" style="text-align:center;font-size:13px;margin:12px 0 0;min-height:16px;"></p>
+    </div>
+  </div>
+</div>
+
 <!-- MINI CHAT WIDGET -->
 <div id="cw-panel" style="position:fixed;bottom:160px;right:24px;z-index:9998;width:320px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
   <div id="cw-lista-wrap" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">
