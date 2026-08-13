@@ -358,6 +358,17 @@
           <span class="material-symbols-outlined text-sm align-middle mr-1">cancel</span>Cancelar
         </button>
       </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:14px;">
+        <p class="text-[10px] text-slate-500 uppercase tracking-widest mb-2">Reprogramar</p>
+        <div class="flex gap-2 mb-2">
+          <input id="det-repro-fecha" type="date" class="flex-1 rounded-xl px-3 py-2.5 text-sm" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;outline:none;">
+          <input id="det-repro-hora" type="time" class="rounded-xl px-3 py-2.5 text-sm" style="width:112px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#e2e8f0;outline:none;">
+        </div>
+        <button onclick="reprogramarCitaAdmin()" class="w-full py-2.5 rounded-xl text-xs font-bold transition-all hover:opacity-90" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3);">
+          <span class="material-symbols-outlined text-sm align-middle mr-1">event_repeat</span>Mover cita y avisar al paciente
+        </button>
+        <p id="det-repro-msg" class="text-center text-xs mt-2" style="min-height:14px;"></p>
+      </div>
     </div>
     <div class="px-6 pb-6 flex gap-3">
       <button onclick="eliminarCita()" class="py-3 px-4 rounded-xl text-xs font-bold text-red-400 hover:bg-red-500/10 transition-all" style="border:1px solid rgba(239,68,68,0.15);">
@@ -607,12 +618,46 @@ function abrirModalDetalle(idx) {
   document.getElementById('det-fecha').textContent = c.dia + ' ' + meses[viewMonth] + ' ' + viewYear
   document.getElementById('det-tipo').textContent = c.tipo
   document.getElementById('det-estado-badge').innerHTML = buildBadge(ec)
+  document.getElementById('det-repro-fecha').value = c.fecha || ''
+  document.getElementById('det-repro-hora').value = String(c.hora_inicio || '').slice(0, 5)
+  document.getElementById('det-repro-msg').textContent = ''
   document.getElementById('modal-detalle').classList.remove('hidden')
 }
 
-function cambiarEstado(nuevoEstado) {
+async function reprogramarCitaAdmin() {
   if (citaDetalleIdx < 0) return
-  CITAS_BASE[citaDetalleIdx].estado = nuevoEstado
+  var c = CITAS_BASE[citaDetalleIdx]
+  var fecha = document.getElementById('det-repro-fecha').value
+  var hora = document.getElementById('det-repro-hora').value
+  var msg = document.getElementById('det-repro-msg')
+  if (!c.id) { msg.style.color = '#f87171'; msg.textContent = 'No se pudo identificar la cita.'; return }
+  if (!fecha || !hora) { msg.style.color = '#f87171'; msg.textContent = 'Elige fecha y hora.'; return }
+  msg.style.color = '#94a3b8'; msg.textContent = 'Moviendo…'
+  try {
+    var s = (await window._sb.auth.getSession()).data.session
+    var r = await fetch('/api/recepcion/cita/' + c.id + '/mover', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + s.access_token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fecha: fecha, hora: hora })
+    })
+    var j = await r.json()
+    if (r.ok && j.ok) {
+      msg.style.color = '#5eead4'; msg.textContent = '✅ ' + j.message
+      c.fecha = fecha; c.hora_inicio = hora; c.dia = parseInt(fecha.split('-')[2], 10); c.hora = hora
+      renderCalendar(); renderCitasDia()
+      setTimeout(function(){ cerrarModal('modal-detalle') }, 1000)
+    } else { msg.style.color = '#f87171'; msg.textContent = j.error || 'No se pudo mover la cita' }
+  } catch (e) { msg.style.color = '#f87171'; msg.textContent = 'Error al mover la cita' }
+}
+
+async function cambiarEstado(nuevoEstado) {
+  if (citaDetalleIdx < 0) return
+  var c = CITAS_BASE[citaDetalleIdx]
+  if (c.id && window._sb) {
+    var r = await window._sb.from('citas').update({ estado: nuevoEstado }).eq('id', c.id)
+    if (r.error) { mostrarToast('No se pudo actualizar: ' + r.error.message); return }
+  }
+  c.estado = nuevoEstado
   var ec = ESTADO_COLORS[nuevoEstado]
   document.getElementById('det-estado-badge').innerHTML = buildBadge(ec)
   renderCalendar()
@@ -620,15 +665,21 @@ function cambiarEstado(nuevoEstado) {
   mostrarToast('Estado actualizado: ' + ec.label)
 }
 
-function eliminarCita() {
+async function eliminarCita() {
   if (citaDetalleIdx < 0) return
-  var nombre = CITAS_BASE[citaDetalleIdx].paciente
+  var c = CITAS_BASE[citaDetalleIdx]
+  var nombre = c.paciente
+  // "Eliminar" = cancelar de verdad en BD (soft, reversible, y dispara el auto-relleno del hueco)
+  if (c.id && window._sb) {
+    var r = await window._sb.from('citas').update({ estado: 'cancelada' }).eq('id', c.id)
+    if (r.error) { mostrarToast('No se pudo cancelar: ' + r.error.message); return }
+  }
   CITAS_BASE.splice(citaDetalleIdx, 1)
   citaDetalleIdx = -1
   cerrarModal('modal-detalle')
   renderCalendar()
   renderCitasDia()
-  mostrarToast('Cita eliminada "” ' + nombre)
+  mostrarToast('Cita cancelada — ' + nombre)
 }
 
 function cerrarModal(id) {
@@ -1098,8 +1149,15 @@ const { data: citasDB } = await supabase
   .order('fecha').order('hora_inicio')
 
 // Siempre sobreescribimos (aunque no haya citas) para limpiar los demos hardcodeados
+window._sb = supabase  // para que las acciones del modal (estado/cancelar/reprogramar) persistan en BD
 window.CITAS_BASE = (citasDB || []).map(function(c) {
   return {
+    id: c.id,
+    fecha: c.fecha,
+    hora_inicio: c.hora_inicio,
+    hora_fin: c.hora_fin,
+    paciente_id: c.paciente_id,
+    psicologo_id: c.psicologo_id,
     dia: parseInt((c.fecha||'').split('-')[2], 10),
     hora: (c.hora_inicio||'').slice(0,5),
     paciente: c.pacientes ? c.pacientes.nombre+' '+c.pacientes.apellido : 'Paciente',

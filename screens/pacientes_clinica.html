@@ -283,7 +283,7 @@ function renderTabla() {
     return '<tr style="cursor:pointer" onclick="window.location.href=\'ficha_paciente.html\'">' +
       '<td class="px-6 py-3.5"><div class="flex items-center gap-3">' +
         '<div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0" style="background:rgba(20,184,166,0.2);">' + initials + '</div>' +
-        '<div><p class="text-sm font-semibold text-slate-200">' + p.nombre + '</p><p class="text-xs text-slate-500">' + p.email + '</p></div>' +
+        '<div><p class="text-sm font-semibold text-slate-200">' + p.nombre + (p.sinContacto ? ' <span title="Sin email ni teléfono — no recibirá avisos de huecos ni recordatorios. Añade su contacto en la ficha." style="font-size:9px;font-weight:700;background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25);border-radius:6px;padding:1px 6px;cursor:help;">⚠ sin contacto</span>' : '') + '</p><p class="text-xs text-slate-500">' + p.email + '</p></div>' +
       '</div></td>' +
       '<td class="px-4 py-3.5 text-xs text-slate-400">' + p.terapeuta + '</td>' +
       '<td class="px-4 py-3.5 text-xs text-slate-400 font-mono">' + p.proxima + '</td>' +
@@ -780,7 +780,7 @@ const hoy = new Date().toISOString().split('T')[0]
 const manana = new Date(Date.now()+86400000).toISOString().split('T')[0]
 
 const [{ data: pacientesDB }, { data: citasDB }, { data: consDB }, { data: psisDB }] = await Promise.all([
-  supabase.from('pacientes').select('id, nombre, apellido, email, estado, psicologo_id').eq('clinica_id', clinicaId).order('apellido'),
+  supabase.from('pacientes').select('id, nombre, apellido, email, telefono, estado, psicologo_id').eq('clinica_id', clinicaId).order('apellido'),
   supabase.from('citas').select('paciente_id, fecha, hora_inicio, estado, psicologo:psicologo_id(nombre,apellido)').eq('clinica_id', clinicaId).order('fecha').order('hora_inicio'),
   supabase.from('consentimientos').select('paciente_id, estado').eq('clinica_id', clinicaId),
   supabase.from('usuarios').select('id, nombre, apellido').eq('clinica_id', clinicaId).eq('rol', 'psicologo').eq('activo', true).order('apellido'),
@@ -819,6 +819,7 @@ if (_ft) _ft.innerHTML = '<option value="">Todos los terapeutas</option>' + (psi
     return {
       nombre: p.nombre+' '+p.apellido,
       email: p.email||'—',
+      sinContacto: !((p.email||'').trim()) && !((p.telefono||'').trim()),
       terapeuta: psiById[p.psicologo_id] || terByPac[p.id] || '—',
       proxima: nextByPac[p.id]||'—',
       sesiones: cntByPac[p.id]||0,
