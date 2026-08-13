@@ -315,12 +315,13 @@ function renderPacientes() {
   empty.classList.add('hidden');
   lista.innerHTML = filtrados.map(function(p) {
     var soapBadge = p.soap ? '<span style="font-size:9px;font-weight:700;background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:1px 6px;margin-left:6px;">SOAP</span>' : '';
+    var contactoBadge = p.sinContacto ? '<span title="Sin email ni teléfono — no recibirá avisos de huecos ni recordatorios. Añade su contacto en la ficha." style="font-size:9px;font-weight:700;background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.25);border-radius:6px;padding:1px 6px;margin-left:6px;cursor:help;">⚠ sin contacto</span>' : '';
     var hoyBadge = p.hoy
       ? '<span style="font-size:9px;font-weight:700;background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);border-radius:6px;padding:1px 6px;">HOY</span>'
       : '<span style="font-size:11px;color:#64748b;">'+p.proxima+'</span>';
     return '<a href="ficha_paciente.html?id='+p.id+'" class="paciente-row">'
       +'<div style="width:40px;height:40px;border-radius:12px;background:'+p.bg+';display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:'+p.color+';font-family:Manrope,sans-serif;flex-shrink:0;">'+p.iniciales+'</div>'
-      +'<div style="min-width:0;"><div style="display:flex;align-items:center;gap:4px;"><p style="font-size:13px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Manrope,sans-serif;">'+p.nombre+'</p>'+soapBadge+'</div>'
+      +'<div style="min-width:0;"><div style="display:flex;align-items:center;gap:4px;"><p style="font-size:13px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Manrope,sans-serif;">'+p.nombre+'</p>'+soapBadge+contactoBadge+'</div>'
       +'<p style="font-size:11px;color:#64748b;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+p.diagnostico+'</p></div>'
       +'<div>'+estadoSelect(p)+'</div>'
       +'<div style="display:flex;align-items:center;gap:6px;">'+hoyBadge+'</div>'
@@ -472,6 +473,7 @@ function formatProxima(cita) {
       sesiones:    p.total_sesiones || 0,
       soap:        soapPendiente.has(p.id),
       hoy:         hoyCitas.has(p.id),
+      sinContacto: !((p.email || '').trim()) && !((p.telefono || '').trim()),
     };
   });
 
