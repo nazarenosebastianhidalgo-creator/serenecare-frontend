@@ -137,7 +137,10 @@
   const esc = s => (s || '').replace(/</g, '&lt;')
 
   const { data: { session } } = await supabase.auth.getSession()
-  if (!session) { location.href = '../screens/acceso_psicologo.html'; }
+  if (!session) {
+    const desdeClinica = /clinica|admin/i.test(document.referrer)
+    location.href = desdeClinica ? '../screens/acceso_clinica.html' : '../screens/acceso_psicologo.html'
+  }
   const auth = { 'Authorization': 'Bearer ' + (session?.access_token || ''), 'Content-Type': 'application/json' }
 
   function copiar(texto, btn) {
