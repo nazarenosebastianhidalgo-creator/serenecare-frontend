@@ -315,11 +315,20 @@ function renderStaff() {
   }).join('')
 
   tbody.querySelectorAll('.btn-eliminar').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-      if (!confirm('¿Eliminar a este miembro del equipo?')) return
+    btn.addEventListener('click', async function() {
       var id = this.getAttribute('data-id')
-      staffData = staffData.filter(function(u){ return u.id !== id })
-      renderStaff()
+      if (id === window.__miId) { alert('No puedes quitarte el acceso a ti mismo.'); return }
+      if (!confirm('¿Quitar el acceso de este miembro? Dejará de poder entrar en la app. Su historial clínico se conserva.')) return
+      try {
+        var resp = await fetch('/api/staff/miembro/' + id + '/desactivar', {
+          method: 'PATCH',
+          headers: { 'Authorization': 'Bearer ' + (window.__sbToken || ''), 'Content-Type': 'application/json' }
+        })
+        var out = await resp.json().catch(function(){ return {} })
+        if (!resp.ok) { alert(out.error || 'No se pudo quitar el acceso.'); return }
+        staffData = staffData.filter(function(u){ return u.id !== id })
+        renderStaff()
+      } catch (e) { alert('Error de red al quitar el acceso.') }
     })
   })
 }
@@ -381,13 +390,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return
     }
 
-    // Otros roles (secretario/a): no consumen seat de pago → alta directa local.
-    // (Pendiente: endpoint de invitación gratuita en backend para no-psicólogos.)
-    staffData.push({ id: Date.now().toString(), nombre: nom, apellido: ape || '—', email: email, rol: rol, activo: false, actividad: 'Invitado ahora' })
-    renderStaff()
-    document.getElementById('modal-invitar').classList.add('hidden')
-    document.getElementById('inv-nombre').value = ''
-    document.getElementById('inv-email').value = ''
+    // Solo se invita a psicólogos (plaza de pago). No hay otros roles.
   })
 
   document.getElementById('btn-logout').addEventListener('click', function(e) {
@@ -424,10 +427,9 @@ document.addEventListener('DOMContentLoaded', function() {
         <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Rol</label>
         <select id="inv-rol" class="field" style="background:#0d1b2e;cursor:pointer;">
           <option value="psicologo">Terapeuta / Psicólogo</option>
-          <option value="secretario" disabled>Secretario/a (próximamente)</option>
         </select>
       </div>
-      <p class="text-xs text-slate-500">Invitar a un <strong class="text-slate-300">psicólogo</strong> añade una plaza de <strong class="text-slate-300">29&nbsp;€/mes</strong> (pago seguro con Lemon Squeezy). Tras el pago recibirá un email para activar su cuenta. Secretarios/as no consumen plaza.</p>
+      <p class="text-xs text-slate-500">Invitar a un <strong class="text-slate-300">psicólogo</strong> añade una plaza de <strong class="text-slate-300">29&nbsp;€/mes</strong> (pago seguro con Lemon Squeezy). Tras el pago recibirá un email para activar su cuenta.</p>
     </div>
     <div class="px-6 pb-6 flex gap-3">
       <button onclick="document.getElementById('modal-invitar').classList.add('hidden')" class="flex-1 py-3 rounded-xl text-sm font-bold text-slate-400 transition-all hover:bg-white/5" style="border:1px solid rgba(255,255,255,0.08);">Cancelar</button>
@@ -845,6 +847,9 @@ window._cerrarSesion = cerrarSesion;
   if (!perfil) return;
   window.__clinicaId   = perfil.clinica_id || '';
   window.__perfilEmail = perfil.email || '';
+  window.__miId        = perfil.id || '';
+  const { data: { session: _sess } } = await supabase.auth.getSession();
+  window.__sbToken     = _sess?.access_token || '';
   const n = perfil.nombre||'', a = perfil.apellido||'';
   const ini = ((n[0]||'')+(a[0]||'')).toUpperCase()||'AC';
   const el = document.getElementById('user-nombre'); if (el) el.textContent = (n+' '+a).trim();
