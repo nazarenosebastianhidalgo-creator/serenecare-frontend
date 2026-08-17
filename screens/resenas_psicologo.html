@@ -106,6 +106,10 @@
       </div>
       <label>Pedirla al llegar a la sesión número</label>
       <input type="number" id="c-num" min="1" max="20" value="4" />
+      <div id="google-nudge" style="display:none;background:rgba(251,191,36,.09);border:1px solid rgba(251,191,36,.30);border-radius:12px;padding:12px 14px;margin:14px 0 12px;">
+        <div style="font-weight:700;color:#fbbf24;font-size:13px;">⚠️ Conecta tu Google y enciende el motor de reseñas</div>
+        <div style="color:#cbd5e1;font-size:12.5px;margin-top:4px;line-height:1.5;">Sin esto, tus pacientes contentos <b style="color:#e2e8f0;">no pueden dejarte reseña en Google</b>. Con esto, cada reseña positiva sube tu ficha en Google Maps y te encuentran más. Pégalo aquí abajo — lo sacas de tu Perfil de Empresa de Google → "Pedir reseñas".</div>
+      </div>
       <label>Enlace para dejar reseña en Google (tu ficha de Google Business)</label>
       <input type="url" id="c-google" placeholder="https://g.page/r/…  o  https://search.google.com/local/writereview?placeid=…" />
       <label>Mensaje del email (opcional, dejamos uno por defecto)</label>
@@ -197,7 +201,7 @@
       $('s-pend').textContent = d.stats.pendientes
       $('c-auto').checked = !!d.config.auto_resena
       $('c-num').value = d.config.resena_sesion_num || 4
-      $('c-google').value = d.config.google_business_url || ''
+      $('c-google').value = d.config.google_business_url || ''; toggleGoogleNudge()
       $('c-texto').value = d.config.texto_resena || ''
       $('lista').innerHTML = (d.resenas && d.resenas.length)
         ? d.resenas.map(resenaHTML).join('')
@@ -206,6 +210,9 @@
       $('lista').innerHTML = '<p class="sub">No se pudieron cargar las reseñas.</p>'
     }
   }
+
+  function toggleGoogleNudge(){ const el = $('google-nudge'); if (el) el.style.display = ($('c-google').value || '').trim() ? 'none' : 'block' }
+  $('c-google').addEventListener('input', toggleGoogleNudge)
 
   $('btn-cfg').addEventListener('click', async () => {
     $('btn-cfg').disabled = true; $('msg').textContent = 'Guardando…'
