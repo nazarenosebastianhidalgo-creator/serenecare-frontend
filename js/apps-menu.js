@@ -7,6 +7,7 @@
 // inyecta el canónico y define window.toggleAppsPanel / window.cerrarApps.
 
 const MODULOS = [
+  { href:'perfil_psicologo.html',       label:'Mi perfil',     icon:'account_circle',color:'#5eead4', bg:'rgba(45,212,191,0.15)',  bd:'rgba(45,212,191,0.25)' },
   { href:'gestion_personal_admin.html', label:'Personal',      icon:'badge',         color:'#fbbf24', bg:'rgba(245,158,11,0.15)',  bd:'rgba(245,158,11,0.25)' },
   { href:'facturacion.html',            label:'Facturación',   icon:'payments',      color:'#34d399', bg:'rgba(16,185,129,0.15)',  bd:'rgba(16,185,129,0.25)' },
   { href:'estadisticas_clinica.html',   label:'Estadísticas',  icon:'bar_chart',     color:'#a78bfa', bg:'rgba(139,92,246,0.15)',  bd:'rgba(139,92,246,0.25)' },
