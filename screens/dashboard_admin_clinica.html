@@ -1450,5 +1450,41 @@ try {
 <script type="module">import { initCampana } from "../js/notif-bell.js"; initCampana();</script>
 <script type="module">import { initAppsMenu } from "../js/apps-menu.js"; initAppsMenu();</script>
 <script type="module">import { initSoporte } from "../js/soporte-widget.js"; initSoporte();</script>
+<script>
+/* Fix desplegable de usuario (toggleUserMenu + toggleTema) — faltaba en esta pantalla */
+(function(){
+  var userMenuOpen = false;
+  function actualizarLabelTema(){
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    var icon = document.getElementById('icon-tema');
+    var label = document.getElementById('label-tema');
+    if (icon) icon.textContent = esClaro ? 'light_mode' : 'dark_mode';
+    if (label) label.textContent = esClaro ? 'Modo oscuro' : 'Modo claro';
+  }
+  window.toggleUserMenu = function(){
+    userMenuOpen = !userMenuOpen;
+    var um = document.getElementById('user-menu'); if (um) um.classList.toggle('hidden', !userMenuOpen);
+    var ch = document.getElementById('chevron-user'); if (ch) ch.textContent = userMenuOpen ? 'expand_more' : 'expand_less';
+  };
+  window.toggleTema = function(){
+    var esClaro = localStorage.getItem('tp_tema') === 'claro';
+    if (esClaro){ localStorage.removeItem('tp_tema'); document.documentElement.style.filter=''; }
+    else { localStorage.setItem('tp_tema','claro'); document.documentElement.style.filter='invert(1) hue-rotate(180deg)'; }
+    actualizarLabelTema();
+    userMenuOpen = false;
+    var um = document.getElementById('user-menu'); if (um) um.classList.add('hidden');
+    var ch = document.getElementById('chevron-user'); if (ch) ch.textContent = 'expand_less';
+  };
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('#btn-user-card') && !e.target.closest('#user-menu') && userMenuOpen){
+      userMenuOpen = false;
+      var um = document.getElementById('user-menu'); if (um) um.classList.add('hidden');
+      var ch = document.getElementById('chevron-user'); if (ch) ch.textContent = 'expand_less';
+    }
+  });
+  try{ if(localStorage.getItem('tp_tema')==='claro'){ document.documentElement.style.filter='invert(1) hue-rotate(180deg)'; } actualizarLabelTema(); }catch(e){}
+})();
+</script>
+
 </body>
 </html>
