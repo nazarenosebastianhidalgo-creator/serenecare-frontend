@@ -16,7 +16,6 @@ const MODULOS = [
   { href:'compliance_clinica.html',     label:'Compliance',    icon:'verified_user', color:'#818cf8', bg:'rgba(99,102,241,0.15)',  bd:'rgba(99,102,241,0.25)' },
   { href:'crear_video.html',            label:'Crear vídeo',   icon:'movie',         color:'#f472b6', bg:'rgba(244,114,182,0.15)', bd:'rgba(244,114,182,0.25)' },
   { href:'migracion.html',              label:'Migrar datos',  icon:'cloud_upload',  color:'#38bdf8', bg:'rgba(56,189,248,0.15)',  bd:'rgba(56,189,248,0.25)' },
-  { href:'consentimientos_clinica.html',label:'Consentimientos',icon:'history_edu',  color:'#c084fc', bg:'rgba(192,132,252,0.15)', bd:'rgba(192,132,252,0.25)' },
 ];
 
 function cardHTML(m) {
