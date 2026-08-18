@@ -166,8 +166,8 @@
     try {
       const r = await fetch(API + '/api/creador-video/generar', { method:'POST', headers: auth, body: JSON.stringify({ guion, avatar_id: avatarSel, vertical }) })
       const d = await r.json()
-      if (r.status === 403 && d.bloqueado_trial) {
-        $('msg').innerHTML = '<div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.28);border-radius:12px;padding:14px 16px;color:#fbbf24;font-weight:700;line-height:1.5;">🔒 El creador de vídeos se desbloquea tras tu primer pago.<br><span style="color:#cbd5e1;font-weight:500;">Cuando termine tu prueba y se active tu suscripción, podrás generar tus vídeos.</span></div>'
+      if ((r.status === 403 || r.status === 402) && d.bloqueado_trial) {
+        $('msg').innerHTML = '<div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.28);border-radius:12px;padding:14px 16px;color:#fbbf24;font-weight:700;line-height:1.5;">🔒 ' + (d.error || 'El creador de vídeos se desbloquea tras tu primer pago.') + '</div>'
         $('btn-generar').disabled = false
         return
       }
