@@ -36,6 +36,8 @@
 </head>
 <body>
   <div class="wrap">
+    <a id="volver-portal" href="#" style="display:flex;width:fit-content;align-items:center;gap:6px;color:#64748b;text-decoration:none;font-size:13px;font-weight:600;margin-bottom:18px;" onmouseover="this.style.color='#94a3b8'" onmouseout="this.style.color='#64748b'"><span style="font-size:18px;line-height:1;">←</span> Volver a mi portal</a>
+    <script>(function(){var r=localStorage.getItem('tp_rol');var a=document.getElementById('volver-portal');if(a)a.href=(r==='admin_clinica'?'dashboard_admin_clinica.html':'dashboard_psicologo.html');})();</script>
     <h1>Tu recepción IA</h1>
     <p class="sub">Rellena tu información. La IA responderá a pacientes potenciales con estos datos y te avisará de cada consulta nueva.</p>
 
