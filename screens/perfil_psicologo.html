@@ -1122,33 +1122,5 @@ try {
   }
 })();
 </script><script type="module">import { initCampana } from '../js/notif-bell.js'; initCampana();</script>
-<script type="module">
-  /* Mi perfil lo usan psicólogo y admin. Si entras como ADMIN, mostramos la
-     navegación del portal admin (sidebar de 9 + menú de 9 puntos canónico),
-     para que no aparezcan los menús del portal psicólogo. Defensivo. */
-  try {
-    if (localStorage.getItem('tp_rol') === 'admin_clinica') {
-      const nav = document.querySelector('aside nav');
-      if (nav) {
-        const items = [
-          ['dashboard','Dashboard','dashboard_admin_clinica.html'],
-          ['group','Pacientes','pacientes_clinica.html'],
-          ['calendar_month','Agenda','agenda_clinica.html'],
-          ['videocam','Videollamada','telemedicina_psicologo.html'],
-          ['chat','Mensajes','mensajes_clinica.html'],
-          ['campaign','Marketing IA','marketing_ia.html'],
-          ['reviews','Reputación & Google','resenas_psicologo.html'],
-          ['support_agent','Recepción y Reservas','recepcion_config.html'],
-          ['history_edu','Consentimientos','consentimientos_clinica.html'],
-        ];
-        nav.innerHTML = items.map(([ic,lb,hr]) =>
-          `<a href="${hr}" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-headline"><span class="material-symbols-outlined text-lg">${ic}</span><span>${lb}</span></a>`
-        ).join('');
-      }
-      const { initAppsMenu } = await import('../js/apps-menu.js');
-      initAppsMenu();
-    }
-  } catch (e) { /* si falla, se queda el menú de psicólogo */ }
-</script>
 </body>
 </html>
