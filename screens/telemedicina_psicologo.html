@@ -579,7 +579,15 @@ window.expandNotas = function() {
 import { supabase, crearSalaVideo } from '../js/supabase-client.js'
 import { verificarSesion } from '../js/auth.js'
 
-(async () => {
+// ── Portal de origen según rol (scope de módulo: lo usa finalizarSesion) ──
+// Al colgar/volver, cada quien a SU portal: admin→admin, psicólogo→psicólogo.
+const _rolTM  = localStorage.getItem('tp_rol') || 'psicologo'
+const _homeTM = _rolTM === 'admin_clinica' ? '/screens/dashboard_admin_clinica.html' : '/screens/dashboard_psicologo.html'
+if (_rolTM === 'admin_clinica') {
+  document.querySelectorAll('a[href="mensajes_psicologo.html"]').forEach(function(a){ a.href = 'mensajes_clinica.html' })
+}
+
+;(async () => {
 
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
 if (!_perfil) return
@@ -762,7 +770,7 @@ if (window._salaUrl === undefined) window._salaUrl = null
 // ── Finalizar sesión ──
 async function finalizarSesion() {
   if (citaId) await supabase.from('citas').update({ estado: 'completada' }).eq('id', citaId)
-  window.location.href = '/screens/dashboard_psicologo.html'
+  window.location.href = _homeTM
 }
 ;['btn-finalizar', 'btn-fin-sidebar'].forEach(function(id) {
   const b = document.getElementById(id)
