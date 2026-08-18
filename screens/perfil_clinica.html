@@ -279,42 +279,18 @@
       </div>
 
       <div class="glass-card">
-        <p class="font-headline font-bold text-white mb-5">Áreas de especialización</p>
-        <div class="flex flex-wrap gap-2" id="especialidades-tags">
-          <span class="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2" style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);">Ansiedad <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#a78bfa;font-size:14px;line-height:1;">×</button></span>
-          <span class="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2" style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);">Depresión <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#a78bfa;font-size:14px;line-height:1;">×</button></span>
-          <span class="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2" style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);">TCC <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#a78bfa;font-size:14px;line-height:1;">×</button></span>
-          <span class="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2" style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);">Duelo <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#a78bfa;font-size:14px;line-height:1;">×</button></span>
-          <span class="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2" style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);">Mindfulness <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#a78bfa;font-size:14px;line-height:1;">×</button></span>
-          <span class="px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2" style="background:rgba(139,92,246,0.12);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);">Estrés laboral <button onclick="this.parentElement.remove()" style="background:none;border:none;cursor:pointer;color:#a78bfa;font-size:14px;line-height:1;">×</button></span>
-          <button onclick="agregarTag()" class="px-3 py-1.5 rounded-xl text-xs font-bold" style="background:rgba(255,255,255,0.04);color:#64748b;border:1px dashed rgba(255,255,255,0.1);">+ Agregar</button>
-        </div>
+        <p class="font-headline font-bold text-white mb-2">Áreas de especialización</p>
+        <p class="text-xs text-slate-400" style="line-height:1.6;">Tus áreas (Ansiedad, Depresión, TCC…) se configuran en <a href="recepcion_config.html" style="color:#2dd4bf;font-weight:700;text-decoration:none;">Recepción y Reservas</a> &rarr; así aparecen en tu ficha pública y las usa la recepcionista IA.</p>
       </div>
 
       <div class="glass-card">
-        <p class="font-headline font-bold text-white mb-5">Formación académica</p>
-        <div class="flex flex-col gap-3">
-          <div class="flex items-start gap-4 p-4 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
-            <span class="material-symbols-outlined text-slate-400 mt-0.5" style="font-size:20px;font-variation-settings:'FILL' 1;">school</span>
-            <div class="flex-1">
-              <p class="text-sm font-bold text-white">Doctorado en Psicología Clínica</p>
-              <p class="text-xs text-slate-500 mt-0.5">Universidad Complutense de Madrid · 2019</p>
-            </div>
-            <button style="background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined text-slate-600" style="font-size:16px;">edit</span></button>
-          </div>
-          <div class="flex items-start gap-4 p-4 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
-            <span class="material-symbols-outlined text-slate-400 mt-0.5" style="font-size:20px;font-variation-settings:'FILL' 1;">school</span>
-            <div class="flex-1">
-              <p class="text-sm font-bold text-white">Grado en Psicología</p>
-              <p class="text-xs text-slate-500 mt-0.5">Universidad Autónoma de Madrid · 2015</p>
-            </div>
-            <button style="background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined text-slate-600" style="font-size:16px;">edit</span></button>
-          </div>
-          <button class="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold transition-all" style="background:rgba(255,255,255,0.03);color:#64748b;border:1px dashed rgba(255,255,255,0.1);">
-            <span class="material-symbols-outlined text-base">add</span>
-            Agregar formación
-          </button>
-        </div>
+        <p class="font-headline font-bold text-white mb-2">Formación académica</p>
+        <p class="text-xs text-slate-500 mb-4">Aparecerá en tu ficha pública. Añade tu titulación, la universidad y el año.</p>
+        <div id="formacion-lista" class="flex flex-col gap-3"></div>
+        <button onclick="agregarFormacion()" class="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold transition-all mt-3" style="background:rgba(255,255,255,0.03);color:#64748b;border:1px dashed rgba(255,255,255,0.1);">
+          <span class="material-symbols-outlined text-base">add</span>
+          Agregar formación
+        </button>
       </div>
     </div>
 
@@ -699,6 +675,25 @@ function agregarTag() {
 }
 
 // â”€â”€ Guardar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// -- Formación académica (funcional) --
+function _escFm(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function filaFormacionHTML(f){ f=f||{};
+  return `<div class="formacion-row flex items-start gap-3 p-3 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+    <span class="material-symbols-outlined text-slate-400 mt-2" style="font-size:20px;font-variation-settings:'FILL' 1;">school</span>
+    <div class="flex-1 flex flex-col gap-2">
+      <input class="f-tit field-input" style="padding:8px 12px;font-size:13px;" placeholder="Título (p. ej. Grado en Psicología)" value="${_escFm(f.titulo)}"/>
+      <div class="grid grid-cols-2 gap-2">
+        <input class="f-uni field-input" style="padding:8px 12px;font-size:13px;" placeholder="Universidad" value="${_escFm(f.universidad)}"/>
+        <input class="f-anio field-input" style="padding:8px 12px;font-size:13px;" placeholder="Año" value="${_escFm(f.anio)}"/>
+      </div>
+    </div>
+    <button onclick="this.closest('.formacion-row').remove()" class="mt-2" style="background:none;border:none;cursor:pointer;"><span class="material-symbols-outlined text-slate-600" style="font-size:18px;">delete</span></button>
+  </div>`;
+}
+function renderFormacion(arr){ const c=document.getElementById('formacion-lista'); if(!c) return; c.innerHTML=(Array.isArray(arr)?arr:[]).map(filaFormacionHTML).join(''); }
+function agregarFormacion(){ const c=document.getElementById('formacion-lista'); if(!c) return; c.insertAdjacentHTML('beforeend', filaFormacionHTML({})); }
+function recogerFormacion(){ return Array.from(document.querySelectorAll('#formacion-lista .formacion-row')).map(r=>({ titulo:(r.querySelector('.f-tit').value||'').trim(), universidad:(r.querySelector('.f-uni').value||'').trim(), anio:(r.querySelector('.f-anio').value||'').trim() })).filter(f=>f.titulo||f.universidad||f.anio); }
+
 function guardarCambios() {
   const n = (document.getElementById('input-nombre').value || '').trim();
   const a = (document.getElementById('input-apellido').value || '').trim();
@@ -913,6 +908,7 @@ try {
         idiomas: document.getElementById('input-idiomas')?.value.trim(),
         bio: document.getElementById('input-bio')?.value.trim(),
         direccion: document.getElementById('input-direccion')?.value.trim(),
+        formacion: recogerFormacion(),
       }) });
     } catch(_) {}
     _origGuardar();
@@ -960,6 +956,7 @@ try {
     document.getElementById('input-idiomas').value = prof.idiomas || '';
     document.getElementById('input-bio').value = prof.bio || '';
     document.getElementById('input-direccion').value = prof.direccion || '';
+    renderFormacion(prof.formacion || []);
   } catch (_) {}
 
   // Override cambiarPassword to use Supabase
