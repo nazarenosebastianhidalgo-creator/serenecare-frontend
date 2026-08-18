@@ -583,8 +583,20 @@ import { verificarSesion } from '../js/auth.js'
 // Al colgar/volver, cada quien a SU portal: admin→admin, psicólogo→psicólogo.
 const _rolTM  = localStorage.getItem('tp_rol') || 'psicologo'
 const _homeTM = _rolTM === 'admin_clinica' ? '/screens/dashboard_admin_clinica.html' : '/screens/dashboard_psicologo.html'
+// Equivalencias psicólogo→admin: reescribe los enlaces para no fugar al portal del psicólogo.
+// (recursos_psicologo no tiene versión admin: se adapta solo por rol dentro de su propia pantalla.)
+const _mapTM = {
+  'dashboard_psicologo.html': 'dashboard_admin_clinica.html',
+  'mensajes_psicologo.html':  'mensajes_clinica.html',
+  'pacientes_psicologo.html': 'pacientes_clinica.html',
+  'agenda_psicologo.html':    'agenda_clinica.html',
+}
 if (_rolTM === 'admin_clinica') {
-  document.querySelectorAll('a[href="mensajes_psicologo.html"]').forEach(function(a){ a.href = 'mensajes_clinica.html' })
+  document.querySelectorAll('a[href*="_psicologo.html"]').forEach(function(a){
+    const href = a.getAttribute('href'); if (!href) return
+    const base = href.split(/[?#]/)[0].split('/').pop()
+    if (_mapTM[base]) a.setAttribute('href', href.replace(base, _mapTM[base]))
+  })
 }
 
 ;(async () => {
