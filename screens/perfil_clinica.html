@@ -147,7 +147,6 @@
     <div class="flex gap-1 mb-8" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:5px;width:fit-content;">
       <button class="tab-btn tab-active" id="tab-personal" onclick="setTab(this,'personal')">Información personal</button>
       <button class="tab-btn tab-inactive" id="tab-profesional" onclick="setTab(this,'profesional')">Perfil profesional</button>
-      <button class="tab-btn tab-inactive" id="tab-notif" onclick="setTab(this,'notif')">Notificaciones</button>
     </div>
 
     <!-- TAB: Personal -->
@@ -495,78 +494,6 @@
 
       </div>
     </div>
-
-    <!-- TAB: Notificaciones -->
-    <div id="section-notif" class="hidden">
-      <div class="glass-card">
-        <p class="font-headline font-bold text-white mb-5">Preferencias de notificaciones</p>
-        <div class="flex flex-col gap-4">
-          <!-- Email -->
-          <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Por email</p>
-            <div class="flex flex-col gap-3">
-              <div class="flex items-center justify-between py-2 border-b border-slate-800/30">
-                <div>
-                  <p class="text-sm font-semibold text-white">Nueva cita agendada</p>
-                  <p class="text-xs text-slate-500 mt-0.5">Cuando un paciente reserva una sesión</p>
-                </div>
-                <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
-              </div>
-              <div class="flex items-center justify-between py-2 border-b border-slate-800/30">
-                <div>
-                  <p class="text-sm font-semibold text-white">Recordatorio de sesión</p>
-                  <p class="text-xs text-slate-500 mt-0.5">1 hora antes de cada cita</p>
-                </div>
-                <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
-              </div>
-              <div class="flex items-center justify-between py-2 border-b border-slate-800/30">
-                <div>
-                  <p class="text-sm font-semibold text-white">Cancelación de cita</p>
-                  <p class="text-xs text-slate-500 mt-0.5">Cuando un paciente cancela</p>
-                </div>
-                <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
-              </div>
-              <div class="flex items-center justify-between py-2 border-b border-slate-800/30">
-                <div>
-                  <p class="text-sm font-semibold text-white">Informe IA completado</p>
-                  <p class="text-xs text-slate-500 mt-0.5">Cuando la IA termina de generar un informe</p>
-                </div>
-                <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
-              </div>
-              <div class="flex items-center justify-between py-2">
-                <div>
-                  <p class="text-sm font-semibold text-white">Resumen semanal</p>
-                  <p class="text-xs text-slate-500 mt-0.5">Estadísticas de la semana todos los lunes</p>
-                </div>
-                <label class="toggle-switch"><input type="checkbox"/><span class="toggle-slider"></span></label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Push -->
-          <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 mt-2">Notificaciones push</p>
-            <div class="flex flex-col gap-3">
-              <div class="flex items-center justify-between py-2 border-b border-slate-800/30">
-                <div>
-                  <p class="text-sm font-semibold text-white">Mensajes de pacientes</p>
-                  <p class="text-xs text-slate-500 mt-0.5">Notificación inmediata al recibir mensajes</p>
-                </div>
-                <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
-              </div>
-              <div class="flex items-center justify-between py-2">
-                <div>
-                  <p class="text-sm font-semibold text-white">Alertas urgentes</p>
-                  <p class="text-xs text-slate-500 mt-0.5">Flags de riesgo detectados por IA</p>
-                </div>
-                <label class="toggle-switch"><input type="checkbox" checked/><span class="toggle-slider"></span></label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </main>
 
@@ -614,7 +541,7 @@
 <script>
 // â”€â”€ Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function setTab(btn, id) {
-  ['personal','profesional','notif'].forEach(t => {
+  ['personal','profesional'].forEach(t => {
     document.getElementById('section-'+t).classList.add('hidden');
     document.getElementById('tab-'+t).className = 'tab-btn tab-inactive';
   });
