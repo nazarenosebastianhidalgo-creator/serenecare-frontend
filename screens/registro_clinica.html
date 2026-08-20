@@ -201,6 +201,9 @@
       // Codificar la contraseña en base64 para enviarla vía custom_data
       const passwordB64 = btoa(unescape(encodeURIComponent(password)));
 
+      // Código del creador que lo trajo (?ref=CODIGO en la URL) para atribución de afiliados
+      const codigoCreador = (new URLSearchParams(location.search).get('ref') || '').trim();
+
       const params = new URLSearchParams({
         'checkout[email]': email,
         'checkout[name]': `${nombre} ${apellido}`,
@@ -209,6 +212,7 @@
         'checkout[custom][clinica_nombre]': clinicaNombre,
         'checkout[custom][password_hash]': passwordB64,
       });
+      if (codigoCreador) params.set('checkout[custom][codigo_creador]', codigoCreador);
 
       const checkoutUrl = `https://serenecare.lemonsqueezy.com/checkout/buy/${VARIANT_ID}?${params.toString()}`;
       window.location.href = checkoutUrl;

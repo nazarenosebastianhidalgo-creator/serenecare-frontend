@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SereneCare — Panel del creador</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;background:#020617;color:#e2e8f0;font-family:'Inter',sans-serif;padding:32px 16px 60px;}
+  .wrap{max-width:620px;margin:0 auto;}
+  h1{font-family:'Manrope',sans-serif;font-size:24px;font-weight:800;margin:0 0 4px;color:#f1f5f9;}
+  .sub{color:#94a3b8;font-size:14px;margin:0 0 24px;line-height:1.5;}
+  .card{background:#0a1628;border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:20px;margin-bottom:14px;}
+  label{display:block;font-size:12px;font-weight:600;color:#cbd5e1;margin:0 0 6px;}
+  input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:12px 14px;color:#e2e8f0;font-family:inherit;font-size:14px;outline:none;}
+  input:focus{border-color:#2dd4bf;}
+  .btn{width:100%;margin-top:12px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;border:none;border-radius:12px;padding:13px;font-family:'Manrope',sans-serif;font-weight:800;font-size:15px;cursor:pointer;}
+  .btn:disabled{opacity:.6;}
+  #msg{text-align:center;font-size:13px;color:#f87171;margin-top:10px;min-height:16px;}
+  .hidden{display:none;}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0 0;}
+  .stat{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px 10px;text-align:center;}
+  .stat .n{font-family:'Manrope',sans-serif;font-size:26px;font-weight:800;color:#5eead4;}
+  .stat .l{font-size:11px;color:#94a3b8;margin-top:2px;}
+  .codigo{font-family:'Manrope',sans-serif;font-weight:800;font-size:26px;letter-spacing:.08em;color:#5eead4;background:rgba(2,6,23,0.5);border:1px solid rgba(45,212,191,0.3);padding:12px 20px;border-radius:12px;text-align:center;margin:6px 0;}
+  .linkrow{display:flex;gap:8px;align-items:center;margin-top:8px;}
+  .linkrow input{flex:1;font-size:12.5px;color:#5eead4;}
+  .mini{background:rgba(255,255,255,0.06);color:#cbd5e1;border:none;border-radius:8px;padding:11px 14px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;}
+  .b-ok{color:#5eead4;background:rgba(45,212,191,0.12);}
+  .b-pend{color:#fbbf24;background:rgba(251,191,36,0.12);}
+  .nota{font-size:12.5px;color:#94a3b8;line-height:1.6;}
+  h2{font-family:'Manrope',sans-serif;font-size:13px;font-weight:800;color:#5eead4;margin:22px 0 8px;text-transform:uppercase;letter-spacing:.04em;}
+  a.volver{color:#64748b;font-size:13px;text-decoration:none;}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="volver" href="creadores.html">← Programa de creadores</a>
+    <h1 style="margin-top:14px;">🌿 Panel del creador</h1>
+    <p class="sub">Entra con el email con el que te registraste para ver tus referidos, tu código y tu enlace.</p>
+
+    <!-- Login por email -->
+    <div class="card" id="login-box">
+      <label>Tu email</label>
+      <input type="email" id="email" placeholder="tucorreo@ejemplo.com" />
+      <button class="btn" id="btn-entrar" onclick="entrar()">Ver mi panel</button>
+      <div id="msg"></div>
+    </div>
+
+    <!-- Panel -->
+    <div id="panel" class="hidden">
+      <div class="card">
+        <p style="margin:0 0 2px;font-size:13px;color:#94a3b8;">Hola,</p>
+        <p style="margin:0;font-family:'Manrope',sans-serif;font-weight:800;font-size:18px;color:#f1f5f9;" id="p-nombre"></p>
+        <p style="margin:8px 0 0;"><span id="p-estado"></span></p>
+      </div>
+
+      <h2>Tus referidos</h2>
+      <div class="card">
+        <div class="stats">
+          <div class="stat"><div class="n" id="p-total">0</div><div class="l">Total</div></div>
+          <div class="stat"><div class="n" id="p-activos">0</div><div class="l">Activos (pagando)</div></div>
+          <div class="stat"><div class="n" id="p-trial">0</div><div class="l">En prueba</div></div>
+        </div>
+        <p class="nota" style="margin:14px 0 0;">Cobras por cada referido <b>activo</b> (que paga), cada mes que siga suscrito, hasta 12 meses. La comisión depende de tu plan de partner.</p>
+      </div>
+
+      <h2>Tu código y enlace</h2>
+      <div class="card">
+        <label>Tu código</label>
+        <div class="codigo" id="p-codigo">—</div>
+        <label style="margin-top:12px;">Tu enlace (compártelo con tu audiencia)</label>
+        <div class="linkrow">
+          <input type="text" id="p-link" readonly />
+          <button class="mini" onclick="copiar()">Copiar</button>
+        </div>
+        <p class="nota" style="margin:10px 0 0;">Cada psicólogo que se registre desde tu enlace queda ligado a ti automáticamente.</p>
+      </div>
+    </div>
+  </div>
+
+<script>
+  var SB_URL = 'https://wnuwuxenzwfqmhxagryk.supabase.co';
+  var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o';
+
+  async function entrar(){
+    var email = document.getElementById('email').value.trim();
+    var msg = document.getElementById('msg');
+    var btn = document.getElementById('btn-entrar');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.textContent = 'Pon un email válido.'; return; }
+    btn.disabled = true; msg.textContent = '';
+    try {
+      var r = await fetch(SB_URL + '/rest/v1/rpc/stats_creador', {
+        method: 'POST',
+        headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_email: email })
+      });
+      var d = await r.json();
+      if(!d || !d.encontrado){
+        msg.textContent = 'No encontramos ese email. ¿Te registraste ya como creador?';
+        btn.disabled = false; return;
+      }
+      document.getElementById('p-nombre').textContent = d.nombre || 'Creador';
+      var est = document.getElementById('p-estado');
+      if(d.estado === 'aprobado' || d.estado === 'activo'){ est.innerHTML = '<span class="badge b-ok">✓ Activo</span>'; }
+      else { est.innerHTML = '<span class="badge b-pend">Solicitud recibida</span>'; }
+      document.getElementById('p-total').textContent   = d.total || 0;
+      document.getElementById('p-activos').textContent = d.activos || 0;
+      document.getElementById('p-trial').textContent   = d.trial || 0;
+      document.getElementById('p-codigo').textContent  = d.codigo || '—';
+      document.getElementById('p-link').value = 'https://serenecare.es/screens/registro_clinica.html?ref=' + encodeURIComponent(d.codigo || '');
+      document.getElementById('login-box').classList.add('hidden');
+      document.getElementById('panel').classList.remove('hidden');
+    } catch(e){ msg.textContent = 'Error cargando el panel. Inténtalo de nuevo.'; btn.disabled = false; }
+  }
+  function copiar(){
+    var i = document.getElementById('p-link'); i.select();
+    document.execCommand('copy');
+    event.target.textContent = '¡Copiado!';
+    setTimeout(function(){ event.target.textContent = 'Copiar'; }, 1500);
+  }
+  document.getElementById('email').addEventListener('keydown', function(e){ if(e.key==='Enter') entrar(); });
+</script>
+</body>
+</html>

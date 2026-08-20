@@ -159,6 +159,7 @@
       <button class="cta" type="button" onclick="abrirRegistro()">Solicitar mi plaza →</button>
     </div>
 
+    <p style="text-align:center;margin:0 0 6px;"><a href="panel_creador.html" style="color:#5eead4;font-weight:700;font-size:14px;text-decoration:none;">¿Ya eres partner? Entra a tu panel →</a></p>
     <footer>SereneCare · Programa de Creadores · Comisiones recurrentes y transparentes</footer>
   </div>
 
@@ -194,7 +195,12 @@
         <h3>¡Ya estás dentro!</h3>
         <p class="msub">Tu código de partner:</p>
         <div class="codigo" id="cr-codigo">—</div>
-        <p class="msub">Te enviaremos tu enlace de referido y los siguientes pasos por email muy pronto.</p>
+        <p class="msub" style="margin-top:14px">Tu enlace de referido (compártelo con tu audiencia):</p>
+        <div style="display:flex;gap:8px;align-items:center;margin:6px 0 4px;">
+          <input type="text" id="cr-link" readonly style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-size:12px;color:#5eead4;" />
+          <button type="button" onclick="copiarLink()" style="background:rgba(255,255,255,0.06);color:#cbd5e1;border:none;border-radius:8px;padding:10px 13px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Copiar</button>
+        </div>
+        <p class="msub" style="font-size:12.5px;margin-top:12px">Consulta tus referidos cuando quieras en tu <a href="panel_creador.html" style="color:#5eead4;font-weight:700;">panel de creador</a> (entrando con tu email).</p>
         <div class="row"><button class="cta" type="button" onclick="cerrarRegistro()" style="flex:1;text-align:center">Cerrar</button></div>
       </div>
     </div>
@@ -205,6 +211,12 @@
   var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o';
 
   function abrirRegistro(){ document.getElementById('modal-registro').classList.add('open'); }
+  function copiarLink(){
+    var i = document.getElementById('cr-link'); i.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    var b = event.target; var t = b.textContent; b.textContent = '¡Copiado!';
+    setTimeout(function(){ b.textContent = t; }, 1500);
+  }
   function cerrarRegistro(){
     document.getElementById('modal-registro').classList.remove('open');
     document.getElementById('cr-form').style.display = '';
@@ -237,6 +249,7 @@
       var codigo = await r.json();
       if(!r.ok || !codigo){ throw new Error('sin codigo'); }
       document.getElementById('cr-codigo').textContent = codigo;
+      document.getElementById('cr-link').value = 'https://serenecare.es/screens/registro_clinica.html?ref=' + encodeURIComponent(codigo);
       document.getElementById('cr-form').style.display = 'none';
       document.getElementById('cr-exito').style.display = '';
     } catch(e){
