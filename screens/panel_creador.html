@@ -48,6 +48,9 @@
   .bar{width:100%;max-width:34px;background:linear-gradient(180deg,#2dd4bf,#0f766e);border-radius:6px 6px 0 0;transition:height .8s cubic-bezier(.2,.8,.2,1);min-height:3px;}
   .bar-col .bl{font-size:10px;color:#64748b;}
   .bar-col .bv{font-size:11px;font-weight:800;color:#5eead4;height:14px;}
+  .gtab{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#94a3b8;border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;}
+  .gtab-on{background:rgba(45,212,191,0.15);border-color:rgba(45,212,191,0.3);color:#5eead4;}
+  .chart-linea{width:100%;height:130px;display:block;overflow:visible;}
   /* Tabla de referidos */
   .ref{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
   .ref:last-child{border-bottom:none;}
@@ -109,7 +112,12 @@
 
       <h2>Evolución</h2>
       <div class="card">
+        <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:10px;">
+          <button class="gtab gtab-on" id="gt-barras" onclick="cambiarGrafico('barras')">Barras</button>
+          <button class="gtab" id="gt-linea" onclick="cambiarGrafico('linea')">Línea</button>
+        </div>
         <div class="chart" id="p-chart"></div>
+        <svg id="p-chart-linea" class="chart-linea hidden" viewBox="0 0 320 120" preserveAspectRatio="none"></svg>
         <p class="nota" style="margin:10px 0 0;text-align:center;">Nuevos referidos por mes (últimos 6 meses)</p>
       </div>
 
@@ -230,20 +238,9 @@
     document.getElementById('p-link').value = 'https://serenecare.es/screens/registro_clinica.html?ref=' + encodeURIComponent(d.codigo || '');
     if(d.metodo_cobro) document.getElementById('p-cobro').value = d.metodo_cobro;
 
-    // Gráfico de barras (serie mensual)
-    var serie = d.serie || [];
-    var maxN = Math.max(1, Math.max.apply(null, serie.map(function(s){ return s.n || 0; }).concat([0])));
-    var chart = document.getElementById('p-chart');
-    chart.innerHTML = serie.map(function(s){
-      var h = Math.round(((s.n || 0) / maxN) * 100);
-      return '<div class="bar-col"><span class="bv">' + (s.n > 0 ? s.n : '') + '</span>'
-           + '<div class="bar" style="height:0"></div><span class="bl">' + s.mes + '</span></div>';
-    }).join('');
-    // animar altura tras render
-    setTimeout(function(){
-      var bars = chart.querySelectorAll('.bar');
-      serie.forEach(function(s, i){ if(bars[i]) bars[i].style.height = Math.round(((s.n||0)/maxN)*100) + '%'; });
-    }, 50);
+    // Guardar serie y dibujar el gráfico (barras por defecto)
+    window._serie = d.serie || [];
+    dibujarBarras();
 
     // Tabla de referidos
     var refs = d.referidos || [];
@@ -270,6 +267,53 @@
   }
 
   function escapeHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function dibujarBarras(){
+    var serie = window._serie || [];
+    var maxN = Math.max(1, Math.max.apply(null, serie.map(function(s){ return s.n || 0; }).concat([0])));
+    var chart = document.getElementById('p-chart');
+    chart.innerHTML = serie.map(function(s){
+      return '<div class="bar-col"><span class="bv">' + (s.n > 0 ? s.n : '') + '</span>'
+           + '<div class="bar" style="height:0"></div><span class="bl">' + s.mes + '</span></div>';
+    }).join('');
+    setTimeout(function(){
+      var bars = chart.querySelectorAll('.bar');
+      serie.forEach(function(s, i){ if(bars[i]) bars[i].style.height = Math.round(((s.n||0)/maxN)*100) + '%'; });
+    }, 50);
+  }
+
+  function dibujarLinea(){
+    var serie = window._serie || [];
+    var svg = document.getElementById('p-chart-linea');
+    var W = 320, H = 120, pad = 14;
+    var maxN = Math.max(1, Math.max.apply(null, serie.map(function(s){ return s.n || 0; }).concat([0])));
+    var n = serie.length;
+    var pts = serie.map(function(s, i){
+      var x = pad + (n <= 1 ? 0 : (i / (n - 1)) * (W - pad * 2));
+      var y = H - pad - ((s.n || 0) / maxN) * (H - pad * 2);
+      return { x: x, y: y, v: s.n || 0, mes: s.mes };
+    });
+    var linePath = pts.map(function(p, i){ return (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' ');
+    var areaPath = linePath + ' L' + pts[pts.length-1].x.toFixed(1) + ' ' + (H-pad) + ' L' + pts[0].x.toFixed(1) + ' ' + (H-pad) + ' Z';
+    var dots = pts.map(function(p){ return '<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="3.5" fill="#5eead4"/>'
+      + (p.v>0 ? '<text x="'+p.x.toFixed(1)+'" y="'+(p.y-8).toFixed(1)+'" text-anchor="middle" font-size="10" font-weight="800" fill="#5eead4">'+p.v+'</text>' : ''); }).join('');
+    var labels = pts.map(function(p){ return '<text x="'+p.x.toFixed(1)+'" y="'+(H-2)+'" text-anchor="middle" font-size="9" fill="#64748b">'+p.mes+'</text>'; }).join('');
+    svg.innerHTML =
+      '<defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">'
+      + '<stop offset="0" stop-color="#2dd4bf" stop-opacity="0.35"/><stop offset="1" stop-color="#2dd4bf" stop-opacity="0"/></linearGradient></defs>'
+      + '<path d="'+areaPath+'" fill="url(#lg)"/>'
+      + '<path d="'+linePath+'" fill="none" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'
+      + dots + labels;
+  }
+
+  function cambiarGrafico(tipo){
+    var barras = document.getElementById('p-chart');
+    var linea = document.getElementById('p-chart-linea');
+    document.getElementById('gt-barras').classList.toggle('gtab-on', tipo === 'barras');
+    document.getElementById('gt-linea').classList.toggle('gtab-on', tipo === 'linea');
+    if(tipo === 'linea'){ barras.classList.add('hidden'); linea.classList.remove('hidden'); dibujarLinea(); }
+    else { linea.classList.add('hidden'); barras.classList.remove('hidden'); dibujarBarras(); }
+  }
 
   async function guardarCobro(){
     var metodo = document.getElementById('p-cobro').value.trim();
