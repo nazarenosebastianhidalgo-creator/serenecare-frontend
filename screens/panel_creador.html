@@ -110,7 +110,7 @@
       document.getElementById('p-activos').textContent = d.activos || 0;
       document.getElementById('p-trial').textContent   = d.trial || 0;
       document.getElementById('p-codigo').textContent  = d.codigo || '—';
-      document.getElementById('p-link').value = 'https://serenecare.es/r/' + encodeURIComponent(d.codigo || '');
+      document.getElementById('p-link').value = 'https://serenecare.es/screens/registro_clinica.html?ref=' + encodeURIComponent(d.codigo || '');
       document.getElementById('login-box').classList.add('hidden');
       document.getElementById('panel').classList.remove('hidden');
     } catch(e){ msg.textContent = 'Error cargando el panel. Inténtalo de nuevo.'; btn.disabled = false; }

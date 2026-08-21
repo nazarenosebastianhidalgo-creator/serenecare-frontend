@@ -249,7 +249,7 @@
       var codigo = await r.json();
       if(!r.ok || !codigo){ throw new Error('sin codigo'); }
       document.getElementById('cr-codigo').textContent = codigo;
-      document.getElementById('cr-link').value = 'https://serenecare.es/r/' + encodeURIComponent(codigo);
+      document.getElementById('cr-link').value = 'https://serenecare.es/screens/registro_clinica.html?ref=' + encodeURIComponent(codigo);
       document.getElementById('cr-form').style.display = 'none';
       document.getElementById('cr-exito').style.display = '';
     } catch(e){
