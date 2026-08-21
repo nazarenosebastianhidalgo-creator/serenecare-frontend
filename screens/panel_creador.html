@@ -33,6 +33,34 @@
   .nota{font-size:12.5px;color:#94a3b8;line-height:1.6;}
   h2{font-family:'Manrope',sans-serif;font-size:13px;font-weight:800;color:#5eead4;margin:22px 0 8px;text-transform:uppercase;letter-spacing:.04em;}
   a.volver{color:#64748b;font-size:13px;text-decoration:none;}
+  /* Hero de ingresos */
+  .hero-eur{background:linear-gradient(135deg,rgba(15,118,110,0.22),rgba(20,184,166,0.08));border:1px solid rgba(45,212,191,0.25);border-radius:20px;padding:26px 22px;text-align:center;margin-bottom:14px;}
+  .hero-eur .lbl{font-size:12px;font-weight:700;color:#5eead4;text-transform:uppercase;letter-spacing:.08em;}
+  .hero-eur .big{font-family:'Manrope',sans-serif;font-weight:800;font-size:46px;color:#f1f5f9;line-height:1.1;margin:6px 0 2px;}
+  .hero-eur .sub{font-size:12.5px;color:#94a3b8;}
+  .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;}
+  .mini-stat{background:rgba(255,255,255,0.04);border-radius:12px;padding:10px 6px;}
+  .mini-stat .mn{font-family:'Manrope',sans-serif;font-weight:800;font-size:20px;color:#5eead4;}
+  .mini-stat .ml{font-size:10px;color:#94a3b8;margin-top:1px;}
+  /* Gráfico de barras */
+  .chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding:8px 4px 0;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;}
+  .bar{width:100%;max-width:34px;background:linear-gradient(180deg,#2dd4bf,#0f766e);border-radius:6px 6px 0 0;transition:height .8s cubic-bezier(.2,.8,.2,1);min-height:3px;}
+  .bar-col .bl{font-size:10px;color:#64748b;}
+  .bar-col .bv{font-size:11px;font-weight:800;color:#5eead4;height:14px;}
+  /* Tabla de referidos */
+  .ref{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+  .ref:last-child{border-bottom:none;}
+  .ref .av{width:38px;height:38px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;font-family:'Manrope',sans-serif;font-weight:800;font-size:14px;background:rgba(45,212,191,0.15);color:#2dd4bf;}
+  .ref .info{flex:1;min-width:0;}
+  .ref .rn{font-weight:700;color:#f1f5f9;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .ref .rd{font-size:11.5px;color:#94a3b8;margin-top:1px;}
+  .ref .reur{text-align:right;flex:none;}
+  .ref .reur .e{font-family:'Manrope',sans-serif;font-weight:800;font-size:14px;color:#5eead4;}
+  .ref .reur .es{font-size:10px;}
+  .empty{text-align:center;color:#64748b;font-size:13px;padding:24px 10px;line-height:1.6;}
+  textarea.cobro{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:11px 13px;color:#e2e8f0;font-family:inherit;font-size:14px;outline:none;resize:vertical;min-height:60px;}
+  textarea.cobro:focus{border-color:#2dd4bf;}
 </style>
 </head>
 <body>
@@ -67,17 +95,30 @@
         <p style="margin:8px 0 0;"><span id="p-estado"></span></p>
       </div>
 
-      <h2>Tus referidos</h2>
-      <div class="card">
-        <div class="stats">
-          <div class="stat"><div class="n" id="p-total">0</div><div class="l">Total</div></div>
-          <div class="stat"><div class="n" id="p-activos">0</div><div class="l">Activos (pagando)</div></div>
-          <div class="stat"><div class="n" id="p-trial">0</div><div class="l">En prueba</div></div>
+      <!-- Hero: dinero ganado -->
+      <div class="hero-eur">
+        <div class="lbl">Ingresos este mes</div>
+        <div class="big"><span id="p-eur">0</span> €</div>
+        <div class="sub">10 € al mes por cada referido activo · mientras siga suscrito (hasta 12 meses)</div>
+        <div class="mini-stats">
+          <div class="mini-stat"><div class="mn" id="p-total">0</div><div class="ml">Referidos</div></div>
+          <div class="mini-stat"><div class="mn" id="p-activos">0</div><div class="ml">Pagando</div></div>
+          <div class="mini-stat"><div class="mn" id="p-trial">0</div><div class="ml">En prueba</div></div>
         </div>
-        <p class="nota" style="margin:14px 0 0;">Cobras por cada referido <b>activo</b> (que paga), cada mes que siga suscrito, hasta 12 meses. La comisión depende de tu plan de partner.</p>
       </div>
 
-      <h2>Tu código y enlace</h2>
+      <h2>Evolución</h2>
+      <div class="card">
+        <div class="chart" id="p-chart"></div>
+        <p class="nota" style="margin:10px 0 0;text-align:center;">Nuevos referidos por mes (últimos 6 meses)</p>
+      </div>
+
+      <h2>Tus referidos</h2>
+      <div class="card">
+        <div id="p-referidos"></div>
+      </div>
+
+      <h2>Tu enlace para compartir</h2>
       <div class="card">
         <label>Tu código</label>
         <div class="codigo" id="p-codigo">—</div>
@@ -87,6 +128,14 @@
           <button class="mini" onclick="copiar()">Copiar</button>
         </div>
         <p class="nota" style="margin:10px 0 0;">Cada psicólogo que se registre desde tu enlace queda ligado a ti automáticamente.</p>
+      </div>
+
+      <h2>Datos de cobro</h2>
+      <div class="card">
+        <label>¿Dónde te enviamos tus comisiones?</label>
+        <textarea class="cobro" id="p-cobro" placeholder="Ej: PayPal: tucorreo@ejemplo.com&#10;o IBAN: ES00 0000 0000 0000 0000 0000 (titular: Tu Nombre)"></textarea>
+        <button class="mini" style="margin-top:10px;width:100%;padding:12px;" onclick="guardarCobro()">Guardar datos de cobro</button>
+        <p class="nota" style="margin:8px 0 0;" id="cobro-msg">Guardamos esto de forma privada, solo para pagarte tus comisiones.</p>
       </div>
     </div>
   </div>
@@ -146,18 +195,96 @@
                 : 'Código incorrecto.';
         msg2.textContent = err; btn.disabled = false; return;
       }
-      document.getElementById('p-nombre').textContent = d.nombre || 'Creador';
-      var est = document.getElementById('p-estado');
-      if(d.estado === 'aprobado' || d.estado === 'activo'){ est.innerHTML = '<span class="badge b-ok">✓ Activo</span>'; }
-      else { est.innerHTML = '<span class="badge b-pend">Solicitud recibida</span>'; }
-      document.getElementById('p-total').textContent   = d.total || 0;
-      document.getElementById('p-activos').textContent = d.activos || 0;
-      document.getElementById('p-trial').textContent   = d.trial || 0;
-      document.getElementById('p-codigo').textContent  = d.codigo || '—';
-      document.getElementById('p-link').value = 'https://serenecare.es/screens/registro_clinica.html?ref=' + encodeURIComponent(d.codigo || '');
+      pintarPanel(d);
       document.getElementById('otp-box').classList.add('hidden');
       document.getElementById('panel').classList.remove('hidden');
     } catch(e){ msg2.textContent = 'Error al verificar. Inténtalo de nuevo.'; btn.disabled = false; }
+  }
+
+  // Contador animado (0 -> valor)
+  function animarNum(el, destino, sufijo){
+    destino = destino || 0; sufijo = sufijo || '';
+    var ini = 0, dur = 900, t0 = null;
+    function paso(ts){
+      if(!t0) t0 = ts;
+      var p = Math.min((ts - t0) / dur, 1);
+      var val = Math.floor(ini + (destino - ini) * (1 - Math.pow(1 - p, 3)));
+      el.textContent = val + sufijo;
+      if(p < 1) requestAnimationFrame(paso); else el.textContent = destino + sufijo;
+    }
+    requestAnimationFrame(paso);
+  }
+
+  function pintarPanel(d){
+    document.getElementById('p-nombre').textContent = d.nombre || 'Creador';
+    var est = document.getElementById('p-estado');
+    if(d.estado === 'aprobado' || d.estado === 'activo'){ est.innerHTML = '<span class="badge b-ok">✓ Partner activo</span>'; }
+    else { est.innerHTML = '<span class="badge b-pend">Solicitud recibida</span>'; }
+
+    animarNum(document.getElementById('p-eur'), d.eur_mes || 0);
+    animarNum(document.getElementById('p-total'), d.total || 0);
+    animarNum(document.getElementById('p-activos'), d.activos || 0);
+    animarNum(document.getElementById('p-trial'), d.trial || 0);
+
+    document.getElementById('p-codigo').textContent = d.codigo || '—';
+    document.getElementById('p-link').value = 'https://serenecare.es/screens/registro_clinica.html?ref=' + encodeURIComponent(d.codigo || '');
+    if(d.metodo_cobro) document.getElementById('p-cobro').value = d.metodo_cobro;
+
+    // Gráfico de barras (serie mensual)
+    var serie = d.serie || [];
+    var maxN = Math.max(1, Math.max.apply(null, serie.map(function(s){ return s.n || 0; }).concat([0])));
+    var chart = document.getElementById('p-chart');
+    chart.innerHTML = serie.map(function(s){
+      var h = Math.round(((s.n || 0) / maxN) * 100);
+      return '<div class="bar-col"><span class="bv">' + (s.n > 0 ? s.n : '') + '</span>'
+           + '<div class="bar" style="height:0"></div><span class="bl">' + s.mes + '</span></div>';
+    }).join('');
+    // animar altura tras render
+    setTimeout(function(){
+      var bars = chart.querySelectorAll('.bar');
+      serie.forEach(function(s, i){ if(bars[i]) bars[i].style.height = Math.round(((s.n||0)/maxN)*100) + '%'; });
+    }, 50);
+
+    // Tabla de referidos
+    var refs = d.referidos || [];
+    var cont = document.getElementById('p-referidos');
+    if(!refs.length){
+      cont.innerHTML = '<div class="empty">Aún no tienes referidos.<br>Comparte tu enlace y aquí verás quién se suma 🌿</div>';
+    } else {
+      cont.innerHTML = refs.map(function(r){
+        var activa = r.status === 'activa';
+        var ini = (r.clinica || '?').trim().charAt(0).toUpperCase();
+        var fecha = new Date(r.creado).toLocaleDateString('es-ES', { day:'numeric', month:'short', year:'numeric' });
+        var estadoTxt = activa
+          ? '<span class="badge b-ok">🟢 Pagando</span>'
+          : (r.status === 'trial' ? '<span class="badge b-pend">🟡 En prueba (14 días)</span>' : '<span class="badge b-pend">' + r.status + '</span>');
+        return '<div class="ref">'
+          + '<div class="av">' + ini + '</div>'
+          + '<div class="info"><div class="rn">' + escapeHtml(r.clinica || 'Clínica') + '</div>'
+          + '<div class="rd">Se unió el ' + fecha + ' · usó tu código ' + escapeHtml(r.codigo || '') + '</div>'
+          + '<div style="margin-top:4px">' + estadoTxt + '</div></div>'
+          + '<div class="reur"><span class="e">' + (activa ? '10' : '0') + '€</span><span class="es" style="color:#94a3b8">/mes</span></div>'
+          + '</div>';
+      }).join('');
+    }
+  }
+
+  function escapeHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  async function guardarCobro(){
+    var metodo = document.getElementById('p-cobro').value.trim();
+    var m = document.getElementById('cobro-msg');
+    if(!metodo){ m.textContent = 'Escribe tu PayPal o IBAN antes de guardar.'; m.style.color = '#fbbf24'; return; }
+    m.textContent = 'Guardando…'; m.style.color = '#94a3b8';
+    try {
+      var r = await fetch(BK + '/api/creadores/guardar-cobro', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailActual, otp: document.getElementById('otp').value.trim(), metodo: metodo })
+      });
+      var d = await r.json();
+      if(d && d.ok){ m.textContent = '✓ Datos de cobro guardados.'; m.style.color = '#5eead4'; }
+      else { m.textContent = d.error || 'No se pudo guardar (¿código caducado? vuelve a entrar).'; m.style.color = '#f87171'; }
+    } catch(e){ m.textContent = 'Error guardando. Inténtalo de nuevo.'; m.style.color = '#f87171'; }
   }
   function copiar(){
     var i = document.getElementById('p-link'); i.select();
