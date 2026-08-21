@@ -41,12 +41,22 @@
     <h1 style="margin-top:14px;">🌿 Panel del creador</h1>
     <p class="sub">Entra con el email con el que te registraste para ver tus referidos, tu código y tu enlace.</p>
 
-    <!-- Login por email -->
+    <!-- Paso 1: pedir código -->
     <div class="card" id="login-box">
       <label>Tu email</label>
       <input type="email" id="email" placeholder="tucorreo@ejemplo.com" />
-      <button class="btn" id="btn-entrar" onclick="entrar()">Ver mi panel</button>
+      <button class="btn" id="btn-codigo" onclick="pedirCodigo()">Enviarme un código de acceso</button>
       <div id="msg"></div>
+    </div>
+
+    <!-- Paso 2: introducir código -->
+    <div class="card hidden" id="otp-box">
+      <p class="nota" style="margin:0 0 12px;">Te enviamos un código de 6 dígitos a <b id="otp-email"></b>. Revisa tu correo (y spam).</p>
+      <label>Código de acceso</label>
+      <input type="text" id="otp" inputmode="numeric" maxlength="6" placeholder="000000" style="letter-spacing:.3em;text-align:center;font-size:20px;" />
+      <button class="btn" id="btn-verificar" onclick="verificar()">Entrar</button>
+      <button onclick="volverEmail()" style="width:100%;margin-top:8px;background:none;border:none;color:#64748b;font-size:12px;cursor:pointer;">← Usar otro email</button>
+      <div id="msg2"></div>
     </div>
 
     <!-- Panel -->
@@ -85,22 +95,56 @@
   var SB_URL = 'https://wnuwuxenzwfqmhxagryk.supabase.co';
   var SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o';
 
-  async function entrar(){
+  var BK = 'https://serenecare-backend-production.up.railway.app';
+  var emailActual = '';
+
+  async function pedirCodigo(){
     var email = document.getElementById('email').value.trim();
     var msg = document.getElementById('msg');
-    var btn = document.getElementById('btn-entrar');
+    var btn = document.getElementById('btn-codigo');
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.textContent = 'Pon un email válido.'; return; }
-    btn.disabled = true; msg.textContent = '';
+    btn.disabled = true; msg.textContent = 'Enviando…';
     try {
-      var r = await fetch(SB_URL + '/rest/v1/rpc/stats_creador', {
+      await fetch(BK + '/api/creadores/solicitar-codigo', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
+      });
+      // Respuesta neutra (no revela si el email existe): siempre pasamos al paso 2.
+      emailActual = email;
+      document.getElementById('otp-email').textContent = email;
+      document.getElementById('login-box').classList.add('hidden');
+      document.getElementById('otp-box').classList.remove('hidden');
+      document.getElementById('otp').focus();
+    } catch(e){ msg.textContent = 'Error enviando el código. Inténtalo de nuevo.'; }
+    btn.disabled = false;
+  }
+
+  function volverEmail(){
+    document.getElementById('otp-box').classList.add('hidden');
+    document.getElementById('login-box').classList.remove('hidden');
+    document.getElementById('msg').textContent = '';
+    document.getElementById('msg2').textContent = '';
+    document.getElementById('otp').value = '';
+  }
+
+  async function verificar(){
+    var otp = document.getElementById('otp').value.trim();
+    var msg2 = document.getElementById('msg2');
+    var btn = document.getElementById('btn-verificar');
+    if(otp.length !== 6){ msg2.textContent = 'El código son 6 dígitos.'; return; }
+    btn.disabled = true; msg2.textContent = '';
+    try {
+      var r = await fetch(SB_URL + '/rest/v1/rpc/verificar_otp_creador', {
         method: 'POST',
         headers: { 'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ p_email: email })
+        body: JSON.stringify({ p_email: emailActual, p_otp: otp })
       });
       var d = await r.json();
-      if(!d || !d.encontrado){
-        msg.textContent = 'No encontramos ese email. ¿Te registraste ya como creador?';
-        btn.disabled = false; return;
+      if(!d || !d.ok){
+        var err = d && d.error === 'expirado' ? 'El código caducó, pide uno nuevo.'
+                : d && d.error === 'no_encontrado' ? 'No encontramos ese email como creador.'
+                : 'Código incorrecto.';
+        msg2.textContent = err; btn.disabled = false; return;
       }
       document.getElementById('p-nombre').textContent = d.nombre || 'Creador';
       var est = document.getElementById('p-estado');
@@ -111,9 +155,9 @@
       document.getElementById('p-trial').textContent   = d.trial || 0;
       document.getElementById('p-codigo').textContent  = d.codigo || '—';
       document.getElementById('p-link').value = 'https://serenecare.es/screens/registro_clinica.html?ref=' + encodeURIComponent(d.codigo || '');
-      document.getElementById('login-box').classList.add('hidden');
+      document.getElementById('otp-box').classList.add('hidden');
       document.getElementById('panel').classList.remove('hidden');
-    } catch(e){ msg.textContent = 'Error cargando el panel. Inténtalo de nuevo.'; btn.disabled = false; }
+    } catch(e){ msg2.textContent = 'Error al verificar. Inténtalo de nuevo.'; btn.disabled = false; }
   }
   function copiar(){
     var i = document.getElementById('p-link'); i.select();
@@ -121,7 +165,8 @@
     event.target.textContent = '¡Copiado!';
     setTimeout(function(){ event.target.textContent = 'Copiar'; }, 1500);
   }
-  document.getElementById('email').addEventListener('keydown', function(e){ if(e.key==='Enter') entrar(); });
+  document.getElementById('email').addEventListener('keydown', function(e){ if(e.key==='Enter') pedirCodigo(); });
+  document.getElementById('otp').addEventListener('keydown', function(e){ if(e.key==='Enter') verificar(); });
 </script>
 </body>
 </html>
