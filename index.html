@@ -3,219 +3,261 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SereneCare — Portal de Acceso</title>
+<title>SereneCare — El software que te LLENA la consulta</title>
+<meta name="description" content="No es otro software de gestión. SereneCare capta pacientes, llena tus huecos y reduce los no-shows con IA. Para psicólogos y clínicas de salud mental en España y Latinoamérica."/>
 <link rel="stylesheet" href="/css/tailwind.css">
   <script>window.tailwind=window.tailwind||{};</script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
-  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-  body { background: #020617; font-family: 'Inter', sans-serif; }
-  .font-headline { font-family: 'Manrope', sans-serif; }
-  @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-  .fade-up { animation: fadeUp 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
-  .fade-up-2 { animation: fadeUp 0.5s 0.1s cubic-bezier(0.16,1,0.3,1) both; }
-  .fade-up-3 { animation: fadeUp 0.5s 0.2s cubic-bezier(0.16,1,0.3,1) both; }
-  .fade-up-4 { animation: fadeUp 0.5s 0.3s cubic-bezier(0.16,1,0.3,1) both; }
-  .access-card {
-    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 24px; padding: 2rem; text-decoration: none; display: flex; flex-direction: column;
-    gap: 20px; transition: all 0.2s; cursor: pointer;
-  }
-  .access-card:hover { background: rgba(255,255,255,0.05); transform: translateY(-2px); }
-  .dev-link { display:flex; align-items:center; gap:8px; padding:7px 10px; border-radius:10px; font-size:12px; color:#475569; text-decoration:none; transition:all 0.15s; }
-  .dev-link:hover { background:rgba(255,255,255,0.04); color:#94a3b8; }
-  ::-webkit-scrollbar { width:6px; }
-  ::-webkit-scrollbar-track { background:transparent; }
-  ::-webkit-scrollbar-thumb { background:#1e293b; border-radius:10px; }
+  .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
+  body { background-color:#020617; font-family:'Inter',sans-serif; }
+  .font-headline { font-family:'Manrope',sans-serif; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse-slow { 0%,100%{opacity:0.4} 50%{opacity:0.7} }
+  .fade-up { animation:fadeUp 0.7s ease forwards; }
+  .fade-up-2 { animation:fadeUp 0.7s 0.15s ease forwards; opacity:0; }
+  .fade-up-3 { animation:fadeUp 0.7s 0.3s ease forwards; opacity:0; }
+  .fade-up-4 { animation:fadeUp 0.7s 0.45s ease forwards; opacity:0; }
+  .glow { animation:pulse-slow 3s ease-in-out infinite; }
+  .feature-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); transition:all 0.25s; }
+  .feature-card:hover { background:rgba(255,255,255,0.06); border-color:rgba(20,184,166,0.2); transform:translateY(-2px); }
+  .form-input { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#e2e8f0; transition:all 0.2s; }
+  .form-input:focus { outline:none; border-color:rgba(20,184,166,0.5); background:rgba(20,184,166,0.05); }
+  .form-input::placeholder { color:#475569; }
+  .btn-primary { background:linear-gradient(135deg,#0f766e,#2dd4bf); box-shadow:0 8px 32px rgba(45,212,191,0.25); transition:all 0.2s; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 12px 40px rgba(45,212,191,0.35); }
+  .btn-primary:active { transform:translateY(0); }
+  .logo-orb { background:rgba(20,184,166,0.15); border:1px solid rgba(20,184,166,0.3); }
 </style>
 </head>
-<body class="text-slate-200 antialiased min-h-screen">
+<body class="text-slate-200 antialiased">
 
-<!-- Background glow -->
-<div style="position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;">
-  <div style="position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(20,184,166,0.06) 0%,transparent 70%);"></div>
-</div>
-
-<div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-6 py-16">
-
-  <!-- Logo + título -->
-  <div class="text-center mb-14 fade-up">
-    <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.25);">
-      <span class="material-symbols-outlined text-3xl" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+<!-- NAV -->
+<nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05);">
+  <div class="max-w-5xl mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-xl logo-orb flex items-center justify-center">
+        <span class="material-symbols-outlined text-base" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+      </div>
+      <span class="font-headline font-bold text-white text-lg">SereneCare</span>
     </div>
-    <h1 class="font-headline text-4xl font-extrabold text-white tracking-tight">SereneCare</h1>
-    <p class="text-slate-500 text-sm mt-2">Selecciona el portal al que deseas acceder</p>
-    <!-- Supabase status -->
-    <div id="supabase-status" class="inline-flex items-center gap-2 mt-4 px-3 py-1.5 rounded-xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);">
-      <span id="status-dot" class="w-2 h-2 rounded-full" style="background:#334155;"></span>
-      <span id="status-text" class="text-xs font-semibold text-slate-500">Verificando Supabase...</span>
+    <a href="screens/registro_clinica.html" class="px-5 py-2 rounded-xl text-sm font-headline font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.3);color:#2dd4bf;">
+      Empieza gratis
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="relative pt-32 pb-20 px-6 overflow-hidden">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] glow" style="background:radial-gradient(ellipse,rgba(20,184,166,0.08) 0%,transparent 70%);"></div>
+  <div class="absolute top-40 left-1/4 w-72 h-72 glow" style="background:radial-gradient(ellipse,rgba(139,92,246,0.05) 0%,transparent 70%);animation-delay:1s;"></div>
+
+  <div class="max-w-4xl mx-auto text-center relative z-10">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-8 fade-up" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.2);">
+      <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+      <span class="text-xs font-bold text-teal-400 uppercase tracking-widest">Acceso prioritario — plazas limitadas</span>
+    </div>
+
+    <h1 class="text-5xl md:text-6xl font-headline font-black text-white leading-tight tracking-tight mb-6 fade-up-2">
+      El software que no gestiona tu consulta<br/>
+      <span style="background:linear-gradient(135deg,#2dd4bf,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">— la LLENA</span>
+    </h1>
+
+    <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10 fade-up-3">
+      SereneCare capta pacientes, llena tus huecos libres y reduce tus no-shows con IA. <strong class="text-slate-200">Despide a tu agencia</strong> — el resto de programas solo te ordena el papeleo.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center fade-up-4">
+      <a href="screens/registro_clinica.html" class="btn-primary px-8 py-4 rounded-2xl font-headline font-bold text-base text-white text-center">
+        Empieza gratis 14 días →
+      </a>
+      <a href="screens/demo_clinica.html" class="px-8 py-4 rounded-2xl font-headline font-bold text-base text-slate-300 text-center hover:bg-white/5 transition-all" style="border:1px solid rgba(255,255,255,0.1);">
+        Ver demo en vivo
+      </a>
+    </div>
+
+    <!-- Social proof -->
+    <div class="flex items-center justify-center gap-6 mt-10 fade-up-4">
+      <div class="text-center">
+        <p class="text-2xl font-headline font-black text-white">+900</p>
+        <p class="text-xs text-slate-500">clínicas contactadas</p>
+      </div>
+      <div class="w-px h-10" style="background:rgba(255,255,255,0.08);"></div>
+      <div class="text-center">
+        <p class="text-2xl font-headline font-black text-white">24/7</p>
+        <p class="text-xs text-slate-500">captando pacientes</p>
+      </div>
+      <div class="w-px h-10" style="background:rgba(255,255,255,0.08);"></div>
+      <div class="text-center">
+        <p class="text-2xl font-headline font-black text-white">RGPD</p>
+        <p class="text-xs text-slate-500">cumplimiento total</p>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- Access cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full max-w-3xl mb-10 fade-up-2">
-
-    <!-- Super Admin -->
-    <a href="/screens/acceso_super_admin.html" class="access-card" style="border-color:rgba(99,102,241,0.2);" onmouseover="this.style.borderColor='rgba(99,102,241,0.4)'" onmouseout="this.style.borderColor='rgba(99,102,241,0.2)'">
-      <div style="width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.25);">
-        <span class="material-symbols-outlined" style="font-size:24px;color:#818cf8;font-variation-settings:'FILL' 1;">shield_person</span>
-      </div>
-      <div>
-        <p class="font-headline font-extrabold text-white text-lg">Super Admin</p>
-        <p style="font-size:12px;color:#475569;margin-top:4px;line-height:1.5;">Panel maestro de gestión de clínicas, planes y configuración global.</p>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#818cf8;font-family:Manrope,sans-serif;">
-        Acceder <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
-      </div>
-    </a>
-
-    <!-- Admin Clínica -->
-    <a href="/screens/acceso_clinica.html" class="access-card" style="border-color:rgba(20,184,166,0.2);" onmouseover="this.style.borderColor='rgba(20,184,166,0.4)'" onmouseout="this.style.borderColor='rgba(20,184,166,0.2)'">
-      <div style="width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.25);">
-        <span class="material-symbols-outlined" style="font-size:24px;color:#2dd4bf;font-variation-settings:'FILL' 1;">business</span>
-      </div>
-      <div>
-        <p class="font-headline font-extrabold text-white text-lg">Admin Clínica</p>
-        <p style="font-size:12px;color:#475569;margin-top:4px;line-height:1.5;">Gestión de la clínica: agenda, pacientes, personal, facturación e integraciones.</p>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#2dd4bf;font-family:Manrope,sans-serif;">
-        Acceder <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
-      </div>
-    </a>
-
-    <!-- Psicólogo -->
-    <a href="/screens/acceso_psicologo.html" class="access-card" style="border-color:rgba(139,92,246,0.2);" onmouseover="this.style.borderColor='rgba(139,92,246,0.4)'" onmouseout="this.style.borderColor='rgba(139,92,246,0.2)'">
-      <div style="width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);">
-        <span class="material-symbols-outlined" style="font-size:24px;color:#a78bfa;font-variation-settings:'FILL' 1;">psychology</span>
-      </div>
-      <div>
-        <p class="font-headline font-extrabold text-white text-lg">Psicólogo</p>
-        <p style="font-size:12px;color:#475569;margin-top:4px;line-height:1.5;">Portal clínico: agenda, pacientes, notas SOAP, telemedicina e informes IA.</p>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#a78bfa;font-family:Manrope,sans-serif;">
-        Acceder <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
-      </div>
-    </a>
-
-    <!-- Portal Paciente -->
-    <a href="/screens/acceso_paciente.html" class="access-card" style="border-color:rgba(52,211,153,0.2);" onmouseover="this.style.borderColor='rgba(52,211,153,0.4)'" onmouseout="this.style.borderColor='rgba(52,211,153,0.2)'">
-      <div style="width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);">
-        <span class="material-symbols-outlined" style="font-size:24px;color:#34d399;font-variation-settings:'FILL' 1;">person</span>
-      </div>
-      <div>
-        <p class="font-headline font-extrabold text-white text-lg">Portal Paciente</p>
-        <p style="font-size:12px;color:#475569;margin-top:4px;line-height:1.5;">Tu espacio de bienestar: sesiones, asistente IA, cuestionarios y más.</p>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#34d399;font-family:Manrope,sans-serif;">
-        Acceder <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
-      </div>
-    </a>
-
-  </div>
-
-  <!-- Dev links expandibles -->
-  <div class="fade-up-4 w-full max-w-3xl">
-    <button onclick="toggleDev()" class="flex items-center gap-2 mx-auto text-xs font-semibold text-slate-600 hover:text-slate-400 transition-colors mb-4" style="background:none;border:none;cursor:pointer;">
-      <span class="material-symbols-outlined" style="font-size:14px;">code</span>
-      Acceso rápido a pantallas (dev)
-      <span id="dev-chevron" class="material-symbols-outlined" style="font-size:14px;">expand_more</span>
-    </button>
-    <div id="dev-panel" class="hidden" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:1.5rem;">
-      <div class="grid grid-cols-4 gap-2">
-        <!-- Psicólogo -->
-        <div>
-          <p style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Psicólogo</p>
-          <a href="/screens/dashboard_psicologo.html" class="dev-link">Dashboard</a>
-          <a href="/screens/agenda_psicologo.html" class="dev-link">Mi Agenda</a>
-          <a href="/screens/pacientes_psicologo.html" class="dev-link">Mis Pacientes</a>
-          <a href="/screens/notas_soap.html" class="dev-link">Notas SOAP</a>
-          <a href="/screens/editor_soap.html" class="dev-link">Editor SOAP</a>
-          <a href="/screens/recursos_psicologo.html" class="dev-link">Recursos</a>
-          <a href="/screens/mensajes_psicologo.html" class="dev-link">Mensajes</a>
-          <a href="/screens/notificaciones_psicologo.html" class="dev-link">Notificaciones</a>
-          <a href="/screens/mis_estadisticas.html" class="dev-link">Mis Estadísticas</a>
-          <a href="/screens/perfil_psicologo.html" class="dev-link">Mi Perfil</a>
-          <a href="/screens/telemedicina_psicologo.html" class="dev-link">Telemedicina</a>
+<!-- BUCLE / MÁQUINA -->
+<section class="px-6 pb-4">
+  <div class="max-w-4xl mx-auto">
+    <div class="rounded-3xl p-8 md:p-10" style="background:linear-gradient(135deg,rgba(20,184,166,0.06),rgba(139,92,246,0.04));border:1px solid rgba(20,184,166,0.15);">
+      <p class="text-center text-teal-400 font-headline font-bold text-xs uppercase tracking-widest mb-6">Una máquina de crecimiento, no un archivador</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="text-center">
+          <div class="text-2xl mb-2">🧲</div>
+          <p class="font-headline font-bold text-white text-sm">Capta</p>
+          <p class="text-xs text-slate-500 mt-1">Recepción IA + marketing + reservas</p>
         </div>
-        <!-- Admin Clínica -->
-        <div>
-          <p style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Admin Clínica</p>
-          <a href="/screens/dashboard_admin_clinica.html" class="dev-link">Dashboard</a>
-          <a href="/screens/agenda_clinica.html" class="dev-link">Agenda</a>
-          <a href="/screens/pacientes_clinica.html" class="dev-link">Pacientes</a>
-          <a href="/screens/mensajes_clinica.html" class="dev-link">Mensajes</a>
-          <a href="/screens/facturacion.html" class="dev-link">Facturación</a>
-          <a href="/screens/estadisticas_clinica.html" class="dev-link">Estadísticas</a>
-          <a href="/screens/gestion_personal_admin.html" class="dev-link">Personal</a>
-          <a href="/screens/integraciones_clinica.html" class="dev-link">Integraciones</a>
-          <a href="/screens/notificaciones.html" class="dev-link">Notificaciones</a>
+        <div class="text-center">
+          <div class="text-2xl mb-2">✅</div>
+          <p class="font-headline font-bold text-white text-sm">Convierte</p>
+          <p class="text-xs text-slate-500 mt-1">Agenda el paciente sin fricción</p>
         </div>
-        <!-- Super Admin -->
-        <div>
-          <p style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Super Admin</p>
-          <a href="/screens/dashboard_maestro_super_admin.html" class="dev-link">Dashboard</a>
-          <a href="/screens/gestion_clinicas_super_admin.html" class="dev-link">Clínicas</a>
-          <a href="/screens/revenue_super_admin.html" class="dev-link">Revenue</a>
-          <a href="/screens/gestion_usuarios_super_admin.html" class="dev-link">Usuarios</a>
-          <a href="/screens/configuracion_ia_super_admin.html" class="dev-link">Config IA</a>
-          <a href="/screens/auditoria_super_admin.html" class="dev-link">Auditoría</a>
-          <a href="/screens/estado_sistema_super_admin.html" class="dev-link">Estado sistema</a>
-          <a href="/screens/logs_sistema_super_admin.html" class="dev-link">Logs</a>
+        <div class="text-center">
+          <div class="text-2xl mb-2">💚</div>
+          <p class="font-headline font-bold text-white text-sm">Retiene</p>
+          <p class="text-xs text-slate-500 mt-1">Recordatorios y seguimiento</p>
         </div>
-        <!-- Portal Paciente -->
-        <div>
-          <p style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Paciente</p>
-          <a href="login.html" class="dev-link">Acceso</a>
-          <a href="/screens/bienvenida_paciente.html" class="dev-link">Bienvenida</a>
-          <a href="/screens/portal_paciente_inicio.html" class="dev-link">Inicio</a>
-          <a href="/screens/asistente_ia_paciente.html" class="dev-link">Asistente IA</a>
-          <a href="/screens/cuestionario_phq9.html" class="dev-link">PHQ-9</a>
-          <a href="/screens/telemedicina_paciente.html" class="dev-link">Telemedicina</a>
-          <a href="/screens/historial_sesiones.html" class="dev-link">Historial</a>
-          <a href="/screens/ficha_paciente.html" class="dev-link">Ficha paciente</a>
-          <a href="/screens/resultado_informe_ia.html" class="dev-link">Informe IA</a>
+        <div class="text-center">
+          <div class="text-2xl mb-2">📈</div>
+          <p class="font-headline font-bold text-white text-sm">Crece</p>
+          <p class="text-xs text-slate-500 mt-1">Menos huecos, menos no-shows</p>
         </div>
       </div>
     </div>
   </div>
+</section>
 
-</div>
+<!-- FEATURES -->
+<section class="px-6 py-20">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl md:text-4xl font-headline font-black text-white mb-4">Lo que ningún otro software hace</h2>
+      <p class="text-slate-400 max-w-xl mx-auto">Los demás te ordenan el papeleo. SereneCare te trae y te retiene los pacientes.</p>
+    </div>
 
-<script>
-function toggleDev() {
-  var panel = document.getElementById('dev-panel');
-  var chev  = document.getElementById('dev-chevron');
-  var open  = !panel.classList.contains('hidden');
-  panel.classList.toggle('hidden', open);
-  chev.textContent = open ? 'expand_more' : 'expand_less';
-}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Recepcionista IA -->
+      <div class="feature-card rounded-3xl p-8">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.2);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">support_agent</span>
+        </div>
+        <h3 class="font-headline font-bold text-white text-lg mb-3">Recepcionista IA</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Un asistente responde a quien visita tu web y capta pacientes nuevos <strong class="text-slate-200">24/7</strong>, aunque estés en sesión. Ni una consulta perdida.</p>
+      </div>
 
-// Supabase status check
-(function() {
-  var url = localStorage.getItem('tp_supabase_url');
-  var key = localStorage.getItem('tp_supabase_key');
-  var dot = document.getElementById('status-dot');
-  var txt = document.getElementById('status-text');
-  if (!url || url.includes('TU_PROYECTO')) {
-    dot.style.background = '#fbbf24';
-    txt.textContent = 'Supabase no configurado';
-    txt.style.color = '#d97706';
-    return;
-  }
-  fetch(url + '/rest/v1/planes?limit=1', { headers: { apikey: key, Authorization: 'Bearer ' + key } })
-    .then(function(r) {
-      if (r.ok || r.status === 406) {
-        dot.style.background = '#34d399';
-        txt.textContent = 'Supabase conectado ✓';
-        txt.style.color = '#34d399';
-      } else throw new Error();
-    })
-    .catch(function() {
-      dot.style.background = '#f87171';
-      txt.textContent = 'Error de conexión';
-      txt.style.color = '#f87171';
-    });
-})();
-</script>
+      <!-- Auto-relleno -->
+      <div class="feature-card rounded-3xl p-8" style="border-color:rgba(139,92,246,0.15);">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);">
+          <span class="material-symbols-outlined" style="color:#a78bfa;font-variation-settings:'FILL' 1;">event_available</span>
+        </div>
+        <h3 class="font-headline font-bold text-white text-lg mb-3">Auto-relleno de huecos</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Cuando alguien cancela, SereneCare ofrece el hueco a tu lista de espera y <strong class="text-slate-200">se llena solo</strong>. Ni un hueco vacío perdiendo dinero.</p>
+      </div>
+
+      <!-- Marketing IA -->
+      <div class="feature-card rounded-3xl p-8" style="border-color:rgba(59,130,246,0.15);">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.2);">
+          <span class="material-symbols-outlined" style="color:#60a5fa;font-variation-settings:'FILL' 1;">campaign</span>
+        </div>
+        <h3 class="font-headline font-bold text-white text-lg mb-3">Marketing IA</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Anuncios, guiones de vídeo y contenido para redes generados con IA a partir de tu perfil. <strong class="text-slate-200">Despide a tu agencia</strong> de marketing.</p>
+      </div>
+
+      <!-- Reservas 24/7 -->
+      <div class="feature-card rounded-3xl p-8">
+        <div class="w-12 h-12 rounded-2xl flex items-center justify-center mb-6" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.2);">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">calendar_month</span>
+        </div>
+        <h3 class="font-headline font-bold text-white text-lg mb-3">Reservas online 24/7</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Tus pacientes reservan solos desde tu enlace, a cualquier hora, sin llamadas. Los recordatorios salen solos y <strong class="text-slate-200">bajan los no-shows</strong>.</p>
+      </div>
+    </div>
+
+    <!-- Y además: gestión -->
+    <p class="text-center text-slate-500 text-sm mt-14 mb-5 font-headline font-semibold uppercase tracking-widest">Y además, todo lo de gestión que ya esperas</p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">edit_note</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Notas SOAP IA</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">videocam</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Telemedicina</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">receipt_long</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Facturación</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">description</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Informes IA</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">monitoring</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Escalas (PHQ-9, GAD-7)</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">group</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Multi-psicólogo</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">notifications_active</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">Recordatorios</span>
+      </div>
+      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
+        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">lock</span>
+        <span class="text-sm text-slate-300 font-headline font-semibold">RGPD</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAITLIST FORM -->
+<section id="waitlist" class="px-6 py-24">
+  <div class="max-w-xl mx-auto">
+    <div class="rounded-3xl p-10" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);">
+
+      <div class="text-center">
+        <div class="w-14 h-14 rounded-2xl logo-orb flex items-center justify-center mx-auto mb-5">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">rocket_launch</span>
+        </div>
+        <h2 class="text-2xl font-headline font-black text-white mb-2">Empieza a llenar tu consulta</h2>
+        <p class="text-slate-400 text-sm leading-relaxed mb-2">Precio de fundador: <strong class="text-teal-400">29 €/mes</strong> por psicólogo. Pruébalo <strong class="text-teal-400">14 días gratis</strong> — sin permanencia, cancela cuando quieras.</p>
+        <p class="text-slate-500 text-xs leading-relaxed mb-8">Te registras en 1 minuto y entras al momento.</p>
+
+        <a href="screens/registro_clinica.html" class="btn-primary block w-full py-4 rounded-2xl font-headline font-bold text-base text-white mb-3">
+          Empezar mis 14 días gratis →
+        </a>
+        <a href="screens/demo_clinica.html" class="inline-block px-6 py-2.5 rounded-xl text-sm font-headline font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">
+          Ver demo en vivo primero →
+        </a>
+        <p class="text-center text-xs text-slate-600 mt-5">14 días gratis · Sin permanencia · Cancela cuando quieras</p>
+      </div>
+
+    </div>
+
+    <!-- Guarantee -->
+    <div class="flex items-center justify-center gap-6 mt-8 text-xs text-slate-600">
+      <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">lock</span> Datos protegidos RGPD</span>
+      <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">mail</span> Sin spam, prometido</span>
+      <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">close</span> Cancela cuando quieras</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-slate-800/30 px-6 py-10">
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-xl logo-orb flex items-center justify-center">
+        <span class="material-symbols-outlined text-sm" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
+      </div>
+      <span class="font-headline font-bold text-slate-400">SereneCare</span>
+    </div>
+    <p class="text-xs text-slate-600">© 2026 SereneCare · Todos los derechos reservados · RGPD compliant</p>
+    <a href="mailto:hola@serenecare.es" class="text-xs text-slate-500 hover:text-teal-400 transition-colors">hola@serenecare.es</a>
+  </div>
+</footer>
+
 </body>
 </html>
