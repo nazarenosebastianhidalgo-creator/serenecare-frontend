@@ -41,8 +41,8 @@
       </div>
       <span class="font-headline font-bold text-white text-lg">SereneCare</span>
     </div>
-    <a href="#waitlist" class="px-5 py-2 rounded-xl text-sm font-headline font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.3);color:#2dd4bf;">
-      Acceso prioritario
+    <a href="screens/registro_clinica.html" class="px-5 py-2 rounded-xl text-sm font-headline font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.3);color:#2dd4bf;">
+      Empieza gratis
     </a>
   </div>
 </nav>
@@ -68,8 +68,8 @@
     </p>
 
     <div class="flex flex-col sm:flex-row gap-3 justify-center fade-up-4">
-      <a href="#waitlist" class="btn-primary px-8 py-4 rounded-2xl font-headline font-bold text-base text-white text-center">
-        Quiero acceso anticipado →
+      <a href="screens/registro_clinica.html" class="btn-primary px-8 py-4 rounded-2xl font-headline font-bold text-base text-white text-center">
+        Empieza gratis 14 días →
       </a>
       <a href="screens/demo_clinica.html" class="px-8 py-4 rounded-2xl font-headline font-bold text-base text-slate-300 text-center hover:bg-white/5 transition-all" style="border:1px solid rgba(255,255,255,0.1);">
         Ver demo en vivo
@@ -217,60 +217,21 @@
   <div class="max-w-xl mx-auto">
     <div class="rounded-3xl p-10" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);">
 
-      <div id="form-state">
-        <div class="text-center mb-8">
-          <div class="w-14 h-14 rounded-2xl logo-orb flex items-center justify-center mx-auto mb-5">
-            <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">rocket_launch</span>
-          </div>
-          <h2 class="text-2xl font-headline font-black text-white mb-2">Empieza a llenar tu consulta</h2>
-          <p class="text-slate-400 text-sm leading-relaxed">Las primeras <strong class="text-teal-400">20 clínicas</strong> obtienen el precio de fundadores: 50% de descuento de por vida. Quedan pocas plazas.</p>
+      <div class="text-center">
+        <div class="w-14 h-14 rounded-2xl logo-orb flex items-center justify-center mx-auto mb-5">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">rocket_launch</span>
         </div>
+        <h2 class="text-2xl font-headline font-black text-white mb-2">Empieza a llenar tu consulta</h2>
+        <p class="text-slate-400 text-sm leading-relaxed mb-2">Precio de fundador: <strong class="text-teal-400">29 €/mes</strong> por psicólogo. Pruébalo <strong class="text-teal-400">14 días gratis</strong> — sin permanencia, cancela cuando quieras.</p>
+        <p class="text-slate-500 text-xs leading-relaxed mb-8">Te registras en 1 minuto y entras al momento.</p>
 
-        <form id="waitlist-form" class="space-y-4">
-          <div>
-            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Nombre completo</label>
-            <input id="wl-nombre" type="text" placeholder="Dr. María García" class="form-input w-full px-4 py-3 rounded-xl text-sm" required/>
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Email profesional</label>
-            <input id="wl-email" type="email" placeholder="info@tuclinica.com" class="form-input w-full px-4 py-3 rounded-xl text-sm" required/>
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Nombre de la clínica / consulta</label>
-            <input id="wl-clinica" type="text" placeholder="Clínica de Psicología García" class="form-input w-full px-4 py-3 rounded-xl text-sm"/>
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">Ciudad</label>
-            <input id="wl-ciudad" type="text" placeholder="Madrid" class="form-input w-full px-4 py-3 rounded-xl text-sm"/>
-          </div>
-          <div>
-            <label class="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-2">¿Cuántos psicólogos sois? (opcional)</label>
-            <select id="wl-tamano" class="form-input w-full px-4 py-3 rounded-xl text-sm">
-              <option value="" style="background:#0a1628;">Solo yo</option>
-              <option value="2-5" style="background:#0a1628;">2-5 psicólogos</option>
-              <option value="6-15" style="background:#0a1628;">6-15 psicólogos</option>
-              <option value="15+" style="background:#0a1628;">Más de 15</option>
-            </select>
-          </div>
-
-          <button type="submit" id="btn-submit" class="btn-primary w-full py-4 rounded-2xl font-headline font-bold text-base text-white mt-2">
-            Quiero acceso prioritario →
-          </button>
-          <p class="text-center text-xs text-slate-600 mt-3">Sin compromiso. Sin tarjeta de crédito. Te contactamos esta semana.</p>
-        </form>
-      </div>
-
-      <!-- Success state -->
-      <div id="success-state" class="hidden text-center py-6">
-        <div class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5" style="background:rgba(20,184,166,0.15);border:1px solid rgba(20,184,166,0.3);">
-          <span class="material-symbols-outlined text-3xl" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">check_circle</span>
-        </div>
-        <h3 class="text-xl font-headline font-black text-white mb-3">¡Ya estás en la lista!</h3>
-        <p class="text-slate-400 text-sm leading-relaxed mb-6">Te contactaremos en las próximas 48 horas para mostrarte la plataforma y darte tu precio de fundador.</p>
-        <p class="text-xs text-slate-600">Mientras tanto, puedes explorar la demo en vivo:</p>
-        <a href="screens/demo_clinica.html" class="inline-block mt-3 px-6 py-2.5 rounded-xl text-sm font-headline font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">
-          Ver demo →
+        <a href="screens/registro_clinica.html" class="btn-primary block w-full py-4 rounded-2xl font-headline font-bold text-base text-white mb-3">
+          Empezar mis 14 días gratis →
         </a>
+        <a href="screens/demo_clinica.html" class="inline-block px-6 py-2.5 rounded-xl text-sm font-headline font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.2);color:#2dd4bf;">
+          Ver demo en vivo primero →
+        </a>
+        <p class="text-center text-xs text-slate-600 mt-5">14 días gratis · Sin permanencia · Cancela cuando quieras</p>
       </div>
 
     </div>
@@ -298,43 +259,5 @@
   </div>
 </footer>
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-
-const supabase = createClient(
-  'https://wnuwuxenzwfqmhxagryk.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o'
-)
-
-document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
-  e.preventDefault()
-  const btn = document.getElementById('btn-submit')
-  btn.textContent = 'Enviando...'
-  btn.disabled = true
-
-  const nombre  = document.getElementById('wl-nombre').value.trim()
-  const email   = document.getElementById('wl-email').value.trim()
-  const clinica = document.getElementById('wl-clinica').value.trim()
-  const ciudad  = document.getElementById('wl-ciudad').value.trim()
-  const tamano  = document.getElementById('wl-tamano').value
-
-  try {
-    const { error } = await supabase.from('lista_espera').insert({
-      email, nombre, clinica, ciudad, tamano,
-      fuente: document.referrer || 'landing'
-    })
-
-    if (error) throw error
-
-    document.getElementById('form-state').classList.add('hidden')
-    document.getElementById('success-state').classList.remove('hidden')
-  } catch (err) {
-    console.error(err)
-    btn.textContent = 'Quiero acceso prioritario →'
-    btn.disabled = false
-    alert('Algo salió mal. Por favor escríbenos a hola@serenecare.es')
-  }
-})
-</script>
 </body>
 </html>
