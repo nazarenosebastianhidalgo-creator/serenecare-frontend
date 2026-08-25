@@ -1,0 +1,211 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Propuesta SereneCare · Vuestro centro</title></head><body><style>
+  *{box-sizing:border-box}
+  :root{
+    --paper:#EEF3F1; --surface:#FFFFFF; --surface-2:#F4F9F7;
+    --ink:#13312C; --ink-soft:#4E6762; --line:#D7E4E0;
+    --brand:#0E7A6B; --brand-ink:#0B5B50; --violet:#6D5DE6;
+    --sand:#FBF4E6; --sand-line:#EBDBBB; --sand-ink:#7C5D18;
+    --shadow:0 1px 2px rgba(19,49,44,.04),0 10px 34px rgba(19,49,44,.07);
+    --serif:"Charter","Iowan Old Style","Palatino Linotype",Palatino,Georgia,ui-serif,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0C1817; --surface:#132523; --surface-2:#16302C;
+      --ink:#E7F0ED; --ink-soft:#9BB2AD; --line:#254440;
+      --brand:#33D2B7; --brand-ink:#69E0CB; --violet:#AA9DFF;
+      --sand:#2A2416; --sand-line:#4A3D1E; --sand-ink:#E5C988;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 34px rgba(0,0,0,.36);
+    }
+  }
+  :root[data-theme="light"]{
+    --paper:#EEF3F1; --surface:#FFFFFF; --surface-2:#F4F9F7;
+    --ink:#13312C; --ink-soft:#4E6762; --line:#D7E4E0;
+    --brand:#0E7A6B; --brand-ink:#0B5B50; --violet:#6D5DE6;
+    --sand:#FBF4E6; --sand-line:#EBDBBB; --sand-ink:#7C5D18;
+    --shadow:0 1px 2px rgba(19,49,44,.04),0 10px 34px rgba(19,49,44,.07);
+  }
+  :root[data-theme="dark"]{
+    --paper:#0C1817; --surface:#132523; --surface-2:#16302C;
+    --ink:#E7F0ED; --ink-soft:#9BB2AD; --line:#254440;
+    --brand:#33D2B7; --brand-ink:#69E0CB; --violet:#AA9DFF;
+    --sand:#2A2416; --sand-line:#4A3D1E; --sand-ink:#E5C988;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 34px rgba(0,0,0,.36);
+  }
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+    line-height:1.62;-webkit-font-smoothing:antialiased;font-size:16.5px}
+  .doc{max-width:880px;margin:0 auto;padding:clamp(28px,5vw,64px) clamp(20px,5vw,40px) 72px}
+  .eyebrow{font-size:.72rem;text-transform:uppercase;letter-spacing:.17em;font-weight:700;
+    color:var(--brand-ink);margin:0 0 18px}
+  .head{border-bottom:1px solid var(--line);padding-bottom:30px;margin-bottom:38px}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+  .logo{font-weight:800;letter-spacing:-.01em;font-size:1.02rem;color:var(--ink)}
+  .logo b{color:var(--brand)}
+  .crumb{font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;font-weight:700;
+    color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,4.6vw,2.85rem);
+    line-height:1.08;letter-spacing:-.015em;margin:6px 0 14px;text-wrap:balance}
+  .lede{font-size:1.1rem;color:var(--ink-soft);margin:0;max-width:60ch}
+  .lede strong{color:var(--ink);font-weight:600}
+  section{margin-top:46px}
+  h2.eyebrow{margin-bottom:22px}
+  .method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .m-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;
+    padding:20px 20px 22px;box-shadow:var(--shadow)}
+  .m-card h3{font-size:1.02rem;font-weight:700;margin:0 0 8px;letter-spacing:-.01em}
+  .m-card p{margin:0;font-size:.94rem;color:var(--ink-soft)}
+  .m-card .tick{color:var(--brand);font-weight:800;margin-right:6px}
+  .timeline{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+  .phase{position:relative;display:grid;grid-template-columns:64px 1fr;gap:6px;
+    background:var(--surface);border:1px solid var(--line);border-radius:18px;
+    padding:24px 26px;box-shadow:var(--shadow)}
+  .ph-num{font-family:var(--serif);font-size:1.7rem;font-weight:600;color:var(--brand);
+    font-variant-numeric:tabular-nums;line-height:1}
+  .ph-body h3{font-size:1.24rem;font-weight:700;letter-spacing:-.015em;margin:0 0 4px;text-wrap:balance}
+  .ph-tag{display:inline-block;font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;
+    font-weight:700;color:var(--violet);margin:0 0 12px}
+  .ph-body ul{margin:0 0 14px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .ph-body li{position:relative;padding-left:22px;font-size:.98rem;color:var(--ink)}
+  .ph-body li::before{content:"";position:absolute;left:2px;top:.62em;width:7px;height:7px;
+    border-radius:2px;background:var(--brand);transform:rotate(45deg)}
+  .ph-body li strong{font-weight:700}
+  .ph-val{margin:0;font-size:.9rem;color:var(--ink-soft);border-top:1px dashed var(--line);
+    padding-top:12px}
+  .ph-val b{color:var(--brand-ink);font-weight:700}
+  .callout{background:var(--sand);border:1px solid var(--sand-line);border-radius:16px;
+    padding:20px 24px;font-size:1rem;color:var(--sand-ink)}
+  .callout strong{color:var(--sand-ink);font-weight:800}
+  .chips{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:9px}
+  .chips li{font-size:.86rem;font-weight:600;color:var(--ink-soft);background:var(--surface-2);
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px}
+  .stack p{color:var(--ink-soft);margin:0}
+  .foot{margin-top:56px;padding-top:22px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    font-size:.8rem;color:var(--ink-soft)}
+  .foot b{color:var(--brand)}
+  @media (max-width:680px){
+    .method-grid{grid-template-columns:1fr}
+    .phase{grid-template-columns:1fr;gap:10px}
+    .ph-num{font-size:1.4rem}
+  }
+  /* ── Exportación a PDF: colores fieles + sin páginas rotas ni huecos ── */
+  @media print{
+    html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;
+      background:var(--paper);font-size:12pt}
+    @page{margin:13mm}
+    .doc{max-width:none;margin:0;padding:10mm 0 0}
+    section{margin-top:30px}
+    .foot{margin-top:34px}
+    /* PÁGINA 1 = portada con presencia (cabecera grande + "Cómo lo hacemos") */
+    .head{padding-bottom:30px;margin-bottom:40px}
+    h1{font-size:2.6rem;margin-top:10px}
+    .lede{font-size:1.18rem;max-width:64ch}
+    .method{margin-top:54px}
+    .m-card{padding:26px 22px 30px}
+    .m-card h3{font-size:1.08rem;margin-bottom:10px}
+    .m-card p{font-size:.98rem}
+    /* las fases arrancan limpias en la página 2 */
+    .phases{break-before:page;page-break-before:always;margin-top:4mm}
+    /* que nada se parta entre páginas */
+    .head,.method-grid,.m-card,.phase,.callout,.chips,.stack,.foot{
+      break-inside:avoid;page-break-inside:avoid}
+    h1,h2,h3{break-after:avoid;page-break-after:avoid}
+    .timeline{gap:14px}
+  }
+</style>
+
+<main class="doc">
+  <header class="head">
+    <div class="brand"><span class="logo">Serene<b>Care</b></span><span class="crumb">Propuesta · Plan</span></div>
+    <p class="eyebrow" style="margin-bottom:10px">Módulo de agenda a medida</p>
+    <h1>Vuestra agenda, montada como trabajáis vosotras</h1>
+    <p class="lede">Plan de implementación para vuestra clínica. Lo construimos <strong>a medida y con vosotras dentro</strong>, por fases, validando cada paso antes de seguir.</p>
+  </header>
+
+  <section class="method">
+    <h2 class="eyebrow">Cómo lo hacemos</h2>
+    <div class="method-grid">
+      <div class="m-card"><h3><span class="tick">·</span>A medida, no “apáñate”</h3><p>Cada regla se monta como la usáis vosotras, no como nos la imaginemos nosotros.</p></div>
+      <div class="m-card"><h3><span class="tick">·</span>Validado en videollamada</h3><p>Antes de programar cada bloque os enseño cómo lo pensamos y lo ajustamos en directo.</p></div>
+      <div class="m-card"><h3><span class="tick">·</span>Lo veis funcionando</h3><p>Cada fase se entrega y la probáis con vuestra agenda real antes de pasar a la siguiente.</p></div>
+    </div>
+  </section>
+
+  <section class="phases">
+    <h2 class="eyebrow">El plan, por fases</h2>
+    <ol class="timeline">
+      <li class="phase">
+        <div class="ph-num">01</div>
+        <div class="ph-body">
+          <h3>Reglas de horario a medida</h3>
+          <span class="ph-tag">Lo del día a día</span>
+          <ul>
+            <li>Horario por <strong>edad</strong> (0–5,99 y 6+), configurable por vosotras.</li>
+            <li><strong>Horario en cascada por familia</strong>: primero las horas fijas que le encajan a la familia; si ninguna le sirve, como último recurso las horas generales de la terapeuta; y si rechaza todo lo ofrecible, pasa automáticamente a la <strong>lista de espera</strong>.</li>
+            <li><strong>Aviso de últimos huecos</strong>: antes de caer en la lista de espera se le avisa —“estos son los últimos huecos disponibles”— para que no se quede fuera sin saberlo.</li>
+            <li>Nunca un hueco del mismo día <strong>antes de la primera sesión</strong> de la terapeuta.</li>
+            <li>Duraciones de <strong>30 / 45 / 60</strong> min.</li>
+          </ul>
+          <p class="ph-val"><b>Validación ·</b> os enseño las franjas y cómo se ofrecen los huecos, y lo afinamos con vosotras.</p>
+        </div>
+      </li>
+      <li class="phase">
+        <div class="ph-num">02</div>
+        <div class="ph-body">
+          <h3>Optimización de huecos</h3>
+          <span class="ph-tag">Aprovechar la agenda al máximo</span>
+          <ul>
+            <li>Huecos a en punto y a y media, <strong>sin dejar 15 min muertos</strong> antes y después.</li>
+            <li>Nada de agujeros que estropeen una sesión de media hora: la agenda se aprovecha entera.</li>
+          </ul>
+          <p class="ph-val"><b>Validación ·</b> lo probamos con vuestra agenda real para ver que no quedan huecos huérfanos.</p>
+        </div>
+      </li>
+      <li class="phase">
+        <div class="ph-num">03</div>
+        <div class="ph-body">
+          <h3>Familias y dobles agendas, en bloque</h3>
+          <span class="ph-tag">Que no vengan dos veces por semana</span>
+          <ul>
+            <li><strong>Grupos familiares / hermanos</strong>: al reagendar, se mueven en bloque y el sistema <strong>pregunta</strong> si los queréis juntos.</li>
+            <li>Paciente en <strong>dos agendas el mismo día</strong>: se le dan dos huecos <strong>seguidos</strong>.</li>
+          </ul>
+          <p class="ph-val"><b>Validación ·</b> montamos un caso real de una familia vuestra y lo probamos juntos.</p>
+        </div>
+      </li>
+      <li class="phase">
+        <div class="ph-num">04</div>
+        <div class="ph-body">
+          <h3>Políticas de faltas y avisos</h3>
+          <span class="ph-tag">Vuestro reglamento, automático</span>
+          <ul>
+            <li>Mismo día hasta la <strong>hora de corte</strong> → aviso; después → <strong>justificante</strong>.</li>
+            <li>Se <strong>perdona X veces</strong> por curso (sept–ago), reinicio en septiembre; pasadas esas, no se recupera.</li>
+          </ul>
+          <p class="ph-val"><b>Validación ·</b> configuramos vuestras reglas exactas (hora de corte y nº de perdones) y lo probamos.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="add">
+    <div class="callout">¿Falta alguna casuística vuestra? <strong>La añadimos al hito que corresponda.</strong> El plan se cierra con vosotras en la videollamada, no antes.</div>
+  </section>
+
+  <section class="stack">
+    <h2 class="eyebrow">Y encima, todo el software</h2>
+    <p>El módulo a medida va sobre la plataforma completa, ya incluida:</p>
+    <ul class="chips">
+      <li>Agenda y reservas online</li>
+      <li>Reprogramar y rellenar huecos</li>
+      <li>Recordatorios automáticos</li>
+      <li>Notas SOAP con IA</li>
+      <li>Videoconsulta</li>
+      <li>Portal del paciente</li>
+      <li>Reputación y Google</li>
+    </ul>
+  </section>
+
+  <footer class="foot"><span>Serene<b>Care</b></span><span>Propuesta construida con vosotras</span></footer>
+</main>
+</body></html>
