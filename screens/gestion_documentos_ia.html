@@ -346,10 +346,11 @@
 
 <script type="module">
 import { supabase } from '../js/supabase-client.js';
-import { cerrarSesion } from '../js/auth.js';
+import { cerrarSesion, verificarSesion } from '../js/auth.js';
 window._cerrarSesion = cerrarSesion;
-const { data: { session } } = await supabase.auth.getSession();
-if (!session) { window.location.href = 'acceso_clinica.html'; }
+// Guard con rol: solo clínica / psicólogo / super admin (verificarSesion redirige si no cumple)
+const session = await verificarSesion(['admin_clinica', 'psicologo', 'super_admin']);
+if (!session) { throw new Error('no autorizado'); }
 const btn = document.getElementById('btn-logout');
 if (btn) {
   const n = btn.cloneNode(true);
