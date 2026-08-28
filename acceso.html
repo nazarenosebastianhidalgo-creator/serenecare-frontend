@@ -113,83 +113,9 @@
 
   </div>
 
-  <!-- Dev links expandibles -->
-  <div class="fade-up-4 w-full max-w-3xl">
-    <button onclick="toggleDev()" class="flex items-center gap-2 mx-auto text-xs font-semibold text-slate-600 hover:text-slate-400 transition-colors mb-4" style="background:none;border:none;cursor:pointer;">
-      <span class="material-symbols-outlined" style="font-size:14px;">code</span>
-      Acceso rápido a pantallas (dev)
-      <span id="dev-chevron" class="material-symbols-outlined" style="font-size:14px;">expand_more</span>
-    </button>
-    <div id="dev-panel" class="hidden" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:20px;padding:1.5rem;">
-      <div class="grid grid-cols-4 gap-2">
-        <!-- Psicólogo -->
-        <div>
-          <p style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Psicólogo</p>
-          <a href="/screens/dashboard_psicologo.html" class="dev-link">Dashboard</a>
-          <a href="/screens/agenda_psicologo.html" class="dev-link">Mi Agenda</a>
-          <a href="/screens/pacientes_psicologo.html" class="dev-link">Mis Pacientes</a>
-          <a href="/screens/notas_soap.html" class="dev-link">Notas SOAP</a>
-          <a href="/screens/editor_soap.html" class="dev-link">Editor SOAP</a>
-          <a href="/screens/recursos_psicologo.html" class="dev-link">Recursos</a>
-          <a href="/screens/mensajes_psicologo.html" class="dev-link">Mensajes</a>
-          <a href="/screens/notificaciones_psicologo.html" class="dev-link">Notificaciones</a>
-          <a href="/screens/mis_estadisticas.html" class="dev-link">Mis Estadísticas</a>
-          <a href="/screens/perfil_psicologo.html" class="dev-link">Mi Perfil</a>
-          <a href="/screens/telemedicina_psicologo.html" class="dev-link">Telemedicina</a>
-        </div>
-        <!-- Admin Clínica -->
-        <div>
-          <p style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Admin Clínica</p>
-          <a href="/screens/dashboard_admin_clinica.html" class="dev-link">Dashboard</a>
-          <a href="/screens/agenda_clinica.html" class="dev-link">Agenda</a>
-          <a href="/screens/pacientes_clinica.html" class="dev-link">Pacientes</a>
-          <a href="/screens/mensajes_clinica.html" class="dev-link">Mensajes</a>
-          <a href="/screens/facturacion.html" class="dev-link">Facturación</a>
-          <a href="/screens/estadisticas_clinica.html" class="dev-link">Estadísticas</a>
-          <a href="/screens/gestion_personal_admin.html" class="dev-link">Personal</a>
-          <a href="/screens/integraciones_clinica.html" class="dev-link">Integraciones</a>
-          <a href="/screens/notificaciones.html" class="dev-link">Notificaciones</a>
-        </div>
-        <!-- Super Admin -->
-        <div>
-          <p style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Super Admin</p>
-          <a href="/screens/dashboard_maestro_super_admin.html" class="dev-link">Dashboard</a>
-          <a href="/screens/gestion_clinicas_super_admin.html" class="dev-link">Clínicas</a>
-          <a href="/screens/revenue_super_admin.html" class="dev-link">Revenue</a>
-          <a href="/screens/gestion_usuarios_super_admin.html" class="dev-link">Usuarios</a>
-          <a href="/screens/configuracion_ia_super_admin.html" class="dev-link">Config IA</a>
-          <a href="/screens/auditoria_super_admin.html" class="dev-link">Auditoría</a>
-          <a href="/screens/estado_sistema_super_admin.html" class="dev-link">Estado sistema</a>
-          <a href="/screens/logs_sistema_super_admin.html" class="dev-link">Logs</a>
-        </div>
-        <!-- Portal Paciente -->
-        <div>
-          <p style="font-size:10px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Paciente</p>
-          <a href="login.html" class="dev-link">Acceso</a>
-          <a href="/screens/bienvenida_paciente.html" class="dev-link">Bienvenida</a>
-          <a href="/screens/portal_paciente_inicio.html" class="dev-link">Inicio</a>
-          <a href="/screens/asistente_ia_paciente.html" class="dev-link">Asistente IA</a>
-          <a href="/screens/cuestionario_phq9.html" class="dev-link">PHQ-9</a>
-          <a href="/screens/telemedicina_paciente.html" class="dev-link">Telemedicina</a>
-          <a href="/screens/historial_sesiones.html" class="dev-link">Historial</a>
-          <a href="/screens/ficha_paciente.html" class="dev-link">Ficha paciente</a>
-          <a href="/screens/resultado_informe_ia.html" class="dev-link">Informe IA</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <script>
-function toggleDev() {
-  var panel = document.getElementById('dev-panel');
-  var chev  = document.getElementById('dev-chevron');
-  var open  = !panel.classList.contains('hidden');
-  panel.classList.toggle('hidden', open);
-  chev.textContent = open ? 'expand_more' : 'expand_less';
-}
-
 // Supabase status check
 (function() {
   var url = localStorage.getItem('tp_supabase_url');
