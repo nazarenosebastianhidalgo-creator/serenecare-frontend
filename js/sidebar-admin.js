@@ -63,7 +63,7 @@
           '<span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>' +
         '</a>' +
       '</div>' +
-      '<button id="btn-user-card" onclick="toggleUserMenu()" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">' +
+      '<button id="btn-user-card" onclick="event.stopImmediatePropagation();document.getElementById(\'user-menu\').classList.toggle(\'hidden\')" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">' +
         '<div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(20,184,166,0.2);color:#2dd4bf;">AC</div>' +
         '<div class="flex-1 overflow-hidden text-left">' +
           '<p id="user-nombre" class="text-sm font-bold text-white truncate">Admin</p>' +
@@ -80,6 +80,16 @@
   } else {
     document.write(html);
   }
+
+  // Cerrar el desplegable de usuario al clicar fuera (uniforme en todas las
+  // pantallas, sin depender del JS de cada página). El clic sobre el propio
+  // botón no llega aquí porque su onclick corta la propagación.
+  document.addEventListener('click', function (e) {
+    var um = document.getElementById('user-menu');
+    if (um && !e.target.closest('#user-menu') && !e.target.closest('#btn-user-card')) {
+      um.classList.add('hidden');
+    }
+  });
 
   // Logout robusto: cierra la sesión de Supabase de verdad y va al acceso de clínica.
   window.__admLogout = async function (e) {
