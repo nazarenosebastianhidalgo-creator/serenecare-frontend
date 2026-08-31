@@ -8,10 +8,7 @@
     ['portal_paciente_inicio.html', 'home',       'Inicio'],
     ['historial_sesiones.html',     'event_note', 'Mis Sesiones'],
     ['asistente_ia_paciente.html',  'psychology', 'Asistente IA'],
-    ['escalas_paciente.html',       'assignment', 'Mis Escalas'],
-    ['---'],
-    ['perfil_paciente.html',        'person',     'Mi Perfil'],
-    ['preferencias_paciente.html',  'tune',       'Preferencias']
+    ['escalas_paciente.html',       'assignment', 'Mis Escalas']
   ];
 
   var nav = items.map(function (it) {
