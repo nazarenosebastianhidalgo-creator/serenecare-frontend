@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
@@ -18,8 +18,10 @@
   .app-card { display:flex; flex-direction:column; align-items:center; gap:0.6rem; padding:1.25rem 0.75rem; border-radius:1.25rem; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); text-decoration:none; transition:all 0.2s; cursor:pointer; }
   .notif-card { padding:18px 20px; border-radius:16px; display:flex; gap:14px; transition:background 0.15s; cursor:pointer; }
   .notif-card:hover { background:rgba(255,255,255,0.03); }
+  .notif-unread { background:rgba(255,255,255,0.025); border-left:3px solid; }
+  .notif-read { background:rgba(255,255,255,0.01); opacity:0.7; border-left:3px solid rgba(255,255,255,0.08); }
   .tab-btn { padding:6px 16px; border-radius:10px; font-size:12px; font-weight:700; font-family:Manrope,sans-serif; cursor:pointer; transition:all 0.15s; border:none; }
-  .tab-active { background:rgba(139,92,246,0.15); color:#a78bfa; border:1px solid rgba(139,92,246,0.3) !important; }
+  .tab-active { background:rgba(20,184,166,0.15); color:#2dd4bf; border:1px solid rgba(20,184,166,0.3) !important; }
   .tab-inactive { background:transparent; color:#64748b; border:1px solid transparent; }
   .tab-inactive:hover { background:rgba(255,255,255,0.04); color:#94a3b8; }
 </style>
@@ -45,31 +47,15 @@
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button id="btn-marcar-todas" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(139,92,246,0.08);color:#a78bfa;border:1px solid rgba(139,92,246,0.2);">
+      <button id="btn-marcar-todas" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-90" style="background:rgba(20,184,166,0.08);color:#2dd4bf;border:1px solid rgba(20,184,166,0.2);">
         <span class="material-symbols-outlined text-base">done_all</span>
         Marcar todas leídas
       </button>
       <button onclick="toggleAppsPanel()" class="p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400" style="font-size:22px;">apps</span>
       </button>
-      <button id="btn-notif-bell" onclick="toggleNotifBell()" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-        <span class="material-symbols-outlined text-slate-400">notifications</span>
-        <span id="notif-bell-dot" class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
-      </button>
     </div>
   </header>
-
-  <!-- Panel campanita -->
-  <div id="notif-bell-panel" class="hidden" style="position:fixed;top:64px;right:24px;width:320px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;z-index:90;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
-    <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid rgba(255,255,255,0.08);">
-      <h4 class="text-sm font-bold text-white font-headline">Notificaciones recientes</h4>
-      <button onclick="marcarTodasDesdePanel()" class="text-xs font-bold" style="color:#a78bfa;background:none;border:none;cursor:pointer;">Marcar leídas</button>
-    </div>
-    <div id="notif-bell-list"></div>
-    <div class="px-5 py-3" style="border-top:1px solid rgba(255,255,255,0.08);text-align:center;">
-      <span class="text-xs font-bold" style="color:#a78bfa;">Ya estás en el Centro de Notificaciones</span>
-    </div>
-  </div>
 
   <!-- CONTENT -->
   <div class="p-8 flex gap-6 max-w-6xl">
@@ -82,8 +68,8 @@
         <button class="tab-btn tab-active" onclick="setTab(this,'todos')">Todos</button>
         <button class="tab-btn tab-inactive" onclick="setTab(this,'citas')">Citas</button>
         <button class="tab-btn tab-inactive" onclick="setTab(this,'mensajes')">Mensajes</button>
-        <button class="tab-btn tab-inactive" onclick="setTab(this,'soap')">Notas SOAP</button>
-        <button class="tab-btn tab-inactive" onclick="setTab(this,'ia')">IA</button>
+        <button class="tab-btn tab-inactive" onclick="setTab(this,'ia')">Informes IA</button>
+        <button class="tab-btn tab-inactive" onclick="setTab(this,'tareas')">Tareas</button>
       </div>
 
       <!-- Feed -->
@@ -100,52 +86,51 @@
         <div class="flex flex-col gap-2">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
             <div style="display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="font-size:18px;color:#fbbf24;font-variation-settings:'FILL' 1;">pending_actions</span>
-              <span style="font-size:12px;color:#94a3b8;">SOAP pendientes</span>
+              <span class="material-symbols-outlined" style="font-size:18px;color:#60a5fa;font-variation-settings:'FILL' 1;">chat</span>
+              <span style="font-size:12px;color:#94a3b8;">Mensajes nuevos</span>
             </div>
-            <span style="font-size:11px;font-weight:800;background:rgba(245,158,11,0.15);color:#fbbf24;border-radius:20px;padding:2px 8px;">3</span>
+            <span style="font-size:11px;font-weight:800;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:20px;padding:2px 8px;">3</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="material-symbols-outlined" style="font-size:18px;color:#2dd4bf;font-variation-settings:'FILL' 1;">psychology</span>
+              <span style="font-size:12px;color:#94a3b8;">Informes IA</span>
+            </div>
+            <span style="font-size:11px;font-weight:800;background:rgba(20,184,166,0.15);color:#2dd4bf;border-radius:20px;padding:2px 8px;">1</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="material-symbols-outlined" style="font-size:18px;color:#f87171;font-variation-settings:'FILL' 1;">warning</span>
+              <span style="font-size:12px;color:#94a3b8;">Tareas pendientes</span>
+            </div>
+            <span style="font-size:11px;font-weight:800;background:rgba(239,68,68,0.12);color:#f87171;border-radius:20px;padding:2px 8px;">2</span>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
             <div style="display:flex;align-items:center;gap:10px;">
               <span class="material-symbols-outlined" style="font-size:18px;color:#a78bfa;font-variation-settings:'FILL' 1;">event</span>
-              <span style="font-size:12px;color:#94a3b8;">Sesiones hoy</span>
+              <span style="font-size:12px;color:#94a3b8;">Citas hoy</span>
             </div>
-            <span style="font-size:11px;font-weight:800;background:rgba(139,92,246,0.15);color:#a78bfa;border-radius:20px;padding:2px 8px;">3</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="font-size:18px;color:#60a5fa;font-variation-settings:'FILL' 1;">chat</span>
-              <span style="font-size:12px;color:#94a3b8;">Mensajes nuevos</span>
-            </div>
-            <span style="font-size:11px;font-weight:800;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:20px;padding:2px 8px;">2</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="font-size:18px;color:#34d399;font-variation-settings:'FILL' 1;">psychology</span>
-              <span style="font-size:12px;color:#94a3b8;">Informes IA</span>
-            </div>
-            <span style="font-size:11px;font-weight:800;background:rgba(16,185,129,0.15);color:#34d399;border-radius:20px;padding:2px 8px;">1</span>
+            <span style="font-size:11px;font-weight:800;background:rgba(139,92,246,0.15);color:#a78bfa;border-radius:20px;padding:2px 8px;">5</span>
           </div>
         </div>
       </div>
 
-      <!-- Próxima sesión (se rellena con la cita real más próxima) -->
-      <div id="proxima-sesion-card" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(109,40,217,0.08));border:1px solid rgba(139,92,246,0.2);border-radius:20px;padding:1.25rem;position:relative;overflow:hidden;display:none;">
-        <div style="position:absolute;right:-20px;bottom:-20px;width:80px;height:80px;background:rgba(139,92,246,0.1);border-radius:50%;filter:blur(20px);pointer-events:none;"></div>
+      <!-- Próxima sesión -->
+      <div style="background:linear-gradient(135deg,rgba(20,184,166,0.12),rgba(15,118,110,0.08));border:1px solid rgba(20,184,166,0.2);border-radius:20px;padding:1.25rem;position:relative;overflow:hidden;">
+        <div style="position:absolute;right:-20px;bottom:-20px;width:80px;height:80px;background:rgba(20,184,166,0.1);border-radius:50%;filter:blur(20px);pointer-events:none;"></div>
         <h4 class="font-headline font-bold text-white text-sm mb-3">Próxima sesión</h4>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <div id="ps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#a78bfa;font-family:Manrope,sans-serif;flex-shrink:0;">—</div>
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(20,184,166,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#2dd4bf;font-family:Manrope,sans-serif;flex-shrink:0;">SV</div>
           <div>
-            <p id="ps-nombre" style="font-size:12px;font-weight:700;color:#e2e8f0;">—</p>
-            <p style="font-size:10px;color:#a78bfa;display:flex;align-items:center;gap:4px;">
-              <span class="material-symbols-outlined" style="font-size:12px;">schedule</span> <span id="ps-hora">—</span>
+            <p style="font-size:12px;font-weight:700;color:#e2e8f0;">Sofía Vallés</p>
+            <p style="font-size:10px;color:#2dd4bf;display:flex;align-items:center;gap:4px;">
+              <span class="material-symbols-outlined" style="font-size:12px;">schedule</span> 10:00 AM (mañana)
             </p>
           </div>
         </div>
-        <p id="ps-desc" style="font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.5;">—</p>
-        <a id="ps-btn" href="telemedicina_psicologo.html" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.25);border-radius:10px;color:#a78bfa;font-size:11px;font-weight:700;text-decoration:none;font-family:Manrope,sans-serif;">
-          <span class="material-symbols-outlined" style="font-size:14px;font-variation-settings:'FILL' 1;">videocam</span>
-          Iniciar videollamada
+        <p style="font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.5;">Manejo de ansiedad en entornos laborales.</p>
+        <a href="ficha_paciente.html" style="display:flex;align-items:center;justify-content:center;padding:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#e2e8f0;font-size:11px;font-weight:700;text-decoration:none;font-family:Manrope,sans-serif;">
+          Ver historial clínico
         </a>
       </div>
 
@@ -220,7 +205,7 @@
 </div>
 
 <script>
-var NOTIFS = []; // se llena con el feed real del backend (ver más abajo)
+var NOTIFS = []; // se llena con el feed REAL del backend (ver script module abajo)
 
 var tabActual = 'todos';
 
@@ -233,7 +218,7 @@ function renderFeed() {
     feed.innerHTML = '<div style="text-align:center;padding:48px 0;"><span class="material-symbols-outlined" style="font-size:40px;color:#1e293b;display:block;margin-bottom:12px;">notifications_off</span><p style="color:#475569;font-size:13px;">Sin notificaciones en esta categoría</p></div>';
     return;
   }
-  feed.innerHTML = filtrados.map(function(n) {
+  feed.innerHTML = filtrados.map(function(n, i) {
     var borderColor = n.leida ? 'rgba(255,255,255,0.08)' : n.color;
     var bg = n.leida ? 'rgba(255,255,255,0.01)' : 'rgba(255,255,255,0.025)';
     var dot = n.leida ? '' : '<div style="width:7px;height:7px;border-radius:50%;background:'+n.color+';flex-shrink:0;margin-top:5px;"></div>';
@@ -272,7 +257,7 @@ document.getElementById('btn-marcar-todas').addEventListener('click', function()
 
 // â”€â”€â”€ Init â”€â”€â”€
 (function() {
-  var n = localStorage.getItem('tp_nombre') || 'Dra. López';
+  var n = localStorage.getItem('tp_nombre') || 'Admin';
   var c = localStorage.getItem('tp_clinica') || 'Clínica Sol';
   var initials = n.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
   document.getElementById('user-nombre').textContent = n;
@@ -294,37 +279,6 @@ function cerrarApps(e) {
   if (!e || e.target === document.getElementById('apps-overlay')) document.getElementById('apps-overlay').style.display = 'none';
 }
 function toggleUserMenu() { document.getElementById('user-menu').classList.toggle('hidden'); }
-
-function toggleNotifBell() {
-  var panel = document.getElementById('notif-bell-panel');
-  var isHidden = panel.classList.contains('hidden');
-  panel.classList.toggle('hidden');
-  if (isHidden) {
-    var unread = NOTIFS.filter(function(n){ return !n.leida; }).slice(0,3);
-    var html = unread.length ? unread.map(function(n){
-      return '<div style="display:flex;align-items:flex-start;gap:10px;padding:12px 20px;border-bottom:1px solid rgba(255,255,255,0.05);">'
-        + '<span class="material-symbols-outlined" style="font-size:16px;color:'+n.color+';font-variation-settings:\'FILL\' 1;flex-shrink:0;margin-top:2px;">'+n.icono+'</span>'
-        + '<div><p style="font-size:12px;font-weight:700;color:#e2e8f0;margin:0;">'+n.titulo+'</p>'
-        + '<p style="font-size:11px;color:#475569;margin:3px 0 0;">'+n.hora+'</p></div></div>';
-    }).join('')
-    : '<div style="padding:24px;text-align:center;"><p style="font-size:13px;color:#475569;">Sin notificaciones sin leer</p></div>';
-    document.getElementById('notif-bell-list').innerHTML = html;
-    document.getElementById('notif-bell-dot').style.display = unread.length ? '' : 'none';
-  }
-}
-
-function marcarTodasDesdePanel() {
-  NOTIFS.forEach(function(n){ n.leida = true; });
-  renderFeed();
-  document.getElementById('notif-bell-dot').style.display = 'none';
-  document.getElementById('notif-bell-panel').classList.add('hidden');
-}
-
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('#btn-notif-bell') && !e.target.closest('#notif-bell-panel')) {
-    document.getElementById('notif-bell-panel').classList.add('hidden');
-  }
-});
 function toggleTema() {
   var nuevo = (localStorage.getItem('tp_tema') || 'oscuro') === 'claro' ? 'oscuro' : 'claro';
   localStorage.setItem('tp_tema', nuevo);
@@ -339,162 +293,87 @@ function mostrarToast(msg) {
   _tt = setTimeout(function(){ t.classList.add('hidden'); }, 3000);
 }
 </script>
-<!-- MINI CHAT WIDGET -->
-<div id="cw-panel" style="position:fixed;bottom:160px;right:24px;z-index:9998;width:320px;transform:translateY(14px) scale(0.97);opacity:0;pointer-events:none;transition:all 0.22s cubic-bezier(0.16,1,0.3,1);">
-  <div id="cw-lista-wrap" style="background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);">
-    <div style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span class="material-symbols-outlined" style="color:#a78bfa;font-size:18px;font-variation-settings:'FILL' 1;">chat</span>
-        <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#f1f5f9;">Mensajes</span>
-        <span id="cw-total-badge" style="background:#f87171;color:#020617;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px;">2</span>
-      </div>
-      <a href="mensajes_psicologo.html" style="font-size:11px;font-weight:700;color:#a78bfa;text-decoration:none;padding:4px 10px;border-radius:8px;background:rgba(139,92,246,0.1);">Ver todo</a>
-    </div>
-    <div id="cw-conv-list" style="max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
-  </div>
-  <div id="cw-chat-wrap" style="display:none;flex-direction:column;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.55);height:420px;">
-    <div style="padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:8px;flex-shrink:0;">
-      <button onclick="cwVolverLista()" style="background:none;border:none;cursor:pointer;color:#64748b;display:flex;align-items:center;padding:2px;">
-        <span class="material-symbols-outlined" style="font-size:17px;">arrow_back</span>
-      </button>
-      <span id="cw-chat-dot" style="width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;"></span>
-      <span id="cw-chat-title" style="flex:1;font-family:'Manrope',sans-serif;font-weight:700;font-size:13px;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
-      <a href="mensajes_psicologo.html" style="font-size:11px;font-weight:700;color:#a78bfa;text-decoration:none;flex-shrink:0;">Expandir &#x2197;</a>
-    </div>
-    <div id="cw-messages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,0.07) transparent;"></div>
-    <div style="padding:10px 12px;border-top:1px solid rgba(255,255,255,0.08);display:flex;gap:8px;align-items:center;flex-shrink:0;">
-      <input id="cw-input" type="text" placeholder="Escribe un mensaje..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;border-radius:10px;padding:8px 12px;font-size:12px;outline:none;font-family:'Inter',sans-serif;" onkeydown="if(event.key==='Enter')cwEnviar()"/>
-      <button onclick="cwEnviar()" style="width:32px;height:32px;border-radius:50%;background:rgba(139,92,246,0.9);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(139,92,246,0.35);">
-        <span class="material-symbols-outlined" style="font-size:15px;color:#fff;font-variation-settings:'FILL' 1;">send</span>
-      </button>
-    </div>
-  </div>
-</div>
-<button id="fab-mensajes" onclick="toggleChatWidget()" style="position:fixed;bottom:96px;right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(139,92,246,0.95),rgba(109,40,217,0.95));box-shadow:0 8px 28px rgba(139,92,246,0.4),0 2px 8px rgba(0,0,0,0.4);transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;outline:none;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Mensajes">
-  <span id="cw-fab-icon" class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
-  <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
-</button>
-<style>@keyframes cwMsgIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}</style>
-<script type="module">import { initChatWidget } from '../js/chat-widget.js'; initChatWidget();</script>
 <!-- WhatsApp Widget flotante -->
 <div id="wa-widget" style="display:none;position:fixed;bottom:24px;right:24px;z-index:9999;">
   <div id="wa-panel" class="hidden" style="position:absolute;bottom:calc(100% + 12px);right:0;width:300px;background:#0d1b2e;border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(37,211,102,0.1);border-bottom:1px solid rgba(37,211,102,0.15);">
-      <div style="display:flex;align-items:center;gap:8px;">
+    <div class="flex items-center justify-between px-4 py-3" style="background:rgba(37,211,102,0.1);border-bottom:1px solid rgba(37,211,102,0.15);">
+      <div class="flex items-center gap-2">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        <span style="font-size:14px;font-weight:700;color:#fff;font-family:Manrope,sans-serif;">WhatsApp</span>
-        <span style="font-size:11px;padding:2px 6px;border-radius:99px;font-weight:800;background:rgba(37,211,102,0.2);color:#25d366;">3</span>
+        <span class="text-sm font-bold text-white">WhatsApp</span>
+        <span class="text-xs px-1.5 py-0.5 rounded-full font-bold" style="background:rgba(37,211,102,0.2);color:#25d366;">3</span>
       </div>
-      <button onclick="document.getElementById('wa-panel').classList.add('hidden')" style="border:none;background:none;cursor:pointer;color:#64748b;display:flex;align-items:center;padding:4px;">
-        <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+      <button onclick="document.getElementById('wa-panel').classList.add('hidden')" class="p-1 rounded-lg hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
+        <span class="material-symbols-outlined text-slate-500" style="font-size:18px;">close</span>
       </button>
     </div>
     <div>
-      <a href="mensajes_psicologo.html?wa=1" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
-        <div style="width:36px;height:36px;border-radius:50%;background:rgba(37,211,102,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#25d366;flex-shrink:0;">EP</div>
-        <div style="flex:1;overflow:hidden;">
-          <p style="font-size:13px;font-weight:600;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Elena Pérez</p>
-          <p style="font-size:11px;color:#64748b;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">¿A qué hora es mi sesión?</p>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
-          <span style="font-size:10px;color:#475569;">10:45</span>
-          <span style="width:16px;height:16px;border-radius:50%;background:#25d366;color:#000;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;">2</span>
-        </div>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">MP</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">María Pérez</p><p class="text-xs text-slate-500 truncate">¿A qué hora es mi cita?</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">10:45</span><span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">2</span></div>
       </a>
-      <a href="mensajes_psicologo.html?wa=1" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
-        <div style="width:36px;height:36px;border-radius:50%;background:rgba(37,211,102,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#25d366;flex-shrink:0;">MG</div>
-        <div style="flex:1;overflow:hidden;">
-          <p style="font-size:13px;font-weight:600;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Marcos Gil</p>
-          <p style="font-size:11px;color:#64748b;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Necesito cancelar mañana</p>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">
-          <span style="font-size:10px;color:#475569;">09:15</span>
-          <span style="width:16px;height:16px;border-radius:50%;background:#25d366;color:#000;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;">1</span>
-        </div>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.04);">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">JL</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Juan López</p><p class="text-xs text-slate-500 truncate">Confirmo asistencia ðŸ‘</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">09:15</span><span class="w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold" style="background:#25d366;color:#000;">1</span></div>
       </a>
-      <a href="mensajes_psicologo.html?wa=1" style="display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
-        <div style="width:36px;height:36px;border-radius:50%;background:rgba(37,211,102,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#25d366;flex-shrink:0;">SR</div>
-        <div style="flex:1;overflow:hidden;">
-          <p style="font-size:13px;font-weight:600;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Sofía Ruiz</p>
-          <p style="font-size:11px;color:#64748b;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Muchas gracias por todo</p>
-        </div>
-        <div style="flex-shrink:0;"><span style="font-size:10px;color:#475569;">Ayer</span></div>
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors" style="text-decoration:none;">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(37,211,102,0.15);color:#25d366;">CR</div>
+        <div class="flex-1 overflow-hidden"><p class="text-sm font-semibold text-white truncate">Carmen Ruiz</p><p class="text-xs text-slate-500 truncate">Necesito cancelar la sesión</p></div>
+        <div class="flex flex-col items-end gap-1 flex-shrink-0"><span class="text-[10px] text-slate-600">Ayer</span></div>
       </a>
     </div>
-    <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,0.06);">
-      <a href="mensajes_psicologo.html?wa=1" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;border-radius:12px;font-size:13px;font-weight:700;background:rgba(37,211,102,0.12);color:#25d366;text-decoration:none;border:1px solid rgba(37,211,102,0.2);">
-        <span class="material-symbols-outlined" style="font-size:16px;">chat</span>
-        Ver todas las conversaciones
+    <div class="px-4 py-3" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <a href="mensajes_clinica.html?wa=1" class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-bold hover:opacity-90 transition-all" style="background:rgba(37,211,102,0.12);color:#25d366;text-decoration:none;border:1px solid rgba(37,211,102,0.2);">
+        <span class="material-symbols-outlined text-base">chat</span>Ver todas las conversaciones
       </a>
     </div>
   </div>
   <div style="position:relative;">
-    <button onclick="document.getElementById('wa-panel').classList.toggle('hidden')" style="width:56px;height:56px;border-radius:50%;background:#25d366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(37,211,102,0.35);transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+    <button onclick="document.getElementById('wa-panel').classList.toggle('hidden')" class="w-14 h-14 rounded-full flex items-center justify-center transition-transform hover:scale-110 active:scale-95" style="background:#25d366;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(37,211,102,0.35);">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </button>
     <span style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#f87171;color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #020617;">3</span>
   </div>
 </div>
+
 <script type="module">
-import { supabase } from '../js/supabase-client.js'
-import { cerrarSesion, verificarSesion } from '../js/auth.js'
-
+import { verificarSesion, cerrarSesion } from '../js/auth.js';
+import { supabase } from '../js/supabase-client.js';
+window._cerrarSesion = cerrarSesion;
 (async () => {
-window._cerrarSesion = cerrarSesion
-const _perfil = await verificarSesion(['psicologo', 'admin_clinica'])
-if (!_perfil) return
-const { data: { session } } = await supabase.auth.getSession()
-if (!session) { window.location.href = '../login.html' }
-// ── Próxima sesión REAL (cita más próxima del psicólogo) ──
-try {
-  const _hoyISO = new Date().toISOString().split('T')[0]
-  const { data: prox } = await supabase.from('citas')
-    .select('id, fecha, hora_inicio, tipo, paciente:paciente_id(nombre, apellido)')
-    .eq('psicologo_id', session.user.id).gte('fecha', _hoyISO)
-    .in('estado', ['pendiente', 'confirmada']).order('fecha').order('hora_inicio').limit(1).maybeSingle()
-  const card = document.getElementById('proxima-sesion-card')
-  if (prox && card) {
-    const nom = ((prox.paciente && prox.paciente.nombre || '') + ' ' + (prox.paciente && prox.paciente.apellido || '')).trim() || 'Paciente'
-    const online = /online|video|telemed/i.test(prox.tipo || '')
-    document.getElementById('ps-avatar').textContent = nom.split(' ').map(function(w){ return w[0] || '' }).slice(0,2).join('').toUpperCase() || '—'
-    document.getElementById('ps-nombre').textContent = nom
-    document.getElementById('ps-hora').textContent = (prox.hora_inicio || '').slice(0,5) + (prox.fecha === _hoyISO ? ' (hoy)' : ' · ' + prox.fecha) + ' · ' + (online ? 'Videollamada' : 'Presencial')
-    document.getElementById('ps-desc').textContent = online ? 'Sesión de telemedicina.' : 'Sesión presencial.'
-    const btn = document.getElementById('ps-btn')
-    if (online) { btn.href = 'telemedicina_psicologo.html?cita_id=' + prox.id; btn.style.display = '' }
-    else { btn.style.display = 'none' }
-    card.style.display = ''
-  }
-} catch (e) { /* sin próxima sesión: la tarjeta queda oculta */ }
+  const perfil = await verificarSesion(['psicologo', 'admin_clinica']);
+  if (!perfil) return;
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return;
 
-const { data: usu } = await supabase.from('usuarios').select('nombre, apellido, clinica_id').eq('id', session.user.id).single()
-if (usu) {
-  const nombre = ((usu.nombre || '') + ' ' + (usu.apellido || '')).trim()
-  const ini = nombre.split(' ').map(function(w){ return w[0]; }).join('').toUpperCase().slice(0,2)
-  const n = document.getElementById('user-nombre'); if (n) n.textContent = nombre
-  const a = document.getElementById('user-avatar'); if (a) a.textContent = ini
-  if (usu.clinica_id) {
-    const { data: cl } = await supabase.from('clinicas').select('nombre').eq('id', usu.clinica_id).single()
-    if (cl) { const nc = document.getElementById('nombre-clinica'); if (nc) nc.textContent = cl.nombre }
+  // Info de usuario en el sidebar
+  const nom = ((perfil.nombre||'') + ' ' + (perfil.apellido||'')).trim();
+  const ini = nom.split(' ').map(function(w){ return w[0]||''; }).join('').toUpperCase().slice(0,2) || 'PS';
+  const elNom = document.getElementById('user-nombre'); if (elNom) elNom.textContent = nom;
+  const elAv  = document.getElementById('user-avatar'); if (elAv) elAv.textContent = ini;
+  if (perfil.clinica_id) {
+    const { data: cl } = await supabase.from('clinicas').select('nombre').eq('id', perfil.clinica_id).single();
+    const nc = document.getElementById('nombre-clinica'); if (nc && cl) nc.textContent = cl.nombre;
   }
-}
 
-// Notificaciones reales (feed derivado: mensajes no leídos + citas recientes + consultas)
-const _BKN = 'https://serenecare-backend-production.up.railway.app'
-try {
-  const _r = await fetch(_BKN + '/api/notificaciones', { headers: { Authorization: 'Bearer ' + session.access_token } })
-  const _d = await _r.json()
-  if (Array.isArray(_d.notificaciones)) {
-    NOTIFS = _d.notificaciones
-    if (typeof renderFeed === 'function') renderFeed()
-    const _dot = document.getElementById('notif-bell-dot'); if (_dot) _dot.style.display = _d.no_leidas > 0 ? '' : 'none'
-  }
-} catch (_) {}
-document.getElementById('btn-marcar-todas')?.addEventListener('click', async function() {
-  try { await fetch(_BKN + '/api/notificaciones/marcar-leidas', { method: 'POST', headers: { Authorization: 'Bearer ' + session.access_token } }) } catch (_) {}
-  const _dot = document.getElementById('notif-bell-dot'); if (_dot) _dot.style.display = 'none'
-})
+  // Notificaciones REALES del backend (mismo endpoint que ya usaba el psicólogo)
+  const BKN = 'https://serenecare-backend-production.up.railway.app';
+  try {
+    const r = await fetch(BKN + '/api/notificaciones', { headers: { Authorization: 'Bearer ' + session.access_token } });
+    const d = await r.json();
+    if (Array.isArray(d.notificaciones)) {
+      window.NOTIFS = d.notificaciones;
+      if (typeof renderFeed === 'function') renderFeed();
+    }
+  } catch (_) {}
 
-})();</script>
+  // "Marcar todas leídas" también persiste en el backend
+  const btnML = document.getElementById('btn-marcar-todas');
+  if (btnML) btnML.addEventListener('click', async function () {
+    try { await fetch(BKN + '/api/notificaciones/marcar-leidas', { method: 'POST', headers: { Authorization: 'Bearer ' + session.access_token } }); } catch (_) {}
+  });
+})();
+</script>
 </body>
 </html>
