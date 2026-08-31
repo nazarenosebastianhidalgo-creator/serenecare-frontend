@@ -58,7 +58,7 @@
           '<span class="text-sm font-semibold" style="color:#fbbf24;">Sugerir mejora</span>' +
         '</button>' +
         '<div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>' +
-        '<a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">' +
+        '<a href="#" onclick="__admLogout(event)" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">' +
           '<span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>' +
           '<span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>' +
         '</a>' +
@@ -80,4 +80,12 @@
   } else {
     document.write(html);
   }
+
+  // Logout robusto: cierra la sesión de Supabase de verdad y va al acceso de clínica.
+  window.__admLogout = async function (e) {
+    if (e && e.preventDefault) e.preventDefault();
+    try { var m = await import('/js/supabase-client.js'); await m.supabase.auth.signOut(); } catch (err) {}
+    ['tp_rol', 'tp_clinica_id', 'tp_nombre', 'tp_clinica', 'tp_demo'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e2) {} });
+    window.location.href = '/screens/acceso_clinica.html';
+  };
 })();

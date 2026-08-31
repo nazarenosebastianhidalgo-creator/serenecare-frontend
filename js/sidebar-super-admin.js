@@ -50,7 +50,7 @@
           '<span id="label-mant" class="text-sm font-semibold" style="color:#cbd5e1;">Modo mantenimiento</span>' +
         '</button>' +
         '<div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>' +
-        '<a href="#" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">' +
+        '<a href="#" id="btn-logout" onclick="__saLogout(event)" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">' +
           '<span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>' +
           '<span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>' +
         '</a>' +
@@ -68,4 +68,12 @@
 
   var mount = document.getElementById('superadmin-sidebar');
   if (mount) { mount.outerHTML = html; } else { document.write(html); }
+
+  // Logout robusto: cierra la sesión de Supabase de verdad y va al acceso del super admin.
+  window.__saLogout = async function (e) {
+    if (e && e.preventDefault) e.preventDefault();
+    try { var m = await import('/js/supabase-client.js'); await m.supabase.auth.signOut(); } catch (err) {}
+    ['tp_rol', 'tp_user_id', 'tp_email', 'tp_nombre', 'tp_clinica_id'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e2) {} });
+    window.location.href = '/screens/acceso_super_admin.html';
+  };
 })();
