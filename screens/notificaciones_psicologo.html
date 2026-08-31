@@ -68,8 +68,8 @@
         <button class="tab-btn tab-active" onclick="setTab(this,'todos')">Todos</button>
         <button class="tab-btn tab-inactive" onclick="setTab(this,'citas')">Citas</button>
         <button class="tab-btn tab-inactive" onclick="setTab(this,'mensajes')">Mensajes</button>
-        <button class="tab-btn tab-inactive" onclick="setTab(this,'ia')">Informes IA</button>
-        <button class="tab-btn tab-inactive" onclick="setTab(this,'tareas')">Tareas</button>
+        <button class="tab-btn tab-inactive" onclick="setTab(this,'resenas')">Reseñas</button>
+        <button class="tab-btn tab-inactive" onclick="setTab(this,'leads')">Leads</button>
       </div>
 
       <!-- Feed -->
@@ -80,7 +80,7 @@
     <!-- RIGHT: Stats + Next session -->
     <div class="flex flex-col gap-4" style="width:280px;flex-shrink:0;">
 
-      <!-- Resumen de actividad -->
+      <!-- Resumen de actividad (real) -->
       <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:1.25rem;">
         <h4 class="font-headline font-bold text-white text-sm mb-4">Resumen de actividad</h4>
         <div class="flex flex-col gap-2">
@@ -89,47 +89,47 @@
               <span class="material-symbols-outlined" style="font-size:18px;color:#60a5fa;font-variation-settings:'FILL' 1;">chat</span>
               <span style="font-size:12px;color:#94a3b8;">Mensajes nuevos</span>
             </div>
-            <span style="font-size:11px;font-weight:800;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:20px;padding:2px 8px;">3</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="font-size:18px;color:#2dd4bf;font-variation-settings:'FILL' 1;">psychology</span>
-              <span style="font-size:12px;color:#94a3b8;">Informes IA</span>
-            </div>
-            <span style="font-size:11px;font-weight:800;background:rgba(20,184,166,0.15);color:#2dd4bf;border-radius:20px;padding:2px 8px;">1</span>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span class="material-symbols-outlined" style="font-size:18px;color:#f87171;font-variation-settings:'FILL' 1;">warning</span>
-              <span style="font-size:12px;color:#94a3b8;">Tareas pendientes</span>
-            </div>
-            <span style="font-size:11px;font-weight:800;background:rgba(239,68,68,0.12);color:#f87171;border-radius:20px;padding:2px 8px;">2</span>
+            <span id="stat-mensajes" style="font-size:11px;font-weight:800;background:rgba(96,165,250,0.15);color:#60a5fa;border-radius:20px;padding:2px 8px;">0</span>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
             <div style="display:flex;align-items:center;gap:10px;">
               <span class="material-symbols-outlined" style="font-size:18px;color:#a78bfa;font-variation-settings:'FILL' 1;">event</span>
               <span style="font-size:12px;color:#94a3b8;">Citas hoy</span>
             </div>
-            <span style="font-size:11px;font-weight:800;background:rgba(139,92,246,0.15);color:#a78bfa;border-radius:20px;padding:2px 8px;">5</span>
+            <span id="stat-citas" style="font-size:11px;font-weight:800;background:rgba(139,92,246,0.15);color:#a78bfa;border-radius:20px;padding:2px 8px;">0</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="material-symbols-outlined" style="font-size:18px;color:#fbbf24;font-variation-settings:'FILL' 1;">reviews</span>
+              <span style="font-size:12px;color:#94a3b8;">Reseñas</span>
+            </div>
+            <span id="stat-resenas" style="font-size:11px;font-weight:800;background:rgba(251,191,36,0.15);color:#fbbf24;border-radius:20px;padding:2px 8px;">0</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,0.03);">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="material-symbols-outlined" style="font-size:18px;color:#2dd4bf;font-variation-settings:'FILL' 1;">notifications</span>
+              <span style="font-size:12px;color:#94a3b8;">Sin leer</span>
+            </div>
+            <span id="stat-sinleer" style="font-size:11px;font-weight:800;background:rgba(20,184,166,0.15);color:#2dd4bf;border-radius:20px;padding:2px 8px;">0</span>
           </div>
         </div>
       </div>
 
-      <!-- Próxima sesión -->
-      <div style="background:linear-gradient(135deg,rgba(20,184,166,0.12),rgba(15,118,110,0.08));border:1px solid rgba(20,184,166,0.2);border-radius:20px;padding:1.25rem;position:relative;overflow:hidden;">
+      <!-- Próxima sesión (real; oculta si no hay) -->
+      <div id="proxima-sesion-card" style="display:none;background:linear-gradient(135deg,rgba(20,184,166,0.12),rgba(15,118,110,0.08));border:1px solid rgba(20,184,166,0.2);border-radius:20px;padding:1.25rem;position:relative;overflow:hidden;">
         <div style="position:absolute;right:-20px;bottom:-20px;width:80px;height:80px;background:rgba(20,184,166,0.1);border-radius:50%;filter:blur(20px);pointer-events:none;"></div>
         <h4 class="font-headline font-bold text-white text-sm mb-3">Próxima sesión</h4>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-          <div style="width:36px;height:36px;border-radius:10px;background:rgba(20,184,166,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#2dd4bf;font-family:Manrope,sans-serif;flex-shrink:0;">SV</div>
+          <div id="ps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(20,184,166,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#2dd4bf;font-family:Manrope,sans-serif;flex-shrink:0;">—</div>
           <div>
-            <p style="font-size:12px;font-weight:700;color:#e2e8f0;">Sofía Vallés</p>
+            <p id="ps-nombre" style="font-size:12px;font-weight:700;color:#e2e8f0;">Paciente</p>
             <p style="font-size:10px;color:#2dd4bf;display:flex;align-items:center;gap:4px;">
-              <span class="material-symbols-outlined" style="font-size:12px;">schedule</span> 10:00 AM (mañana)
+              <span class="material-symbols-outlined" style="font-size:12px;">schedule</span> <span id="ps-hora"></span>
             </p>
           </div>
         </div>
-        <p style="font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.5;">Manejo de ansiedad en entornos laborales.</p>
-        <a href="ficha_paciente.html" style="display:flex;align-items:center;justify-content:center;padding:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#e2e8f0;font-size:11px;font-weight:700;text-decoration:none;font-family:Manrope,sans-serif;">
+        <p id="ps-desc" style="font-size:11px;color:#64748b;margin-bottom:12px;line-height:1.5;"></p>
+        <a id="ps-btn" href="#" style="display:flex;align-items:center;justify-content:center;padding:8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#e2e8f0;font-size:11px;font-weight:700;text-decoration:none;font-family:Manrope,sans-serif;">
           Ver historial clínico
         </a>
       </div>
@@ -365,6 +365,39 @@ window._cerrarSesion = cerrarSesion;
     if (Array.isArray(d.notificaciones)) {
       window.NOTIFS = d.notificaciones;
       if (typeof renderFeed === 'function') renderFeed();
+    }
+  } catch (_) {}
+
+  // ── Resumen de actividad (real) + próxima sesión (real) ──
+  try {
+    var arr = window.NOTIFS || [];
+    var cnt = function (t) { return arr.filter(function (n) { return n.tipo === t; }).length; };
+    var setN = function (id, v) { var e = document.getElementById(id); if (e) e.textContent = v; };
+    setN('stat-mensajes', cnt('mensajes'));
+    setN('stat-resenas', cnt('resenas'));
+    setN('stat-sinleer', arr.filter(function (n) { return !n.leida; }).length);
+
+    var hoyISO = new Date().toISOString().split('T')[0];
+    var citasHoy = await supabase.from('citas').select('id')
+      .eq('psicologo_id', session.user.id).eq('fecha', hoyISO)
+      .in('estado', ['pendiente', 'confirmada']);
+    setN('stat-citas', ((citasHoy && citasHoy.data) || []).length);
+
+    var prox = await supabase.from('citas')
+      .select('id, fecha, hora_inicio, tipo, paciente_id, paciente:paciente_id(nombre, apellido)')
+      .eq('psicologo_id', session.user.id).gte('fecha', hoyISO)
+      .in('estado', ['pendiente', 'confirmada']).order('fecha').order('hora_inicio').limit(1).maybeSingle();
+    var p = prox && prox.data;
+    var card = document.getElementById('proxima-sesion-card');
+    if (p && card) {
+      var nomP = (((p.paciente && p.paciente.nombre) || '') + ' ' + ((p.paciente && p.paciente.apellido) || '')).trim() || 'Paciente';
+      var online = /online|video|telemed/i.test(p.tipo || '');
+      setN('ps-avatar', nomP.split(' ').map(function (w) { return w[0] || ''; }).slice(0, 2).join('').toUpperCase() || '—');
+      setN('ps-nombre', nomP);
+      setN('ps-hora', (p.hora_inicio || '').slice(0, 5) + (p.fecha === hoyISO ? ' (hoy)' : ' · ' + p.fecha) + ' · ' + (online ? 'Videollamada' : 'Presencial'));
+      setN('ps-desc', online ? 'Sesión de telemedicina.' : 'Sesión presencial.');
+      var pb = document.getElementById('ps-btn'); if (pb && p.paciente_id) pb.href = 'ficha_paciente.html?id=' + p.paciente_id;
+      card.style.display = '';
     }
   } catch (_) {}
 
