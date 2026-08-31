@@ -380,7 +380,7 @@
         <p style="font-family:Manrope,sans-serif;font-size:1.25rem;font-weight:800;color:#f1f5f9;letter-spacing:-0.02em;">Módulos</p>
         <p style="font-size:0.75rem;color:#64748b;margin-top:2px;">Portal Clínico</p>
       </div>
-      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+      <button onclick="cerrarApps()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;transition:all 0.15s;">
         <span class="material-symbols-outlined" style="font-size:18px;">close</span>
       </button>
     </div>
@@ -414,6 +414,23 @@
         <span style="font-size:0.7rem;font-weight:700;color:#cbd5e1;text-align:center;font-family:Manrope,sans-serif;">Mis Estadísticas</span>
       </a>
 
+    </div>
+    <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div id="apps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#a78bfa;">AM</div>
+        <div>
+          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">Ana Martínez</p>
+          <p id="apps-clinica" style="font-size:0.7rem;color:#64748b;">Clínica Sol</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.5rem;">
+        <button onclick="toggleTema()" title="Cambiar tema" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#94a3b8;">
+          <span class="material-symbols-outlined" style="font-size:16px;">contrast</span>
+        </button>
+        <button onclick="document.getElementById('btn-logout').click()" title="Cerrar sesión" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#f87171;">
+          <span class="material-symbols-outlined" style="font-size:16px;">logout</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
