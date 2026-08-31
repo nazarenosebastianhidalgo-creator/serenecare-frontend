@@ -43,7 +43,7 @@
           '<span id="theme-menu-icon" class="material-symbols-outlined" style="color:#94a3b8;font-size:17px;">light_mode</span>' +
           '<span id="theme-menu-label" class="text-sm font-semibold" style="color:#94a3b8;">Modo día</span>' +
         '</button>' +
-        '<a href="#" onclick="window._cerrarSesion&&window._cerrarSesion()" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">' +
+        '<a href="#" onclick="__pacLogout(event)" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">' +
           '<span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>' +
           '<span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>' +
         '</a>' +
@@ -61,4 +61,19 @@
 
   var mount = document.getElementById('paciente-sidebar');
   if (mount) { mount.outerHTML = html; } else { document.write(html); }
+
+  // Logout robusto e independiente: cierra la sesión de Supabase de verdad,
+  // limpia localStorage y lleva al acceso del paciente. Funciona aunque la
+  // página no defina window._cerrarSesion.
+  window.__pacLogout = async function (e) {
+    if (e && e.preventDefault) e.preventDefault();
+    try {
+      var m = await import('/js/supabase-client.js');
+      await m.supabase.auth.signOut();
+    } catch (err) { /* si falla el signOut, igualmente limpiamos y salimos */ }
+    ['tp_rol', 'tp_clinica_id', 'tp_nombre', 'tp_clinica', 'tp_demo'].forEach(function (k) {
+      try { localStorage.removeItem(k); } catch (e2) {}
+    });
+    window.location.href = '/screens/acceso_paciente.html';
+  };
 })();
