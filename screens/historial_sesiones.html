@@ -81,6 +81,13 @@ html.light .sesion-row:hover{background:#f8fafc!important;border-color:#cbd5e1!i
             <span class="material-symbols-outlined text-lg" style="color:#34d399;">calendar_month</span>
             Sesiones Anteriores
           </h2>
+          <style>
+            #lista-sesiones{max-height:460px;overflow-y:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:rgba(52,211,153,0.4) transparent;}
+            #lista-sesiones::-webkit-scrollbar{width:6px;}
+            #lista-sesiones::-webkit-scrollbar-thumb{background:rgba(52,211,153,0.35);border-radius:10px;}
+            #lista-sesiones::-webkit-scrollbar-thumb:hover{background:rgba(52,211,153,0.55);}
+            #lista-sesiones::-webkit-scrollbar-track{background:transparent;}
+          </style>
           <div class="space-y-3" id="lista-sesiones"></div>
         </div>
 
