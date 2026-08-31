@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.removeItem('tp_rol'); localStorage.removeItem('tp_nombre')
     localStorage.removeItem('tp_clinica_id'); localStorage.removeItem('tp_clinica')
     localStorage.removeItem('tp_demo')
-    window.location.href = 'demo_clinica.html'
+    if(window._cerrarSesion){window._cerrarSesion();}else{window.location.href='/login.html';}
   })
 
   renderTabla()

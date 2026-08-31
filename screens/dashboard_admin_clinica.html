@@ -795,7 +795,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('btn-logout').addEventListener('click', function(e) {
     e.preventDefault()
     ;['tp_rol','tp_nombre','tp_clinica_id','tp_clinica','tp_demo'].forEach(function(k){ localStorage.removeItem(k) })
-    window.location.href = 'demo_clinica.html'
+    if(window._cerrarSesion){window._cerrarSesion();}else{window.location.href='/login.html';}
   })
 
   // Cerrar modal con Escape o click overlay

@@ -371,7 +371,7 @@
   }
 
   document.getElementById('btn-logout').addEventListener('click', function(e) {
-    e.preventDefault(); localStorage.clear(); window.location.href = 'demo_clinica.html';
+    e.preventDefault(); localStorage.clear(); if(window._cerrarSesion){window._cerrarSesion();}else{window.location.href='/login.html';}
   });
   actualizarLabelTema();
 })();
