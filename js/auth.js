@@ -177,11 +177,20 @@ export async function restablecerPassword(nuevaPassword) {
 
 // ─── CERRAR SESIÓN ────────────────────────────────────────────────
 export async function cerrarSesion() {
+  const rol = localStorage.getItem('tp_rol')  // leer ANTES de limpiar
   await supabase.auth.signOut()
   localStorage.removeItem('tp_rol')
   localStorage.removeItem('tp_clinica_id')
   localStorage.removeItem('tp_nombre')
-  window.location.href = '/login.html'
+  // Volver al login que corresponde a cada rol (coherente con super admin)
+  const destinos = {
+    admin_clinica: 'acceso_clinica.html',
+    psicologo:     'acceso_psicologo.html',
+    secretario:    'acceso_psicologo.html',
+    paciente:      'acceso_paciente.html',
+    super_admin:   'acceso_super_admin.html',
+  }
+  window.location.href = destinos[rol] || '/login.html'
 }
 
 // ─── GUARDIA DE RUTA ──────────────────────────────────────────────
