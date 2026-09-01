@@ -214,6 +214,15 @@
       });
       if (codigoCreador) params.set('checkout[custom][codigo_creador]', codigoCreador);
 
+      // Guardar las credenciales en sessionStorage para el auto-acceso al volver
+      // del pago (misma pestaña + mismo origen → sobreviven al viaje a Lemon).
+      // registro_exito.html las usa para entrar solo y luego borra la contraseña.
+      try {
+        sessionStorage.setItem('sc_login_email', email);
+        sessionStorage.setItem('sc_login_pwd', password);
+        sessionStorage.setItem('sc_login_clinica', clinicaNombre);
+      } catch (e) {}
+
       const checkoutUrl = `https://serenecare.lemonsqueezy.com/checkout/buy/${VARIANT_ID}?${params.toString()}`;
       window.location.href = checkoutUrl;
     });

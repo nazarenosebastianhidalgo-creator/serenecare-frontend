@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>¡Pago recibido! · SereneCare</title>
+  <style>
+    :root{ --bg:#071a17; --card:#0d2621; --card2:#0f2e28; --line:rgba(255,255,255,.10);
+           --teal:#14b8a6; --teal2:#2dd4bf; --txt:#eafaf6; --mut:#9fc4bb; }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
+    body{background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(20,184,166,.16), transparent 60%),
+        var(--bg);
+      color:var(--txt); font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      display:flex; align-items:center; justify-content:center; padding:24px; min-height:100vh;}
+    .card{width:100%; max-width:460px; background:linear-gradient(180deg,var(--card2),var(--card));
+      border:1px solid var(--line); border-radius:22px; padding:34px 30px; text-align:center;
+      box-shadow:0 30px 80px rgba(0,0,0,.45);}
+    .brand{font-weight:800; letter-spacing:-.02em; color:var(--teal2); font-size:15px; margin-bottom:22px;}
+    .spinner{width:46px;height:46px;margin:6px auto 18px; border:3px solid rgba(45,212,191,.25);
+      border-top-color:var(--teal2); border-radius:50%; animation:spin 1s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media (prefers-reduced-motion: reduce){ .spinner{animation:none} }
+    h1{font-size:21px; margin:0 0 8px; font-weight:800;}
+    p{font-size:14.5px; line-height:1.55; color:var(--mut); margin:0 0 8px;}
+    .ico{width:56px;height:56px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;
+      justify-content:center;font-size:30px;background:rgba(45,212,191,.14);border:1px solid rgba(45,212,191,.3);}
+    .btn{display:block; width:100%; margin-top:18px; text-decoration:none; text-align:center;
+      background:linear-gradient(135deg,#0f766e,#14b8a6); color:#fff; font-weight:800; font-size:15px;
+      padding:14px 18px; border-radius:13px; border:none; cursor:pointer;}
+    .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--mut);font-weight:700;margin-top:10px;}
+    .hint{margin-top:16px; font-size:12.5px; color:var(--mut); line-height:1.5;}
+    .hide{display:none}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">SereneCare</div>
+
+    <!-- Estado: activando / auto-acceso -->
+    <div id="loading">
+      <div class="spinner"></div>
+      <h1>¡Pago recibido! 🎉</h1>
+      <p id="loading-msg">Estamos activando tu cuenta y te llevamos a tu panel…</p>
+      <p style="font-size:12.5px;opacity:.8">Esto tarda unos segundos, no cierres esta ventana.</p>
+    </div>
+
+    <!-- Estado: listo pero requiere click (fallback) -->
+    <div id="ready" class="hide">
+      <div class="ico">✅</div>
+      <h1 id="ready-title">Tu cuenta está lista</h1>
+      <p id="ready-msg">Tu clínica ya está activa en SereneCare. Entra a tu panel para empezar.</p>
+      <a id="btn-entrar" class="btn" href="/screens/acceso_clinica.html">Entrar a mi panel →</a>
+      <button id="btn-reintentar" class="btn ghost hide">Reintentar acceso automático</button>
+      <p class="hint">Te hemos enviado también un correo de bienvenida.
+        Si no lo ves, <b>revisa la carpeta de spam</b> — pero puedes entrar directamente desde aquí.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase } from '/js/supabase-client.js';
+
+    const email   = sessionStorage.getItem('sc_login_email');
+    const pwd     = sessionStorage.getItem('sc_login_pwd');
+    const DASH    = '/screens/dashboard_admin_clinica.html';
+    const ACCESO  = '/screens/acceso_clinica.html';
+
+    const $ = (id) => document.getElementById(id);
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+    function mostrarFallback(conReintento) {
+      $('loading').classList.add('hide');
+      $('ready').classList.remove('hide');
+      // Prefijar el email en la pantalla de acceso si es posible
+      if (email) $('btn-entrar').href = ACCESO + '?email=' + encodeURIComponent(email);
+      if (conReintento) $('btn-reintentar').classList.remove('hide');
+    }
+
+    async function perfilListo(userId, intentos = 8) {
+      // Espera a que el webhook haya creado la fila en 'usuarios' (rol) para
+      // que el dashboard no rebote por perfil inexistente.
+      for (let i = 0; i < intentos; i++) {
+        const { data } = await supabase.from('usuarios').select('id, rol').eq('id', userId).maybeSingle();
+        if (data && data.rol) return true;
+        await sleep(1500);
+      }
+      return false;
+    }
+
+    async function autoAcceso() {
+      // Sin credenciales guardadas → no podemos entrar solos: fallback directo.
+      if (!email || !pwd) { mostrarFallback(false); return; }
+
+      // Reintentar el login mientras el webhook termina de crear la cuenta (~hasta 40s)
+      let user = null;
+      for (let i = 0; i < 16; i++) {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password: pwd });
+        if (!error && data?.user) { user = data.user; break; }
+        if (i === 4)  $('loading-msg').textContent = 'Casi listo, terminando de preparar tu cuenta…';
+        await sleep(2500);
+      }
+
+      if (!user) { mostrarFallback(true); return; }
+
+      // Esperar a que exista el perfil (rol) antes de entrar al panel
+      await perfilListo(user.id);
+
+      // Ya dentro: limpiar la contraseña de sessionStorage y entrar al panel
+      try {
+        sessionStorage.removeItem('sc_login_pwd');
+        sessionStorage.removeItem('sc_login_email');
+        sessionStorage.removeItem('sc_login_clinica');
+      } catch (e) {}
+      window.location.href = DASH;
+    }
+
+    $('btn-reintentar').addEventListener('click', () => {
+      $('ready').classList.add('hide');
+      $('loading').classList.remove('hide');
+      $('loading-msg').textContent = 'Reintentando acceso…';
+      autoAcceso();
+    });
+
+    autoAcceso();
+  </script>
+</body>
+</html>
