@@ -189,15 +189,10 @@
 </div>
 
 <script>
-var NOTIFS = [
-  { tipo:'ia',       icono:'psychology',      color:'#2dd4bf',  titulo:'Informe IA listo para revisión',   desc:'El análisis de la sesión de ayer con <b>Lucía Méndez</b> ya está procesado y listo.', hora:'Hace 10 min', leida:false, accion:'Ver informe', accionUrl:'resultado_informe_ia.html' },
-  { tipo:'mensajes', icono:'chat',             color:'#60a5fa',  titulo:'Nuevo mensaje: Ricardo Morales',    desc:'"Doctora, ¿sería posible adelantar mi cita del jueves? Me ha surgido un imprevisto familiar..."', hora:'Hace 45 min', leida:false, accion:'Responder', accionUrl:'mensajes_clinica.html' },
-  { tipo:'citas',    icono:'event_available',  color:'#34d399',  titulo:'Cita confirmada',                  desc:'Sofía Vallés ha confirmado su asistencia para mañana a las 10:00 AM.', hora:'Hace 2h', leida:true, accion:null },
-  { tipo:'tareas',   icono:'assignment_late',  color:'#f87171',  titulo:'Recordatorio de tarea pendiente',  desc:'Falta firmar la hoja de consentimiento para el tratamiento de <b>Marcos Ruiz</b>.', hora:'Hace 5h', leida:false, accion:'Firmar documento', accionUrl:'gestion_documentos_ia.html' },
-  { tipo:'citas',    icono:'event_busy',       color:'#94a3b8',  titulo:'Cita cancelada',                   desc:'Elena Costa ha cancelado su cita del viernes 10 de mayo.', hora:'Ayer', leida:true, accion:null },
-  { tipo:'mensajes', icono:'mark_chat_unread', color:'#60a5fa',  titulo:'Nuevo mensaje: Pablo Herrera',     desc:'"Buenos días, quería consultar sobre la próxima evaluación..."', hora:'Ayer', leida:false, accion:'Responder', accionUrl:'mensajes_clinica.html' },
-  { tipo:'tareas',   icono:'pending_actions',  color:'#fbbf24',  titulo:'3 notas SOAP sin completar',       desc:'Las sesiones del lunes, martes y miércoles tienen notas pendientes de completar.', hora:'Hace 2 días', leida:true, accion:null },
-];
+// Notificaciones reales: esta pantalla aún no está cableada al endpoint
+// /api/notificaciones (sí lo está el timbre del header y notificaciones_psicologo).
+// Vaciado para no mostrar notificaciones inventadas. PENDIENTE: cablear al backend.
+var NOTIFS = [];
 
 var tabActual = 'todos';
 

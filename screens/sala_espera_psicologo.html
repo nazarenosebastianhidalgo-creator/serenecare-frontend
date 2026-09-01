@@ -273,15 +273,10 @@
 window.addEventListener('pageshow', function(e){ if(e.persisted) window.location.reload(); });
 
 // ── DATOS PACIENTES ──────────────────────────────────────────────
+// Placeholder neutro; el módulo de datos reales sobreescribe window.PACIENTES
+// con la cola real (citas). Sin nombres ni diagnósticos inventados.
 var PACIENTES = [
-  { nombre:'Elena Rodríguez',   init:'ER', dx:'Trastorno de ansiedad',    sesion:24, hora:'14:30' },
-  { nombre:'Carlos Mendoza',    init:'CM', dx:'Depresión moderada',        sesion:11, hora:'15:30' },
-  { nombre:'Lucía Fernández',   init:'LF', dx:'Trastorno adaptativo',      sesion:7,  hora:'16:00' },
-  { nombre:'Marcos Vidal',      init:'MV', dx:'TDAH en adultos',           sesion:18, hora:'17:00' },
-  { nombre:'Ana Beltrán',       init:'AB', dx:'Ansiedad social',           sesion:5,  hora:'10:00' },
-  { nombre:'Roberto Fuentes',   init:'RF', dx:'Estrés postraumático',      sesion:32, hora:'11:30' },
-  { nombre:'Isabel Castro',     init:'IC', dx:'Trastorno bipolar II',      sesion:9,  hora:'12:00' },
-  { nombre:'Diego Morales',     init:'DM', dx:'Burnout laboral',           sesion:3,  hora:'13:00' },
+  { nombre:'—', init:'', dx:'', sesion:0, hora:'' },
 ];
 
 var pacienteActual = PACIENTES[0]; // Elena por defecto
