@@ -83,4 +83,7 @@ if (rol === 'admin_clinica') {
     const canonical = window.toggleAppsPanel;
     document.querySelectorAll('[onclick="toggleAppsPanel()"]').forEach(function (b) { b.onclick = canonical; });
   } catch (e) { /* si algo falla, se mantiene el menú original */ }
+
+  // Ya reconvertido a admin: revelar el sidebar (lo ocultó el anti-parpadeo del <head>).
+  document.documentElement.classList.remove('rol-admin-pending');
 }

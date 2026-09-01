@@ -3,6 +3,18 @@
 <head>
 <meta charset="utf-8"/>
 <script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<script>
+  /* Evita el parpadeo psicólogo→admin: si es admin, oculta el sidebar desde el
+     primer pintado hasta que portal-rol.js lo reconvierta a admin. Con red de
+     seguridad por si portal-rol fallara (revelar igualmente tras 1.2s). */
+  if (localStorage.getItem('tp_rol') === 'admin_clinica') {
+    document.documentElement.classList.add('rol-admin-pending');
+    var _s = document.createElement('style');
+    _s.textContent = '.rol-admin-pending aside.sidebar-dark{opacity:0!important}';
+    document.head.appendChild(_s);
+    setTimeout(function(){ document.documentElement.classList.remove('rol-admin-pending'); }, 1200);
+  }
+</script>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>SereneCare — Recursos Clínicos</title>
 <link rel="stylesheet" href="/css/tailwind.css">
