@@ -410,10 +410,12 @@ var ACTIVIDAD = []
 
 var INGRESOS_7D = []
 
-var SPARK_PAC   = [40,42,43,44,45,46,48]
-var SPARK_CITAS = [8,10,11,9,12,10,12]
-var SPARK_TER   = [4,5,5,5,5,5,5]
-var SPARK_ING   = [5200,5600,5800,6000,5900,6100,6200]
+// Arrancan planas (sin datos inventados). El módulo de datos reales rellena
+// SPARK_CITAS y SPARK_ING con la actividad real de la clínica.
+var SPARK_PAC   = [0,0,0,0,0,0,0]
+var SPARK_CITAS = [0,0,0,0,0,0,0]
+var SPARK_TER   = [0,0,0,0,0,0,0]
+var SPARK_ING   = [0,0,0,0,0,0,0]
 
 var ingView = 'bar'
 var citaSelIdx = -1
@@ -759,15 +761,12 @@ document.addEventListener('DOMContentLoaded', function() {
     weekday:'long', day:'numeric', month:'long', year:'numeric'
   })
 
-  // KPIs animados
-  setTimeout(function() {
-    animarNum(document.getElementById('kpi-pac'),   48,  '', '')
-    animarNum(document.getElementById('kpi-citas'), 12,  '', '')
-    animarNum(document.getElementById('kpi-ter'),   5,   '', '')
-  }, 100)
-  setTimeout(function() {
-    document.getElementById('kpi-ing').textContent = '€0'  // lo real lo pone el módulo
-  }, 700)
+  // KPIs — arrancan en 0; el módulo de datos reales (más abajo) los rellena
+  // con las cifras reales de la clínica. Sin placeholders inventados.
+  document.getElementById('kpi-pac').textContent   = '0'
+  document.getElementById('kpi-citas').textContent = '0'
+  document.getElementById('kpi-ter').textContent   = '0'
+  document.getElementById('kpi-ing').textContent   = '€0'
 
   // Sparklines (tras paint)
   setTimeout(function() {
