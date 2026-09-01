@@ -385,7 +385,7 @@ function renderCalendar() {
     var cls = 'cal-day' + (c.other ? ' other-month' : '') + (isToday ? ' today' : '')
     var border = isSelected ? 'border:2px solid rgba(20,184,166,0.6);' : ''
     var pills = citas.slice(0,2).map(function(ci, idx) {
-      var tc = { color: colorTerapeuta(ci.terapeuta) }
+      var tc = { color: (window.TER_COLOR_MAP && window.TER_COLOR_MAP[ci.terapeuta]) || colorTerapeuta(ci.terapeuta) }
       var ec = ESTADO_COLORS[ci.estado] || ESTADO_COLORS.pendiente
       return '<span class="cita-pill" style="background:' + ec.pillBg + ';color:' + ec.color + ';border:1px solid ' + ec.pillBdr + ';" data-cita-idx="' + getCitaIdx(c.day, idx) + '">' +
         '<span class="dot" style="background:' + tc.color + ';"></span>' +
@@ -1047,20 +1047,25 @@ const clinicaId = perfil.clinica_id
 // Poblar los desplegables de terapeuta con los psicólogos REALES de la clínica
 try {
   const { data: psis } = await supabase.from('usuarios')
-    .select('nombre, apellido').eq('clinica_id', clinicaId).eq('rol', 'psicologo').eq('activo', true).order('apellido')
+    .select('nombre, apellido, color').eq('clinica_id', clinicaId).eq('rol', 'psicologo').eq('activo', true).order('apellido')
   const opts = (psis || []).map(function(p){ const n = ((p.nombre||'') + ' ' + (p.apellido||'')).trim(); return '<option value="' + n + '">' + n + '</option>' }).join('')
   const fT = document.getElementById('filter-terapeuta'); if (fT) fT.innerHTML = '<option value="">Todos los terapeutas</option>' + opts
   const nT = document.getElementById('nf-terapeuta'); if (nT) nT.innerHTML = '<option value="">Selecciona…</option>' + opts
 
-  // Leyenda de colores dinámica: mismos terapeutas reales, color estable por nombre
+  // Leyenda + mapa de color: usa el color ELEGIDO al invitar; si no hay, estable por nombre
   const cTer = window.colorTerapeuta || function(){ return '#2dd4bf' }
+  window.TER_COLOR_MAP = {}
+  ;(psis || []).forEach(function(p){
+    const n = ((p.nombre||'') + ' ' + (p.apellido||'')).trim()
+    window.TER_COLOR_MAP[n] = p.color || cTer(n)
+  })
   const leg = document.getElementById('leyenda-terapeutas')
   const legLbl = document.getElementById('leyenda-ter-label')
   if (leg) {
     leg.innerHTML = (psis || []).map(function(p){
       const n = ((p.nombre||'') + ' ' + (p.apellido||'')).trim()
       return '<span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">'
-           + '<span class="w-2.5 h-2.5 rounded-full inline-block" style="background:' + cTer(n) + ';"></span>' + n + '</span>'
+           + '<span class="w-2.5 h-2.5 rounded-full inline-block" style="background:' + window.TER_COLOR_MAP[n] + ';"></span>' + n + '</span>'
     }).join('')
   }
   if (legLbl) legLbl.style.display = (psis && psis.length) ? '' : 'none'

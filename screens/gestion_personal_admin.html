@@ -252,6 +252,23 @@ document.addEventListener('DOMContentLoaded', function() {
     })
   })
 
+  // Selector de color para la agenda (misma paleta estable que la agenda)
+  var PALETA_INV = ['#2dd4bf','#818cf8','#a78bfa','#fbbf24','#f472b6','#34d399','#60a5fa','#fb923c']
+  window.__invColor = PALETA_INV[0]
+  var contCol = document.getElementById('inv-colores')
+  if (contCol) {
+    contCol.innerHTML = PALETA_INV.map(function(c, i){
+      return '<button type="button" data-color="'+c+'" class="inv-swatch" style="width:26px;height:26px;border-radius:50%;background:'+c+';cursor:pointer;border:2px solid '+(i===0?'#fff':'transparent')+';box-shadow:0 0 0 1px rgba(255,255,255,0.15);"></button>'
+    }).join('')
+    contCol.querySelectorAll('.inv-swatch').forEach(function(b){
+      b.addEventListener('click', function(){
+        window.__invColor = this.getAttribute('data-color')
+        contCol.querySelectorAll('.inv-swatch').forEach(function(x){ x.style.border='2px solid transparent' })
+        this.style.border='2px solid #fff'
+      })
+    })
+  }
+
   // Invitar
   document.getElementById('btn-invitar').addEventListener('click', function() {
     document.getElementById('modal-invitar').classList.remove('hidden')
@@ -281,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'checkout[custom][apellido]': ape,
         'checkout[custom][clinica_id]': clinicaId,
       })
+      params.set('checkout[custom][color]', window.__invColor || '')
       if (window.__perfilEmail) params.set('checkout[email]', window.__perfilEmail)
       window.location.href = 'https://serenecare.lemonsqueezy.com/checkout/buy/' + VARIANT_ID + '?' + params.toString()
       return
@@ -324,6 +342,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <select id="inv-rol" class="field" style="background:#0d1b2e;cursor:pointer;">
           <option value="psicologo">Terapeuta / Psicólogo</option>
         </select>
+      </div>
+      <div>
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Color en la agenda</label>
+        <div id="inv-colores" class="flex flex-wrap gap-2"></div>
       </div>
       <p class="text-xs text-slate-500">Invitar a un <strong class="text-slate-300">psicólogo</strong> añade una plaza de <strong class="text-slate-300">29&nbsp;€/mes</strong> (pago seguro con Lemon Squeezy). Tras el pago recibirá un email para activar su cuenta.</p>
     </div>
