@@ -693,9 +693,13 @@ function toggleTema() {
 
 
 
-// Demo badge
-document.getElementById('demo-badge').classList.remove('hidden');
-document.getElementById('demo-header-banner').classList.remove('hidden');
+// Demo badge / banner: solo para la clínica demo (coherente con el resto de
+// pantallas). Antes se mostraba SIEMPRE al cargar y se ocultaba tras los datos
+// → provocaba un flash de "Modo Demo" de unos segundos en clínicas reales.
+if (localStorage.getItem('tp_demo') === 'true') {
+  document.getElementById('demo-badge').classList.remove('hidden');
+  document.getElementById('demo-header-banner').classList.remove('hidden');
+}
 
 // Google Calendar flow
 window.iniciarConexionGCal = function() {
@@ -766,8 +770,6 @@ try {
     document.getElementById('input-telefono').value = perfil.telefono || '';
     actualizarDisplay();
     if (perfil.clinicas?.nombre) document.getElementById('nombre-clinica').textContent = perfil.clinicas.nombre;
-    document.getElementById('demo-badge').classList.add('hidden');
-    document.getElementById('demo-header-banner').classList.add('hidden');
   }
 
   // Override guardarCambios to also persist in Supabase
