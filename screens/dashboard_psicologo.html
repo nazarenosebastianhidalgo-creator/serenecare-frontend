@@ -262,7 +262,7 @@
       <div style="display:flex;align-items:center;gap:0.75rem;">
         <div id="apps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#a78bfa;">AM</div>
         <div>
-          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">Ana Martínez</p>
+          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">—</p>
           <p id="apps-clinica" style="font-size:0.7rem;color:#64748b;">Clínica Sol</p>
         </div>
       </div>
@@ -387,7 +387,7 @@ function toggleTema(){
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  var nombre=localStorage.getItem('tp_nombre')||'Ana Martínez';
+  var nombre=localStorage.getItem('tp_nombre')||'Mi cuenta';
   var clinica=localStorage.getItem('tp_clinica')||'Clínica Sol';
   var demo=localStorage.getItem('tp_demo')==='true';
 

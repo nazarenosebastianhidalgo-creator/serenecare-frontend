@@ -289,7 +289,7 @@
 <script>
 // Init demo data
 (function init() {
-  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var nombre = localStorage.getItem('tp_nombre') || 'Mi cuenta';
   var av = document.getElementById('user-avatar-top');
   if (av) av.textContent = nombre.split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase();
 

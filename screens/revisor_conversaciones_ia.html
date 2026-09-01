@@ -88,7 +88,7 @@
     <button id="btn-user-card" onclick="toggleUserMenu()" class="w-full flex items-center gap-3 px-2 py-2.5 rounded-xl transition-colors hover:bg-white/5" style="border:none;background:none;cursor:pointer;text-align:left;">
       <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white flex-shrink-0" style="background:rgba(139,92,246,0.2);" id="user-avatar">AM</div>
       <div class="flex-1 overflow-hidden">
-        <p class="text-sm font-bold text-slate-100 truncate" id="user-nombre">Ana Martínez</p>
+        <p class="text-sm font-bold text-slate-100 truncate" id="user-nombre">—</p>
         <p class="text-xs text-slate-500">Psicóloga clínica</p>
       </div>
       <span class="material-symbols-outlined text-slate-500" style="font-size:16px;" id="chevron-user">expand_less</span>
@@ -417,7 +417,7 @@
       <div style="display:flex;align-items:center;gap:0.75rem;">
         <div id="apps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#a78bfa;">AM</div>
         <div>
-          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">Ana Martínez</p>
+          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">—</p>
           <p id="apps-clinica" style="font-size:0.7rem;color:#64748b;">Clínica Sol</p>
         </div>
       </div>
@@ -435,7 +435,7 @@
 
 <script>
 (function init() {
-  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var nombre = localStorage.getItem('tp_nombre') || 'Mi cuenta';
   var clinica = localStorage.getItem('tp_clinica') || 'Clínica Sol';
   var demo = localStorage.getItem('tp_demo') === 'true';
 

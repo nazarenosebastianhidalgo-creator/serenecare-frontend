@@ -156,7 +156,7 @@
     <button id="btn-user" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;" onclick="document.getElementById('user-menu').classList.toggle('hidden')">
       <div id="user-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(139,92,246,0.2);color:#a78bfa;">AM</div>
       <div class="flex-1 overflow-hidden text-left">
-        <p id="user-nombre" class="text-sm font-bold text-white truncate">Ana Martínez</p>
+        <p id="user-nombre" class="text-sm font-bold text-white truncate">—</p>
         <p class="text-[10px] text-slate-500">Psicóloga clínica</p>
       </div>
       <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
@@ -458,7 +458,7 @@
       <div style="display:flex;align-items:center;gap:0.75rem;">
         <div id="apps-avatar" style="width:36px;height:36px;border-radius:10px;background:rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#a78bfa;">AM</div>
         <div>
-          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">Ana Martínez</p>
+          <p id="apps-nombre" style="font-size:0.8rem;font-weight:700;color:#f1f5f9;font-family:Manrope,sans-serif;">—</p>
           <p id="apps-clinica" style="font-size:0.7rem;color:#64748b;">Clínica Sol</p>
         </div>
       </div>
@@ -839,7 +839,7 @@ function renderNotifsPsi() {
 window.leerNotifPsi = function(i) { NOTIFS_PSI[i].leida = true; renderNotifsPsi(); };
 
 document.addEventListener('DOMContentLoaded', function() {
-  var nombre  = localStorage.getItem('tp_nombre')  || 'Ana Martínez';
+  var nombre  = localStorage.getItem('tp_nombre')  || 'Mi cuenta';
   var clinica = localStorage.getItem('tp_clinica') || 'Clínica Sol';
   var partes  = nombre.trim().split(' ');
   var ini     = ((partes[0]||'A')[0] + ((partes[1]||'M')[0])).toUpperCase();
