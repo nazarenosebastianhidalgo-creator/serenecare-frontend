@@ -132,19 +132,8 @@
       <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.2);">
         <span class="material-symbols-outlined" style="font-size:13px;">cancel</span>Cancelada
       </span>
-      <span class="ml-4 text-[10px] text-slate-600 uppercase tracking-widest font-bold">Terapeuta:</span>
-      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
-        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#2dd4bf;"></span>Ana
-      </span>
-      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
-        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#818cf8;"></span>Pedro
-      </span>
-      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
-        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#a78bfa;"></span>Sofía
-      </span>
-      <span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">
-        <span class="w-2.5 h-2.5 rounded-full inline-block" style="background:#fbbf24;"></span>Isabel
-      </span>
+      <span id="leyenda-ter-label" class="ml-4 text-[10px] text-slate-600 uppercase tracking-widest font-bold" style="display:none;">Terapeuta:</span>
+      <span id="leyenda-terapeutas" class="inline-flex flex-wrap items-center gap-x-3 gap-y-1"></span>
     </div>
 
     <!-- Calendario -->
@@ -349,13 +338,7 @@ document.addEventListener('click', function(e) {
   }
 })
 
-var TERAPEUTAS_COLORS = {
-  'Ana Martínez':  { bg:'rgba(20,184,166,0.2)',  color:'#2dd4bf' },
-  'Pedro Sánchez': { bg:'rgba(99,102,241,0.2)',  color:'#818cf8' },
-  'Sofía Ruiz':    { bg:'rgba(139,92,246,0.2)', color:'#a78bfa' },
-  'Isabel López':  { bg:'rgba(245,158,11,0.2)', color:'#fbbf24' },
-}
-// Color estable por terapeuta REAL (los nombres no están en el mapa de arriba)
+// Color estable por terapeuta REAL (derivado del nombre; mismo en leyenda y pastillas)
 var _PALETA_TER = ['#2dd4bf','#818cf8','#a78bfa','#fbbf24','#f472b6','#34d399','#60a5fa','#fb923c']
 function colorTerapeuta(nombre) {
   var h = 0, str = nombre || ''
@@ -402,7 +385,7 @@ function renderCalendar() {
     var cls = 'cal-day' + (c.other ? ' other-month' : '') + (isToday ? ' today' : '')
     var border = isSelected ? 'border:2px solid rgba(20,184,166,0.6);' : ''
     var pills = citas.slice(0,2).map(function(ci, idx) {
-      var tc = TERAPEUTAS_COLORS[ci.terapeuta] || { color: colorTerapeuta(ci.terapeuta) }
+      var tc = { color: colorTerapeuta(ci.terapeuta) }
       var ec = ESTADO_COLORS[ci.estado] || ESTADO_COLORS.pendiente
       return '<span class="cita-pill" style="background:' + ec.pillBg + ';color:' + ec.color + ';border:1px solid ' + ec.pillBdr + ';" data-cita-idx="' + getCitaIdx(c.day, idx) + '">' +
         '<span class="dot" style="background:' + tc.color + ';"></span>' +
@@ -1068,7 +1051,20 @@ try {
   const opts = (psis || []).map(function(p){ const n = ((p.nombre||'') + ' ' + (p.apellido||'')).trim(); return '<option value="' + n + '">' + n + '</option>' }).join('')
   const fT = document.getElementById('filter-terapeuta'); if (fT) fT.innerHTML = '<option value="">Todos los terapeutas</option>' + opts
   const nT = document.getElementById('nf-terapeuta'); if (nT) nT.innerHTML = '<option value="">Selecciona…</option>' + opts
-} catch (e) { /* sin psicólogos: desplegables con su opción por defecto */ }
+
+  // Leyenda de colores dinámica: mismos terapeutas reales, color estable por nombre
+  const cTer = window.colorTerapeuta || function(){ return '#2dd4bf' }
+  const leg = document.getElementById('leyenda-terapeutas')
+  const legLbl = document.getElementById('leyenda-ter-label')
+  if (leg) {
+    leg.innerHTML = (psis || []).map(function(p){
+      const n = ((p.nombre||'') + ' ' + (p.apellido||'')).trim()
+      return '<span class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-400">'
+           + '<span class="w-2.5 h-2.5 rounded-full inline-block" style="background:' + cTer(n) + ';"></span>' + n + '</span>'
+    }).join('')
+  }
+  if (legLbl) legLbl.style.display = (psis && psis.length) ? '' : 'none'
+} catch (e) { /* sin psicólogos: desplegables y leyenda con sus valores por defecto */ }
 const now = new Date()
 const mesInicio = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-01'
 const mesFin   = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-31'
