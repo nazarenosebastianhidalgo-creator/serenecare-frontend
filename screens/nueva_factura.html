@@ -473,7 +473,7 @@ document.querySelectorAll('button').forEach(btn => {
 </nav>
 <script>
 (function(){
-  var nombre = localStorage.getItem('tp_nombre') || 'Ana Martínez';
+  var nombre = localStorage.getItem('tp_nombre') || 'Admin';
   var av = document.getElementById('user-avatar-header');
   if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase() || 'AM';
 })();

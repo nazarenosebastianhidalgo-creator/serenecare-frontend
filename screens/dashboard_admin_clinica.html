@@ -630,9 +630,7 @@ function guardarCitaNueva() {
   var ter  = document.getElementById('nf-ter').value
   var hora = document.getElementById('nf-hora').value
   var tipo = document.getElementById('nf-tipo').value
-  var tc = { 'Ana Martínez':'#2dd4bf','Pedro Sánchez':'#818cf8','Sofía Ruiz':'#a78bfa','Isabel López':'#fbbf24' }
-  var bg = { 'Ana Martínez':'rgba(20,184,166,0.2)','Pedro Sánchez':'rgba(99,102,241,0.2)','Sofía Ruiz':'rgba(139,92,246,0.2)','Isabel López':'rgba(245,158,11,0.15)' }
-  CITAS_HOY.push({ hora:hora, paciente:pac, terapeuta:ter, tipo:tipo, estado:'pendiente', color:bg[ter]||'rgba(100,116,139,0.2)', tc:tc[ter]||'#94a3b8' })
+  CITAS_HOY.push({ hora:hora, paciente:pac, terapeuta:ter, tipo:tipo, estado:'pendiente', color:'rgba(20,184,166,0.2)', tc:'#2dd4bf' })
   CITAS_HOY.sort(function(a,b){ return a.hora.localeCompare(b.hora) })
   document.getElementById('modal-nueva').classList.add('hidden')
   renderCitasHoy()
