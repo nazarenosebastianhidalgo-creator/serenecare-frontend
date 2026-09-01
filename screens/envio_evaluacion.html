@@ -163,7 +163,7 @@
 <main class="ml-64 flex-1 p-8 bg-background relative min-h-screen">
 <!-- Background Content (Simulating Patient Profile) -->
 <div class="max-w-4xl opacity-20 pointer-events-none">
-<h1 class="text-4xl font-display font-bold tracking-tight mb-2">Elena Rodríguez</h1>
+<h1 class="text-4xl font-display font-bold tracking-tight mb-2">Paciente A</h1>
 <p class="text-on-surface-variant mb-8 italic">Última sesión: 14 de Octubre, 2023</p>
 <div class="grid grid-cols-3 gap-6 mb-8">
 <div class="h-32 bg-surface-container rounded-2xl"></div>
@@ -349,7 +349,7 @@ if (pacienteId) {
   const { data: pac } = await supabase.from('pacientes').select('nombre, apellido, email').eq('id', pacienteId).single()
   if (pac) {
     document.querySelectorAll('h1').forEach(el => {
-      if (el.textContent.includes('Elena Rodríguez')) el.textContent = `${pac.nombre} ${pac.apellido}`
+      if (el.textContent.includes('Paciente A')) el.textContent = `${pac.nombre} ${pac.apellido}`
     })
     document.querySelectorAll('p.text-on-surface-variant.mb-8').forEach(el => {
       if (el.textContent.includes('14 de Octubre')) el.textContent = `Email: ${pac.email}`
