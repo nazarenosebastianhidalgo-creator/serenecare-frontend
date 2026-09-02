@@ -448,6 +448,15 @@
       </div>
     </div>
   </div>
+
+  <!-- Suscripción -->
+  <div class="px-8 pb-8">
+    <div class="p-5 rounded-2xl" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);max-width:640px;">
+      <p class="text-sm font-bold text-white font-headline mb-1">Suscripción</p>
+      <p class="text-xs text-slate-500 mb-4">Gestiona tu plan, cambia la tarjeta o cancela tu suscripción en el portal seguro de pago.</p>
+      <button id="btn-gestionar-sub" class="px-4 py-2.5 rounded-xl text-sm font-bold" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);cursor:pointer;">Gestionar suscripción →</button>
+    </div>
+  </div>
 </main>
 
 <!-- APPS OVERLAY -->
@@ -754,6 +763,19 @@ window._cerrarSesion = cerrarSesion;
 const _perfil = await verificarSesion(['psicologo', 'admin_clinica']);
 if (!_perfil) return;
 const { data: { session } } = await supabase.auth.getSession();
+
+// Botón "Gestionar suscripción" → portal de cliente de Lemon (cancelar, tarjeta…)
+const _bgs = document.getElementById('btn-gestionar-sub');
+if (_bgs && session) _bgs.addEventListener('click', async () => {
+  const _o = _bgs.textContent; _bgs.disabled = true; _bgs.textContent = 'Abriendo…';
+  try {
+    const r = await fetch('/api/cuenta/portal-suscripcion', { headers: { Authorization: 'Bearer ' + session.access_token } });
+    const d = await r.json().catch(() => ({}));
+    if (r.ok && d.url) { window.location.href = d.url; return; }
+    alert(d.error || 'No se pudo abrir el portal de gestión.');
+  } catch (e) { alert('Error de red.'); }
+  _bgs.disabled = false; _bgs.textContent = _o;
+});
 if (!session) { window.location.href = '../login.html'; }
 
 try {
