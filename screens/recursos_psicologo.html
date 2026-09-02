@@ -166,7 +166,7 @@
           <span class="material-symbols-outlined" style="font-size:20px;color:#a78bfa;font-variation-settings:'FILL' 1;">library_books</span>
         </div>
         <div>
-          <p class="font-headline text-xl font-extrabold text-white">12</p>
+          <p id="stat-rec-total" class="font-headline text-xl font-extrabold text-white">0</p>
           <p style="font-size:11px;color:#64748b;">Total recursos</p>
         </div>
       </div>
@@ -175,7 +175,7 @@
           <span class="material-symbols-outlined" style="font-size:20px;color:#fbbf24;font-variation-settings:'FILL' 1;">assignment</span>
         </div>
         <div>
-          <p class="font-headline text-xl font-extrabold text-white">5</p>
+          <p id="stat-rec-fichas" class="font-headline text-xl font-extrabold text-white">0</p>
           <p style="font-size:11px;color:#64748b;">Fichas de trabajo</p>
         </div>
       </div>
@@ -184,7 +184,7 @@
           <span class="material-symbols-outlined" style="font-size:20px;color:#60a5fa;font-variation-settings:'FILL' 1;">monitor_heart</span>
         </div>
         <div>
-          <p class="font-headline text-xl font-extrabold text-white">4</p>
+          <p id="stat-rec-escalas" class="font-headline text-xl font-extrabold text-white">0</p>
           <p style="font-size:11px;color:#64748b;">Escalas clínicas</p>
         </div>
       </div>
@@ -193,7 +193,7 @@
           <span class="material-symbols-outlined" style="font-size:20px;color:#34d399;font-variation-settings:'FILL' 1;">share</span>
         </div>
         <div>
-          <p class="font-headline text-xl font-extrabold text-white">8</p>
+          <p id="stat-rec-asignados" class="font-headline text-xl font-extrabold text-white">0</p>
           <p style="font-size:11px;color:#64748b;">Asignados este mes</p>
         </div>
       </div>
@@ -572,6 +572,21 @@ window.RECURSOS = (recursosDB || []).map(function(r) {
     favorito: _favs.includes(r.id),
   }
 })
+
+// ── Stats reales: catálogo (total/fichas/escalas) + asignados este mes ──
+try {
+  const _rec = window.RECURSOS || []
+  const _setRec = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v }
+  _setRec('stat-rec-total', _rec.length)
+  _setRec('stat-rec-escalas', _rec.filter(r => r.tipo === 'escala').length)
+  _setRec('stat-rec-fichas', _rec.filter(r => r.tipo !== 'escala').length)
+  const _im = new Date(); _im.setDate(1); _im.setHours(0, 0, 0, 0)
+  const { count: _asig } = await supabase.from('recursos_asignados')
+    .select('id', { count: 'exact', head: true })
+    .eq('psicologo_id', session.user.id)
+    .gte('created_at', _im.toISOString())
+  _setRec('stat-rec-asignados', _asig || 0)
+} catch (e) { /* stats no rompen la pantalla */ }
 
 // Descargar: genera el archivo HTML imprimible en el navegador (sin Storage)
 window.descargar = function(id) {
