@@ -3,6 +3,20 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script>
+  /* Reenvío de invitaciones/recuperación: Supabase redirige SIEMPRE a la raíz del
+     Site URL (serenecare.es) con la sesión en el #hash (no respeta el redirect a
+     una subpágina). Lo detectamos y lo mandamos a la pantalla correcta conservando
+     el hash, para que el psicólogo/paciente invitado pueda activar su cuenta. */
+  (function () {
+    var h = location.hash || '';
+    if (h.indexOf('access_token=') === -1) return;
+    var dest = null;
+    if (h.indexOf('type=recovery') !== -1) dest = '/screens/restablecer_password.html';
+    else if (h.indexOf('type=invite') !== -1) dest = '/screens/registro_psicologo.html';
+    if (dest) location.replace(dest + h);
+  })();
+</script>
 <title>SereneCare — El software que te LLENA la consulta</title>
 <meta name="description" content="No es otro software de gestión. SereneCare capta pacientes, llena tus huecos y reduce los no-shows con IA. Para psicólogos y clínicas de salud mental en España y Latinoamérica."/>
 <link rel="stylesheet" href="/css/tailwind.css">
