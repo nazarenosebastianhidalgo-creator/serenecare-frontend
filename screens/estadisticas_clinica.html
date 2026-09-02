@@ -88,7 +88,7 @@
       </button>
       <button id="btn-notif-est" type="button" class="relative p-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
         <span class="material-symbols-outlined text-slate-400">notifications</span>
-        <span id="notif-dot-est" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
+        <span id="notif-dot-est" data-notif-dot class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500" style="display:none;"></span>
       </button>
     </div>
   </header>
@@ -917,7 +917,7 @@ if (localStorage.getItem('tp_demo') === 'true') renderAll(PERIODOS['mes']);
       <div style="display:flex;align-items:center;gap:8px;">
         <span class="material-symbols-outlined" style="color:#2dd4bf;font-size:18px;font-variation-settings:'FILL' 1;">chat</span>
         <span style="font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;color:#f1f5f9;">Mensajes</span>
-        <span id="cw-total-badge" style="background:#f87171;color:#020617;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px;">2</span>
+        <span id="cw-total-badge" style="display:none;background:#f87171;color:#020617;font-size:9px;font-weight:800;padding:2px 6px;border-radius:99px;">2</span>
       </div>
       <a href="mensajes_clinica.html" style="font-size:11px;font-weight:700;color:#2dd4bf;text-decoration:none;padding:4px 10px;border-radius:8px;background:rgba(20,184,166,0.1);">Ver todo</a>
     </div>
@@ -947,7 +947,7 @@ if (localStorage.getItem('tp_demo') === 'true') renderAll(PERIODOS['mes']);
 
 <button id="fab-mensajes" onclick="toggleChatWidget()" style="position:fixed;bottom:96px;right:24px;z-index:9998;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(20,184,166,0.95),rgba(13,140,124,0.95));box-shadow:0 8px 28px rgba(20,184,166,0.4),0 2px 8px rgba(0,0,0,0.4);transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;outline:none;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" title="Mensajes">
   <span id="cw-fab-icon" class="material-symbols-outlined" style="color:#fff;font-size:22px;font-variation-settings:'FILL' 1;">chat</span>
-  <span id="fab-badge" style="position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
+  <span id="fab-badge" style="display:none;position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:#f87171;border:2px solid #020617;font-size:9px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;">2</span>
 </button>
 
 <script>
