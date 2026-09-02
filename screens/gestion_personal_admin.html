@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (rol === 'psicologo') {
       var clinicaId = window.__clinicaId || localStorage.getItem('tp_clinica_id') || ''
       if (!clinicaId) { alert('No se pudo identificar tu clínica. Recarga la página e inténtalo de nuevo.'); return }
-      var VARIANT_ID = '527d999a-b07f-4b35-8c13-22f8e5636466' // Plan Fundadores €29/mes
+      var VARIANT_ID = 'a6396e0a-7a68-4089-82c3-26e64752e6e8' // Acceso Fundadores €29/mes — LIVE (mismo que registro)
       var params = new URLSearchParams({
         'checkout[custom][action]': 'invite_psicologo',
         'checkout[custom][email_psicologo]': email,
