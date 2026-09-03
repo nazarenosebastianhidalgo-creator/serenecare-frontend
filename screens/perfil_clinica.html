@@ -191,8 +191,11 @@
           <!-- Suscripción -->
           <div class="glass-card">
             <p class="font-headline font-bold text-white mb-1">Suscripción</p>
-            <p class="text-xs text-slate-500 mb-4">Gestiona tu plan, cambia la tarjeta o cancela tu suscripción en el portal seguro de pago.</p>
-            <button id="btn-gestionar-sub" class="px-4 py-2.5 rounded-xl text-sm font-bold" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);cursor:pointer;">Gestionar suscripción →</button>
+            <p class="text-xs text-slate-500 mb-4">Cambia la tarjeta o consulta tus facturas en el portal seguro. O cancela tu suscripción.</p>
+            <div class="flex flex-wrap gap-3">
+              <button id="btn-gestionar-sub" class="px-4 py-2.5 rounded-xl text-sm font-bold" style="background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.3);cursor:pointer;">Gestionar suscripción →</button>
+              <button id="btn-cancelar-sub" class="px-4 py-2.5 rounded-xl text-sm font-bold" style="background:rgba(248,113,113,0.12);color:#f87171;border:1px solid rgba(248,113,113,0.3);cursor:pointer;">Cancelar suscripción</button>
+            </div>
           </div>
         </div>
 
@@ -773,6 +776,24 @@ if (_bgs && session) _bgs.addEventListener('click', async () => {
     alert(d.error || 'No se pudo abrir el portal de gestión.');
   } catch (e) { alert('Error de red.'); }
   _bgs.disabled = false; _bgs.textContent = _o;
+});
+
+// Botón "Cancelar suscripción" → cancela la sub de la clínica en Lemon (suspende la clínica)
+const _bcs = document.getElementById('btn-cancelar-sub');
+if (_bcs && session) _bcs.addEventListener('click', async () => {
+  if (!confirm('¿Seguro que quieres CANCELAR la suscripción de la clínica?\n\nSe suspenderá el acceso de TODA la clínica (todos los psicólogos) y se detiene el cobro. Esta acción no se puede deshacer desde aquí.')) return;
+  const _o2 = _bcs.textContent; _bcs.disabled = true; _bcs.textContent = 'Cancelando…';
+  try {
+    const r = await fetch('/api/cuenta/cancelar-suscripcion', { method: 'POST', headers: { Authorization: 'Bearer ' + session.access_token } });
+    const d = await r.json().catch(() => ({}));
+    if (r.ok) {
+      alert('Suscripción cancelada. Tu clínica queda suspendida y deja de cobrarse.');
+      if (window._cerrarSesion) window._cerrarSesion(); else window.location.href = '/screens/acceso_clinica.html';
+      return;
+    }
+    alert(d.error || 'No se pudo cancelar la suscripción.');
+  } catch (e) { alert('Error de red.'); }
+  _bcs.disabled = false; _bcs.textContent = _o2;
 });
 if (!session) { window.location.href = '../login.html'; }
 
