@@ -195,41 +195,92 @@
       </div>
     </div>
 
-    <!-- Y además: gestión -->
-    <p class="text-center text-slate-500 text-sm mt-14 mb-5 font-headline font-semibold uppercase tracking-widest">Y además, todo lo de gestión que ya esperas</p>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
-        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">edit_note</span>
-        <span class="text-sm text-slate-300 font-headline font-semibold">Notas SOAP IA</span>
+    <!-- TODO LO QUE INCLUYE (desglose completo) -->
+    <div class="text-center mt-20 mb-3">
+      <span class="text-xs font-headline font-bold uppercase tracking-widest" style="color:#2dd4bf;">Todo lo que incluye</span>
+      <h3 class="text-2xl md:text-3xl font-headline font-black text-white mt-3" style="text-wrap:balance;">No es una función. Es todo tu día a día resuelto.</h3>
+      <p class="text-slate-400 text-sm max-w-xl mx-auto mt-3">Desde que un paciente te descubre hasta que le cobras la sesión — sin saltar de programa en programa.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+
+      <!-- Grupo: Captar -->
+      <div class="feature-card rounded-3xl p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.2);">
+            <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">group_add</span>
+          </div>
+          <h4 class="font-headline font-bold text-white text-lg">Captar más pacientes</h4>
+        </div>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Recepcionista IA que atiende tu web y capta consultas 24/7</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Reserva y pago de la cita de principio a fin, sin llamadas</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Ficha pública optimizada para Google: te encuentran al buscar psicólogo en tu ciudad</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Bucle de reseñas: las buenas van a tu Google, las dudas se quedan en privado</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Marketing IA: guiones de vídeo, contenido y anuncios a partir de tu perfil</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Lista de espera que llena sola los huecos que se cancelan</span></li>
+        </ul>
       </div>
-      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
-        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">videocam</span>
-        <span class="text-sm text-slate-300 font-headline font-semibold">Telemedicina</span>
+
+      <!-- Grupo: Reducir ausencias -->
+      <div class="feature-card rounded-3xl p-8" style="border-color:rgba(139,92,246,0.15);">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.2);">
+            <span class="material-symbols-outlined" style="color:#a78bfa;font-variation-settings:'FILL' 1;">event_repeat</span>
+          </div>
+          <h4 class="font-headline font-bold text-white text-lg">Reducir ausencias</h4>
+        </div>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#a78bfa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Recordatorios automáticos de cita antes de cada sesión</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#a78bfa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Reprogramación con un clic para el paciente, sin que te llame</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#a78bfa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Seguimiento a quien no vino, para recuperar esa cita</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#a78bfa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Confirmación de asistencia para saber con quién cuentas</span></li>
+        </ul>
       </div>
-      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
-        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">receipt_long</span>
-        <span class="text-sm text-slate-300 font-headline font-semibold">Facturación</span>
+
+      <!-- Grupo: Papeleo -->
+      <div class="feature-card rounded-3xl p-8" style="border-color:rgba(59,130,246,0.15);">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.2);">
+            <span class="material-symbols-outlined" style="color:#60a5fa;font-variation-settings:'FILL' 1;">draft</span>
+          </div>
+          <h4 class="font-headline font-bold text-white text-lg">Quitarte el papeleo</h4>
+        </div>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#60a5fa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Notas de sesión que dictas y se redactan solas en formato SOAP; tú solo revisas y firmas</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#60a5fa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Anamnesis e intake automático antes de la primera cita</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#60a5fa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Escalas clínicas (PHQ-9, GAD-7 y más) con la evolución del paciente en gráfica</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#60a5fa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Recursos y ejercicios que compartes con el paciente desde su portal</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-lg shrink-0 mt-0.5" style="color:#60a5fa;font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Informes clínicos generados con IA</span></li>
+        </ul>
       </div>
-      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
-        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">description</span>
-        <span class="text-sm text-slate-300 font-headline font-semibold">Informes IA</span>
+
+      <!-- Grupo: Gestión -->
+      <div class="feature-card rounded-3xl p-8">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-11 h-11 rounded-2xl flex items-center justify-center shrink-0" style="background:rgba(20,184,166,0.12);border:1px solid rgba(20,184,166,0.2);">
+            <span class="material-symbols-outlined" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">dashboard</span>
+          </div>
+          <h4 class="font-headline font-bold text-white text-lg">Gestionar tu consulta</h4>
+        </div>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Agenda e historia clínica en un solo sitio</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Videoconsulta integrada para sesiones online</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Sincronización con tu Google Calendar</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Cobros y facturación online de la consulta</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Portal propio para cada paciente</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Importa tus pacientes actuales: subes tu Excel y la IA lo ordena por ti</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">¿Clínica con equipo? Multiprofesional y estadísticas incluidas</span></li>
+          <li class="flex items-start gap-3"><span class="material-symbols-outlined text-teal-400 text-lg shrink-0 mt-0.5" style="font-variation-settings:'FILL' 1;">check_circle</span><span class="text-slate-300 text-sm leading-relaxed">Cumplimiento RGPD y datos protegidos</span></li>
+        </ul>
       </div>
-      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
-        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">monitoring</span>
-        <span class="text-sm text-slate-300 font-headline font-semibold">Escalas (PHQ-9, GAD-7)</span>
-      </div>
-      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
-        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">group</span>
-        <span class="text-sm text-slate-300 font-headline font-semibold">Multi-psicólogo</span>
-      </div>
-      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
-        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">notifications_active</span>
-        <span class="text-sm text-slate-300 font-headline font-semibold">Recordatorios</span>
-      </div>
-      <div class="feature-card rounded-2xl p-5 flex items-center gap-3">
-        <span class="material-symbols-outlined text-slate-500" style="font-variation-settings:'FILL' 1;">lock</span>
-        <span class="text-sm text-slate-300 font-headline font-semibold">RGPD</span>
-      </div>
+
+    </div>
+
+    <div class="text-center mt-12">
+      <a href="screens/registro_clinica.html" class="btn-primary inline-block px-8 py-4 rounded-2xl font-headline font-bold text-base text-white">
+        Probar todo esto 14 días gratis →
+      </a>
     </div>
   </div>
 </section>
