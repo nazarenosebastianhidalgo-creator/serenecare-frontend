@@ -42,6 +42,11 @@
   .btn-primary:hover { transform:translateY(-1px); box-shadow:0 12px 40px rgba(45,212,191,0.35); }
   .btn-primary:active { transform:translateY(0); }
   .logo-orb { background:rgba(20,184,166,0.15); border:1px solid rgba(20,184,166,0.3); }
+  .logo-wrap { position:relative; cursor:pointer; }
+  .logo-shine { position:absolute; inset:0; border-radius:0.75rem; opacity:0; transition:opacity 0.25s ease; pointer-events:none;
+    background:radial-gradient(circle 20px at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.6), rgba(45,212,191,0.25) 45%, transparent 72%);
+    mix-blend-mode:screen; }
+  .logo-wrap:hover .logo-shine { opacity:1; }
 </style>
 </head>
 <body class="text-slate-200 antialiased">
@@ -50,7 +55,10 @@
 <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05);">
   <div class="max-w-5xl mx-auto flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <img src="/sc-logo.png" alt="SereneCare" class="w-8 h-8 rounded-xl object-cover" />
+      <span class="logo-wrap w-8 h-8 rounded-xl block" id="logoWrap">
+        <img src="/sc-logo.png" alt="SereneCare" class="w-8 h-8 rounded-xl object-cover" />
+        <span class="logo-shine"></span>
+      </span>
       <span class="font-headline font-black text-2xl tracking-tight" style="background:linear-gradient(135deg,#2dd4bf,#818cf8);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">SereneCare</span>
     </div>
     <div class="flex items-center gap-2 sm:gap-3">
@@ -393,6 +401,17 @@
     ctx.font = fontSize + "px 'Courier New', monospace";
     for(var i=0;i<cols;i++){ ctx.fillStyle='rgba(45,212,191,0.25)'; ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*fontSize, Math.random()*c.height); }
   }
+})();
+
+// Foco que sigue al raton por encima del logo
+(function(){
+  var w = document.getElementById('logoWrap');
+  if(!w) return;
+  w.addEventListener('mousemove', function(e){
+    var r = w.getBoundingClientRect();
+    w.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+    w.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  });
 })();
 </script>
 
