@@ -1231,7 +1231,7 @@ const COLS_TC = ['#2dd4bf','#818cf8','#a78bfa','#4ade80','#fbbf24']
 
 const [{ data: citasDB }, { data: psicologosDB }, { count: totalPac }] = await Promise.all([
   supabase.from('citas').select('*, pacientes(nombre,apellido), psicologo:psicologo_id(nombre,apellido)').eq('clinica_id', clinicaId).eq('fecha', hoy).order('hora_inicio'),
-  supabase.from('usuarios').select('id, nombre, apellido, activo').eq('clinica_id', clinicaId).eq('rol', 'psicologo'),
+  supabase.from('usuarios').select('id, nombre, apellido, activo').eq('clinica_id', clinicaId).eq('rol', 'psicologo').eq('activo', true),
   supabase.from('pacientes').select('id', { count: 'exact', head: true }).eq('clinica_id', clinicaId),
 ])
 
