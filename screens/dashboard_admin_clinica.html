@@ -1154,15 +1154,17 @@ const perfil = await verificarSesion(['admin_clinica'])
 if (!perfil) { throw new Error('redirigiendo') }
 const session = { user: { id: perfil.id } }
 
-// Onboarding en el primer acceso: se muestra 1 vez por dispositivo (flag localStorage
-// → a prueba de bucles de redirección). El onboarding termina volviendo al panel.
-if (!localStorage.getItem('tp_onboarding_visto')) {
-  localStorage.setItem('tp_onboarding_visto', '1')
-  window.location.replace('onboarding_admin.html')
-  throw new Error('onboarding')
-}
-
 const clinicaId = perfil.clinica_id
+
+// Onboarding: se muestra UNA sola vez por CLÍNICA (marca en el servidor), la primera
+// vez tras registrarse. No reaparece aunque cambies de navegador o borres datos.
+if (clinicaId) {
+  const { data: _cliOb } = await supabase.from('clinicas').select('onboarding_completado').eq('id', clinicaId).single()
+  if (_cliOb && _cliOb.onboarding_completado === false) {
+    window.location.replace('onboarding_admin.html')
+    throw new Error('onboarding')
+  }
+}
 const hoy = new Date().toISOString().split('T')[0]
 
 // Aviso: falta configurar la línea de crisis del SOS y ya hay pacientes usando el portal

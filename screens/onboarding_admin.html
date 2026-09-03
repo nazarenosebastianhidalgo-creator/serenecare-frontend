@@ -356,6 +356,21 @@
   </div>
 </footer>
 
+<script type="module">
+  // Marca el onboarding como completado (UNA sola vez por clínica) en cuanto se abre
+  // → no vuelve a mostrarse aunque cambies de navegador. Solo toca esa marca, nada más.
+  import { supabase } from '../js/supabase-client.js';
+  (async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      const { data: u } = await supabase.from('usuarios').select('clinica_id').eq('id', session.user.id).single();
+      const cid = (u && u.clinica_id) || localStorage.getItem('tp_clinica_id');
+      if (cid) await supabase.from('clinicas').update({ onboarding_completado: true }).eq('id', cid);
+    } catch (e) { /* si falla, el botón igual lleva al panel */ }
+  })();
+</script>
+
 <script>
 var paso = 1;
 var psicologos = [];
