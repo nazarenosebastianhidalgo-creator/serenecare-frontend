@@ -242,6 +242,20 @@ const CONFIG = {
 };
 const respuestas = {phq9:{}, gad7:{}};
 
+/* ---------------- Embudo: seguimiento de la RUTA DE FUGA ----------------
+   Marca cada paso del recorrido para ver DÓNDE se caen los leads:
+   visita(auto) -> empieza -> termina/ve resultado -> abre email -> envía.
+   Cada evento se dispara UNA sola vez por escala (flags en `hecho`). */
+const hecho = {}; // p.ej. hecho['phq9_empieza']=true
+function ev(name, data){
+  try{ if(window.va) window.va("event", Object.assign({name}, data||{})); }catch(e){}
+}
+function evUnaVez(key){
+  if(hecho[key]) return;
+  hecho[key]=true;
+  ev(key);
+}
+
 /* ---------------- Render de preguntas ---------------- */
 function pintar(scale){
   const cont = document.getElementById(scale+"-qs");
@@ -260,6 +274,7 @@ document.body.addEventListener("click", e=>{
   const opt = e.target.closest(".opt");
   if(!opt) return;
   const s=opt.dataset.s, i=+opt.dataset.i, v=+opt.dataset.v;
+  evUnaVez(s+"_empieza");           // 1er clic en una respuesta de esta escala
   respuestas[s][i]=v;
   const qEl=document.getElementById(`${s}-q${i}`);
   qEl.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel"));
@@ -280,6 +295,7 @@ function calcular(scale){
   const b=banda(scale,total);
   const pct=Math.round(total/cfg.max*100);
   const riesgo = scale==="phq9" && (r[8]||0)>0;
+  evUnaVez(scale+"_termina");        // completó la escala y ve el resultado
   res.classList.remove("hidden");
   res.innerHTML=`
     <div class="score-big" style="color:${b.col}">${total}<span class="score-max"> / ${cfg.max}</span></div>
@@ -338,9 +354,10 @@ function bindGate(scale,total,sev,riesgo){
   const send=document.getElementById(scale+"-send");
   const input=document.getElementById(scale+"-email");
   if(!send) return;
+  input.addEventListener("focus", ()=>evUnaVez(scale+"_abre_email"), {once:true}); // pincha en el campo email
   send.addEventListener("click", async ()=>{
     const email=(input.value||"").trim();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ input.focus(); input.style.borderColor="var(--grave)"; return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ input.focus(); input.style.borderColor="var(--grave)"; ev(scale+"_email_invalido"); return; }
     send.disabled=true; send.textContent="Enviando…";
     try{
       await fetch("/api/herramientas/lead",{
@@ -354,7 +371,8 @@ function bindGate(scale,total,sev,riesgo){
     }catch(e){/* la captura no debe romper la UX */}
     document.querySelector(`#${scale}-gate .gate-form`).style.display="none";
     document.getElementById(scale+"-ok").classList.add("show");
-    if(window.va) window.va("event",{name:"lead_"+scale});
+    ev("lead_"+scale);               // ✅ conversión: dejó el email
+    ev("lead");                       // total de leads (todas las escalas juntas)
   });
 }
 function reiniciar(scale){
@@ -374,13 +392,15 @@ document.querySelectorAll(".tab").forEach(t=>{
   });
 });
 
-/* ---------------- Propagar UTM a los CTA hacia SereneCare ---------------- */
+/* ---------------- CTA hacia SereneCare: propaga UTM + marca el clic --------
+   Es el paso más profundo del embudo (de la herramienta al producto). */
 (function(){
   const qs=location.search;
-  if(!qs) return;
   ["navCta","ctaFinal"].forEach(id=>{
     const a=document.getElementById(id);
-    if(a) a.href += (a.href.includes("?")?"&":"?")+qs.slice(1);
+    if(!a) return;
+    if(qs) a.href += (a.href.includes("?")?"&":"?")+qs.slice(1);
+    a.addEventListener("click", ()=>ev("clic_probar_serenecare", {desde:id}));
   });
 })();
 </script>
