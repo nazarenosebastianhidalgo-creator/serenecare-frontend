@@ -114,9 +114,27 @@
   footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--mut2);font-size:12.5px}
   footer a{color:var(--mut)}
   .reset{background:none;border:0;color:var(--mut2);font-size:13px;cursor:pointer;text-decoration:underline;margin-top:14px}
+  /* Aviso de cookies (para el mapa de calor / Clarity — RGPD) */
+  .ck{position:fixed;left:16px;right:16px;bottom:16px;z-index:100;max-width:720px;margin:0 auto;background:rgba(11,18,32,0.97);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:none;box-shadow:0 12px 40px rgba(0,0,0,.4)}
+  .ck.show{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .ck p{margin:0;flex:1;min-width:220px;font-size:13px;color:var(--mut)}
+  .ck a{text-decoration:underline}
+  .ck-btns{display:flex;gap:8px;flex-shrink:0}
+  .ck-btn{font-family:'Manrope';font-weight:700;font-size:13px;padding:9px 16px;border-radius:10px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--mut)}
+  .ck-btn.ok{background:linear-gradient(135deg,var(--teal-d),var(--teal));border-color:transparent;color:#fff}
+  .ck-btn:hover{opacity:.9}
 </style>
 </head>
 <body>
+
+<!-- Aviso de cookies: gobierna el mapa de calor (Clarity). Sin aceptar, Clarity NO carga. -->
+<div class="ck" id="ckBanner" role="dialog" aria-label="Aviso de cookies">
+  <p>Usamos cookies propias y de terceros (Microsoft Clarity) para entender cómo se usa la web y mejorarla. Las de medición solo se activan si aceptas. <a href="/#quienes-somos">Más info</a>.</p>
+  <div class="ck-btns">
+    <button class="ck-btn" id="ckNo">Rechazar</button>
+    <button class="ck-btn ok" id="ckYes">Aceptar</button>
+  </div>
+</div>
 
 <nav>
   <div class="wrap">
@@ -255,6 +273,31 @@ function evUnaVez(key){
   hecho[key]=true;
   ev(key);
 }
+
+/* ---------------- Consentimiento de cookies + Mapa de calor (Clarity) --------
+   RGPD: Clarity SOLO carga si el usuario acepta. La elección se recuerda en
+   localStorage. Vercel Analytics es independiente (sin cookies, siempre activo). */
+const CLARITY_ID = "yeq6ojrhrm";
+function cargarClarity(){
+  if(window.clarity) return;
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window,document,"clarity","script",CLARITY_ID);
+}
+(function(){
+  let pref=null;
+  try{ pref=localStorage.getItem("sc_cookies"); }catch(e){}
+  if(pref==="accepted"){ cargarClarity(); return; }
+  if(pref==="rejected"){ return; }
+  const banner=document.getElementById("ckBanner");
+  if(banner) banner.classList.add("show");
+  const set=(val)=>{ try{localStorage.setItem("sc_cookies",val);}catch(e){} if(banner) banner.classList.remove("show"); };
+  const yes=document.getElementById("ckYes"), no=document.getElementById("ckNo");
+  if(yes) yes.addEventListener("click", ()=>{ set("accepted"); cargarClarity(); });
+  if(no)  no.addEventListener("click",  ()=>{ set("rejected"); });
+})();
 
 /* ---------------- Render de preguntas ---------------- */
 function pintar(scale){
