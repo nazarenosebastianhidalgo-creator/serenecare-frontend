@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Calculadora PHQ-9 y GAD-7 online gratis — corrección e interpretación | SereneCare</title>
+<meta name="description" content="Corrige el PHQ-9 (depresión) y el GAD-7 (ansiedad) online y gratis. Puntuación automática, interpretación por severidad y descarga del informe en PDF. Herramienta para psicólogos."/>
+<link rel="canonical" href="https://serenecare.es/herramientas/phq9"/>
+<meta property="og:title" content="Calculadora PHQ-9 y GAD-7 online gratis — SereneCare"/>
+<meta property="og:description" content="Corrige el PHQ-9 y el GAD-7 al instante: puntuación, severidad e informe en PDF. Gratis para psicólogos."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://serenecare.es/herramientas/phq9"/>
+<meta name="robots" content="index,follow"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<!-- Datos estructurados: ayuda a Google a entender que es una herramienta gratuita -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Calculadora PHQ-9 y GAD-7",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "Web",
+  "url": "https://serenecare.es/herramientas/phq9",
+  "description": "Corrección online del PHQ-9 (depresión) y GAD-7 (ansiedad) con puntuación e interpretación por severidad.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "publisher": { "@type": "Organization", "name": "SereneCare", "url": "https://serenecare.es" }
+}
+</script>
+<style>
+  :root{
+    --bg:#020617; --bg2:#0b1220; --card:rgba(255,255,255,0.03); --line:rgba(255,255,255,0.08);
+    --teal:#2dd4bf; --teal-d:#0f766e; --violet:#8b5cf6; --txt:#e2e8f0; --mut:#94a3b8; --mut2:#64748b;
+    --ok:#34d399; --leve:#a3e635; --mod:#fbbf24; --modg:#fb923c; --grave:#f87171;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .headline{font-family:'Manrope',sans-serif}
+  a{color:var(--teal);text-decoration:none}
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px}
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:rgba(2,6,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+  .brand img{width:30px;height:30px;border-radius:9px;object-fit:cover}
+  .brand span{font-family:'Manrope';background:linear-gradient(90deg,#2dd4bf,#8b5cf6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .nav-cta{font-family:'Manrope';font-weight:700;font-size:14px;padding:9px 16px;border-radius:12px;background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff}
+  /* HERO */
+  header{padding:44px 0 12px;text-align:center}
+  .eyebrow{font-family:'Manrope';font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal)}
+  h1{font-family:'Manrope';font-weight:900;font-size:clamp(28px,5vw,40px);line-height:1.1;margin:14px 0 12px;text-wrap:balance}
+  h1 em{font-style:normal;background:linear-gradient(90deg,#2dd4bf,#8b5cf6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .sub{color:var(--mut);font-size:16px;max-width:560px;margin:0 auto}
+  /* TABS */
+  .tabs{display:flex;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px;max-width:420px;margin:26px auto 0}
+  .tab{flex:1;font-family:'Manrope';font-weight:700;font-size:14px;padding:11px;border-radius:11px;border:0;background:transparent;color:var(--mut);cursor:pointer;transition:.2s}
+  .tab.active{background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff}
+  .tab small{display:block;font-weight:500;font-size:11px;opacity:.85;margin-top:2px}
+  /* SCALE CARD */
+  .scale{display:none;margin-top:24px}
+  .scale.active{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .lead{background:rgba(45,212,191,0.06);border:1px solid rgba(45,212,191,0.18);border-radius:14px;padding:14px 16px;font-size:14px;color:var(--mut);margin-bottom:18px}
+  .lead b{color:var(--txt)}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:10px;transition:.2s}
+  .q.answered{border-color:rgba(45,212,191,0.25)}
+  .q-txt{font-size:14.5px;font-weight:600;margin-bottom:12px;display:flex;gap:10px}
+  .q-num{flex:0 0 24px;height:24px;border-radius:7px;background:rgba(139,92,246,0.15);color:#c4b5fd;font-family:'Manrope';font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .opts{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .opt{font-size:12px;font-weight:600;text-align:center;padding:9px 4px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,0.02);color:var(--mut);cursor:pointer;transition:.15s;line-height:1.25}
+  .opt:hover{border-color:rgba(45,212,191,0.4);color:var(--txt)}
+  .opt.sel{background:linear-gradient(135deg,var(--teal-d),var(--teal));border-color:transparent;color:#fff}
+  .opt b{display:block;font-family:'Manrope';font-size:15px}
+  @media(max-width:520px){.opts{grid-template-columns:repeat(2,1fr)}}
+  /* RESULT */
+  .result{background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));border:1px solid var(--line);border-radius:18px;padding:22px;margin-top:20px;text-align:center}
+  .result.hidden{display:none}
+  .score-big{font-family:'Manrope';font-weight:900;font-size:52px;line-height:1}
+  .score-max{font-size:20px;color:var(--mut2)}
+  .band{display:inline-block;font-family:'Manrope';font-weight:800;font-size:14px;padding:6px 14px;border-radius:999px;margin-top:12px}
+  .bar{height:10px;border-radius:999px;background:rgba(255,255,255,0.07);margin:18px 0 6px;overflow:hidden}
+  .bar>i{display:block;height:100%;border-radius:999px;transition:width .5s ease}
+  .scale-legend{display:flex;justify-content:space-between;font-size:10.5px;color:var(--mut2);margin-bottom:6px}
+  .interp{font-size:14px;color:var(--mut);margin-top:14px;text-align:left;background:rgba(255,255,255,0.02);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .interp b{color:var(--txt)}
+  .risk{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.35);color:#fecaca;border-radius:12px;padding:12px 14px;font-size:13px;margin-top:12px;text-align:left}
+  /* LEAD GATE */
+  .gate{background:linear-gradient(135deg,rgba(45,212,191,0.08),rgba(139,92,246,0.08));border:1px solid rgba(45,212,191,0.25);border-radius:18px;padding:24px;margin-top:18px;text-align:center}
+  .gate h3{font-family:'Manrope';font-weight:800;font-size:20px;margin:0 0 8px}
+  .gate p{color:var(--mut);font-size:14px;margin:0 auto 16px;max-width:440px}
+  .gate ul{list-style:none;padding:0;margin:0 0 18px;display:inline-flex;flex-direction:column;gap:7px;text-align:left;font-size:13.5px;color:var(--txt)}
+  .gate li::before{content:"✓";color:var(--teal);font-weight:800;margin-right:8px}
+  .form-row{display:flex;gap:8px;max-width:440px;margin:0 auto;flex-wrap:wrap}
+  .form-row input{flex:1;min-width:180px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--txt);border-radius:12px;padding:13px 15px;font-size:15px;font-family:'Inter'}
+  .form-row input:focus{outline:none;border-color:rgba(45,212,191,0.55);background:rgba(45,212,191,0.05)}
+  .form-row input::placeholder{color:var(--mut2)}
+  .btn{font-family:'Manrope';font-weight:800;font-size:15px;padding:13px 22px;border-radius:12px;border:0;cursor:pointer;background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;box-shadow:0 8px 28px rgba(45,212,191,0.22);transition:.2s;white-space:nowrap}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+  .consent{font-size:11px;color:var(--mut2);margin-top:12px;max-width:440px;margin-left:auto;margin-right:auto}
+  .gate-ok{display:none}
+  .gate-ok.show{display:block}
+  .disclaimer{font-size:12px;color:var(--mut2);text-align:center;margin:22px auto 0;max-width:560px;line-height:1.6}
+  /* SEO body */
+  .seo{border-top:1px solid var(--line);margin-top:44px;padding:34px 0 20px}
+  .seo h2{font-family:'Manrope';font-weight:800;font-size:22px;margin:26px 0 10px}
+  .seo h3{font-family:'Manrope';font-weight:700;font-size:16px;margin:20px 0 6px;color:var(--txt)}
+  .seo p,.seo li{color:var(--mut);font-size:14.5px}
+  .seo table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+  .seo th,.seo td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+  .seo th{background:rgba(255,255,255,0.03);font-family:'Manrope';color:var(--txt)}
+  .cta-final{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;text-align:center;margin:30px 0}
+  .cta-final h2{margin-top:0}
+  footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--mut2);font-size:12.5px}
+  footer a{color:var(--mut)}
+  .reset{background:none;border:0;color:var(--mut2);font-size:13px;cursor:pointer;text-decoration:underline;margin-top:14px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="/"><img src="/sc-logo.png" alt="SereneCare"/><span>SereneCare</span></a>
+    <a class="nav-cta" href="/#waitlist" id="navCta">Probar SereneCare →</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Herramienta gratuita para psicólogos</div>
+    <h1>Calculadora <em>PHQ-9 y GAD-7</em><br>online y gratis</h1>
+    <p class="sub">Corrige el cuestionario de depresión (PHQ-9) y el de ansiedad (GAD-7) al instante: puntuación, nivel de severidad e informe listo para la historia clínica.</p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-scale="phq9" role="tab">PHQ-9<small>Depresión · 9 ítems</small></button>
+    <button class="tab" data-scale="gad7" role="tab">GAD-7<small>Ansiedad · 7 ítems</small></button>
+  </div>
+
+  <!-- ===== PHQ-9 ===== -->
+  <section class="scale active" id="phq9">
+    <div class="lead">Durante las <b>últimas 2 semanas</b>, ¿con qué frecuencia le han molestado los siguientes problemas?</div>
+    <div class="qs" id="phq9-qs"></div>
+    <div class="result hidden" id="phq9-result"></div>
+  </section>
+
+  <!-- ===== GAD-7 ===== -->
+  <section class="scale" id="gad7">
+    <div class="lead">Durante las <b>últimas 2 semanas</b>, ¿con qué frecuencia le han molestado los siguientes problemas?</div>
+    <div class="qs" id="gad7-qs"></div>
+    <div class="result hidden" id="gad7-result"></div>
+  </section>
+
+  <p class="disclaimer">⚕️ El PHQ-9 y el GAD-7 son instrumentos de <b>cribado</b>, no de diagnóstico. Los resultados orientan, pero no sustituyen la evaluación de un profesional de la salud mental. Esta herramienta no almacena las respuestas de tus pacientes: el cálculo ocurre en tu navegador.</p>
+
+  <!-- ===== SEO CONTENT ===== -->
+  <div class="seo">
+    <h2>Cómo se corrige el PHQ-9</h2>
+    <p>El <b>PHQ-9</b> (Patient Health Questionnaire-9) evalúa la presencia y gravedad de síntomas depresivos. Cada uno de sus 9 ítems se puntúa de 0 (nunca) a 3 (casi todos los días), con un rango total de 0 a 27 puntos. La interpretación estándar es:</p>
+    <table>
+      <thead><tr><th>Puntuación</th><th>Severidad</th><th>Orientación</th></tr></thead>
+      <tbody>
+        <tr><td>0–4</td><td>Mínima o ausente</td><td>No suele requerir tratamiento</td></tr>
+        <tr><td>5–9</td><td>Leve</td><td>Vigilancia / psicoeducación</td></tr>
+        <tr><td>10–14</td><td>Moderada</td><td>Valorar plan de tratamiento</td></tr>
+        <tr><td>15–19</td><td>Moderadamente grave</td><td>Tratamiento activo</td></tr>
+        <tr><td>20–27</td><td>Grave</td><td>Tratamiento e intervención prioritaria</td></tr>
+      </tbody>
+    </table>
+    <p>El <b>ítem 9</b> explora la ideación autolítica: cualquier respuesta superior a 0 requiere valoración clínica del riesgo, con independencia de la puntuación total.</p>
+
+    <h2>Cómo se corrige el GAD-7</h2>
+    <p>El <b>GAD-7</b> (Generalized Anxiety Disorder-7) mide la gravedad de la ansiedad generalizada. Sus 7 ítems se puntúan igual (0–3), con un rango de 0 a 21. Puntos de corte: <b>0–4</b> mínima, <b>5–9</b> leve, <b>10–14</b> moderada y <b>15–21</b> grave. Un resultado ≥10 se considera el umbral habitual para una evaluación más detallada.</p>
+
+    <h3>Preguntas frecuentes</h3>
+    <p><b>¿Es fiable esta calculadora?</b> Usa la puntuación y los puntos de corte validados de ambas escalas. Aun así, es una ayuda al cribado y la decisión clínica siempre es del profesional.</p>
+    <p><b>¿Se guardan los datos del paciente?</b> No. La corrección se hace en tu navegador; solo se envía tu email si pides el informe en PDF, para hacértelo llegar.</p>
+    <p><b>¿Puedo usarla en consulta?</b> Sí, es gratuita para profesionales. Si quieres pasar escalas a tus pacientes y ver la <b>curva de evolución</b> automáticamente en su historia, eso lo hace SereneCare.</p>
+
+    <div class="cta-final">
+      <h2>Pasa escalas sin corregir a mano</h2>
+      <p style="color:var(--mut);max-width:480px;margin:0 auto 18px">En SereneCare envías el PHQ-9, GAD-7 y decenas de escalas a tus pacientes, se corrigen solas y ves la <b style="color:var(--txt)">curva de evolución</b> en su ficha. Menos papeleo, mejor seguimiento.</p>
+      <a class="btn" href="/#waitlist" id="ctaFinal" style="display:inline-block">Probar SereneCare 14 días gratis →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p><a href="/">SereneCare</a> · El software que te llena la consulta · <a href="mailto:hola@serenecare.es">hola@serenecare.es</a></p>
+    <p style="margin-top:6px;color:var(--mut2)">© 2026 SereneCare · Herramienta gratuita · RGPD compliant</p>
+  </div>
+</footer>
+
+<!-- Vercel Web Analytics (sin cookies, sin banner). Se activa al pulsar "Enable" en el panel de Vercel. -->
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+
+<script>
+/* ---------------- Definición de escalas ---------------- */
+const OPCIONES = [
+  {v:0,t:"Nunca"},
+  {v:1,t:"Varios días"},
+  {v:2,t:"Más de la mitad"},
+  {v:3,t:"Casi cada día"}
+];
+const PHQ9 = [
+  "Poco interés o placer en hacer las cosas",
+  "Se ha sentido decaído/a, deprimido/a o sin esperanza",
+  "Problemas para dormir, seguir durmiendo o ha dormido demasiado",
+  "Se ha sentido cansado/a o con poca energía",
+  "Poco apetito o ha comido en exceso",
+  "Se ha sentido mal consigo mismo/a, un fracaso, o que ha fallado a los suyos",
+  "Dificultad para concentrarse (leer, ver la tele…)",
+  "Se ha movido o hablado tan despacio que otros lo notaron — o al contrario, muy inquieto/a",
+  "Pensamientos de que estaría mejor muerto/a o de hacerse daño"
+];
+const GAD7 = [
+  "Sentirse nervioso/a, ansioso/a o con los nervios de punta",
+  "No poder dejar de preocuparse o no poder controlar la preocupación",
+  "Preocuparse demasiado por diferentes cosas",
+  "Dificultad para relajarse",
+  "Estar tan inquieto/a que es difícil quedarse quieto/a",
+  "Molestarse o irritarse fácilmente",
+  "Sentir miedo, como si algo terrible fuera a pasar"
+];
+
+const CONFIG = {
+  phq9:{items:PHQ9,max:27,bandas:[
+    {lim:4,txt:"Mínima o ausente",col:"var(--ok)"},
+    {lim:9,txt:"Leve",col:"var(--leve)"},
+    {lim:14,txt:"Moderada",col:"var(--mod)"},
+    {lim:19,txt:"Moderadamente grave",col:"var(--modg)"},
+    {lim:27,txt:"Grave",col:"var(--grave)"}
+  ]},
+  gad7:{items:GAD7,max:21,bandas:[
+    {lim:4,txt:"Mínima o ausente",col:"var(--ok)"},
+    {lim:9,txt:"Leve",col:"var(--leve)"},
+    {lim:14,txt:"Moderada",col:"var(--mod)"},
+    {lim:21,txt:"Grave",col:"var(--grave)"}
+  ]}
+};
+const respuestas = {phq9:{}, gad7:{}};
+
+/* ---------------- Render de preguntas ---------------- */
+function pintar(scale){
+  const cont = document.getElementById(scale+"-qs");
+  cont.innerHTML = CONFIG[scale].items.map((q,i)=>`
+    <div class="q" id="${scale}-q${i}">
+      <div class="q-txt"><span class="q-num">${i+1}</span><span>${q}</span></div>
+      <div class="opts">
+        ${OPCIONES.map(o=>`<button class="opt" data-s="${scale}" data-i="${i}" data-v="${o.v}"><b>${o.v}</b>${o.t}</button>`).join("")}
+      </div>
+    </div>`).join("");
+}
+pintar("phq9"); pintar("gad7");
+
+/* ---------------- Selección de opción ---------------- */
+document.body.addEventListener("click", e=>{
+  const opt = e.target.closest(".opt");
+  if(!opt) return;
+  const s=opt.dataset.s, i=+opt.dataset.i, v=+opt.dataset.v;
+  respuestas[s][i]=v;
+  const qEl=document.getElementById(`${s}-q${i}`);
+  qEl.querySelectorAll(".opt").forEach(o=>o.classList.remove("sel"));
+  opt.classList.add("sel"); qEl.classList.add("answered");
+  calcular(s);
+});
+
+/* ---------------- Cálculo + resultado ---------------- */
+function banda(scale,total){
+  return CONFIG[scale].bandas.find(b=>total<=b.lim);
+}
+function calcular(scale){
+  const cfg=CONFIG[scale], r=respuestas[scale];
+  const contestadas=Object.keys(r).length;
+  const res=document.getElementById(scale+"-result");
+  if(contestadas<cfg.items.length){ res.classList.add("hidden"); return; }
+  const total=Object.values(r).reduce((a,b)=>a+b,0);
+  const b=banda(scale,total);
+  const pct=Math.round(total/cfg.max*100);
+  const riesgo = scale==="phq9" && (r[8]||0)>0;
+  res.classList.remove("hidden");
+  res.innerHTML=`
+    <div class="score-big" style="color:${b.col}">${total}<span class="score-max"> / ${cfg.max}</span></div>
+    <div class="band" style="background:${b.col}22;color:${b.col};border:1px solid ${b.col}55">${b.txt}</div>
+    <div class="scale-legend"><span>0</span><span>${cfg.max}</span></div>
+    <div class="bar"><i style="width:${pct}%;background:${b.col}"></i></div>
+    <div class="interp">${textoInterp(scale,total,b)}</div>
+    ${riesgo?`<div class="risk">⚠️ <b>Ítem de riesgo positivo.</b> La respuesta al ítem 9 (ideación) es mayor que 0. Se recomienda valorar el riesgo suicida de forma directa, con independencia de la puntuación total.</div>`:``}
+    ${gateHTML(scale,total,b.txt)}
+    <button class="reset" onclick="reiniciar('${scale}')">Reiniciar cuestionario</button>
+  `;
+  bindGate(scale,total,b.txt,riesgo);
+  res.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function textoInterp(scale,total,b){
+  if(scale==="phq9"){
+    return `Puntuación total <b>${total}/27</b> → depresión <b>${b.txt.toLowerCase()}</b>. El PHQ-9 es una escala de cribado; usa este resultado como apoyo a tu juicio clínico.`;
+  }
+  return `Puntuación total <b>${total}/21</b> → ansiedad <b>${b.txt.toLowerCase()}</b>. A partir de 10 puntos se suele recomendar una evaluación más detallada.`;
+}
+
+/* ---------------- Lead gate (email → informe PDF) ---------------- */
+function gateHTML(scale,total,sev){
+  return `
+  <div class="gate" id="${scale}-gate">
+    <div class="gate-form">
+      <h3>📄 Llévate el informe + pack de plantillas</h3>
+      <p>Te enviamos por email el <b>informe interpretado en PDF</b> de este resultado, junto con un <b>pack de plantillas clínicas RGPD</b> (consentimiento informado, LOPD y modelo de nota SOAP) para tu consulta.</p>
+      <ul>
+        <li>Informe PHQ-9 / GAD-7 listo para la historia clínica</li>
+        <li>Pack de plantillas RGPD editables</li>
+        <li>Sin spam — un solo correo con tus recursos</li>
+      </ul>
+      <div class="form-row">
+        <input type="email" id="${scale}-email" placeholder="tu@email.com" autocomplete="email"/>
+        <button class="btn" id="${scale}-send">Enviarme el informe →</button>
+      </div>
+      <p class="consent">Al enviar aceptas recibir tus recursos y ocasionalmente consejos de SereneCare. Puedes darte de baja cuando quieras. Responsable: SereneCare · RGPD.</p>
+    </div>
+    <div class="gate-ok" id="${scale}-ok">
+      <h3>✅ ¡Enviado!</h3>
+      <p>Revisa tu bandeja de entrada (y spam, por si acaso). Tienes el informe y el pack de plantillas en camino.</p>
+    </div>
+  </div>`;
+}
+function utmData(){
+  const p=new URLSearchParams(location.search);
+  return {
+    utm_source:p.get("utm_source")||"",
+    utm_medium:p.get("utm_medium")||"",
+    utm_campaign:p.get("utm_campaign")||"",
+    referrer:document.referrer||""
+  };
+}
+function bindGate(scale,total,sev,riesgo){
+  const send=document.getElementById(scale+"-send");
+  const input=document.getElementById(scale+"-email");
+  if(!send) return;
+  send.addEventListener("click", async ()=>{
+    const email=(input.value||"").trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ input.focus(); input.style.borderColor="var(--grave)"; return; }
+    send.disabled=true; send.textContent="Enviando…";
+    try{
+      await fetch("/api/herramientas/lead",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          email, herramienta:scale.toUpperCase(),
+          resultado:{total, max:CONFIG[scale].max, severidad:sev, riesgo},
+          ...utmData()
+        })
+      });
+    }catch(e){/* la captura no debe romper la UX */}
+    document.querySelector(`#${scale}-gate .gate-form`).style.display="none";
+    document.getElementById(scale+"-ok").classList.add("show");
+    if(window.va) window.va("event",{name:"lead_"+scale});
+  });
+}
+function reiniciar(scale){
+  respuestas[scale]={};
+  pintar(scale);
+  document.getElementById(scale+"-result").classList.add("hidden");
+  document.getElementById(scale).scrollIntoView({behavior:"smooth"});
+}
+
+/* ---------------- Tabs ---------------- */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".scale").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    document.getElementById(t.dataset.scale).classList.add("active");
+  });
+});
+
+/* ---------------- Propagar UTM a los CTA hacia SereneCare ---------------- */
+(function(){
+  const qs=location.search;
+  if(!qs) return;
+  ["navCta","ctaFinal"].forEach(id=>{
+    const a=document.getElementById(id);
+    if(a) a.href += (a.href.includes("?")?"&":"?")+qs.slice(1);
+  });
+})();
+</script>
+</body>
+</html>

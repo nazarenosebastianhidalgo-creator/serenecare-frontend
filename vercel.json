@@ -47,6 +47,8 @@
     { "source": "/creadores", "destination": "/screens/creadores.html" },
     { "source": "/panel", "destination": "/screens/panel_creador.html" },
     { "source": "/registro", "destination": "/screens/registro_clinica.html" },
+    { "source": "/herramientas/phq9", "destination": "/herramientas/phq9.html" },
+    { "source": "/herramientas", "destination": "/herramientas/phq9.html" },
     { "source": "/screens/:path*", "destination": "/screens/:path*" }
   ],
   "redirects": [
