@@ -87,16 +87,11 @@
       <div class="flex-1 h-px mx-2" style="background:rgba(255,255,255,0.06);"></div>
       <div class="flex flex-col items-center gap-1.5 step-pending" id="s2">
         <div class="step-circle">2</div>
-        <span class="step-label text-[10px] uppercase tracking-widest font-bold">Psicólogos</span>
+        <span class="step-label text-[10px] uppercase tracking-widest font-bold">Horario</span>
       </div>
       <div class="flex-1 h-px mx-2" style="background:rgba(255,255,255,0.06);"></div>
       <div class="flex flex-col items-center gap-1.5 step-pending" id="s3">
         <div class="step-circle">3</div>
-        <span class="step-label text-[10px] uppercase tracking-widest font-bold">Horario</span>
-      </div>
-      <div class="flex-1 h-px mx-2" style="background:rgba(255,255,255,0.06);"></div>
-      <div class="flex flex-col items-center gap-1.5 step-pending" id="s4">
-        <div class="step-circle">4</div>
         <span class="step-label text-[10px] uppercase tracking-widest font-bold">Listo</span>
       </div>
     </div>
@@ -130,7 +125,7 @@
 
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="field-label">Especialidad principal</label>
+          <label class="field-label">Tu especialidad principal</label>
           <select class="field-input" id="c-especialidad">
             <option value="">Seleccionar...</option>
             <option>Psicología clínica</option>
@@ -139,6 +134,7 @@
             <option>Neuropsicología</option>
             <option>Multidisciplinaria</option>
           </select>
+          <p class="text-xs text-slate-500 mt-1.5">Aparecerá en tu perfil público para que te encuentren pacientes.</p>
         </div>
         <div>
           <label class="field-label">País</label>
@@ -171,63 +167,8 @@
     </div>
   </section>
 
-  <!-- ═══════════ PASO 2 — Invitar psicólogos ═══════════ -->
+  <!-- ═══════════ PASO 2 — Horario operativo ═══════════ -->
   <section id="step-2" class="step-section space-y-6 hidden">
-    <div class="text-center space-y-1">
-      <h2 class="font-headline text-2xl font-extrabold text-white">Invitá a tu equipo</h2>
-      <p class="text-slate-400 text-sm">Agregá los psicólogos de tu clínica. Les llegará un email para activar su cuenta.</p>
-    </div>
-
-    <div class="glass-card p-7 space-y-5">
-
-      <!-- Lista de invitados -->
-      <div id="lista-invitados" class="space-y-2"></div>
-
-      <!-- Formulario añadir -->
-      <div class="p-4 rounded-xl space-y-3" style="background:rgba(255,255,255,0.02);border:1px solid rgba(99,102,241,0.15);">
-        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Añadir psicólogo</p>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="field-label">Nombre completo</label>
-            <input type="text" id="ps-nombre" class="field-input" placeholder="Dr./Dra. Apellido"/>
-          </div>
-          <div>
-            <label class="field-label">Email profesional</label>
-            <input type="email" id="ps-email" class="field-input" placeholder="doctor@clinica.com"/>
-          </div>
-        </div>
-        <div>
-          <label class="field-label">Especialidad</label>
-          <select class="field-input" id="ps-especialidad">
-            <option value="">Seleccionar...</option>
-            <option>Psicología clínica</option>
-            <option>Neuropsicología</option>
-            <option>Psicología infantil</option>
-            <option>Terapia de pareja</option>
-            <option>Otra</option>
-          </select>
-        </div>
-        <button onclick="agregarPsicologo()" class="w-full py-2.5 rounded-xl text-sm font-bold font-headline transition-all hover:brightness-110" style="background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3);">
-          <span class="material-symbols-outlined text-sm align-middle">person_add</span>
-          Añadir a la lista
-        </button>
-      </div>
-
-      <p class="text-xs text-slate-600 text-center">Podés añadir más psicólogos después desde el panel de administración.</p>
-
-      <div class="flex gap-3 pt-2">
-        <button onclick="irPaso(1)" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
-          ← Atrás
-        </button>
-        <button onclick="irPaso(3)" class="flex-[2] py-3.5 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">
-          Continuar <span class="material-symbols-outlined text-base">arrow_forward</span>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ PASO 3 — Horario operativo ═══════════ -->
-  <section id="step-3" class="step-section space-y-6 hidden">
     <div class="text-center space-y-1">
       <h2 class="font-headline text-2xl font-extrabold text-white">Horario operativo</h2>
       <p class="text-slate-400 text-sm">¿Cuándo abre tu clínica? Podés cambiarlo después.</p>
@@ -283,10 +224,10 @@
       </div>
 
       <div class="flex gap-3 pt-2">
-        <button onclick="irPaso(2)" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
+        <button onclick="irPaso(1)" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
           ← Atrás
         </button>
-        <button onclick="irPaso(4)" class="flex-[2] py-3.5 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">
+        <button onclick="irPaso(3)" class="flex-[2] py-3.5 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">
           <span class="material-symbols-outlined text-base">check_circle</span>
           Finalizar configuración
         </button>
@@ -294,8 +235,8 @@
     </div>
   </section>
 
-  <!-- ═══════════ PASO 4 — ¡Listo! ═══════════ -->
-  <section id="step-4" class="step-section space-y-8 text-center hidden">
+  <!-- ═══════════ PASO 3 — ¡Listo! ═══════════ -->
+  <section id="step-3" class="step-section space-y-8 text-center hidden">
 
     <div class="relative inline-block mx-auto">
       <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto check-anim" style="background:rgba(99,102,241,0.12);border:2px solid rgba(99,102,241,0.3);">
@@ -318,15 +259,6 @@
         <div>
           <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Clínica</p>
           <p class="font-bold text-white text-sm" id="res-nombre-clinica">—</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.2);">
-          <span class="material-symbols-outlined text-base" style="color:#818cf8;font-variation-settings:'FILL' 1;">group</span>
-        </div>
-        <div>
-          <p class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Psicólogos invitados</p>
-          <p class="font-bold text-white text-sm" id="res-psicologos">—</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -373,7 +305,6 @@
 
 <script>
 var paso = 1;
-var psicologos = [];
 
 function irPaso(n) {
   if (n === 2 && !validarPaso1()) return;
@@ -384,11 +315,11 @@ function irPaso(n) {
   actualizarStepper();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  if (paso === 4) mostrarResumen();
+  if (paso === 3) mostrarResumen();
 }
 
 function actualizarStepper() {
-  for (var i = 1; i <= 4; i++) {
+  for (var i = 1; i <= 3; i++) {
     var el = document.getElementById('s' + i);
     el.className = el.className.replace(/step-(active|done|pending)/g, '').trim();
     if (i < paso) el.classList.add('step-done');
@@ -409,45 +340,9 @@ function validarPaso1() {
   return true;
 }
 
-function agregarPsicologo() {
-  var nombre = document.getElementById('ps-nombre').value.trim();
-  var email  = document.getElementById('ps-email').value.trim();
-  var esp    = document.getElementById('ps-especialidad').value;
-  if (!nombre || !email) { alert('Completá nombre y email del psicólogo.'); return; }
-
-  psicologos.push({ nombre, email, esp });
-  renderLista();
-
-  document.getElementById('ps-nombre').value = '';
-  document.getElementById('ps-email').value = '';
-  document.getElementById('ps-especialidad').value = '';
-}
-
-function renderLista() {
-  var lista = document.getElementById('lista-invitados');
-  if (psicologos.length === 0) { lista.innerHTML = ''; return; }
-  lista.innerHTML = psicologos.map(function(p, i) {
-    return '<div class="flex items-center justify-between p-3 rounded-xl" style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.15);">'
-      + '<div class="flex items-center gap-3">'
-      + '<div class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold" style="background:rgba(99,102,241,0.15);color:#818cf8;">' + p.nombre.split(' ').map(function(x){return x[0];}).slice(0,2).join('').toUpperCase() + '</div>'
-      + '<div><p class="text-sm font-semibold text-white">' + p.nombre + '</p>'
-      + '<p class="text-xs text-slate-500">' + p.email + (p.esp ? ' · ' + p.esp : '') + '</p></div></div>'
-      + '<button onclick="quitarPsicologo(' + i + ')" style="background:none;border:none;cursor:pointer;color:#475569;" onmouseover="this.style.color=\'#f87171\'" onmouseout="this.style.color=\'#475569\'">'
-      + '<span class="material-symbols-outlined text-base">close</span></button></div>';
-  }).join('');
-}
-
-function quitarPsicologo(i) {
-  psicologos.splice(i, 1);
-  renderLista();
-}
-
 function mostrarResumen() {
   var nombre = document.getElementById('c-nombre').value.trim();
   document.getElementById('res-nombre-clinica').textContent = nombre || '—';
-  document.getElementById('res-psicologos').textContent = psicologos.length > 0
-    ? psicologos.length + ' invitación' + (psicologos.length > 1 ? 'es enviadas' : ' enviada')
-    : 'Ninguno aún (podés añadir desde el panel)';
   var apertura = document.getElementById('h-apertura').value;
   var cierre   = document.getElementById('h-cierre').value;
   document.getElementById('res-horario').textContent = apertura + ' – ' + cierre;

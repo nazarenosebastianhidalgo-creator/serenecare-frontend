@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('modal-invitar').addEventListener('click', function(e) {
     if (e.target === this) this.classList.add('hidden')
   })
-  document.getElementById('btn-confirmar-invitar').addEventListener('click', function() {
+  document.getElementById('btn-confirmar-invitar').addEventListener('click', async function() {
     var nombre = (document.getElementById('inv-nombre').value || '').trim()
     var email  = (document.getElementById('inv-email').value || '').trim()
     var rol    = document.getElementById('inv-rol').value
@@ -284,27 +284,36 @@ document.addEventListener('DOMContentLoaded', function() {
     var parts = nombre.split(' ')
     var nom = parts[0], ape = parts.slice(1).join(' ') || ''
 
-    // Psicólogo = seat de pago (29€/mes). Abre el checkout de Lemon Squeezy; al confirmar el
-    // pago, el webhook del backend (/webhook/lemonsqueezy, action=invite_psicologo) genera la
-    // invitación de Supabase y envía el email de alta al psicólogo.
+    // Añadir psicólogo es GRATIS (captación de oferta sin fricción). El psicólogo entra en
+    // plan free: su IA queda capada por defecto y él mismo sube a Premium cuando quiera
+    // desbloquearla. Nadie paga por asiento. El backend (/api/staff/invite) genera la
+    // invitación de Supabase y envía el email de alta.
     if (rol === 'psicologo') {
+      var btn = document.getElementById('btn-confirmar-invitar')
       var clinicaId = window.__clinicaId || localStorage.getItem('tp_clinica_id') || ''
       if (!clinicaId) { alert('No se pudo identificar tu clínica. Recarga la página e inténtalo de nuevo.'); return }
-      var VARIANT_ID = 'a6396e0a-7a68-4089-82c3-26e64752e6e8' // Acceso Fundadores €29/mes — LIVE (mismo que registro)
-      var params = new URLSearchParams({
-        'checkout[custom][action]': 'invite_psicologo',
-        'checkout[custom][email_psicologo]': email,
-        'checkout[custom][nombre]': nom,
-        'checkout[custom][apellido]': ape,
-        'checkout[custom][clinica_id]': clinicaId,
-      })
-      params.set('checkout[custom][color]', window.__invColor || '')
-      if (window.__perfilEmail) params.set('checkout[email]', window.__perfilEmail)
-      window.location.href = 'https://serenecare.lemonsqueezy.com/checkout/buy/' + VARIANT_ID + '?' + params.toString()
+      btn.disabled = true
+      try {
+        var resp = await fetch('/api/staff/invite', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + (window.__sbToken || ''), 'Content-Type': 'application/json' },
+          body: JSON.stringify({ nombre: nom, apellido: ape, email: email, telefono: '', clinica_id: clinicaId })
+        })
+        var out = await resp.json().catch(function(){ return {} })
+        if (!resp.ok) { alert(out.error || 'No se pudo enviar la invitación.'); btn.disabled = false; return }
+        alert(out.message || ('Invitación enviada a ' + email))
+        document.getElementById('modal-invitar').classList.add('hidden')
+        document.getElementById('inv-nombre').value = ''
+        document.getElementById('inv-email').value = ''
+        setTimeout(function(){ location.reload() }, 400)
+      } catch (e) {
+        alert('Error de red al enviar la invitación.')
+        btn.disabled = false
+      }
       return
     }
 
-    // Solo se invita a psicólogos (plaza de pago). No hay otros roles.
+    // Solo se invita a psicólogos. No hay otros roles.
   })
 
   document.getElementById('btn-logout').addEventListener('click', function(e) {
@@ -347,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1.5">Color en la agenda</label>
         <div id="inv-colores" class="flex flex-wrap gap-2"></div>
       </div>
-      <p class="text-xs text-slate-500">Invitar a un <strong class="text-slate-300">psicólogo</strong> añade una plaza de <strong class="text-slate-300">29&nbsp;€/mes</strong> (pago seguro con Lemon Squeezy). Tras el pago recibirá un email para activar su cuenta.</p>
+      <p class="text-xs text-slate-500">Invitar a un <strong class="text-slate-300">psicólogo</strong> es <strong class="text-slate-300">gratis</strong>. Recibirá un email para activar su cuenta y trabajará con el plan gratuito; podrá desbloquear las funciones de IA con Premium cuando quiera.</p>
     </div>
     <div class="px-6 pb-6 flex gap-3">
       <button onclick="document.getElementById('modal-invitar').classList.add('hidden')" class="flex-1 py-3 rounded-xl text-sm font-bold text-slate-400 transition-all hover:bg-white/5" style="border:1px solid rgba(255,255,255,0.08);">Cancelar</button>
