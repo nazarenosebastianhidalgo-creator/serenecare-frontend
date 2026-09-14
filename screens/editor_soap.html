@@ -547,6 +547,11 @@ async function procesarDictadoConIA() {
       headers: _authHeaders,
       body: JSON.stringify({ texto: texto })
     });
+    if (res.status === 403) {
+      var _err = await res.json().catch(function(){ return {}; });
+      if (_err.premium) { pedirUpgradePremium(_sess); return; }
+      throw new Error(_err.error || 'No autorizado');
+    }
     if (!res.ok) throw new Error('Error ' + res.status);
     var json = await res.json();
     var soap = json.soap || {};
@@ -564,6 +569,19 @@ async function procesarDictadoConIA() {
     btn.disabled = false;
     btn.innerHTML = '<span class="material-symbols-outlined" style="font-size:16px;font-variation-settings:\'FILL\' 1;">auto_awesome</span> Estructurar con IA → SOAP';
   }
+}
+
+// Plan Free → la IA es Premium. Lleva al checkout de mejora (upgrade sin crear cuenta).
+function pedirUpgradePremium(sess){
+  var VARIANT = 'a6396e0a-7a68-4089-82c3-26e64752e6e8'; // Premium 29€/mes (mismo variant que registro)
+  var uid   = sess && sess.user && sess.user.id;
+  var email = sess && sess.user && sess.user.email;
+  if (!confirm('La transcripción a SOAP con IA es una función Premium (29 €/mes).\n¿Mejorar tu plan ahora y desbloquear la IA?')) return;
+  var p = new URLSearchParams();
+  if (email) p.set('checkout[email]', email);
+  p.set('checkout[custom][action]', 'upgrade_premium');
+  if (uid) p.set('checkout[custom][psicologo_id]', uid);
+  window.location.href = 'https://serenecare.lemonsqueezy.com/checkout/buy/' + VARIANT + '?' + p.toString();
 }
 
 document.addEventListener('DOMContentLoaded', function() {
