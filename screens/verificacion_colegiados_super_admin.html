@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verificación de colegiados | SereneCare</title>
+<link rel="stylesheet" href="/css/tailwind.css">
+  <script>window.tailwind=window.tailwind||{};</script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = { darkMode: "class", theme: { extend: { fontFamily: { "headline": ["Manrope"], "body": ["Inter"] } } } }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .bg-dark-canvas { background-color: #020617; }
+  .sidebar-dark { background-color: #0f172a; }
+  .badge { display:inline-flex; align-items:center; gap:4px; padding:2px 9px; border-radius:999px; font-size:11px; font-weight:700; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .act-btn { display:inline-flex; align-items:center; gap:4px; padding:6px 10px; border-radius:9px; font-size:12px; font-weight:700; cursor:pointer; border:1px solid transparent; transition:all .15s; text-decoration:none; }
+</style>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
+</head>
+<body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
+
+<div id="superadmin-sidebar"></div>
+<script src="/js/sidebar-super-admin.js"></script>
+
+<main class="pl-64 min-h-screen">
+  <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-8 z-40 border-b border-slate-800/10">
+    <div class="flex flex-col">
+      <h2 class="font-headline text-xl font-extrabold text-slate-50 tracking-tighter">Verificación de colegiados</h2>
+      <p class="text-slate-500 text-xs font-medium tracking-wide">Fichas del plan Free — coteja el nº de colegiado y despublica las que no cuadren</p>
+    </div>
+    <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
+      <input type="checkbox" id="chk-revisados" class="accent-indigo-500"/> Mostrar ya revisados
+    </label>
+  </header>
+
+  <div class="p-8">
+    <!-- Stats -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="rounded-2xl p-4 border border-slate-800/40 bg-slate-900/40">
+        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Fichas Free</p>
+        <p id="stat-total" class="text-2xl font-extrabold text-slate-50 mt-1">—</p>
+      </div>
+      <div class="rounded-2xl p-4 border border-slate-800/40 bg-slate-900/40">
+        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Por revisar</p>
+        <p id="stat-pendientes" class="text-2xl font-extrabold text-amber-400 mt-1">—</p>
+      </div>
+      <div class="rounded-2xl p-4 border border-slate-800/40 bg-slate-900/40">
+        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Publicadas</p>
+        <p id="stat-publicadas" class="text-2xl font-extrabold text-emerald-400 mt-1">—</p>
+      </div>
+      <div class="rounded-2xl p-4 border border-slate-800/40 bg-slate-900/40">
+        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Despublicadas</p>
+        <p id="stat-despublicadas" class="text-2xl font-extrabold text-slate-400 mt-1">—</p>
+      </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-800/40 bg-slate-900/30 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-[11px] uppercase tracking-widest text-slate-500 border-b border-slate-800/40">
+              <th class="px-4 py-3 font-bold">Psicólogo</th>
+              <th class="px-4 py-3 font-bold">Nº colegiado</th>
+              <th class="px-4 py-3 font-bold">Ciudad</th>
+              <th class="px-4 py-3 font-bold">Especialidad</th>
+              <th class="px-4 py-3 font-bold">Alta</th>
+              <th class="px-4 py-3 font-bold">Estado</th>
+              <th class="px-4 py-3 font-bold text-right">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div id="vacio" class="hidden py-16 text-center text-slate-500 text-sm">
+        <span class="material-symbols-outlined text-4xl text-slate-700 block mb-2">verified_user</span>
+        No hay fichas Free por revisar.
+      </div>
+    </div>
+    <p class="text-[11px] text-slate-600 mt-3">El botón <strong>Revisado OK</strong> oculta la ficha en este navegador (marca local). Despublicar/Desactivar sí quedan guardados en el sistema.</p>
+  </div>
+</main>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { guardaSuperAdmin } from '../js/admin.js'
+
+const session = await guardaSuperAdmin()
+if (!session) { throw new Error('redirigiendo') }
+
+// Token para llamar al backend (endpoints con service role + guard super_admin)
+const { data: { session: sess } } = await supabase.auth.getSession()
+const TOKEN = sess && sess.access_token
+
+const LS_KEY = 'sc_verif_revisados'
+function revisados() { try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]') } catch { return [] } }
+function marcarRevisado(id) { const s = revisados(); if (!s.includes(id)) { s.push(id); localStorage.setItem(LS_KEY, JSON.stringify(s)) } }
+function desmarcarRevisado(id) { localStorage.setItem(LS_KEY, JSON.stringify(revisados().filter(x => x !== id))) }
+
+let DATA = []
+
+async function cargar() {
+  const r = await fetch('/api/directorio/admin/free', { headers: { 'Authorization': 'Bearer ' + TOKEN } })
+  const out = await r.json().catch(() => ({}))
+  if (!r.ok) { document.getElementById('tbody').innerHTML = '<tr><td colspan="7" class="px-4 py-6 text-red-400">' + (out.error || 'Error al cargar') + '</td></tr>'; return }
+  DATA = out.psicologos || []
+  render()
+}
+
+function badge(txt, color) {
+  const c = { green:'background:rgba(16,185,129,0.12);color:#34d399;', slate:'background:rgba(148,163,184,0.12);color:#94a3b8;', red:'background:rgba(239,68,68,0.12);color:#f87171;' }[color]
+  return '<span class="badge" style="' + c + '">' + txt + '</span>'
+}
+
+function cotejarUrl(p) {
+  const q = '"' + (p.matricula || '') + '" psicólogo colegiado ' + (p.ciudad || '') + ' ' + (p.nombre || '')
+  return 'https://www.google.com/search?q=' + encodeURIComponent(q)
+}
+
+function render() {
+  const mostrarRev = document.getElementById('chk-revisados').checked
+  const rev = revisados()
+  const visibles = DATA.filter(p => mostrarRev || !rev.includes(p.id))
+
+  document.getElementById('stat-total').textContent = DATA.length
+  document.getElementById('stat-pendientes').textContent = DATA.filter(p => !rev.includes(p.id)).length
+  document.getElementById('stat-publicadas').textContent = DATA.filter(p => p.publicado).length
+  document.getElementById('stat-despublicadas').textContent = DATA.filter(p => !p.publicado).length
+
+  const tb = document.getElementById('tbody')
+  document.getElementById('vacio').classList.toggle('hidden', visibles.length > 0)
+  tb.innerHTML = visibles.map(p => {
+    const esRev = rev.includes(p.id)
+    const estados = (p.activo ? (p.publicado ? badge('Publicada','green') : badge('Despublicada','slate')) : badge('Desactivada','red'))
+      + (esRev ? ' ' + badge('Revisado','slate') : '')
+    const fecha = (p.created_at || '').split('T')[0]
+    return '<tr class="border-b border-slate-800/20">'
+      + '<td class="px-4 py-3"><p class="font-semibold text-slate-100">' + (p.nombre || '—') + '</p><p class="text-xs text-slate-500">' + (p.email || '') + '</p></td>'
+      + '<td class="px-4 py-3 font-mono text-slate-200">' + (p.matricula || '<span class="text-red-400">—</span>') + '</td>'
+      + '<td class="px-4 py-3 text-slate-400">' + (p.ciudad || '—') + '</td>'
+      + '<td class="px-4 py-3 text-slate-400">' + (p.especialidad || '—') + '</td>'
+      + '<td class="px-4 py-3 text-slate-500 text-xs">' + fecha + '</td>'
+      + '<td class="px-4 py-3">' + estados + '</td>'
+      + '<td class="px-4 py-3"><div class="flex items-center justify-end gap-1.5 flex-wrap">'
+        + '<a href="' + cotejarUrl(p) + '" target="_blank" rel="noopener" class="act-btn" style="background:rgba(59,130,246,0.12);color:#60a5fa;"><span class="material-symbols-outlined" style="font-size:14px;">search</span>Cotejar</a>'
+        + (esRev
+            ? '<button data-act="desmarcar" data-id="' + p.id + '" class="act-btn" style="background:rgba(148,163,184,0.1);color:#94a3b8;">Deshacer OK</button>'
+            : '<button data-act="revisar" data-id="' + p.id + '" class="act-btn" style="background:rgba(16,185,129,0.12);color:#34d399;"><span class="material-symbols-outlined" style="font-size:14px;">check</span>Revisado OK</button>')
+        + (p.publicado
+            ? '<button data-act="despublicar" data-id="' + p.id + '" class="act-btn" style="background:rgba(245,158,11,0.12);color:#fbbf24;">Despublicar</button>'
+            : '<button data-act="republicar" data-id="' + p.id + '" class="act-btn" style="background:rgba(16,185,129,0.12);color:#34d399;">Republicar</button>')
+        + (p.activo
+            ? '<button data-act="desactivar" data-id="' + p.id + '" class="act-btn" style="background:rgba(239,68,68,0.12);color:#f87171;">Desactivar</button>'
+            : '<button data-act="reactivar" data-id="' + p.id + '" class="act-btn" style="background:rgba(16,185,129,0.12);color:#34d399;">Reactivar</button>')
+      + '</div></td>'
+      + '</tr>'
+  }).join('')
+}
+
+async function setEstado(id, patch, confirmMsg) {
+  if (confirmMsg && !confirm(confirmMsg)) return
+  const r = await fetch('/api/directorio/admin/psi-estado', {
+    method: 'POST', headers: { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' },
+    body: JSON.stringify(Object.assign({ id }, patch))
+  })
+  const out = await r.json().catch(() => ({}))
+  if (!r.ok) { alert(out.error || 'No se pudo actualizar'); return }
+  const p = DATA.find(x => x.id === id); if (p) Object.assign(p, patch)
+  render()
+}
+
+document.getElementById('tbody').addEventListener('click', function(e) {
+  const btn = e.target.closest('button[data-act]'); if (!btn) return
+  const id = btn.getAttribute('data-id'); const act = btn.getAttribute('data-act')
+  if (act === 'revisar') { marcarRevisado(id); render() }
+  else if (act === 'desmarcar') { desmarcarRevisado(id); render() }
+  else if (act === 'despublicar') setEstado(id, { publicado: false }, '¿Despublicar esta ficha del directorio?')
+  else if (act === 'republicar') setEstado(id, { publicado: true })
+  else if (act === 'desactivar') setEstado(id, { activo: false }, '¿Desactivar la cuenta? El psicólogo dejará de poder entrar (el historial se conserva).')
+  else if (act === 'reactivar') setEstado(id, { activo: true })
+})
+document.getElementById('chk-revisados').addEventListener('change', render)
+
+await cargar()
+</script>
+
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Super Admin';
+  var av = document.getElementById('sa-avatar');
+  var nm = document.getElementById('sa-nombre');
+  if (av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase()||'SA';
+  if (nm) nm.textContent = nombre;
+  var tema = localStorage.getItem('tp_tema')||'oscuro';
+  var iconTema = document.getElementById('icon-tema');
+  var labelTema = document.getElementById('label-tema');
+  if (iconTema) iconTema.textContent = tema==='claro'?'light_mode':'dark_mode';
+  if (labelTema) labelTema.textContent = tema==='claro'?'Modo oscuro':'Modo claro';
+})();
+function toggleTema(){
+  var nuevo=(localStorage.getItem('tp_tema')||'oscuro')==='oscuro'?'claro':'oscuro';
+  localStorage.setItem('tp_tema',nuevo);
+  document.documentElement.style.filter=nuevo==='claro'?'invert(1) hue-rotate(180deg)':'';
+  var i=document.getElementById('icon-tema'),l=document.getElementById('label-tema');
+  if(i)i.textContent=nuevo==='claro'?'light_mode':'dark_mode';
+  if(l)l.textContent=nuevo==='claro'?'Modo oscuro':'Modo claro';
+}
+function cerrarTodasSesiones(){ if(confirm('¿Cerrar todas las sesiones activas?')) alert('Sesiones cerradas (requiere Supabase service role)'); }
+function toggleMantenimiento(){
+  var activo=localStorage.getItem('tp_mantenimiento')==='1';
+  var nuevo=activo?'0':'1'; localStorage.setItem('tp_mantenimiento',nuevo);
+  var i=document.getElementById('icon-mant'),l=document.getElementById('label-mant');
+  if(i)i.style.color=nuevo==='1'?'#ef4444':'#f59e0b';
+  if(l)l.textContent=nuevo==='1'?'Desactivar mantenimiento':'Modo mantenimiento';
+}
+</script>
+<script type="module">import { initMantenimientoToggle } from "../js/mantenimiento-toggle.js"; initMantenimientoToggle();</script>
+</body></html>

@@ -7,6 +7,7 @@
   var items = [
     ['dashboard_maestro_super_admin.html', 'dashboard',                 'Dashboard'],
     ['gestion_clinicas_super_admin.html',  'medical_services',          'Clínicas'],
+    ['verificacion_colegiados_super_admin.html', 'verified_user',       'Verificación'],
     ['revenue_super_admin.html',           'payments',                  'Revenue'],
     ['configuracion_ia_super_admin.html',  'settings_input_component',  'IA Config'],
     ['soporte_super_admin.html',           'contact_support',           'Soporte'],
