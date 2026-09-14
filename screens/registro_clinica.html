@@ -31,8 +31,8 @@
            style="background:rgba(45,212,191,0.15);border:1px solid rgba(45,212,191,0.3);">
         <span class="material-symbols-outlined text-4xl" style="color:#2dd4bf;font-variation-settings:'FILL' 1;">medical_services</span>
       </div>
-      <h1 class="text-3xl font-extrabold text-white">Crear tu clínica</h1>
-      <p class="text-slate-400 mt-1 text-sm">14 días gratis · Sin tarjeta al registrarte</p>
+      <h1 class="text-3xl font-extrabold text-white">Crea tu cuenta gratis</h1>
+      <p class="text-slate-400 mt-1 text-sm">Sin tarjeta · Sin permanencia · Empieza en 1 minuto</p>
     </div>
 
     <!-- Card principal -->
@@ -42,11 +42,11 @@
       <div class="rounded-2xl p-4 mb-6 flex items-center justify-between"
            style="background:rgba(45,212,191,0.08);border:1px solid rgba(45,212,191,0.25);">
         <div>
-          <div class="text-xs font-bold uppercase tracking-wider mb-0.5" style="color:#2dd4bf;">Plan Fundadores</div>
-          <div class="text-slate-400 text-xs">Precio bloqueado para siempre · Solo primeras plazas</div>
+          <div class="text-xs font-bold uppercase tracking-wider mb-0.5" style="color:#2dd4bf;">Plan Gratis</div>
+          <div class="text-slate-400 text-xs">Agenda, pacientes y ficha en el directorio · Mejora a Premium cuando quieras</div>
         </div>
         <div class="text-right">
-          <div class="text-2xl font-extrabold text-white">€29<span class="text-sm font-normal text-slate-400">/mes</span></div>
+          <div class="text-2xl font-extrabold text-white">0€<span class="text-sm font-normal text-slate-400">/mes</span></div>
         </div>
       </div>
 
@@ -83,14 +83,25 @@
             onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.boxShadow='none'"/>
         </div>
 
-        <!-- Nombre clínica -->
+        <!-- Nombre consulta/clínica (opcional) -->
         <div>
-          <label class="text-xs font-semibold text-slate-400 block mb-1.5">Nombre de tu clínica</label>
-          <input id="clinica-nombre" type="text" placeholder="Clínica Psicología Bienestar" required
+          <label class="text-xs font-semibold text-slate-400 block mb-1.5">Nombre de tu consulta o clínica <span class="text-slate-600">(opcional)</span></label>
+          <input id="clinica-nombre" type="text" placeholder="Tu consulta / clínica"
             class="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm transition-all focus:outline-none"
             style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);"
             onfocus="this.style.borderColor='rgba(45,212,191,0.5)';this.style.boxShadow='0 0 0 2px rgba(45,212,191,0.12)'"
             onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.boxShadow='none'"/>
+        </div>
+
+        <!-- Nº de colegiado (obligatorio) -->
+        <div>
+          <label class="text-xs font-semibold text-slate-400 block mb-1.5">Nº de colegiado/a</label>
+          <input id="colegiado" type="text" placeholder="Ej. M-12345" required
+            class="w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm transition-all focus:outline-none"
+            style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);"
+            onfocus="this.style.borderColor='rgba(45,212,191,0.5)';this.style.boxShadow='0 0 0 2px rgba(45,212,191,0.12)'"
+            onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.boxShadow='none'"/>
+          <p class="text-[11px] text-slate-500 mt-1">Verificamos tu colegiación para publicar tu ficha en el directorio.</p>
         </div>
 
         <!-- Contraseña -->
@@ -119,7 +130,7 @@
           style="background:linear-gradient(135deg,#0d9488,#0f766e);box-shadow:0 4px 20px rgba(13,148,136,0.3);"
           onmouseover="this.style.background='linear-gradient(135deg,#14b8a6,#0d9488)'"
           onmouseout="this.style.background='linear-gradient(135deg,#0d9488,#0f766e)'">
-          Continuar al pago seguro →
+          Crear mi cuenta gratis →
         </button>
 
       </form>
@@ -128,12 +139,12 @@
       <div class="mt-5 flex items-center justify-center gap-4 text-xs text-slate-500">
         <span class="flex items-center gap-1">
           <span class="material-symbols-outlined text-sm" style="color:#2dd4bf;">shield</span>
-          14 días gratis
+          Gratis, sin tarjeta
         </span>
         <span class="text-slate-700">·</span>
         <span class="flex items-center gap-1">
           <span class="material-symbols-outlined text-sm" style="color:#2dd4bf;">lock</span>
-          Pago seguro
+          Datos protegidos
         </span>
         <span class="text-slate-700">·</span>
         <span class="flex items-center gap-1">
@@ -166,21 +177,22 @@
       else                         { pwd.type = 'password'; icon.textContent = 'visibility'; }
     });
 
-    document.getElementById('form-registro').addEventListener('submit', (e) => {
+    document.getElementById('form-registro').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const nombre       = document.getElementById('nombre').value.trim();
       const apellido     = document.getElementById('apellido').value.trim();
       const email        = document.getElementById('email').value.trim();
       const clinicaNombre= document.getElementById('clinica-nombre').value.trim();
+      const colegiado    = document.getElementById('colegiado').value.trim();
       const password     = document.getElementById('password').value;
       const errDiv       = document.getElementById('error-msg');
       const btn          = document.getElementById('btn-submit');
 
       errDiv.classList.add('hidden');
 
-      if (!nombre || !apellido || !email || !clinicaNombre || !password) {
-        errDiv.textContent = 'Por favor completa todos los campos obligatorios.';
+      if (!nombre || !apellido || !email || !colegiado || !password) {
+        errDiv.textContent = 'Completa nombre, apellido, email, nº de colegiado y contraseña.';
         errDiv.classList.remove('hidden');
         return;
       }
@@ -196,35 +208,37 @@
       }
 
       btn.disabled = true;
-      btn.textContent = 'Redirigiendo al pago...';
+      btn.textContent = 'Creando tu cuenta...';
 
-      // Codificar la contraseña en base64 para enviarla vía custom_data
-      const passwordB64 = btoa(unescape(encodeURIComponent(password)));
-
-      // Código del creador que lo trajo (?ref=CODIGO en la URL) para atribución de afiliados
+      // Código del creador que lo trajo (?ref=CODIGO) para atribución de afiliados
       const codigoCreador = (new URLSearchParams(location.search).get('ref') || '').trim();
 
-      const params = new URLSearchParams({
-        'checkout[email]': email,
-        'checkout[name]': `${nombre} ${apellido}`,
-        'checkout[custom][nombre]': nombre,
-        'checkout[custom][apellido]': apellido,
-        'checkout[custom][clinica_nombre]': clinicaNombre,
-        'checkout[custom][password_hash]': passwordB64,
-      });
-      if (codigoCreador) params.set('checkout[custom][codigo_creador]', codigoCreador);
-
-      // Guardar las credenciales en sessionStorage para el auto-acceso al volver
-      // del pago (misma pestaña + mismo origen → sobreviven al viaje a Lemon).
-      // registro_exito.html las usa para entrar solo y luego borra la contraseña.
       try {
-        sessionStorage.setItem('sc_login_email', email);
-        sessionStorage.setItem('sc_login_pwd', password);
-        sessionStorage.setItem('sc_login_clinica', clinicaNombre);
-      } catch (e) {}
-
-      const checkoutUrl = `https://serenecare.lemonsqueezy.com/checkout/buy/${VARIANT_ID}?${params.toString()}`;
-      window.location.href = checkoutUrl;
+        const resp = await fetch('/api/auth/registro-gratis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre: `${nombre} ${apellido}`.trim(),
+            email, password, colegiado,
+            clinica: clinicaNombre || null,
+            codigo_creador: codigoCreador || null,
+          }),
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) {
+          errDiv.textContent = data.error || 'No se pudo crear la cuenta.';
+          errDiv.classList.remove('hidden');
+          btn.disabled = false; btn.textContent = 'Crear mi cuenta gratis →';
+          return;
+        }
+        // ✅ Cuenta creada GRATIS (sin tarjeta). Guardamos el email y vamos al login.
+        try { sessionStorage.setItem('sc_login_email', email); } catch (e) {}
+        window.location.href = '/screens/acceso_clinica.html?registrado=1&email=' + encodeURIComponent(email);
+      } catch (err) {
+        errDiv.textContent = 'Error de conexión. Vuelve a intentarlo.';
+        errDiv.classList.remove('hidden');
+        btn.disabled = false; btn.textContent = 'Crear mi cuenta gratis →';
+      }
     });
   </script>
 
