@@ -478,7 +478,7 @@ try {
   const clinicaId = cita ? (cita.clinica_id || null) : null
 
   if (!cita) {
-    setEstado('No tenés una sesión de video activa', 'Cuando tengas una sesión online programada, podrás unirte desde acá.', 'event_busy')
+    setEstado('No tienes una sesión de video activa', 'Cuando tengas una sesión online programada, podrás unirte desde aquí.', 'event_busy')
   } else {
     const dn = document.getElementById('doctor-nombre')
     if (dn && cita.psicologo) dn.textContent = 'Dr/a. ' + (cita.psicologo.nombre || '') + ' ' + (cita.psicologo.apellido || '')
@@ -500,7 +500,7 @@ try {
         const url = await crearSalaVideo(cita.id)
         montarSala(url)
       } catch (e) {
-        setEstado('No se pudo iniciar la videollamada', 'Intentá de nuevo en un momento o contactá a tu clínica.', 'error')
+        setEstado('No se pudo iniciar la videollamada', 'Intenta de nuevo en un momento o contacta a tu clínica.', 'error')
       }
     }
   }

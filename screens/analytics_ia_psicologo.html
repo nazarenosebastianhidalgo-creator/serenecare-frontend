@@ -516,7 +516,7 @@ const filas = (misPacientes || []).map((p, i) => {
 const _tbody = document.getElementById('tabla-pacientes')
 if (_tbody) {
   if (!filas.length) {
-    _tbody.innerHTML = '<tr><td colspan="6" style="padding:40px;text-align:center;color:#64748b;font-size:13px;">Aún no tenés pacientes con datos para analizar.</td></tr>'
+    _tbody.innerHTML = '<tr><td colspan="6" style="padding:40px;text-align:center;color:#64748b;font-size:13px;">Aún no tienes pacientes con datos para analizar.</td></tr>'
   } else {
     _tbody.innerHTML = filas.map(function(p) {
       return '<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">'

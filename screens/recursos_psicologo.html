@@ -634,7 +634,7 @@ document.body.appendChild(_modal)
 const _maSelect = _modal.querySelector('#ma-paciente')
 _maSelect.innerHTML = _pacientes.length
   ? _pacientes.map(p => '<option value="'+p.id+'">'+(((p.nombre||'')+' '+(p.apellido||'')).trim())+'</option>').join('')
-  : '<option value="">No tenés pacientes cargados</option>'
+  : '<option value="">No tienes pacientes cargados</option>'
 _modal.querySelector('#ma-cancelar').addEventListener('click', () => { _modal.style.display = 'none' })
 _modal.querySelector('#ma-confirmar').addEventListener('click', async () => {
   const pacId = _maSelect.value

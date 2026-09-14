@@ -120,7 +120,7 @@
       const errMsg   = document.getElementById('error-msg')
 
       if (!email || !password) {
-        mostrarError('Completá todos los campos.')
+        mostrarError('Completa todos los campos.')
         return
       }
 
@@ -141,7 +141,7 @@
         if (perfilError || !perfil) throw new Error('No se encontró tu perfil.')
         if (perfil.rol !== 'admin_clinica') {
           await supabase.auth.signOut()
-          throw new Error('No tenés permisos de admin clínica.')
+          throw new Error('No tienes permisos de admin clínica.')
         }
 
         localStorage.setItem('tp_rol',        'admin_clinica')

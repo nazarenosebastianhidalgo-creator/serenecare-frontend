@@ -460,7 +460,7 @@
     }
 
     try {
-      if (modoDemo) { mostrarError('Conectá tu cuenta para ver tu historial de pagos.'); throw new Error() }
+      if (modoDemo) { mostrarError('Conecta tu cuenta para ver tu historial de pagos.'); throw new Error() }
       const uid = (await supabase.auth.getUser()).data.user?.id
       const { data: paciente } = await supabase.from('pacientes').select('*').eq('usuario_id', uid).single()
 

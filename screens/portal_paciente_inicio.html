@@ -602,7 +602,7 @@ function abrirRecurso(titulo, tipo, url) {
     </div>
     <div id="notif-escalas-count" style="padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.05);display:none;align-items:flex-start;gap:0.75rem;">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(245,158,11,0.12);"><span class="material-symbols-outlined" style="color:#fbbf24;font-size:18px;">assignment</span></div>
-      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p id="notif-escalas-count-txt" style="font-size:0.72rem;color:#64748b;margin:0;">Tenés 2 escalas por completar</p></div>
+      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p id="notif-escalas-count-txt" style="font-size:0.72rem;color:#64748b;margin:0;">Tienes 2 escalas por completar</p></div>
       <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">ayer</span>
     </div>
     <a id="notif-consent" href="consentimiento_firma_paciente.html" style="display:none;padding:1rem 1.25rem;align-items:flex-start;gap:0.75rem;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='rgba(251,191,36,0.04)'" onmouseout="this.style.background='none'">
@@ -702,7 +702,7 @@ document.addEventListener('keydown', function(e) {
         </div>
         <div>
           <p style="font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#fef2f2;margin:0;">¿Necesitás ayuda ahora?</p>
-          <p style="font-size:0.75rem;color:#94a3b8;margin:0;">Estamos aquí para vos</p>
+          <p style="font-size:0.75rem;color:#94a3b8;margin:0;">Estamos aquí para tú</p>
         </div>
       </div>
     </div>
@@ -1279,7 +1279,7 @@ try {
     const notifCount = document.getElementById('notif-escalas-count')
     if (notifCount && pend.length >= 2) {
       const ct = document.getElementById('notif-escalas-count-txt')
-      if (ct) ct.textContent = 'Tenés ' + pend.length + ' escalas por completar'
+      if (ct) ct.textContent = 'Tienes ' + pend.length + ' escalas por completar'
       notifCount.style.display = 'flex'
     }
 

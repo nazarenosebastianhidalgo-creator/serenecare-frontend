@@ -112,7 +112,7 @@
   <section id="step-1" class="step-section space-y-6">
     <div class="text-center space-y-1">
       <h2 class="font-headline text-2xl font-extrabold text-white" id="saludo">Hola 👋</h2>
-      <p class="text-slate-400 text-sm">Tu psicólogo te invitó a SereneCare. Creá tu contraseña para activar tu cuenta.</p>
+      <p class="text-slate-400 text-sm">Tu psicólogo te invitó a SereneCare. Crea tu contraseña para activar tu cuenta.</p>
     </div>
 
     <div class="glass-card p-7 space-y-5">
@@ -156,7 +156,7 @@
   <!-- ═══════════ PASO 2 — Datos personales ═══════════ -->
   <section id="step-2" class="step-section space-y-6 hidden">
     <div class="text-center space-y-1">
-      <h2 class="font-headline text-2xl font-extrabold text-white">Completá tu perfil</h2>
+      <h2 class="font-headline text-2xl font-extrabold text-white">Completa tu perfil</h2>
       <p class="text-slate-400 text-sm">Estos datos son solo para tu psicólogo.</p>
     </div>
 
@@ -180,7 +180,7 @@
 
       <div>
         <label class="field-label">Teléfono</label>
-        <input type="tel" class="field-input" id="d-tel" placeholder="+54 9 11 0000 0000"/>
+        <input type="tel" class="field-input" id="d-tel" placeholder="+34 600 000 000"/>
       </div>
 
       <div>
@@ -216,7 +216,7 @@
   <section id="step-3" class="step-section space-y-6 hidden">
     <div class="text-center space-y-1">
       <h2 class="font-headline text-2xl font-extrabold text-white">Consentimiento informado</h2>
-      <p class="text-slate-400 text-sm">Leé el documento y aceptá para continuar.</p>
+      <p class="text-slate-400 text-sm">Leé el documento y acepta para continuar.</p>
     </div>
 
     <div class="glass-card p-7 space-y-5">
@@ -244,7 +244,7 @@
           <input type="checkbox" id="chk2"/>
           <div>
             <p class="text-sm font-semibold text-slate-200">Autorizo el uso de IA en el análisis de mis sesiones</p>
-            <p class="text-xs text-slate-500 mt-0.5">Opcional — podés revocar este permiso en cualquier momento</p>
+            <p class="text-xs text-slate-500 mt-0.5">Opcional — puedes revocar este permiso en cualquier momento</p>
           </div>
         </label>
         <label class="check-row">
@@ -266,7 +266,7 @@
         <p class="text-xs text-slate-500" id="fecha-firma"></p>
       </div>
 
-      <p class="error-msg" id="err-consent" style="display:none;">Debés aceptar el consentimiento informado para continuar.</p>
+      <p class="error-msg" id="err-consent" style="display:none;">Debes aceptar el consentimiento informado para continuar.</p>
 
       <div class="flex gap-3 pt-2">
         <button onclick="irPaso(2)" class="flex-1 py-3.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white transition-colors" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);">
@@ -292,7 +292,7 @@
 
     <div class="space-y-2">
       <h2 class="font-headline text-3xl font-extrabold text-white">¡Tu cuenta está activa!</h2>
-      <p class="text-slate-400 text-sm max-w-xs mx-auto">Ya podés acceder a tu portal de paciente y conectarte con tu psicólogo.</p>
+      <p class="text-slate-400 text-sm max-w-xs mx-auto">Ya puedes acceder a tu portal de paciente y conectarte con tu psicólogo.</p>
     </div>
 
     <!-- Info del psicólogo -->
@@ -559,7 +559,7 @@ window.activarCuenta = async function() {
   const firma = ((document.getElementById('d-firma') || {}).value || '').trim()
   const err   = document.getElementById('err-consent')
   if (!chk1 || !chk1.checked) {
-    if (err) { err.textContent = 'Debés aceptar el consentimiento informado para continuar.'; err.style.display = 'block' }
+    if (err) { err.textContent = 'Debes aceptar el consentimiento informado para continuar.'; err.style.display = 'block' }
     return
   }
   if (!firma) {

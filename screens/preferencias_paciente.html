@@ -69,7 +69,7 @@ html.light .pill.active{background:rgba(5,150,105,0.1)!important;border-color:rg
       <!-- Page header -->
       <div class="mb-8">
         <h1 class="text-2xl font-extrabold text-white font-headline mb-1">Preferencias</h1>
-        <p class="text-slate-500 text-sm">Personalizá tu experiencia en el portal de bienestar</p>
+        <p class="text-slate-500 text-sm">Personaliza tu experiencia en el portal de bienestar</p>
       </div>
 
       <div class="space-y-5">
@@ -77,7 +77,7 @@ html.light .pill.active{background:rgba(5,150,105,0.1)!important;border-color:rg
         <!-- Notification channels -->
         <div class="card rounded-2xl p-6">
           <h2 class="text-white font-semibold font-headline mb-1">Canales de notificación</h2>
-          <p class="text-slate-500 text-sm mb-5">¿Cómo preferís que te avisemos de tus sesiones?</p>
+          <p class="text-slate-500 text-sm mb-5">¿Cómo prefieres que te avisemos de tus sesiones?</p>
           <div class="space-y-3">
 
             <!-- Email -->
@@ -127,7 +127,7 @@ html.light .pill.active{background:rgba(5,150,105,0.1)!important;border-color:rg
         <!-- Anticipation -->
         <div class="card rounded-2xl p-6">
           <h2 class="text-white font-semibold font-headline mb-1">Antelación del aviso</h2>
-          <p class="text-slate-500 text-sm mb-4">¿Con cuánto tiempo querés que te recordemos la sesión?</p>
+          <p class="text-slate-500 text-sm mb-4">¿Con cuánto tiempo quieres que te recordemos la sesión?</p>
           <div class="flex flex-wrap gap-2">
             <button class="pill active px-5 py-2.5 rounded-full text-sm font-semibold font-headline transition-all" onclick="togglePill(this)">1h</button>
             <button class="pill px-5 py-2.5 rounded-full text-sm font-semibold font-headline transition-all" onclick="togglePill(this)">2h</button>
@@ -144,10 +144,10 @@ html.light .pill.active{background:rgba(5,150,105,0.1)!important;border-color:rg
             <select class="w-full px-4 py-3 rounded-xl text-slate-200 text-sm focus:outline-none appearance-none transition-all"
               style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);"
               onfocus="this.style.borderColor='rgba(52,211,153,0.4)'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+              <option style="background:#0a1628;">(GMT+01:00) Madrid, España</option>
               <option style="background:#0a1628;">(GMT-03:00) Buenos Aires, Argentina</option>
               <option style="background:#0a1628;">(GMT-05:00) Bogotá, Colombia</option>
               <option style="background:#0a1628;">(GMT-06:00) Ciudad de México</option>
-              <option style="background:#0a1628;">(GMT+01:00) Madrid, España</option>
             </select>
             <span class="material-symbols-outlined text-slate-500 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-xl">expand_more</span>
           </div>
@@ -416,7 +416,7 @@ function togglePill(btn) {
     </div>
     <div style="padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:0.75rem;">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(245,158,11,0.12);"><span class="material-symbols-outlined" style="color:#fbbf24;font-size:18px;">assignment</span></div>
-      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Tenés 2 escalas por completar</p></div>
+      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Tienes 2 escalas por completar</p></div>
       <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">ayer</span>
     </div>
   </div>
@@ -490,7 +490,7 @@ document.addEventListener('keydown', function(e) {
 <div id="modal-sos" onclick="if(event.target===this)cerrarModal('modal-sos')" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem;">
   <div style="background:#0d1b2e;border:1px solid rgba(239,68,68,0.3);border-radius:24px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.7);">
     <div style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05));padding:24px 24px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">
-      <div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:14px;background:rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:center;border:1px solid rgba(239,68,68,0.3);"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">emergency</span></div><div><p style="font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#fef2f2;margin:0;">¿Necesitás ayuda ahora?</p><p style="font-size:0.75rem;color:#94a3b8;margin:0;">Estamos aquí para vos</p></div></div>
+      <div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:14px;background:rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:center;border:1px solid rgba(239,68,68,0.3);"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">emergency</span></div><div><p style="font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#fef2f2;margin:0;">¿Necesitás ayuda ahora?</p><p style="font-size:0.75rem;color:#94a3b8;margin:0;">Estamos aquí para tú</p></div></div>
     </div>
     <div style="padding:20px 24px;display:flex;flex-direction:column;gap:10px;">
       <a href="telemedicina_paciente.html" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);text-decoration:none;" onmouseover="this.style.background='rgba(52,211,153,0.14)'" onmouseout="this.style.background='rgba(52,211,153,0.08)'"><div style="width:38px;height:38px;border-radius:10px;background:rgba(52,211,153,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-symbols-outlined" style="color:#34d399;font-size:18px;font-variation-settings:'FILL' 1;">videocam</span></div><div><p style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:700;color:#e2e8f0;margin:0 0 2px;">Llamar a mi psicólogo</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Iniciar videollamada de emergencia</p></div></a>

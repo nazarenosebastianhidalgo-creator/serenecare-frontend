@@ -191,7 +191,7 @@
 
       <div class="flex items-center gap-3 my-6">
         <div class="flex-1 h-px bg-slate-800"></div>
-        <span class="text-xs text-slate-600">¿Ya tenés cuenta?</span>
+        <span class="text-xs text-slate-600">¿Ya tienes cuenta?</span>
         <div class="flex-1 h-px bg-slate-800"></div>
       </div>
 
@@ -285,7 +285,7 @@ window.registrar = async function(e) {
 
   // Validar campos
   if (!nombre || !clinica || !email || pw.length < 8 || !codigo) {
-    mostrarError('Completá todos los campos. La contraseña debe tener al menos 8 caracteres.');
+    mostrarError('Completa todos los campos. La contraseña debe tener al menos 8 caracteres.');
     return;
   }
   errEl.classList.add('hidden');
@@ -304,7 +304,7 @@ window.registrar = async function(e) {
     document.getElementById('f-codigo').classList.add('error');
     document.getElementById('ico-codigo-err').classList.remove('hidden');
     const msgEl = document.getElementById('msg-codigo');
-    msgEl.textContent = 'Código no válido. Verificá que esté escrito correctamente.';
+    msgEl.textContent = 'Código no válido. Verifica que esté escrito correctamente.';
     msgEl.className = 'text-xs mt-1';
     msgEl.style.color = '#f87171';
     msgEl.classList.remove('hidden');

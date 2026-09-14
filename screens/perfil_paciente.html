@@ -73,7 +73,7 @@ html.light .field-input{background:#f8fafc!important;border-color:#e2e8f0!import
     <div class="mb-8 fade-in flex items-center justify-between">
       <div>
         <h1 class="text-2xl font-extrabold text-white font-headline mb-1">Mi Perfil</h1>
-        <p class="text-slate-500 text-sm">Gestioná tu información personal y preferencias de sesión</p>
+        <p class="text-slate-500 text-sm">Gestiona tu información personal y preferencias de sesión</p>
       </div>
       <button onclick="guardarCambios()" class="flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm text-white transition-all hover:opacity-90 active:scale-95 font-headline"
         style="background:linear-gradient(135deg,#059669,#047857);border:none;cursor:pointer;box-shadow:0 4px 16px rgba(5,150,105,0.3);">
@@ -152,7 +152,7 @@ html.light .field-input{background:#f8fafc!important;border-color:#e2e8f0!import
           </div>
           <div>
             <label class="field-label">Teléfono</label>
-            <input id="campo-telefono" type="tel" placeholder="+54 11 1234-5678" class="field-input"/>
+            <input id="campo-telefono" type="tel" placeholder="+34 600 000 000-5678" class="field-input"/>
           </div>
           <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:1rem;">
             <p class="field-label mb-3">Contacto de emergencia</p>
@@ -256,7 +256,7 @@ html.light .field-input{background:#f8fafc!important;border-color:#e2e8f0!import
               <span class="material-symbols-outlined text-lg" style="color:#34d399;">privacy_tip</span>
               <div>
                 <p class="text-sm font-semibold text-white">Privacidad y notificaciones</p>
-                <p class="text-xs text-slate-500">Configurá tus preferencias de comunicación</p>
+                <p class="text-xs text-slate-500">Configura tus preferencias de comunicación</p>
               </div>
             </div>
             <span class="material-symbols-outlined text-slate-600">chevron_right</span>
@@ -463,7 +463,7 @@ function mostrarToast(msg, tipo) {
     </div>
     <div style="padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:0.75rem;">
       <div style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(245,158,11,0.12);"><span class="material-symbols-outlined" style="color:#fbbf24;font-size:18px;">assignment</span></div>
-      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Tenés 2 escalas por completar</p></div>
+      <div style="flex:1;"><p style="font-size:0.8rem;font-weight:600;color:#e2e8f0;margin:0 0 2px;">Escalas pendientes</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Tienes 2 escalas por completar</p></div>
       <span style="font-size:0.65rem;color:#475569;flex-shrink:0;padding-top:2px;">ayer</span>
     </div>
   </div>
@@ -537,7 +537,7 @@ document.addEventListener('keydown', function(e) {
 <div id="modal-sos" onclick="if(event.target===this)cerrarModal('modal-sos')" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:1rem;">
   <div style="background:#0d1b2e;border:1px solid rgba(239,68,68,0.3);border-radius:24px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.7);">
     <div style="background:linear-gradient(135deg,rgba(239,68,68,0.15),rgba(239,68,68,0.05));padding:24px 24px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">
-      <div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:14px;background:rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:center;border:1px solid rgba(239,68,68,0.3);"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">emergency</span></div><div><p style="font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#fef2f2;margin:0;">¿Necesitás ayuda ahora?</p><p style="font-size:0.75rem;color:#94a3b8;margin:0;">Estamos aquí para vos</p></div></div>
+      <div style="display:flex;align-items:center;gap:12px;"><div style="width:44px;height:44px;border-radius:14px;background:rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:center;border:1px solid rgba(239,68,68,0.3);"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px;font-variation-settings:'FILL' 1;">emergency</span></div><div><p style="font-family:Manrope,sans-serif;font-size:1rem;font-weight:800;color:#fef2f2;margin:0;">¿Necesitás ayuda ahora?</p><p style="font-size:0.75rem;color:#94a3b8;margin:0;">Estamos aquí para tú</p></div></div>
     </div>
     <div style="padding:20px 24px;display:flex;flex-direction:column;gap:10px;">
       <a href="telemedicina_paciente.html" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);text-decoration:none;" onmouseover="this.style.background='rgba(52,211,153,0.14)'" onmouseout="this.style.background='rgba(52,211,153,0.08)'"><div style="width:38px;height:38px;border-radius:10px;background:rgba(52,211,153,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-symbols-outlined" style="color:#34d399;font-size:18px;font-variation-settings:'FILL' 1;">videocam</span></div><div><p style="font-family:Manrope,sans-serif;font-size:0.875rem;font-weight:700;color:#e2e8f0;margin:0 0 2px;">Llamar a mi psicólogo</p><p style="font-size:0.72rem;color:#64748b;margin:0;">Iniciar videollamada de emergencia</p></div></a>
@@ -651,7 +651,7 @@ window.guardarCambios = async function() {
         let lineas = '🔔 Aviso automático — ' + nombrePac + ' actualizó sus datos de contacto:'
         if (telCambio)   lineas += '\n📞 Teléfono: ' + (tel || '(vacío)') + (_origTel ? ' (antes ' + _origTel + ')' : '')
         if (emailCambio) lineas += '\n✉️ Email: ' + (email || '(vacío)') + (_origEmail ? ' (antes ' + _origEmail + ')' : '')
-        lineas += '\nPor favor verificá que sean correctos.'
+        lineas += '\nPor favor verifica que sean correctos.'
         await supabase.from('mensajes').insert({
           clinica_id: perfil.clinica_id,
           de_id: perfil.id,
