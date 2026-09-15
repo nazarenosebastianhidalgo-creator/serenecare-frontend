@@ -42,6 +42,12 @@
     <h1>Tu recepción IA</h1>
     <p class="sub">Rellena tu información. La IA responderá a pacientes potenciales con estos datos y te avisará de cada consulta nueva.</p>
 
+    <div id="premium-banner" style="display:none;background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.3);border-radius:14px;padding:14px 16px;margin-bottom:16px;">
+      <p style="margin:0 0 8px;font-size:14px;color:#c7d2fe;font-weight:700;">La recepcionista IA es una función Premium</p>
+      <p style="margin:0 0 12px;font-size:13px;color:#94a3b8;">Puedes configurarla aquí, pero para que responda a tus pacientes necesitas el plan Premium (29 €/mes).</p>
+      <button id="btn-upgrade-rec" style="background:linear-gradient(135deg,#4f46e5,#818cf8);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;">Mejorar a Premium</button>
+    </div>
+
     <div class="link" id="linkbox" style="display:none">
       <p>🔗 Tu enlace público (compártelo o ponlo en tu web/redes):</p>
       <div class="u"><input type="text" id="enlace" readonly /><button class="ghost" onclick="copiar()">Copiar</button></div>
@@ -141,6 +147,23 @@
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) { $('msg').textContent = 'Inicia sesión para configurar tu recepción.'; }
   const auth = { 'Authorization': 'Bearer ' + (session?.access_token || ''), 'Content-Type': 'application/json' }
+
+  // Aviso Premium: la recepcionista IA solo responde a pacientes en planes de pago.
+  try {
+    if (session) {
+      const { data: psi } = await supabase.from('psicologos').select('plan').eq('id', session.user.id).maybeSingle()
+      if (psi && !['premium', 'fundador'].includes(psi.plan)) {
+        $('premium-banner').style.display = 'block'
+        $('btn-upgrade-rec').addEventListener('click', () => {
+          const p = new URLSearchParams()
+          p.set('checkout[custom][action]', 'upgrade_premium')
+          p.set('checkout[custom][psicologo_id]', session.user.id)
+          if (session.user.email) p.set('checkout[email]', session.user.email)
+          window.location.href = 'https://serenecare.lemonsqueezy.com/checkout/buy/a6396e0a-7a68-4089-82c3-26e64752e6e8?' + p.toString()
+        })
+      }
+    }
+  } catch (e) { /* si no se puede leer el plan, no mostramos el banner */ }
 
   // Filas de horario (Lun-Dom, 1-7)
   const DIAS = [['1','Lun'],['2','Mar'],['3','Mié'],['4','Jue'],['5','Vie'],['6','Sáb'],['7','Dom']]
