@@ -9,93 +9,197 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px;}
   .brand{display:flex;align-items:center;gap:8px;margin:12px 0 22px;font-family:'Manrope',sans-serif;font-weight:800;font-size:20px;color:var(--teal);}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;max-width:460px;width:100%;padding:28px;box-shadow:0 10px 40px rgba(15,118,110,0.06);}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;max-width:480px;width:100%;padding:28px;box-shadow:0 10px 40px rgba(15,118,110,0.06);}
   h1{font-family:'Manrope',sans-serif;font-size:22px;margin:0 0 6px;letter-spacing:-.02em;}
-  .sub{color:var(--muted);font-size:14px;margin:0 0 20px;line-height:1.5;}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 18px;line-height:1.5;}
   label{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px;}
   input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;color:var(--ink);outline:none;}
   input:focus{border-color:var(--teal2);}
-  .pill{display:inline-flex;align-items:center;gap:6px;background:rgba(20,184,166,.1);color:var(--teal);font-weight:700;font-size:13px;padding:6px 12px;border-radius:999px;margin-bottom:6px;}
-  button{width:100%;margin-top:20px;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;font-weight:700;font-size:15px;font-family:'Manrope',sans-serif;cursor:pointer;transition:filter .15s;}
+  .pill{display:inline-flex;align-items:center;gap:6px;background:rgba(20,184,166,.1);color:var(--teal);font-weight:700;font-size:13px;padding:6px 12px;border-radius:999px;margin-bottom:8px;}
+  button{width:100%;margin-top:18px;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;font-weight:700;font-size:15px;font-family:'Manrope',sans-serif;cursor:pointer;transition:filter .15s;}
   button:hover{filter:brightness(1.06);} button:disabled{opacity:.6;cursor:default;}
   .msg{margin-top:14px;font-size:14px;font-weight:600;text-align:center;}
   .ok{color:var(--teal);} .err{color:#dc2626;}
-  .foot{color:var(--muted);font-size:12px;margin-top:20px;text-align:center;}
+  .foot{color:var(--muted);font-size:12px;margin-top:18px;text-align:center;}
   .hidden{display:none;}
-  .copago{background:#f0faf9;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted);margin-bottom:4px;}
+  .copago{background:#f0faf9;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted);margin-bottom:6px;}
   .copago b{color:var(--ink);}
+  .item{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;}
+  .item:hover{border-color:var(--teal2);background:#f5fbfa;}
+  .item .n{font-weight:700;color:var(--ink);font-size:14px;} .item .m{font-size:12px;color:var(--muted);}
+  .dia{margin:14px 0 4px;font-weight:700;font-size:13px;color:var(--ink);text-transform:capitalize;}
+  .slots{display:flex;flex-wrap:wrap;gap:8px;}
+  .slot{width:auto;margin:0;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--teal);font-weight:700;font-size:13px;cursor:pointer;font-family:'Manrope',sans-serif;}
+  .slot:hover{background:var(--teal);color:#fff;}
+  .back{background:none;border:none;color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;padding:0;margin:0 0 10px;width:auto;}
 </style>
 </head>
 <body>
   <div class="brand"><span>🧠</span> SereneCare</div>
 
-  <div class="card" id="card-loading">
-    <p class="sub" style="margin:0">Comprobando tu acceso…</p>
-  </div>
+  <div class="card" id="card-loading"><p class="sub" style="margin:0">Comprobando tu acceso…</p></div>
 
   <div class="card hidden" id="card-invalido">
     <h1>Código no válido</h1>
     <p class="sub">Este enlace no corresponde a ninguna empresa activa. Pide a tu departamento de RR. HH. el enlace correcto.</p>
   </div>
 
-  <div class="card hidden" id="card-form">
+  <!-- Paso 1: elegir psicólogo -->
+  <div class="card hidden" id="card-elige">
     <div class="pill" id="pill-empresa">Empresa</div>
     <h1>Habla con un psicólogo</h1>
-    <p class="sub">Tu empresa cubre parte del coste de tus sesiones. Reserva de forma confidencial — tu empresa nunca sabe quién la usa ni de qué habláis.</p>
-
+    <p class="sub">Tu empresa cubre parte del coste. Elige un psicólogo y reserva un hueco. Todo confidencial: tu empresa nunca sabe quién lo usa ni de qué habláis.</p>
     <div class="copago" id="copago-box"></div>
+    <div id="lista-psi" style="margin-top:12px"></div>
+  </div>
 
+  <!-- Paso 2: huecos del psicólogo -->
+  <div class="card hidden" id="card-huecos">
+    <button class="back" id="volver1">← Cambiar de psicólogo</button>
+    <h1 id="psi-nombre">Elige un hueco</h1>
+    <p class="sub" id="psi-sub"></p>
+    <div id="huecos-box"></div>
+    <p class="msg" id="msg-huecos"></p>
+  </div>
+
+  <!-- Paso 3: datos para confirmar -->
+  <div class="card hidden" id="card-datos">
+    <button class="back" id="volver2">← Cambiar de hueco</button>
+    <h1>Confirma tu reserva</h1>
+    <p class="sub" id="resumen-hueco"></p>
+    <label for="nombre">Tu nombre</label>
+    <input type="text" id="nombre" placeholder="Nombre y apellido"/>
     <label for="email">Tu email</label>
     <input type="email" id="email" placeholder="tu@correo.com" autocomplete="email"/>
+    <button id="btn-reservar">Reservar sesión</button>
+    <p class="msg" id="msg-datos"></p>
+  </div>
 
-    <label for="fecha">¿Alguna preferencia de fecha? (opcional)</label>
-    <input type="date" id="fecha"/>
-
-    <button id="btn">Solicitar sesión</button>
-    <p class="msg" id="msg"></p>
-    <p class="foot">Confidencial · psicólogos colegiados · sin listas de espera eternas</p>
+  <!-- Fallback manual -->
+  <div class="card hidden" id="card-form">
+    <div class="pill" id="pill-empresa2">Empresa</div>
+    <h1>Solicita tu sesión</h1>
+    <p class="sub">Tu empresa cubre parte del coste. Déjanos tu email y te contactamos para asignarte psicólogo y horario. Confidencial.</p>
+    <div class="copago" id="copago-box2"></div>
+    <label for="email-m">Tu email</label>
+    <input type="email" id="email-m" placeholder="tu@correo.com"/>
+    <label for="fecha-m">¿Preferencia de fecha? (opcional)</label>
+    <input type="date" id="fecha-m"/>
+    <button id="btn-m">Solicitar sesión</button>
+    <p class="msg" id="msg-m"></p>
   </div>
 
   <div class="card hidden" id="card-ok">
-    <div class="pill">✓ Solicitud recibida</div>
-    <h1>¡Listo!</h1>
-    <p class="sub">Hemos recibido tu solicitud. Te contactaremos por email en breve para asignarte psicólogo y cerrar el horario. Todo de forma confidencial.</p>
+    <div class="pill">✓ Hecho</div>
+    <h1 id="ok-titulo">¡Listo!</h1>
+    <p class="sub" id="ok-texto">Hemos registrado tu solicitud. Te contactaremos por email en breve. Todo confidencial.</p>
   </div>
 
 <script>
 (function(){
-  var API = '';
-  var params = new URLSearchParams(location.search);
-  var codigo = params.get('codigo') || '';
-  var $ = function(id){ return document.getElementById(id); };
-  function show(id){ ['card-loading','card-invalido','card-form','card-ok'].forEach(function(c){ $(c).classList.toggle('hidden', c!==id); }); }
+  var API='';
+  var params=new URLSearchParams(location.search);
+  var codigo=params.get('codigo')||'';
+  var $=function(id){return document.getElementById(id);};
+  var ST={ empresa:'', copagoEur:0, psi:null, fecha:null, hora:null };
+  var CARDS=['card-loading','card-invalido','card-elige','card-huecos','card-datos','card-form','card-ok'];
+  function show(id){ CARDS.forEach(function(c){ $(c).classList.toggle('hidden', c!==id); }); }
+  function copagoTxt(){ return 'Tú pagas solo <b>'+ST.copagoEur.toFixed(2).replace('.',',')+' €</b> por sesión. El resto lo cubre tu empresa.'; }
+  function fechaBonita(iso){ try{ return new Date(iso+'T12:00:00').toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}); }catch(e){ return iso; } }
 
   if(!codigo){ show('card-invalido'); return; }
 
-  fetch(API + '/api/eap/codigo/' + encodeURIComponent(codigo))
-    .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+  // 1) validar código
+  fetch(API+'/api/eap/codigo/'+encodeURIComponent(codigo))
+    .then(function(r){ return r.ok?r.json():Promise.reject(); })
     .then(function(d){
-      $('pill-empresa').textContent = d.empresa;
-      $('copago-box').innerHTML = 'Tú pagas solo <b>' + (d.copago_empleado_eur||0).toFixed(2).replace('.',',') + ' €</b> por sesión. El resto lo cubre tu empresa.';
-      show('card-form');
+      ST.empresa=d.empresa; ST.copagoEur=d.copago_empleado_eur||0;
+      $('pill-empresa').textContent=ST.empresa; $('pill-empresa2').textContent=ST.empresa;
+      $('copago-box').innerHTML=copagoTxt(); $('copago-box2').innerHTML=copagoTxt();
+      // 2) ¿hay psicólogos reservables?
+      return fetch(API+'/api/eap/psicologos?codigo='+encodeURIComponent(codigo)).then(function(r){return r.json();});
+    })
+    .then(function(res){
+      var psis=(res&&res.psicologos)||[];
+      if(!psis.length){ show('card-form'); return; }
+      $('lista-psi').innerHTML=psis.map(function(p,i){
+        return '<div class="item" data-i="'+i+'"><div><div class="n">'+p.nombre+'</div><div class="m">'+[p.especialidad,p.ciudad].filter(Boolean).join(' · ')+'</div></div><span style="color:#14b8a6;font-weight:800">›</span></div>';
+      }).join('');
+      $('lista-psi').querySelectorAll('.item').forEach(function(el){
+        el.addEventListener('click',function(){ elegirPsi(psis[+el.getAttribute('data-i')]); });
+      });
+      show('card-elige');
     })
     .catch(function(){ show('card-invalido'); });
 
-  $('btn') && $('btn').addEventListener('click', function(){
-    var email = ($('email').value||'').trim();
-    var fecha = $('fecha').value || null;
-    if(!/.+@.+\..+/.test(email)){ $('msg').textContent='Escribe un email válido.'; $('msg').className='msg err'; return; }
-    $('btn').disabled = true; $('msg').textContent='Enviando…'; $('msg').className='msg';
-    fetch(API + '/api/eap/reservar', {
+  function elegirPsi(p){
+    ST.psi=p;
+    $('psi-nombre').textContent=p.nombre;
+    $('psi-sub').textContent=[p.especialidad,p.ciudad].filter(Boolean).join(' · ');
+    $('huecos-box').innerHTML='<p class="sub">Cargando huecos…</p>'; $('msg-huecos').textContent='';
+    show('card-huecos');
+    fetch(API+'/api/reservas/'+p.id+'/huecos')
+      .then(function(r){ return r.ok?r.json():Promise.reject(); })
+      .then(function(d){
+        var dias=(d&&d.dias)||[];
+        if(!dias.length){ $('huecos-box').innerHTML='<p class="sub">Este psicólogo no tiene huecos libres ahora mismo. Prueba con otro.</p>'; return; }
+        $('huecos-box').innerHTML=dias.map(function(dia){
+          return '<div class="dia">'+fechaBonita(dia.fecha)+'</div><div class="slots">'+
+            dia.huecos.map(function(h){ return '<button class="slot" data-f="'+dia.fecha+'" data-h="'+h+'">'+h+'</button>'; }).join('')+'</div>';
+        }).join('');
+        $('huecos-box').querySelectorAll('.slot').forEach(function(b){
+          b.addEventListener('click',function(){ elegirHueco(b.getAttribute('data-f'), b.getAttribute('data-h')); });
+        });
+      })
+      .catch(function(){ $('huecos-box').innerHTML='<p class="sub err">No se pudieron cargar los huecos. Prueba con otro psicólogo.</p>'; });
+  }
+
+  function elegirHueco(f,h){
+    ST.fecha=f; ST.hora=h;
+    $('resumen-hueco').innerHTML='Con <b>'+ST.psi.nombre+'</b> · '+fechaBonita(f)+' a las <b>'+h+' h</b>. '+copagoTxt();
+    $('msg-datos').textContent='';
+    show('card-datos');
+  }
+
+  $('volver1').addEventListener('click',function(){ show('card-elige'); });
+  $('volver2').addEventListener('click',function(){ show('card-huecos'); });
+
+  // Reserva real (crea la cita) + registro EAP
+  $('btn-reservar').addEventListener('click',function(){
+    var nombre=($('nombre').value||'').trim(), email=($('email').value||'').trim();
+    if(!nombre){ $('msg-datos').textContent='Escribe tu nombre.'; $('msg-datos').className='msg err'; return; }
+    if(!/.+@.+\..+/.test(email)){ $('msg-datos').textContent='Escribe un email válido.'; $('msg-datos').className='msg err'; return; }
+    $('btn-reservar').disabled=true; $('msg-datos').textContent='Reservando…'; $('msg-datos').className='msg';
+    fetch(API+'/api/reservas/'+ST.psi.id, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ codigo: codigo, empleado_email: email, fecha: fecha })
+      body: JSON.stringify({ nombre:nombre, email:email, fecha:ST.fecha, hora:ST.hora, motivo:'EAP · '+ST.empresa })
     })
-    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
     .then(function(res){
-      if(!res.ok){ $('msg').textContent = res.j.error || 'No se pudo enviar.'; $('msg').className='msg err'; $('btn').disabled=false; return; }
+      if(!res.ok){ $('msg-datos').textContent=res.j.error||'Ese hueco ya no está libre.'; $('msg-datos').className='msg err'; $('btn-reservar').disabled=false; return; }
+      // registrar en EAP (para el panel de la empresa) — no bloquea el éxito
+      fetch(API+'/api/eap/reservar', { method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ codigo:codigo, empleado_email:email, psicologo_id:ST.psi.id, fecha:ST.fecha, cita_id:res.j.cita_id }) }).catch(function(){});
+      $('ok-titulo').textContent='¡Cita confirmada!';
+      $('ok-texto').innerHTML='Tu sesión con <b>'+ST.psi.nombre+'</b> el '+fechaBonita(ST.fecha)+' a las '+ST.hora+' h está reservada. Te hemos enviado un email de confirmación.';
       show('card-ok');
     })
-    .catch(function(){ $('msg').textContent='Error de red. Inténtalo de nuevo.'; $('msg').className='msg err'; $('btn').disabled=false; });
+    .catch(function(){ $('msg-datos').textContent='Error de red. Inténtalo de nuevo.'; $('msg-datos').className='msg err'; $('btn-reservar').disabled=false; });
+  });
+
+  // Fallback manual
+  $('btn-m').addEventListener('click',function(){
+    var email=($('email-m').value||'').trim(), fecha=$('fecha-m').value||null;
+    if(!/.+@.+\..+/.test(email)){ $('msg-m').textContent='Escribe un email válido.'; $('msg-m').className='msg err'; return; }
+    $('btn-m').disabled=true; $('msg-m').textContent='Enviando…'; $('msg-m').className='msg';
+    fetch(API+'/api/eap/reservar', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ codigo:codigo, empleado_email:email, fecha:fecha }) })
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok,j:j}; }); })
+    .then(function(res){
+      if(!res.ok){ $('msg-m').textContent=res.j.error||'No se pudo enviar.'; $('msg-m').className='msg err'; $('btn-m').disabled=false; return; }
+      $('ok-titulo').textContent='¡Listo!'; show('card-ok');
+    })
+    .catch(function(){ $('msg-m').textContent='Error de red.'; $('msg-m').className='msg err'; $('btn-m').disabled=false; });
   });
 })();
 </script>
