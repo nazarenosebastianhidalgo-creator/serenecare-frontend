@@ -43,6 +43,8 @@
         <div><label class="lbl">Copago empresa (€)</label><input id="f-cemp" class="fld" type="number" value="20" min="0" step="1"/></div>
         <div><label class="lbl">Copago empleado (€)</label><input id="f-cempl" class="fld" type="number" value="20" min="0" step="1"/></div>
         <div><label class="lbl">Fee SereneCare (€)</label><input id="f-fee" class="fld" type="number" value="10" min="0" step="1"/></div>
+        <div><label class="lbl">Setup — pago único (€)</label><input id="f-setup" class="fld" type="number" value="0" min="0" step="1"/></div>
+        <div><label class="lbl">Cuota mensual (€)</label><input id="f-mensual" class="fld" type="number" value="0" min="0" step="1"/></div>
       </div>
       <button id="btn-crear" class="mt-4 px-5 py-2.5 rounded-xl font-bold text-sm text-white" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">Crear empresa + generar código</button>
       <p id="crear-msg" class="text-sm mt-3"></p>
@@ -91,7 +93,7 @@ async function cargar() {
     <tr class="border-b border-slate-800/20">
       <td class="px-4 py-3"><p class="font-semibold text-slate-100">${e.nombre}</p><p class="text-xs text-slate-500">${e.sector||''} · ${e.contacto_email||''}</p></td>
       <td class="px-4 py-3"><button data-copy="${e.enlace_empleado}" class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:rgba(59,130,246,0.12);color:#60a5fa;"><span class="material-symbols-outlined align-middle" style="font-size:14px;">link</span> Copiar (${e.codigo})</button></td>
-      <td class="px-4 py-3 text-slate-400 text-xs">${eur(e.copago_empresa_cent)} / ${eur(e.copago_empleado_cent)} / ${eur(e.fee_cent)} €</td>
+      <td class="px-4 py-3 text-slate-400 text-xs">copago ${eur(e.copago_empresa_cent)}/${eur(e.copago_empleado_cent)}/${eur(e.fee_cent)}€<br><span class="text-slate-500">setup ${eur(e.setup_cent||0)}€ · mes ${eur(e.mensual_cent||0)}€</span></td>
       <td class="px-4 py-3 text-slate-300">${e.sesiones_realizadas}/${e.sesiones_total}</td>
       <td class="px-4 py-3 text-right"><button data-panel="${e.id}" class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:rgba(16,185,129,0.12);color:#34d399;">Ver panel</button></td>
     </tr>`).join('')
@@ -107,6 +109,8 @@ $('btn-crear').addEventListener('click', async () => {
     copago_empresa_cent: Math.round((+$('f-cemp').value||0)*100),
     copago_empleado_cent: Math.round((+$('f-cempl').value||0)*100),
     fee_cent: Math.round((+$('f-fee').value||0)*100),
+    setup_cent: Math.round((+$('f-setup').value||0)*100),
+    mensual_cent: Math.round((+$('f-mensual').value||0)*100),
   }
   const r = await fetch('/api/eap/empresas', { method:'POST', headers:H, body: JSON.stringify(body) })
   const out = await r.json().catch(()=>({}))
