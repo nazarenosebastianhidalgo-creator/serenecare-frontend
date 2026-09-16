@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Apoyo psicológico de tu empresa | SereneCare</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{ --bg:#f6f9f9; --card:#ffffff; --ink:#0f2b2e; --muted:#5b7377; --teal:#0f766e; --teal2:#14b8a6; --line:#e2ecec; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px;}
+  .brand{display:flex;align-items:center;gap:8px;margin:12px 0 22px;font-family:'Manrope',sans-serif;font-weight:800;font-size:20px;color:var(--teal);}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;max-width:460px;width:100%;padding:28px;box-shadow:0 10px 40px rgba(15,118,110,0.06);}
+  h1{font-family:'Manrope',sans-serif;font-size:22px;margin:0 0 6px;letter-spacing:-.02em;}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 20px;line-height:1.5;}
+  label{display:block;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px;}
+  input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font-size:15px;font-family:inherit;color:var(--ink);outline:none;}
+  input:focus{border-color:var(--teal2);}
+  .pill{display:inline-flex;align-items:center;gap:6px;background:rgba(20,184,166,.1);color:var(--teal);font-weight:700;font-size:13px;padding:6px 12px;border-radius:999px;margin-bottom:6px;}
+  button{width:100%;margin-top:20px;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;font-weight:700;font-size:15px;font-family:'Manrope',sans-serif;cursor:pointer;transition:filter .15s;}
+  button:hover{filter:brightness(1.06);} button:disabled{opacity:.6;cursor:default;}
+  .msg{margin-top:14px;font-size:14px;font-weight:600;text-align:center;}
+  .ok{color:var(--teal);} .err{color:#dc2626;}
+  .foot{color:var(--muted);font-size:12px;margin-top:20px;text-align:center;}
+  .hidden{display:none;}
+  .copago{background:#f0faf9;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted);margin-bottom:4px;}
+  .copago b{color:var(--ink);}
+</style>
+</head>
+<body>
+  <div class="brand"><span>🧠</span> SereneCare</div>
+
+  <div class="card" id="card-loading">
+    <p class="sub" style="margin:0">Comprobando tu acceso…</p>
+  </div>
+
+  <div class="card hidden" id="card-invalido">
+    <h1>Código no válido</h1>
+    <p class="sub">Este enlace no corresponde a ninguna empresa activa. Pide a tu departamento de RR. HH. el enlace correcto.</p>
+  </div>
+
+  <div class="card hidden" id="card-form">
+    <div class="pill" id="pill-empresa">Empresa</div>
+    <h1>Habla con un psicólogo</h1>
+    <p class="sub">Tu empresa cubre parte del coste de tus sesiones. Reserva de forma confidencial — tu empresa nunca sabe quién la usa ni de qué habláis.</p>
+
+    <div class="copago" id="copago-box"></div>
+
+    <label for="email">Tu email</label>
+    <input type="email" id="email" placeholder="tu@correo.com" autocomplete="email"/>
+
+    <label for="fecha">¿Alguna preferencia de fecha? (opcional)</label>
+    <input type="date" id="fecha"/>
+
+    <button id="btn">Solicitar sesión</button>
+    <p class="msg" id="msg"></p>
+    <p class="foot">Confidencial · psicólogos colegiados · sin listas de espera eternas</p>
+  </div>
+
+  <div class="card hidden" id="card-ok">
+    <div class="pill">✓ Solicitud recibida</div>
+    <h1>¡Listo!</h1>
+    <p class="sub">Hemos recibido tu solicitud. Te contactaremos por email en breve para asignarte psicólogo y cerrar el horario. Todo de forma confidencial.</p>
+  </div>
+
+<script>
+(function(){
+  var API = '';
+  var params = new URLSearchParams(location.search);
+  var codigo = params.get('codigo') || '';
+  var $ = function(id){ return document.getElementById(id); };
+  function show(id){ ['card-loading','card-invalido','card-form','card-ok'].forEach(function(c){ $(c).classList.toggle('hidden', c!==id); }); }
+
+  if(!codigo){ show('card-invalido'); return; }
+
+  fetch(API + '/api/eap/codigo/' + encodeURIComponent(codigo))
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(); })
+    .then(function(d){
+      $('pill-empresa').textContent = d.empresa;
+      $('copago-box').innerHTML = 'Tú pagas solo <b>' + (d.copago_empleado_eur||0).toFixed(2).replace('.',',') + ' €</b> por sesión. El resto lo cubre tu empresa.';
+      show('card-form');
+    })
+    .catch(function(){ show('card-invalido'); });
+
+  $('btn') && $('btn').addEventListener('click', function(){
+    var email = ($('email').value||'').trim();
+    var fecha = $('fecha').value || null;
+    if(!/.+@.+\..+/.test(email)){ $('msg').textContent='Escribe un email válido.'; $('msg').className='msg err'; return; }
+    $('btn').disabled = true; $('msg').textContent='Enviando…'; $('msg').className='msg';
+    fetch(API + '/api/eap/reservar', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ codigo: codigo, empleado_email: email, fecha: fecha })
+    })
+    .then(function(r){ return r.json().then(function(j){ return {ok:r.ok, j:j}; }); })
+    .then(function(res){
+      if(!res.ok){ $('msg').textContent = res.j.error || 'No se pudo enviar.'; $('msg').className='msg err'; $('btn').disabled=false; return; }
+      show('card-ok');
+    })
+    .catch(function(){ $('msg').textContent='Error de red. Inténtalo de nuevo.'; $('msg').className='msg err'; $('btn').disabled=false; });
+  });
+})();
+</script>
+</body></html>

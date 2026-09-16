@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Empresas EAP | SereneCare</title>
+<link rel="stylesheet" href="/css/tailwind.css">
+  <script>window.tailwind=window.tailwind||{};</script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{fontFamily:{"headline":["Manrope"],"body":["Inter"]}}}}</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+  .bg-dark-canvas{background-color:#020617;} .sidebar-dark{background-color:#0f172a;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .fld{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:10px;color:#e2e8f0;font-size:14px;padding:10px 12px;width:100%;outline:none;}
+  .fld:focus{border-color:rgba(129,140,248,0.5);}
+  .lbl{font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:block;}
+</style>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
+</head>
+<body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
+
+<div id="superadmin-sidebar"></div>
+<script src="/js/sidebar-super-admin.js"></script>
+
+<main class="pl-64 min-h-screen">
+  <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center px-8 z-40 border-b border-slate-800/10">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-slate-50 tracking-tighter">Empresas EAP</h2>
+      <p class="text-slate-500 text-xs font-medium">Bienestar para empresas (copago) — piloto</p>
+    </div>
+  </header>
+
+  <div class="p-8 max-w-5xl">
+    <!-- Alta -->
+    <div class="rounded-2xl border border-slate-800/40 bg-slate-900/40 p-6 mb-8">
+      <h3 class="font-headline font-bold text-slate-100 mb-4">Dar de alta una empresa</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div><label class="lbl">Nombre *</label><input id="f-nombre" class="fld" placeholder="Acme S.L."/></div>
+        <div><label class="lbl">Sector</label><input id="f-sector" class="fld" placeholder="Tech, industria…"/></div>
+        <div><label class="lbl">Contacto (nombre)</label><input id="f-cnombre" class="fld" placeholder="RR. HH."/></div>
+        <div><label class="lbl">Contacto (email)</label><input id="f-cemail" class="fld" placeholder="rrhh@acme.com"/></div>
+        <div><label class="lbl">Copago empresa (€)</label><input id="f-cemp" class="fld" type="number" value="20" min="0" step="1"/></div>
+        <div><label class="lbl">Copago empleado (€)</label><input id="f-cempl" class="fld" type="number" value="20" min="0" step="1"/></div>
+        <div><label class="lbl">Fee SereneCare (€)</label><input id="f-fee" class="fld" type="number" value="10" min="0" step="1"/></div>
+      </div>
+      <button id="btn-crear" class="mt-4 px-5 py-2.5 rounded-xl font-bold text-sm text-white" style="background:linear-gradient(135deg,#4f46e5,#818cf8);">Crear empresa + generar código</button>
+      <p id="crear-msg" class="text-sm mt-3"></p>
+    </div>
+
+    <!-- Lista -->
+    <div class="rounded-2xl border border-slate-800/40 bg-slate-900/30 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead><tr class="text-left text-[11px] uppercase tracking-widest text-slate-500 border-b border-slate-800/40">
+            <th class="px-4 py-3 font-bold">Empresa</th>
+            <th class="px-4 py-3 font-bold">Enlace empleados</th>
+            <th class="px-4 py-3 font-bold">Copago (E/e/fee)</th>
+            <th class="px-4 py-3 font-bold">Sesiones</th>
+            <th class="px-4 py-3 font-bold text-right">Panel</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div id="vacio" class="hidden py-14 text-center text-slate-500 text-sm">
+        <span class="material-symbols-outlined text-4xl text-slate-700 block mb-2">domain</span>
+        Aún no hay empresas. Da de alta la primera arriba.
+      </div>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { guardaSuperAdmin } from '../js/admin.js'
+const session = await guardaSuperAdmin()
+if (!session) { throw new Error('redirigiendo') }
+const { data: { session: sess } } = await supabase.auth.getSession()
+const TOKEN = sess && sess.access_token
+const H = { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' }
+const $ = id => document.getElementById(id)
+const eur = c => (c/100).toFixed(2).replace('.', ',')
+
+async function cargar() {
+  const r = await fetch('/api/eap/empresas', { headers: H })
+  const out = await r.json().catch(()=>({}))
+  if (!r.ok) { $('tbody').innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-red-400">'+(out.error||'Error')+'</td></tr>'; return }
+  const emp = out.empresas || []
+  $('vacio').classList.toggle('hidden', emp.length>0)
+  $('tbody').innerHTML = emp.map(e => `
+    <tr class="border-b border-slate-800/20">
+      <td class="px-4 py-3"><p class="font-semibold text-slate-100">${e.nombre}</p><p class="text-xs text-slate-500">${e.sector||''} · ${e.contacto_email||''}</p></td>
+      <td class="px-4 py-3"><button data-copy="${e.enlace_empleado}" class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:rgba(59,130,246,0.12);color:#60a5fa;"><span class="material-symbols-outlined align-middle" style="font-size:14px;">link</span> Copiar (${e.codigo})</button></td>
+      <td class="px-4 py-3 text-slate-400 text-xs">${eur(e.copago_empresa_cent)} / ${eur(e.copago_empleado_cent)} / ${eur(e.fee_cent)} €</td>
+      <td class="px-4 py-3 text-slate-300">${e.sesiones_realizadas}/${e.sesiones_total}</td>
+      <td class="px-4 py-3 text-right"><button data-panel="${e.id}" class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:rgba(16,185,129,0.12);color:#34d399;">Ver panel</button></td>
+    </tr>`).join('')
+}
+
+$('btn-crear').addEventListener('click', async () => {
+  const nombre = $('f-nombre').value.trim()
+  if (!nombre) { $('crear-msg').textContent='Falta el nombre.'; $('crear-msg').style.color='#f87171'; return }
+  $('btn-crear').disabled = true; $('crear-msg').textContent='Creando…'; $('crear-msg').style.color='#94a3b8'
+  const body = {
+    nombre, sector: $('f-sector').value.trim(), contacto_nombre: $('f-cnombre').value.trim(),
+    contacto_email: $('f-cemail').value.trim(),
+    copago_empresa_cent: Math.round((+$('f-cemp').value||0)*100),
+    copago_empleado_cent: Math.round((+$('f-cempl').value||0)*100),
+    fee_cent: Math.round((+$('f-fee').value||0)*100),
+  }
+  const r = await fetch('/api/eap/empresas', { method:'POST', headers:H, body: JSON.stringify(body) })
+  const out = await r.json().catch(()=>({}))
+  $('btn-crear').disabled = false
+  if (!r.ok) { $('crear-msg').textContent = out.error||'No se pudo crear.'; $('crear-msg').style.color='#f87171'; return }
+  $('crear-msg').innerHTML = '✓ Creada. Enlace para sus empleados: <b style="color:#34d399">'+out.enlace_empleado+'</b>'
+  $('crear-msg').style.color='#34d399'
+  ;['f-nombre','f-sector','f-cnombre','f-cemail'].forEach(id=>$(id).value='')
+  cargar()
+})
+
+document.getElementById('tbody').addEventListener('click', async e => {
+  const cp = e.target.closest('button[data-copy]'); const pn = e.target.closest('button[data-panel]')
+  if (cp) { try { await navigator.clipboard.writeText(cp.getAttribute('data-copy')); cp.textContent='¡Copiado!' ; setTimeout(cargar, 900) } catch(x){ alert(cp.getAttribute('data-copy')) } }
+  if (pn) {
+    const r = await fetch('/api/eap/empresas/'+pn.getAttribute('data-panel')+'/panel', { headers: H })
+    const out = await r.json().catch(()=>({}))
+    if (!r.ok) { alert(out.error||'Error'); return }
+    const m = out.metricas
+    alert(out.empresa.nombre+'\n\n'+
+      'Sesiones totales: '+m.total+'\n'+
+      'Reservadas: '+m.reservadas+'  ·  Realizadas: '+m.realizadas+'  ·  Canceladas: '+m.canceladas+'\n'+
+      'Satisfacción media: '+(m.satisfaccion_media!=null?m.satisfaccion_media+'/5':'—')+'\n'+
+      'Coste asumido por la empresa: '+m.coste_empresa_eur+' €')
+  }
+})
+
+await cargar()
+</script>
+
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Super Admin';
+  var av=document.getElementById('sa-avatar'), nm=document.getElementById('sa-nombre');
+  if(av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase()||'SA';
+  if(nm) nm.textContent = nombre;
+  var tema=localStorage.getItem('tp_tema')||'oscuro';
+  var i=document.getElementById('icon-tema'),l=document.getElementById('label-tema');
+  if(i)i.textContent=tema==='claro'?'light_mode':'dark_mode'; if(l)l.textContent=tema==='claro'?'Modo oscuro':'Modo claro';
+})();
+function toggleTema(){var n=(localStorage.getItem('tp_tema')||'oscuro')==='oscuro'?'claro':'oscuro';localStorage.setItem('tp_tema',n);document.documentElement.style.filter=n==='claro'?'invert(1) hue-rotate(180deg)':'';var i=document.getElementById('icon-tema'),l=document.getElementById('label-tema');if(i)i.textContent=n==='claro'?'light_mode':'dark_mode';if(l)l.textContent=n==='claro'?'Modo oscuro':'Modo claro';}
+function cerrarTodasSesiones(){ if(confirm('¿Cerrar todas las sesiones activas?')) alert('Sesiones cerradas (requiere service role)'); }
+function toggleMantenimiento(){var a=localStorage.getItem('tp_mantenimiento')==='1',n=a?'0':'1';localStorage.setItem('tp_mantenimiento',n);var i=document.getElementById('icon-mant'),l=document.getElementById('label-mant');if(i)i.style.color=n==='1'?'#ef4444':'#f59e0b';if(l)l.textContent=n==='1'?'Desactivar mantenimiento':'Modo mantenimiento';}
+</script>
+<script type="module">import { initMantenimientoToggle } from "../js/mantenimiento-toggle.js"; initMantenimientoToggle();</script>
+</body></html>
