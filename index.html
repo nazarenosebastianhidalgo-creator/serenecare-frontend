@@ -50,6 +50,7 @@
 </style>
 </head>
 <body class="text-slate-200 antialiased">
+<script>/* Captura origen (first-touch) para atribuir registros */(function(){try{var p=new URLSearchParams(location.search);var s=p.get('utm_source');if(s&&!localStorage.getItem('sc_origen')){var c=p.get('utm_campaign');localStorage.setItem('sc_origen',(s+(c?('/'+c):'')).slice(0,60));}}catch(e){}})();</script>
 
 <!-- NAV -->
 <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05);">

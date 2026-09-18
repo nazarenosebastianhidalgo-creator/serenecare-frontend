@@ -16,6 +16,7 @@
   </style>
 </head>
 <body class="min-h-screen gradient flex items-center justify-center p-6 py-12">
+<script>/* Captura origen (first-touch) para atribuir registros */(function(){try{var p=new URLSearchParams(location.search);var s=p.get('utm_source');if(s&&!localStorage.getItem('sc_origen')){var c=p.get('utm_campaign');localStorage.setItem('sc_origen',(s+(c?('/'+c):'')).slice(0,60));}}catch(e){}})();</script>
 
   <!-- Orbes decorativos -->
   <div class="fixed top-0 right-0 w-96 h-96 rounded-full opacity-20 pointer-events-none"
@@ -222,6 +223,7 @@
             email, password, colegiado,
             clinica: clinicaNombre || null,
             codigo_creador: codigoCreador || null,
+            origen: (function(){ try { return localStorage.getItem('sc_origen') || 'directo'; } catch(e){ return 'directo'; } })(),
           }),
         });
         const data = await resp.json().catch(() => ({}));

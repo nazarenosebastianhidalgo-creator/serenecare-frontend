@@ -24,6 +24,7 @@
 </style>
 </head>
 <body>
+<script>/* Captura origen (first-touch) para atribuir registros */(function(){try{var p=new URLSearchParams(location.search);var s=p.get('utm_source');if(s&&!localStorage.getItem('sc_origen')){var c=p.get('utm_campaign');localStorage.setItem('sc_origen',(s+(c?('/'+c):'')).slice(0,60));}}catch(e){}})();</script>
   <div class="logo">SereneCare<span class="dot">.</span></div>
   <p class="tag">Herramientas gratis para psicólogos y el software que te llena la agenda.</p>
 
