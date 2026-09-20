@@ -341,6 +341,39 @@
 </div>
 </section>
 </div>
+<!-- Actividad de psicólogos (retención) -->
+<div class="mt-6">
+<section class="bg-slate-900 rounded-2xl p-6 border border-slate-800/20">
+<div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+<div>
+<h3 class="font-headline text-xl font-bold text-white">Actividad de psicólogos</h3>
+<p class="text-slate-500 text-sm mt-1">Quién ha vuelto y quién hace algo — de un vistazo.</p>
+</div>
+<div class="flex flex-wrap gap-2 text-xs font-bold">
+<span class="px-3 py-1.5 rounded-full bg-emerald-500/15 text-emerald-400">🟢 <span id="act-activos">0</span> activos</span>
+<span class="px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-400">🟡 <span id="act-volvieron">0</span> volvieron</span>
+<span class="px-3 py-1.5 rounded-full bg-rose-500/15 text-rose-400">🔴 <span id="act-novolvieron">0</span> no volvió</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-slate-500 border-b border-slate-800/50">
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest">Psicólogo</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest">Ubicación</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest">Registro</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest">Último acceso</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest text-center">Pac / Citas</th>
+<th class="pb-4 font-semibold text-xs uppercase tracking-widest text-right">Estado</th>
+</tr>
+</thead>
+<tbody id="tbody-actividad" class="divide-y divide-slate-800/30">
+<tr><td colspan="6" class="py-10 text-center text-slate-500 text-sm">Cargando...</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
 </div>
 </main>
 
@@ -563,6 +596,43 @@
         + `<polyline points="${pts}" fill="none" stroke="#818cf8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`
         + dots + `</svg>`
     }
+
+    // ── Recuadro de actividad de psicólogos (retención) ───────────────
+    ;(async () => {
+      try {
+        const { data: { session: s } } = await supabase.auth.getSession()
+        const tk = s && s.access_token
+        const r = await fetch('/api/directorio/admin/actividad', { headers: { 'Authorization': 'Bearer ' + tk } })
+        const j = await r.json()
+        const rows = (j && j.psicologos) || []
+        const tb = document.getElementById('tbody-actividad')
+        const badge = (est) => est === 'activo'
+          ? '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-400">🟢 Activo</span>'
+          : est === 'volvio'
+          ? '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-400">🟡 Volvió</span>'
+          : '<span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-500/15 text-rose-400">🔴 No volvió</span>'
+        const dias = (iso) => { if (!iso) return '—'; const d = Math.floor((Date.now() - new Date(iso)) / 86400000); return d <= 0 ? 'hoy' : ('hace ' + d + 'd') }
+        const fdate = (iso) => iso ? new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: 'short' }) : '—'
+        let act = 0, vol = 0, nov = 0
+        rows.forEach(p => { if (p.estado === 'activo') act++; else if (p.estado === 'volvio') vol++; else nov++ })
+        set('act-activos', act); set('act-volvieron', vol); set('act-novolvieron', nov)
+        if (!tb) return
+        if (!rows.length) { tb.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500 text-sm">Sin registros reales todavía</td></tr>'; return }
+        tb.innerHTML = rows.map(p => `
+          <tr class="hover:bg-slate-800/20">
+            <td class="py-3"><div class="text-white font-semibold text-sm">${p.nombre || '—'}</div><div class="text-slate-500 text-xs">${p.email || ''}</div></td>
+            <td class="py-3 text-slate-400 text-sm">${[p.ciudad, p.pais].filter(Boolean).join(', ') || '—'}</td>
+            <td class="py-3 text-slate-400 text-sm">${fdate(p.created_at)}</td>
+            <td class="py-3 text-slate-400 text-sm">${dias(p.last_sign_in)}</td>
+            <td class="py-3 text-center text-white font-bold text-sm">${p.pacientes}<span class="text-slate-600 font-normal"> / ${p.citas}</span></td>
+            <td class="py-3 text-right">${badge(p.estado)}</td>
+          </tr>`).join('')
+      } catch (e) {
+        console.error('actividad', e)
+        const tb = document.getElementById('tbody-actividad')
+        if (tb) tb.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500 text-sm">No se pudo cargar la actividad</td></tr>'
+      }
+    })();
 
     // ── Cargar datos de clínicas ──────────────────────────────────────
     const { data: clinicas, error } = await supabase
