@@ -26,7 +26,7 @@
   }).join('');
 
   var html =
-  '<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark shadow-2xl shadow-slate-950/50 p-6 border-r border-slate-800/20 z-50">' +
+  '<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 sidebar-dark shadow-2xl shadow-slate-950/50 p-6 border-r border-slate-800/20 z-50" style="background-color:#0f172a">' +
     '<div class="mb-8 flex items-center gap-3">' +
       '<div class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center">' +
         '<span class="material-symbols-outlined text-white" style="font-variation-settings:\'FILL\' 1;">medical_services</span>' +
