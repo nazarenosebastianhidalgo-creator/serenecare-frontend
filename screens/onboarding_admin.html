@@ -272,7 +272,7 @@
       </div>
     </div>
 
-    <a href="dashboard_admin_clinica.html" class="block w-full max-w-xs mx-auto py-4 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#4f46e5,#818cf8);text-decoration:none;">
+    <a href="dashboard_admin_clinica.html" onclick="marcarPaso('completado')" class="block w-full max-w-xs mx-auto py-4 rounded-xl font-bold text-sm font-headline text-white flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-95" style="background:linear-gradient(135deg,#4f46e5,#818cf8);text-decoration:none;">
       <span class="material-symbols-outlined text-base">dashboard</span>
       Ir al panel de administración
     </a>
@@ -306,6 +306,16 @@
 <script>
 var paso = 1;
 
+// Etiqueta de embudo para Clarity: hasta qué paso del onboarding llega cada
+// usuario. Permite filtrar sesiones por paso alcanzado y ver el punto de fuga
+// del alta (dónde abandonan). Robusto ante que Clarity aún no haya cargado.
+function marcarPaso(v) {
+  try {
+    if (window.clarity) { clarity('set', 'paso_onboarding', String(v)); }
+    else { setTimeout(function () { try { if (window.clarity) clarity('set', 'paso_onboarding', String(v)); } catch (e) {} }, 1500); }
+  } catch (e) {}
+}
+
 function irPaso(n) {
   if (n === 2 && !validarPaso1()) return;
 
@@ -314,6 +324,7 @@ function irPaso(n) {
   document.getElementById('step-' + paso).classList.remove('hidden');
   actualizarStepper();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  marcarPaso(paso);
 
   if (paso === 3) mostrarResumen();
 }
@@ -390,6 +401,9 @@ document.addEventListener('keydown', function(e) {
     }
   }
 });
+
+// Entrada al onboarding = paso 1 del embudo.
+marcarPaso(1);
 </script>
 <!-- Analítica de producto (mapa de calor Clarity) — enmascarado estricto en el panel -->
 <script src="/js/clarity-portal.js" async></script>
