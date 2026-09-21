@@ -12,7 +12,7 @@
     ['revenue_super_admin.html',           'payments',                  'Revenue'],
     ['configuracion_ia_super_admin.html',  'settings_input_component',  'IA Config'],
     ['soporte_super_admin.html',           'contact_support',           'Soporte'],
-    ['gestion_planes_super_admin.html',    'inventory_2',               'Planes SaaS']
+    ['config_pagos_super_admin.html',      'inventory_2',               'Planes y precios']
   ];
 
   var nav = items.map(function (it) {
