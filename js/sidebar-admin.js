@@ -1,3 +1,13 @@
+/* Analítica de producto (mapa de calor Clarity) — se carga una vez por página
+   del portal profesional. Datos de pacientes protegidos con enmascarado
+   estricto (configurado en el panel de Clarity). Ver js/clarity-portal.js. */
+(function () {
+  if (document.getElementById('sc-clarity')) return;
+  var s = document.createElement('script');
+  s.id = 'sc-clarity'; s.src = '/js/clarity-portal.js'; s.async = true;
+  (document.head || document.documentElement).appendChild(s);
+})();
+
 /* Sidebar unificado del portal Admin Clínica.
    Se inyecta de forma SÍNCRONA (script normal, no module) en el punto
    <div id="admin-sidebar"></div>, ANTES de que corra el JS de la página,
