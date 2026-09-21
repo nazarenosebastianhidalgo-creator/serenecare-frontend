@@ -467,14 +467,14 @@ if (!session) { throw new Error('redirigiendo') }
 const ahora = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
 
 const [{ data: clinicas }, { data: usuarios }] = await Promise.all([
-  supabase.from('clinicas').select('id, estado, plan_id'),
+  supabase.from('clinicas').select('id, status, plan_id'),
   supabase.from('usuarios').select('id, rol'),
 ])
 
 if (clinicas) {
   const total = clinicas.length
-  const activas = clinicas.filter(function(c) { return c.estado === 'activo' || c.estado === 'activa' }).length
-  const trial = clinicas.filter(function(c) { return c.estado === 'trial' }).length
+  const activas = clinicas.filter(function(c) { return c.status === 'activo' || c.status === 'activa' }).length
+  const trial = clinicas.filter(function(c) { return c.status === 'trial' }).length
   const el = function(id, v) { var e = document.getElementById(id); if (e) e.textContent = v }
   el('rep-clinicas-total', total)
   el('rep-clinicas-activas', activas)

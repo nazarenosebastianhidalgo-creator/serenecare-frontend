@@ -419,8 +419,10 @@ if (!session) { throw new Error('redirigiendo') }
 // ── Logs reales (para la pestaña Logs + derivar incidencias) ──
 let realLogs = false
 try {
+  // Fuente real: logs_acceso (auditoría). No existe una tabla system_logs;
+  // mapeamos la auditoría a la forma que espera el panel (ts/level/service/msg).
   const { data: logs, error } = await supabase
-    .from('system_logs')
+    .from('logs_acceso')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(100)
@@ -429,10 +431,10 @@ try {
     window.LOGS_DATA = logs.map(function(l) {
       return {
         ts: (l.created_at || '').replace('T', ' ').slice(0, 19),
-        level: (l.level || 'INFO').toUpperCase(),
-        service: l.service || 'Sistema',
-        msg: l.message || l.msg || '',
-        clinica: l.clinica || l.clinica_nombre || '—',
+        level: (l.accion === 'borrado' ? 'WARN' : 'INFO'),
+        service: l.recurso || 'Sistema',
+        msg: [l.accion, l.recurso, l.detalle].filter(Boolean).join(' · '),
+        clinica: l.clinica_id ? String(l.clinica_id).slice(0, 8) : '—',
       }
     })
     window.logsFiltrados = window.LOGS_DATA.slice()
