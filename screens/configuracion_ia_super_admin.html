@@ -104,70 +104,9 @@
 </head>
 <body class="bg-[#020617] text-slate-100 min-h-screen selection:bg-indigo-500/30">
 <!-- SideNavBar Anchor -->
-<aside class="h-screen w-64 flex flex-col fixed left-0 top-0 bg-slate-900 dark:bg-[#0f172a] font-manrope tracking-tight text-slate-200 shadow-2xl shadow-slate-950/50 z-50">
-<div class="flex flex-col h-full p-6 border-r border-slate-800/20">
-<div class="mb-8 px-2">
-<span class="text-xl font-bold tracking-tighter text-slate-50 dark:text-white">SereneCare</span>
-<p class="text-xs text-slate-500 font-medium tracking-widest mt-1 uppercase">SaaS Enterprise</p>
-</div>
-<nav class="flex-1 space-y-2">
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="dashboard_maestro_super_admin.html">
-<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-<span class="font-medium">Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="gestion_clinicas_super_admin.html">
-<span class="material-symbols-outlined" data-icon="medical_services">medical_services</span>
-<span class="font-medium">Clínicas</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="revenue_super_admin.html">
-<span class="material-symbols-outlined" data-icon="payments">payments</span>
-<span class="font-medium">Revenue</span>
-</a>
-<!-- Active Tab: AI Config -->
-<a class="flex items-center gap-3 px-4 py-3 bg-indigo-500/10 text-indigo-400 rounded-xl font-semibold transition-all duration-300" href="configuracion_ia_super_admin.html">
-<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
-<span class="font-medium">IA Config</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="soporte_super_admin.html">
-<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
-<span class="font-medium">Soporte</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-all duration-300 active:scale-95" href="gestion_planes_super_admin.html">
-<span class="material-symbols-outlined">inventory_2</span>
-<span class="font-medium">Planes SaaS</span>
-</a>
-</nav>
-<div class="mt-auto pt-6 border-t border-slate-800/40 relative">
-<div id="user-menu" class="hidden" style="position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:#0d1b2e;border:1px solid rgba(255,255,255,0.12);border-radius:14px;overflow:hidden;box-shadow:0 -12px 36px rgba(0,0,0,0.5);z-index:60;">
-  <button onclick="toggleTema()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span id="icon-tema" class="material-symbols-outlined" style="color:#818cf8;font-size:17px;">dark_mode</span>
-    <span id="label-tema" class="text-sm font-semibold" style="color:#cbd5e1;">Modo claro</span>
-  </button>
-  <button onclick="cerrarTodasSesiones()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">no_accounts</span>
-    <span class="text-sm font-semibold" style="color:#cbd5e1;">Cerrar todas las sesiones</span>
-  </button>
-  <button onclick="toggleMantenimiento()" class="flex items-center gap-3 px-4 py-3 w-full text-left hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-    <span id="icon-mant" class="material-symbols-outlined" style="color:#f59e0b;font-size:17px;">construction</span>
-    <span id="label-mant" class="text-sm font-semibold" style="color:#cbd5e1;">Modo mantenimiento</span>
-  </button>
-  <div style="height:1px;background:rgba(255,255,255,0.06);margin:0 10px;"></div>
-  <a href="#" id="btn-logout" class="flex items-center gap-3 px-4 py-3 w-full hover:bg-red-400/5 transition-colors" style="text-decoration:none;">
-    <span class="material-symbols-outlined" style="color:#f87171;font-size:17px;">logout</span>
-    <span class="text-sm font-semibold" style="color:#f87171;">Cerrar sesión</span>
-  </a>
-</div>
-<button id="btn-user" class="flex items-center gap-3 w-full px-2 py-2 rounded-xl hover:bg-white/5 transition-colors" style="border:none;background:none;cursor:pointer;">
-  <div id="sa-avatar" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0" style="background:rgba(99,102,241,0.2);color:#818cf8;">SA</div>
-  <div class="flex-1 overflow-hidden text-left">
-    <p id="sa-nombre" class="text-sm font-bold text-slate-100 truncate">Super Admin</p>
-    <p class="text-[10px] text-slate-500">Super Administrador</p>
-  </div>
-  <span class="material-symbols-outlined text-slate-600 text-base">unfold_more</span>
-</button>
-</div>
-</div>
-</aside>
+<!-- Sidebar Navigation (unificado) -->
+<div id="superadmin-sidebar"></div>
+<script src="/js/sidebar-super-admin.js"></script>
 <!-- Main Content Shell -->
 <main class="pl-64 pb-32">
 <!-- TopNavBar Anchor -->

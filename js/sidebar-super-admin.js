@@ -88,4 +88,18 @@
     ['tp_rol', 'tp_user_id', 'tp_email', 'tp_nombre', 'tp_clinica_id'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e2) {} });
     window.location.href = '/screens/acceso_super_admin.html';
   };
+
+  // Fallback de cambio de tema para pantallas que no definen su propio
+  // toggleTema (varias del portal no lo tenían → botón de tema muerto).
+  // Si la página define el suyo en un <script> posterior, ese gana.
+  if (typeof window.toggleTema !== 'function') {
+    window.toggleTema = function () {
+      var nuevo = (localStorage.getItem('tp_tema') || 'oscuro') === 'oscuro' ? 'claro' : 'oscuro';
+      try { localStorage.setItem('tp_tema', nuevo); } catch (e) {}
+      document.documentElement.style.filter = nuevo === 'claro' ? 'invert(1) hue-rotate(180deg)' : '';
+      var i = document.getElementById('icon-tema'), l = document.getElementById('label-tema');
+      if (i) i.textContent = nuevo === 'claro' ? 'light_mode' : 'dark_mode';
+      if (l) l.textContent = nuevo === 'claro' ? 'Modo oscuro' : 'Modo claro';
+    };
+  }
 })();
