@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex"/>
+<title>CRM WhatsApp · SereneCare</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#020617;color:#e2e8f0;font-family:'Inter',sans-serif;min-height:100vh;}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.07);position:sticky;top:0;background:#020617;z-index:5;}
+  .top h1{font-family:'Manrope';font-size:19px;font-weight:800;color:#f1f5f9;}
+  .top .sub{font-size:12px;color:#64748b;}
+  .live{font-size:11px;color:#34d399;display:flex;align-items:center;gap:6px;}
+  .dot{width:7px;height:7px;border-radius:50%;background:#34d399;animation:p 1.6s infinite;}
+  @keyframes p{50%{opacity:.3;}}
+  .board{display:flex;gap:14px;padding:18px 22px;overflow-x:auto;align-items:flex-start;}
+  .col{flex:0 0 270px;background:#0b1424;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:12px;}
+  .col-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px;}
+  .col-h .n{font-family:'Manrope';font-weight:800;font-size:13px;}
+  .col-h .c{font-size:11px;font-weight:700;background:rgba(255,255,255,.08);border-radius:20px;padding:1px 8px;color:#94a3b8;}
+  .card{background:#0f1e34;border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:11px 12px;margin-bottom:9px;cursor:pointer;transition:border-color .15s,transform .1s;}
+  .card:hover{border-color:rgba(45,212,191,.4);}
+  .card:active{transform:scale(.98);}
+  .card .nm{font-weight:700;font-size:13.5px;color:#f1f5f9;display:flex;align-items:center;gap:6px;}
+  .card .tel{font-size:11px;color:#64748b;margin-top:1px;}
+  .card .msg{font-size:12px;color:#94a3b8;margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .card .ft{display:flex;justify-content:space-between;align-items:center;margin-top:7px;font-size:10.5px;color:#475569;}
+  .pausa-badge{font-size:10px;font-weight:700;color:#fbbf24;background:rgba(251,191,36,.12);border-radius:20px;padding:1px 7px;}
+  .empty{font-size:11.5px;color:#475569;text-align:center;padding:14px 0;}
+  /* modal */
+  .ov{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:16px;z-index:20;}
+  .ov.on{display:flex;}
+  .modal{background:#0b1424;border:1px solid rgba(255,255,255,.1);border-radius:18px;width:100%;max-width:460px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
+  .m-h{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07);}
+  .m-h .nm{font-family:'Manrope';font-weight:800;font-size:15px;}
+  .m-h .tel{font-size:11px;color:#64748b;}
+  .m-close{background:none;border:none;color:#64748b;font-size:22px;cursor:pointer;line-height:1;}
+  .chat{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px;background:#071120;}
+  .b{max-width:80%;padding:8px 11px;border-radius:13px;font-size:13px;line-height:1.4;white-space:pre-wrap;word-break:break-word;}
+  .b.user{align-self:flex-start;background:#1e293b;border-bottom-left-radius:4px;}
+  .b.bot{align-self:flex-end;background:#0f766e;color:#f0fdfa;border-bottom-right-radius:4px;}
+  .m-f{padding:12px 14px;border-top:1px solid rgba(255,255,255,.07);}
+  .pausa-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:12.5px;color:#cbd5e1;}
+  .sw{background:#334155;border:none;border-radius:20px;width:46px;height:24px;position:relative;cursor:pointer;transition:background .2s;}
+  .sw.on{background:#f59e0b;}
+  .sw::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;}
+  .sw.on::after{left:24px;}
+  .send{display:flex;gap:8px;}
+  .send textarea{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:9px 11px;color:#e2e8f0;font-family:inherit;font-size:13px;resize:none;height:42px;outline:none;}
+  .send textarea:focus{border-color:#2dd4bf;}
+  .send button{background:linear-gradient(135deg,#0f766e,#2dd4bf);border:none;border-radius:10px;color:#022;font-weight:800;font-family:'Manrope';padding:0 16px;cursor:pointer;font-size:13px;}
+  .send button:disabled{opacity:.5;cursor:default;}
+  .hint{font-size:10.5px;color:#475569;margin-top:6px;}
+</style>
+</head>
+<body>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<div class="top">
+  <div>
+    <h1>CRM WhatsApp <span style="color:#2dd4bf;">·</span> Captación</h1>
+    <div class="sub">Conversaciones del bot de SereneCare en tiempo real</div>
+  </div>
+  <div class="live"><span class="dot"></span> en vivo</div>
+</div>
+<div id="board" class="board"><div class="empty">Cargando…</div></div>
+
+<div id="ov" class="ov">
+  <div class="modal">
+    <div class="m-h">
+      <div><div class="nm" id="m-nm">—</div><div class="tel" id="m-tel"></div></div>
+      <button class="m-close" onclick="cerrar()">×</button>
+    </div>
+    <div id="chat" class="chat"></div>
+    <div class="m-f">
+      <div class="pausa-row">
+        <span>Tomar el mando (pausar bot)</span>
+        <button id="sw" class="sw" onclick="togglePausa()"></button>
+      </div>
+      <div class="send">
+        <textarea id="txt" placeholder="Escribe tú al cliente…"></textarea>
+        <button id="btn-send" onclick="enviar()">Enviar</button>
+      </div>
+      <div class="hint" id="hint">Con el bot pausado, respondes tú. Reactívalo cuando quieras.</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { guardaSuperAdmin } from '../js/admin.js'
+await guardaSuperAdmin()
+const { data: { session } } = await supabase.auth.getSession()
+const TOKEN = session && session.access_token
+
+const COLS = [
+  { key:'nuevo', label:'Nuevo', alt:['nueva'], color:'#60a5fa' },
+  { key:'negociando', label:'Negociando', alt:[], color:'#fbbf24' },
+  { key:'pendiente', label:'Pendiente', alt:[], color:'#a78bfa' },
+  { key:'cerrado', label:'Cerrado', alt:['citada','pagada'], color:'#34d399' },
+  { key:'descartado', label:'Descartado', alt:[], color:'#f87171' },
+]
+const colDe = (e) => (COLS.find(c => c.key===e || (c.alt||[]).includes(e)) || COLS[0]).key
+const esc = s => (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+const hace = (iso) => { if(!iso) return ''; const m=Math.floor((Date.now()-new Date(iso))/60000); if(m<1)return'ahora'; if(m<60)return'hace '+m+'m'; const h=Math.floor(m/60); if(h<24)return'hace '+h+'h'; return'hace '+Math.floor(h/24)+'d' }
+
+const api = async (url, opts={}) => {
+  const r = await fetch(url, { ...opts, headers: { 'Authorization':'Bearer '+TOKEN, 'Content-Type':'application/json', ...(opts.headers||{}) } })
+  return r.json().catch(()=>({}))
+}
+
+let DATA = []
+let abierta = null // conversación abierta en el modal
+
+async function cargar() {
+  const j = await api('/api/rec-wa/crm')
+  DATA = (j && j.conversaciones) || []
+  render()
+}
+
+function render() {
+  const board = document.getElementById('board')
+  board.innerHTML = COLS.map(col => {
+    const items = DATA.filter(c => colDe(c.estado) === col.key)
+    const cards = items.map(c => `
+      <div class="card" onclick="window._abrir('${c.id}')">
+        <div class="nm">${esc(c.cliente_nombre || 'Sin nombre')}${c.pausado?' <span class="pausa-badge">tú</span>':''}</div>
+        <div class="tel">${esc(c.cliente_tel || '')}</div>
+        <div class="msg">${esc(c.ultimo_mensaje || '—')}</div>
+        <div class="ft"><span>${hace(c.ultimo_at || c.created_at)}</span></div>
+      </div>`).join('') || '<div class="empty">—</div>'
+    return `<div class="col">
+      <div class="col-h"><span class="n" style="color:${col.color}">${col.label}</span><span class="c">${items.length}</span></div>
+      ${cards}
+    </div>`
+  }).join('')
+}
+
+window._abrir = async (id) => {
+  abierta = DATA.find(c => c.id === id) || { id }
+  document.getElementById('ov').classList.add('on')
+  document.getElementById('m-nm').textContent = abierta.cliente_nombre || 'Sin nombre'
+  document.getElementById('m-tel').textContent = abierta.cliente_tel || ''
+  document.getElementById('chat').innerHTML = '<div class="empty">Cargando…</div>'
+  const j = await api('/api/rec-wa/crm/'+id)
+  const msgs = (j && j.mensajes) || []
+  abierta.pausado = j && j.conv ? j.conv.pausado : abierta.pausado
+  pintaChat(msgs)
+  pintaSw()
+}
+function pintaChat(msgs){
+  const chat = document.getElementById('chat')
+  chat.innerHTML = msgs.filter(m=>m.role==='user'||m.role==='assistant').map(m =>
+    `<div class="b ${m.role==='user'?'user':'bot'}">${esc(typeof m.content==='string'?m.content:'')}</div>`).join('') || '<div class="empty">Sin mensajes</div>'
+  chat.scrollTop = chat.scrollHeight
+}
+function pintaSw(){
+  const sw = document.getElementById('sw')
+  sw.classList.toggle('on', !!(abierta && abierta.pausado))
+}
+window.cerrar = () => { document.getElementById('ov').classList.remove('on'); abierta=null }
+window.togglePausa = async () => {
+  if(!abierta) return
+  const nuevo = !abierta.pausado
+  abierta.pausado = nuevo; pintaSw()
+  await api('/api/rec-wa/crm/'+abierta.id+'/pausa', { method:'POST', body: JSON.stringify({ pausado: nuevo }) })
+  cargar()
+}
+window.enviar = async () => {
+  if(!abierta) return
+  const ta = document.getElementById('txt'); const texto = ta.value.trim(); if(!texto) return
+  const btn = document.getElementById('btn-send'); btn.disabled = true
+  const r = await api('/api/rec-wa/crm/'+abierta.id+'/enviar', { method:'POST', body: JSON.stringify({ texto }) })
+  btn.disabled = false
+  if(r && r.ok){ ta.value=''; window._abrir(abierta.id) } else { alert((r&&r.error)||'No se pudo enviar') }
+}
+
+await cargar()
+setInterval(() => { cargar(); }, 7000)
+</script>
+</body></html>
