@@ -9,6 +9,7 @@
     ['gestion_clinicas_super_admin.html',  'medical_services',          'Clínicas'],
     ['verificacion_colegiados_super_admin.html', 'verified_user',       'Verificación'],
     ['eap_empresas_super_admin.html',      'domain',                    'Empresas EAP'],
+    ['sesiones_eap_super_admin.html',      'event_available',           'Sesiones EAP'],
     ['revenue_super_admin.html',           'payments',                  'Revenue'],
     ['configuracion_ia_super_admin.html',  'settings_input_component',  'IA Config'],
     ['soporte_super_admin.html',           'contact_support',           'Soporte'],

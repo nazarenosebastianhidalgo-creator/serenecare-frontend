@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex"/>
+<title>Sesiones EAP · Super Admin</title>
+<link rel="stylesheet" href="/css/tailwind.css">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;} body{background:#020617;}</style>
+</head>
+<body class="text-slate-200 font-body">
+<div id="superadmin-sidebar"></div>
+<script src="/js/sidebar-super-admin.js"></script>
+
+<main class="pl-64 min-h-screen">
+  <div class="p-8 max-w-6xl">
+    <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="font-headline text-2xl font-extrabold text-white">Sesiones EAP</h1>
+        <p class="text-slate-400 text-sm mt-1">Control de la demanda de empresas — asigna, confirma o cancela sesiones.</p>
+      </div>
+      <div class="flex gap-2 text-xs font-bold">
+        <span class="px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-400">Reservadas <span id="c-reservada">0</span></span>
+        <span class="px-3 py-1.5 rounded-full bg-emerald-500/15 text-emerald-400">Realizadas <span id="c-realizada">0</span></span>
+        <span class="px-3 py-1.5 rounded-full bg-rose-500/15 text-rose-400">Canceladas <span id="c-cancelada">0</span></span>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-2 mb-4" id="filtros">
+      <button data-f="" class="filtro px-3 py-1.5 rounded-lg text-sm font-semibold bg-indigo-500/15 text-indigo-300">Todas</button>
+      <button data-f="reservada" class="filtro px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-400 hover:bg-slate-800/50">Reservadas</button>
+      <button data-f="realizada" class="filtro px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-400 hover:bg-slate-800/50">Realizadas</button>
+      <button data-f="cancelada" class="filtro px-3 py-1.5 rounded-lg text-sm font-semibold text-slate-400 hover:bg-slate-800/50">Canceladas</button>
+    </div>
+
+    <div class="bg-slate-900 rounded-2xl border border-slate-800/30 overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="text-slate-500 border-b border-slate-800/50">
+            <th class="px-4 py-3 font-semibold text-xs uppercase tracking-widest">Empresa</th>
+            <th class="px-4 py-3 font-semibold text-xs uppercase tracking-widest">Empleado</th>
+            <th class="px-4 py-3 font-semibold text-xs uppercase tracking-widest">Psicólogo</th>
+            <th class="px-4 py-3 font-semibold text-xs uppercase tracking-widest">Fecha</th>
+            <th class="px-4 py-3 font-semibold text-xs uppercase tracking-widest">Estado</th>
+            <th class="px-4 py-3 font-semibold text-xs uppercase tracking-widest text-right">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbody" class="divide-y divide-slate-800/30">
+          <tr><td colspan="6" class="px-4 py-10 text-center text-slate-500">Cargando…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { guardaSuperAdmin } from '../js/admin.js'
+await guardaSuperAdmin()
+const { data: { session } } = await supabase.auth.getSession()
+const TOKEN = session && session.access_token
+
+const esc = s => (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+const api = async (url, opts={}) => {
+  const r = await fetch(url, { ...opts, headers:{ 'Authorization':'Bearer '+TOKEN, 'Content-Type':'application/json', ...(opts.headers||{}) } })
+  return r.json().catch(()=>({}))
+}
+const badge = (e) => {
+  const m = { reservada:['Reservada','bg-amber-500/15 text-amber-400'], realizada:['Realizada','bg-emerald-500/15 text-emerald-400'], cancelada:['Cancelada','bg-rose-500/15 text-rose-400'] }[e] || [e||'—','bg-slate-500/15 text-slate-400']
+  return '<span class="px-2.5 py-1 rounded-full text-xs font-bold '+m[1]+'">'+m[0]+'</span>'
+}
+
+let DATA = [], POOL = [], filtro = ''
+
+async function cargar() {
+  const [j, jp] = await Promise.all([ api('/api/eap/sesiones'), POOL.length ? Promise.resolve(null) : api('/api/eap/psicologos-pool') ])
+  DATA = (j && j.sesiones) || []
+  if (jp) POOL = (jp && jp.psicologos) || []
+  render()
+}
+
+function render() {
+  document.getElementById('c-reservada').textContent = DATA.filter(s=>s.estado==='reservada').length
+  document.getElementById('c-realizada').textContent = DATA.filter(s=>s.estado==='realizada').length
+  document.getElementById('c-cancelada').textContent = DATA.filter(s=>s.estado==='cancelada').length
+  const rows = DATA.filter(s => !filtro || s.estado===filtro)
+  const tb = document.getElementById('tbody')
+  if (!rows.length) { tb.innerHTML = '<tr><td colspan="6" class="px-4 py-10 text-center text-slate-500">Sin sesiones'+(filtro?' en este estado':'')+'.</td></tr>'; return }
+  tb.innerHTML = rows.map(s => {
+    const opts = '<option value="">— asignar —</option>' + POOL.map(p =>
+      '<option value="'+p.id+'"'+(p.id===s.psicologo_id?' selected':'')+'>'+esc(p.nombre)+'</option>').join('')
+    return `<tr class="hover:bg-slate-800/20">
+      <td class="px-4 py-3 text-slate-200 font-semibold">${esc(s.empresa)}</td>
+      <td class="px-4 py-3 text-slate-400">${esc(s.empleado_email)}</td>
+      <td class="px-4 py-3">
+        <select onchange="window._reasignar('${s.id}', this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-200">${opts}</select>
+      </td>
+      <td class="px-4 py-3 text-slate-400">${esc(s.fecha||'—')}</td>
+      <td class="px-4 py-3">${badge(s.estado)}</td>
+      <td class="px-4 py-3">
+        <div class="flex items-center justify-end gap-1.5">
+          <button onclick="window._estado('${s.id}','realizada')" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25">Realizada</button>
+          <button onclick="window._estado('${s.id}','cancelada')" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-rose-500/15 text-rose-400 hover:bg-rose-500/25">Cancelar</button>
+        </div>
+      </td>
+    </tr>`
+  }).join('')
+}
+
+window._estado = async (id, estado) => {
+  const s = DATA.find(x=>x.id===id); if (s) s.estado = estado; render()
+  await api('/api/eap/sesiones/'+id, { method:'POST', body: JSON.stringify({ estado }) })
+  cargar()
+}
+window._reasignar = async (id, psicologo_id) => {
+  await api('/api/eap/sesiones/'+id, { method:'POST', body: JSON.stringify({ psicologo_id }) })
+  cargar()
+}
+
+document.getElementById('filtros').addEventListener('click', e => {
+  const b = e.target.closest('.filtro'); if (!b) return
+  filtro = b.getAttribute('data-f')
+  document.querySelectorAll('.filtro').forEach(x => { x.className = x.className.replace('bg-indigo-500/15 text-indigo-300','text-slate-400 hover:bg-slate-800/50') })
+  b.className = b.className.replace('text-slate-400 hover:bg-slate-800/50','bg-indigo-500/15 text-indigo-300')
+  render()
+})
+
+await cargar()
+setInterval(cargar, 15000)
+</script>
+</body></html>
