@@ -114,6 +114,45 @@
       </div>
     </div>
 
+    <!-- Marcador de elegibilidad (directorio + empresas) — fuerza la activación -->
+    <div id="elegibilidad-card" class="fade-up card rounded-2xl p-6 hidden" style="animation-delay:0.03s"></div>
+    <script type="module">
+      import { supabase } from '../js/supabase-client.js'
+      ;(async () => {
+        try {
+          const { data: { session } } = await supabase.auth.getSession()
+          const tk = session && session.access_token
+          if (!tk) return
+          const r = await fetch('/api/eap/mi-elegibilidad', { headers: { Authorization: 'Bearer ' + tk } })
+          const j = await r.json().catch(() => ({}))
+          const card = document.getElementById('elegibilidad-card')
+          if (!j || !j.ok || !card) return
+          const badge = (ok, txt) => ok
+            ? '<span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-400">' + txt + ': SÍ ✅</span>'
+            : '<span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-500/15 text-rose-400">' + txt + ': NO ⛔</span>'
+          const checks = j.checks || []
+          const pend = checks.filter(c => !c.done)
+          const lista = checks.map(c => {
+            const ic = c.done ? '<span style="color:#34d399">✓</span>' : '<span style="color:#f87171">○</span>'
+            const canales = (c.para || []).map(p => p === 'directorio' ? 'Directorio' : 'Empresas').join(' · ')
+            const txt = '<span class="' + (c.done ? 'text-slate-500 line-through' : 'text-slate-200') + '">' + ic + ' ' + c.label + '</span> <span class="text-[10px] text-slate-600">' + canales + '</span>'
+            return c.done
+              ? '<div class="py-2">' + txt + '</div>'
+              : '<a href="' + c.url + '" class="py-2 flex items-center justify-between hover:bg-white/5 rounded-lg px-2 -mx-2"><span>' + txt + '</span><span class="text-teal-400 text-xs font-bold whitespace-nowrap">Completar ›</span></a>'
+          }).join('')
+          card.innerHTML =
+            '<div class="flex flex-wrap items-center justify-between gap-3 mb-4">'
+            + '<h3 class="font-headline text-lg font-bold text-white">Tu visibilidad</h3>'
+            + '<div class="flex gap-2">' + badge(j.directorio && j.directorio.visible, 'Directorio') + badge(j.empresas && j.empresas.elegible, 'Empresas') + '</div>'
+            + '</div>'
+            + (pend.length
+              ? '<p class="text-slate-400 text-sm mb-2">Completa esto para que te lleguen pacientes:</p><div class="divide-y divide-slate-800/30">' + lista + '</div>'
+              : '<p class="text-emerald-400 text-sm">¡Todo listo! Estás visible en el directorio y elegible para empresas. 🎉</p>')
+          card.classList.remove('hidden')
+        } catch (e) { /* no romper el dashboard */ }
+      })()
+    </script>
+
     <!-- KPI Cards -->
     <div class="grid grid-cols-4 gap-4 fade-up" style="animation-delay:0.05s">
 
