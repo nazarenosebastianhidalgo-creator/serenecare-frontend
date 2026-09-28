@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script>
+  /* Landing VIEJA (precio "14 días de prueba") retirada 28/09/2026: el modelo ahora
+     es GRATIS. Redirige a la home actual (index.html) conservando ?ref/utm. */
+  (function () { try { location.replace('/' + location.search + location.hash); } catch (e) {} })();
+</script>
 <title>SereneCare — El software que te LLENA la consulta</title>
 <meta name="description" content="No es otro software de gestión. SereneCare capta pacientes, llena tus huecos y reduce los no-shows con IA. Para psicólogos y clínicas de salud mental en España y Latinoamérica."/>
 <link rel="stylesheet" href="/css/tailwind.css">
