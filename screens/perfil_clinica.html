@@ -848,10 +848,11 @@ try {
     b.style.color = v ? '#34d399' : '#fbbf24';
     const bv = document.getElementById('btn-verificar-tel'); if (bv) bv.style.display = v ? 'none' : '';
   }
-  try {
-    const est = await (await fetch(BK_PERFIL + '/api/perfil/telefono/estado', { headers: await _authH() })).json();
-    _telBadge(!!est.verificado);
-  } catch (_) {}
+  // Verificación por WhatsApp OCULTA (29/09): canal WhatsApp aún no activo → el código
+  // fallaba y confundía. Es opcional, no afecta a la elegibilidad. Reactivar cuando WhatsApp funcione.
+  document.getElementById('tel-badge')?.style.setProperty('display','none','important');
+  document.getElementById('btn-verificar-tel')?.style.setProperty('display','none','important');
+  document.getElementById('tel-codigo-wrap')?.style.setProperty('display','none','important');
   document.getElementById('btn-verificar-tel')?.addEventListener('click', async () => {
     try {
       const r = await fetch(BK_PERFIL + '/api/perfil/telefono/enviar-codigo', { method: 'POST', headers: await _authH(), body: '{}' });

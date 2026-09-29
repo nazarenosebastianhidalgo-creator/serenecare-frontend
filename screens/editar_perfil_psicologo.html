@@ -536,7 +536,10 @@
     try {
       const est = await (await fetch(BK_PERFIL + '/api/perfil/telefono/estado', { headers: await _authH() })).json()
       const ti = document.getElementById('perfil-telefono'); if (ti && est.telefono) ti.value = est.telefono
-      _telBadge(!!est.verificado)
+      // Verificación por WhatsApp OCULTA (29/09): canal aún no activo → confundía. Opcional, no afecta elegibilidad.
+      document.getElementById('tel-badge')?.style.setProperty('display','none','important')
+      document.getElementById('btn-verificar-tel')?.style.setProperty('display','none','important')
+      document.getElementById('tel-codigo-wrap')?.style.setProperty('display','none','important')
     } catch {}
     document.getElementById('btn-verificar-tel')?.addEventListener('click', async () => {
       try {
