@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LexAI — Asistente de llamadas para despachos de abogados</title>
+<meta name="description" content="LexAI atiende las llamadas que tu despacho pierde cuando estás en un juicio o reunión, recoge el caso del cliente y te lo pasa. Ningún cliente se va al despacho de al lado."/>
+<meta name="robots" content="noindex"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0b;
+    --bg-2:#111113;
+    --panel:#141416;
+    --line:#26262a;
+    --ink:#ececed;
+    --ink-soft:#a8a8ac;
+    --muted:#6f6f75;
+    --gold:#b89663;      /* dorado mate */
+    --gold-soft:#8a6f45;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding-inline:24px}
+  h1,h2,h3{font-family:'Fraunces','Georgia',serif;font-weight:600;letter-spacing:-.01em;line-height:1.1}
+  .serif{font-family:'Fraunces',serif}
+  a{color:inherit;text-decoration:none}
+  .accent{color:var(--gold)}
+  .eyebrow{font-size:.72rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+
+  /* Nav */
+  nav{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(10,10,11,.85);backdrop-filter:blur(10px);z-index:50}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;padding-block:18px}
+  .logo{font-family:'Fraunces',serif;font-size:1.35rem;font-weight:700;letter-spacing:.02em}
+  .logo b{color:var(--gold);font-weight:700}
+  .btn{display:inline-block;padding:12px 22px;border-radius:4px;font-weight:600;font-size:.92rem;transition:all .2s;border:1px solid transparent}
+  .btn-gold{background:var(--gold);color:#161208}
+  .btn-gold:hover{background:#c9a771}
+  .btn-ghost{border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+  /* Hero */
+  header{padding-block:96px 72px;border-bottom:1px solid var(--line);background:radial-gradient(1200px 500px at 50% -10%, rgba(184,150,99,.08), transparent 70%)}
+  header h1{font-size:clamp(2.2rem,6vw,4rem);max-width:16ch;margin-block:22px 0}
+  header .lead{color:var(--ink-soft);font-size:clamp(1.05rem,2.2vw,1.3rem);max-width:52ch;margin-top:26px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:40px;align-items:center}
+  .hero-note{color:var(--muted);font-size:.85rem}
+
+  section{padding-block:72px;border-bottom:1px solid var(--line)}
+  .sec-head{max-width:60ch;margin-bottom:44px}
+  .sec-head h2{font-size:clamp(1.7rem,3.5vw,2.4rem)}
+  .sec-head p{color:var(--ink-soft);margin-top:14px;font-size:1.05rem}
+
+  /* Problema */
+  .prob{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .prob-card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:30px}
+  .prob-card .n{font-family:'Fraunces',serif;font-size:2.6rem;color:var(--gold);line-height:1}
+  .prob-card p{color:var(--ink-soft);margin-top:12px}
+
+  /* Cómo funciona */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+  .step{background:var(--bg-2);padding:30px 24px}
+  .step .k{font-family:'Fraunces',serif;color:var(--gold);font-size:1.1rem;border:1px solid var(--gold-soft);width:38px;height:38px;display:grid;place-items:center;border-radius:50%;margin-bottom:18px}
+  .step h3{font-family:'Inter',sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:0}
+  .step p{color:var(--ink-soft);font-size:.92rem;margin-top:8px}
+
+  /* Audio */
+  .audio-box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:40px;text-align:center;max-width:640px;margin:0 auto}
+  .audio-box h2{font-size:1.9rem}
+  .audio-box p{color:var(--ink-soft);margin-block:12px 26px}
+  audio{width:100%;filter:invert(0.9) sepia(.2) saturate(1.2)}
+
+  /* Precios */
+  .planes{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:820px;margin:0 auto}
+  .plan{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:36px;display:flex;flex-direction:column}
+  .plan.dest{border-color:var(--gold-soft);box-shadow:0 0 0 1px rgba(184,150,99,.25)}
+  .plan .tag{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .plan.dest .tag{color:var(--gold)}
+  .plan .price{font-family:'Fraunces',serif;font-size:2.6rem;margin-block:10px 4px}
+  .plan .price small{font-size:1rem;color:var(--muted);font-family:'Inter',sans-serif}
+  .plan ul{list-style:none;margin-block:22px 28px;display:flex;flex-direction:column;gap:11px}
+  .plan li{color:var(--ink-soft);font-size:.95rem;padding-left:22px;position:relative}
+  .plan li::before{content:'—';position:absolute;left:0;color:var(--gold)}
+  .plan .btn{margin-top:auto;text-align:center}
+
+  /* CTA final */
+  .final{text-align:center;padding-block:88px;border-bottom:none}
+  .final h2{font-size:clamp(1.9rem,4vw,2.8rem);max-width:20ch;margin:0 auto}
+  .final p{color:var(--ink-soft);margin-block:18px 34px;max-width:48ch;margin-inline:auto}
+
+  footer{padding-block:40px;text-align:center;color:var(--muted);font-size:.82rem}
+
+  @media(max-width:720px){
+    .prob,.planes{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr 1fr}
+    header{padding-block:64px 52px}
+  }
+</style>
+</head>
+<body>
+
+<nav><div class="wrap nav-in">
+  <div class="logo">Lex<b>AI</b></div>
+  <a href="#contacto" class="btn btn-gold">Solicitar demo</a>
+</div></nav>
+
+<header><div class="wrap">
+  <span class="eyebrow">Recepción inteligente para despachos</span>
+  <h1>Ninguna llamada perdida. Ningún cliente que se va al despacho de al lado.</h1>
+  <p class="lead">Cuando estás en un juicio o una reunión, LexAI atiende la llamada, recoge el caso del cliente y te lo pasa cualificado. Funciona solo, sin contratar a nadie.</p>
+  <div class="hero-cta">
+    <a href="#audio" class="btn btn-gold">Escuchar una llamada real</a>
+    <a href="#precios" class="btn btn-ghost">Ver planes</a>
+  </div>
+  <p class="hero-note" style="margin-top:22px">Sin instalación compleja · Operativo en días · Sin permanencia</p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">El problema</span>
+    <h2>Cada llamada sin atender es un cliente potencial que no vuelve.</h2>
+    <p>Un despacho no puede coger todas las llamadas: hay juicios, reuniones, clientes delante. Y quien no recibe respuesta llama al siguiente abogado de la lista.</p>
+  </div>
+  <div class="prob">
+    <div class="prob-card"><div class="n">1 de cada 3</div><p>llamadas a un despacho se queda sin atender en horas punta. La mayoría no deja mensaje ni vuelve a llamar.</p></div>
+    <div class="prob-card"><div class="n">Segundos</div><p>es lo que tarda un cliente en buscar otro despacho cuando nadie le coge el teléfono.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="sec-head">
+    <span class="eyebrow">Cómo funciona</span>
+    <h2>Atiende, entiende el caso y te lo pasa listo.</h2>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="k">I</div><h3>Atiende la llamada</h3><p>Responde con naturalidad en tu nombre, a cualquier hora, cuando tú no puedes.</p></div>
+    <div class="step"><div class="k">II</div><h3>Recoge el caso</h3><p>Pregunta el motivo, los datos del cliente y cualifica la consulta.</p></div>
+    <div class="step"><div class="k">III</div><h3>Agenda o deriva</h3><p>Puede reservar una cita en tu agenda o dejar la consulta preparada.</p></div>
+    <div class="step"><div class="k">IV</div><h3>Te avisa al instante</h3><p>Recibes el caso cualificado para devolver la llamada cuando puedas.</p></div>
+  </div>
+</div></section>
+
+<section id="audio"><div class="wrap">
+  <div class="audio-box">
+    <span class="eyebrow">Escúchalo</span>
+    <h2 style="margin-top:14px">Así atendería LexAI a un cliente de tu despacho</h2>
+    <p>Una llamada real de 30 segundos. Sube el volumen.</p>
+    <audio controls preload="none">
+      <source src="https://wwxyrgklvecelomhsbpo.supabase.co/storage/v1/object/public/audios/audio_abogado.m4a" type="audio/mp4">
+      Tu navegador no soporta audio. Escríbenos y te lo enviamos.
+    </audio>
+  </div>
+</div></section>
+
+<section id="precios"><div class="wrap">
+  <div class="sec-head" style="text-align:center;margin-inline:auto">
+    <span class="eyebrow">Planes</span>
+    <h2>Elige el nivel que necesita tu despacho.</h2>
+  </div>
+  <div class="planes">
+    <div class="plan">
+      <span class="tag">Recepción</span>
+      <div class="price">497€<small> / pago único de implantación</small></div>
+      <ul>
+        <li>Asistente de voz que atiende tus llamadas</li>
+        <li>Recoge y cualifica el caso del cliente</li>
+        <li>Aviso inmediato con los datos</li>
+        <li>Configurado y operativo en días</li>
+      </ul>
+      <a href="#contacto" class="btn btn-ghost">Solicitar demo</a>
+    </div>
+    <div class="plan dest">
+      <span class="tag">Despacho completo</span>
+      <div class="price">950€<small> / implantación completa</small></div>
+      <ul>
+        <li>Todo lo del plan Recepción</li>
+        <li>Agenda de citas conectada</li>
+        <li>Que te encuentren cuando buscan abogado en tu zona</li>
+        <li>Reseñas de clientes satisfechos, automatizadas</li>
+      </ul>
+      <a href="#contacto" class="btn btn-gold">Solicitar demo</a>
+    </div>
+  </div>
+  <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:24px">Sin permanencia. Te mostramos el sistema funcionando antes de que decidas.</p>
+</div></section>
+
+<section class="final" id="contacto"><div class="wrap">
+  <span class="eyebrow">Solicita una demostración</span>
+  <h2 style="margin-top:18px">Vea cómo suena en su propio despacho.</h2>
+  <p>Diez minutos. Le enseñamos el asistente atendiendo una llamada y resolvemos sus dudas, sin compromiso.</p>
+  <div class="hero-cta" style="justify-content:center">
+    <a href="https://wa.me/34XXXXXXXXX" class="btn btn-gold" data-edit="whatsapp">Escríbenos por WhatsApp</a>
+    <a href="mailto:tu-correo@ejemplo.com" class="btn btn-ghost" data-edit="email">Enviar un correo</a>
+  </div>
+</div></section>
+
+<footer><div class="wrap">LexAI · Asistente de recepción para despachos de abogados</div></footer>
+
+</body>
+</html>
