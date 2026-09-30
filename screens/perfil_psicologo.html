@@ -297,7 +297,7 @@
           </div>
         </div>
 
-        <button id="btn-guardar-verif" type="button" onclick="guardarVerificacion()" class="mt-5 px-5 py-3 rounded-xl text-sm font-bold w-full" style="background:#7c3aed;color:#fff;border:none;cursor:pointer;">Guardar y enviar a revisión</button>
+        <button id="btn-guardar-verif" type="button" onclick="guardarVerificacion()" class="mt-5 px-5 py-3 rounded-xl text-sm font-bold w-full" style="background:#7c3aed;color:#fff;border:none;cursor:pointer;">Guardar documentación</button>
         <p class="text-[11px] text-slate-500 mt-3" style="line-height:1.5;">Formatos: PDF, JPG o PNG · máx. 10 MB por archivo.</p>
       </div>
     </div>
@@ -989,7 +989,7 @@ try {
       if (d.estado) _verifBadge(d.estado);
       alert('¡Gracias! Hemos recibido tu documentación. La verificación se realiza automáticamente; te avisaremos en cuanto esté lista.');
     } catch (e) { alert('No se pudo guardar: ' + e.message); }
-    btn.disabled = false; btn.textContent = 'Guardar y enviar a revisión';
+    btn.disabled = false; btn.textContent = 'Guardar documentación';
   };
   // Cargar estado y mostrar la tarjeta SOLO si aplica al país del psicólogo
   try {

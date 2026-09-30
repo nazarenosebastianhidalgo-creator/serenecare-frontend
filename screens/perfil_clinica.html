@@ -254,6 +254,55 @@
           Agregar formación
         </button>
       </div>
+
+      <!-- Verificación profesional (país-gated: solo se muestra a México) -->
+      <div class="glass-card" id="card-verificacion" style="display:none;">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="material-symbols-outlined" style="color:#2dd4bf;">verified_user</span>
+          <p class="font-headline font-bold text-white">Verificación profesional</p>
+          <span id="verif-badge" class="ml-auto" style="font-size:11px;font-weight:700;padding:4px 12px;border-radius:999px;"></span>
+        </div>
+        <p class="text-xs text-slate-400 mb-4" style="line-height:1.6;">
+          Para poder recibir pacientes del directorio y de empresas necesitamos confirmar que eres psicólogo/a titulado/a. Sube tus documentos una sola vez — se guardan de forma <strong style="color:#cbd5e1;">privada y cifrada</strong>. La verificación se realiza de forma automática.
+        </p>
+
+        <div class="grid grid-cols-1 gap-4">
+          <div>
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Número de cédula profesional</label>
+            <input id="verif-cedula" class="field-input" type="text" placeholder="Ej: 12345678"/>
+          </div>
+
+          <div class="doc-row" data-doc="ine">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Identificación oficial (INE / pasaporte)</label>
+            <div class="flex items-center gap-3 flex-wrap">
+              <input type="file" id="file-ine" accept="application/pdf,image/*" style="display:none" onchange="subirDoc('ine', this)">
+              <button type="button" onclick="document.getElementById('file-ine').click()" class="px-4 py-2.5 rounded-xl text-sm font-bold" style="background:rgba(45,212,191,0.12);color:#2dd4bf;border:1px solid rgba(45,212,191,0.3);cursor:pointer;">Subir archivo</button>
+              <span class="verif-estado text-xs" data-for="ine" style="color:#64748b;">Sin subir</span>
+            </div>
+          </div>
+
+          <div class="doc-row" data-doc="titulo">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Título / cédula de Psicología</label>
+            <div class="flex items-center gap-3 flex-wrap">
+              <input type="file" id="file-titulo" accept="application/pdf,image/*" style="display:none" onchange="subirDoc('titulo', this)">
+              <button type="button" onclick="document.getElementById('file-titulo').click()" class="px-4 py-2.5 rounded-xl text-sm font-bold" style="background:rgba(45,212,191,0.12);color:#2dd4bf;border:1px solid rgba(45,212,191,0.3);cursor:pointer;">Subir archivo</button>
+              <span class="verif-estado text-xs" data-for="titulo" style="color:#64748b;">Sin subir</span>
+            </div>
+          </div>
+
+          <div class="doc-row" data-doc="cedula">
+            <label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">Documento de la cédula profesional (opcional)</label>
+            <div class="flex items-center gap-3 flex-wrap">
+              <input type="file" id="file-cedula" accept="application/pdf,image/*" style="display:none" onchange="subirDoc('cedula', this)">
+              <button type="button" onclick="document.getElementById('file-cedula').click()" class="px-4 py-2.5 rounded-xl text-sm font-bold" style="background:rgba(45,212,191,0.12);color:#2dd4bf;border:1px solid rgba(45,212,191,0.3);cursor:pointer;">Subir archivo</button>
+              <span class="verif-estado text-xs" data-for="cedula" style="color:#64748b;">Sin subir</span>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-guardar-verif" type="button" onclick="guardarVerificacion()" class="mt-5 px-5 py-3 rounded-xl text-sm font-bold w-full" style="background:#0d9488;color:#fff;border:none;cursor:pointer;">Guardar documentación</button>
+        <p class="text-[11px] text-slate-500 mt-3" style="line-height:1.5;">Formatos: PDF, JPG o PNG · máx. 10 MB por archivo.</p>
+      </div>
     </div>
 
     <!-- TAB: Agenda -->
@@ -881,6 +930,74 @@ try {
     document.getElementById('input-bio').value = prof.bio || '';
     document.getElementById('input-direccion').value = prof.direccion || '';
     renderFormacion(prof.formacion || []);
+  } catch (_) {}
+
+  // ── Verificación profesional (país-gated: MÉXICO primero) ──────────────────
+  const VERIF_BUCKET = 'documentos-verificacion';
+  const _verifPaths = { ine: null, titulo: null, cedula: null };
+  function _verifBadge(estado) {
+    const b = document.getElementById('verif-badge'); if (!b) return;
+    const map = {
+      PENDING:  ['Pendiente', 'rgba(148,163,184,.15)', '#94a3b8'],
+      VERIFYING:['Documentación recibida', 'rgba(251,191,36,.15)', '#fbbf24'],
+      VERIFIED: ['Verificado ✓', 'rgba(52,211,153,.15)', '#34d399'],
+      CORPORATE_VERIFIED: ['Verificado ✓', 'rgba(52,211,153,.15)', '#34d399'],
+      REJECTED: ['Revisar documentación', 'rgba(248,113,113,.15)', '#f87171'],
+      MANUAL_REVIEW: ['Documentación recibida', 'rgba(251,191,36,.15)', '#fbbf24'],
+    };
+    const [t, bg, c] = map[estado] || map.PENDING;
+    b.textContent = t; b.style.background = bg; b.style.color = c;
+  }
+  function _docEstado(tipo, txt, color) {
+    const el = document.querySelector('.verif-estado[data-for="' + tipo + '"]');
+    if (el) { el.textContent = txt; el.style.color = color || '#64748b'; }
+  }
+  window.subirDoc = async function (tipo, input) {
+    const file = input.files && input.files[0]; if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { alert('El archivo supera los 10 MB.'); input.value = ''; return; }
+    _docEstado(tipo, 'Subiendo…', '#2dd4bf');
+    try {
+      const ext = (file.name.split('.').pop() || 'dat').toLowerCase().slice(0, 5);
+      const path = session.user.id + '/' + tipo + '_' + Date.now() + '.' + ext;
+      const { error } = await supabase.storage.from(VERIF_BUCKET).upload(path, file, { upsert: true, contentType: file.type });
+      if (error) throw error;
+      _verifPaths[tipo] = path;
+      _docEstado(tipo, '✓ Subido', '#34d399');
+    } catch (e) { _docEstado(tipo, 'Error al subir', '#f87171'); alert('No se pudo subir: ' + (e.message || e)); }
+    input.value = '';
+  };
+  window.guardarVerificacion = async function () {
+    const btn = document.getElementById('btn-guardar-verif');
+    const cedula = (document.getElementById('verif-cedula') && document.getElementById('verif-cedula').value.trim()) || '';
+    if (!cedula && !_verifPaths.ine && !_verifPaths.titulo && !_verifPaths.cedula) {
+      alert('Añade tu número de cédula y al menos un documento.'); return;
+    }
+    btn.disabled = true; btn.textContent = 'Guardando…';
+    try {
+      const r = await fetch(BK_PERFIL + '/api/perfil/verificacion', { method: 'POST', headers: await _authH(), body: JSON.stringify({
+        cedula_profesional: cedula,
+        ine_path: _verifPaths.ine, titulo_path: _verifPaths.titulo, cedula_path: _verifPaths.cedula,
+      }) });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Error');
+      if (d.estado) _verifBadge(d.estado);
+      alert('¡Gracias! Hemos recibido tu documentación. La verificación se realiza automáticamente; te avisaremos en cuanto esté lista.');
+    } catch (e) { alert('No se pudo guardar: ' + e.message); }
+    btn.disabled = false; btn.textContent = 'Guardar documentación';
+  };
+  // Cargar estado y mostrar la tarjeta SOLO si aplica al país
+  try {
+    const v = await (await fetch(BK_PERFIL + '/api/perfil/verificacion', { headers: await _authH() })).json();
+    if (v.aplica) {
+      document.getElementById('card-verificacion').style.display = '';
+      document.getElementById('verif-cedula').value = v.cedula_profesional || '';
+      _verifBadge(v.estado);
+      if (v.docs) {
+        if (v.docs.ine) _docEstado('ine', '✓ Subido', '#34d399');
+        if (v.docs.titulo) _docEstado('titulo', '✓ Subido', '#34d399');
+        if (v.docs.cedula) _docEstado('cedula', '✓ Subido', '#34d399');
+      }
+    }
   } catch (_) {}
 
   // Override cambiarPassword to use Supabase
