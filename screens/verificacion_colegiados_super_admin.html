@@ -37,6 +37,36 @@
   </header>
 
   <div class="p-8">
+    <!-- Verificación de documentos por país (México primero) -->
+    <div class="rounded-2xl border border-indigo-800/40 bg-indigo-950/20 overflow-hidden mb-8">
+      <div class="px-5 py-4 border-b border-indigo-800/30 flex items-center gap-2">
+        <span class="material-symbols-outlined text-indigo-400">verified_user</span>
+        <div>
+          <h3 class="font-headline font-extrabold text-slate-50">Verificación de documentos — México</h3>
+          <p class="text-xs text-slate-500">Psicólogos que han subido su papeleo. Revisa los documentos y aprueba o rechaza.</p>
+        </div>
+        <span id="verif-count" class="ml-auto badge" style="background:rgba(251,191,36,0.12);color:#fbbf24;">0 pendientes</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-[11px] uppercase tracking-widest text-slate-500 border-b border-slate-800/40">
+              <th class="px-4 py-3 font-bold">Psicólogo</th>
+              <th class="px-4 py-3 font-bold">Nº cédula</th>
+              <th class="px-4 py-3 font-bold">Documentos</th>
+              <th class="px-4 py-3 font-bold">Estado</th>
+              <th class="px-4 py-3 font-bold text-right">Decisión</th>
+            </tr>
+          </thead>
+          <tbody id="verif-tbody"></tbody>
+        </table>
+      </div>
+      <div id="verif-vacio" class="hidden py-10 text-center text-slate-500 text-sm">
+        <span class="material-symbols-outlined text-3xl text-slate-700 block mb-2">inbox</span>
+        No hay verificaciones pendientes.
+      </div>
+    </div>
+
     <!-- Stats -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
       <div class="rounded-2xl p-4 border border-slate-800/40 bg-slate-900/40">
@@ -183,6 +213,53 @@ document.getElementById('tbody').addEventListener('click', function(e) {
 })
 document.getElementById('chk-revisados').addEventListener('change', render)
 
+// ── Verificación de documentos (México) ──────────────────────────────────────
+async function cargarVerif() {
+  let out = {}
+  try {
+    const r = await fetch('/api/verificaciones', { headers: { 'Authorization': 'Bearer ' + TOKEN } })
+    out = await r.json().catch(() => ({}))
+    if (!r.ok) { document.getElementById('verif-tbody').innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-red-400">' + (out.error || 'Error') + '</td></tr>'; return }
+  } catch (e) { return }
+  const lista = out.pendientes || []
+  document.getElementById('verif-count').textContent = lista.length + ' pendiente' + (lista.length === 1 ? '' : 's')
+  document.getElementById('verif-vacio').classList.toggle('hidden', lista.length > 0)
+  const docLink = (url, txt) => url
+    ? '<a href="' + url + '" target="_blank" rel="noopener" class="act-btn" style="background:rgba(59,130,246,0.12);color:#60a5fa;"><span class="material-symbols-outlined" style="font-size:14px;">description</span>' + txt + '</a>'
+    : '<span class="text-slate-600 text-xs">' + txt + ': —</span>'
+  document.getElementById('verif-tbody').innerHTML = lista.map(p =>
+    '<tr class="border-b border-slate-800/20" data-email="' + encodeURIComponent(p.email) + '">'
+    + '<td class="px-4 py-3"><p class="font-semibold text-slate-100">' + (p.nombre || '—') + '</p><p class="text-xs text-slate-500">' + p.email + ' · ' + (p.pais || '') + '</p></td>'
+    + '<td class="px-4 py-3 font-mono text-slate-200">' + (p.cedula_profesional || '<span class="text-amber-400">—</span>') + '</td>'
+    + '<td class="px-4 py-3"><div class="flex flex-wrap gap-1.5">' + docLink(p.docs.ine, 'INE') + docLink(p.docs.titulo, 'Título') + docLink(p.docs.cedula, 'Cédula') + '</div></td>'
+    + '<td class="px-4 py-3">' + badge(p.estado === 'MANUAL_REVIEW' ? 'Revisión manual' : 'En revisión', 'slate') + '</td>'
+    + '<td class="px-4 py-3"><div class="flex items-center justify-end gap-1.5">'
+      + '<button data-vact="VERIFIED" class="act-btn" style="background:rgba(16,185,129,0.12);color:#34d399;"><span class="material-symbols-outlined" style="font-size:14px;">check</span>Aprobar</button>'
+      + '<button data-vact="REJECTED" class="act-btn" style="background:rgba(239,68,68,0.12);color:#f87171;"><span class="material-symbols-outlined" style="font-size:14px;">close</span>Rechazar</button>'
+    + '</div></td></tr>'
+  ).join('')
+}
+
+async function decidirVerif(email, decision) {
+  let motivo = null
+  if (decision === 'REJECTED') { motivo = prompt('Motivo del rechazo (se le podrá mostrar al psicólogo):', ''); if (motivo === null) return }
+  else if (!confirm('¿Aprobar la verificación de este psicólogo?')) return
+  const r = await fetch('/api/verificaciones/decidir', {
+    method: 'POST', headers: { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, decision, motivo })
+  })
+  const out = await r.json().catch(() => ({}))
+  if (!r.ok) { alert(out.error || 'No se pudo guardar'); return }
+  await cargarVerif()
+}
+
+document.getElementById('verif-tbody').addEventListener('click', function (e) {
+  const btn = e.target.closest('button[data-vact]'); if (!btn) return
+  const tr = btn.closest('tr[data-email]'); if (!tr) return
+  decidirVerif(decodeURIComponent(tr.getAttribute('data-email')), btn.getAttribute('data-vact'))
+})
+
+await cargarVerif()
 await cargar()
 </script>
 
