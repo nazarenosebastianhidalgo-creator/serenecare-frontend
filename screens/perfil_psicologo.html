@@ -945,11 +945,11 @@ try {
     const b = document.getElementById('verif-badge'); if (!b) return;
     const map = {
       PENDING:  ['Pendiente', 'rgba(148,163,184,.15)', '#94a3b8'],
-      VERIFYING:['En revisión', 'rgba(251,191,36,.15)', '#fbbf24'],
+      VERIFYING:['Documentación recibida', 'rgba(251,191,36,.15)', '#fbbf24'],
       VERIFIED: ['Verificado ✓', 'rgba(52,211,153,.15)', '#34d399'],
       CORPORATE_VERIFIED: ['Verificado ✓', 'rgba(52,211,153,.15)', '#34d399'],
-      REJECTED: ['Rechazado', 'rgba(248,113,113,.15)', '#f87171'],
-      MANUAL_REVIEW: ['En revisión', 'rgba(251,191,36,.15)', '#fbbf24'],
+      REJECTED: ['Revisar documentación', 'rgba(248,113,113,.15)', '#f87171'],
+      MANUAL_REVIEW: ['Documentación recibida', 'rgba(251,191,36,.15)', '#fbbf24'],
     };
     const [t, bg, c] = map[estado] || map.PENDING;
     b.textContent = t; b.style.background = bg; b.style.color = c;
@@ -987,7 +987,7 @@ try {
       const d = await r.json();
       if (!r.ok) throw new Error(d.error || 'Error');
       if (d.estado) _verifBadge(d.estado);
-      alert('¡Gracias! Tus documentos están en revisión. Te avisaremos cuando quede verificado.');
+      alert('¡Gracias! Hemos recibido tu documentación. La verificación se realiza automáticamente; te avisaremos en cuanto esté lista.');
     } catch (e) { alert('No se pudo guardar: ' + e.message); }
     btn.disabled = false; btn.textContent = 'Guardar y enviar a revisión';
   };
