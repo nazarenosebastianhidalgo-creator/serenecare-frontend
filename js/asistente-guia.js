@@ -116,17 +116,26 @@ const CSS = `
 .sc-chips{display:flex;flex-wrap:wrap;gap:8px;}
 .sc-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(129,140,248,.12);color:#c7d2fe;border:1px solid rgba(129,140,248,.3);border-radius:999px;padding:8px 12px;font:600 12px Inter,sans-serif;cursor:pointer;}
 .sc-chip .material-symbols-outlined{font-size:15px;}
+.sc-chip-fb{background:rgba(251,191,36,.12);color:#fcd34d;border-color:rgba(251,191,36,.3);}
 .sc-cta{display:inline-flex;align-items:center;gap:6px;background:#0d9488;color:#fff;border-radius:10px;padding:9px 14px;font:700 12px Manrope,sans-serif;text-decoration:none;margin-top:4px;}
 .sc-done{color:#34d399;} .sc-pend{color:#fbbf24;}
 `;
 
 let token = null;
+let userId = null;
+let perfil = { rol: null, clinica_id: null, nombre: '', apellido: '', email: '' };
 
 async function init() {
   try {
     const { data: { session } } = await supabase.auth.getSession();
     token = session && session.access_token;
     if (!token) return; // sin sesión → no mostrar
+    userId = session.user.id;
+    perfil.email = session.user.email || '';
+    try {
+      const { data } = await supabase.from('usuarios').select('rol, clinica_id, nombre, apellido, email').eq('id', userId).maybeSingle();
+      if (data) perfil = { ...perfil, ...data };
+    } catch (_) {}
   } catch (_) { return; }
   montarUI();
 }
@@ -204,7 +213,73 @@ function menuPrincipal() {
     c.addEventListener('click', () => responderTema(t));
     chips.appendChild(c);
   });
+  // Siempre: salida a sugerencia/incidencia si no encuentra lo que busca
+  const fb = document.createElement('button'); fb.className = 'sc-chip sc-chip-fb';
+  fb.innerHTML = '<span class="material-symbols-outlined">forum</span> No encuentro lo que busco';
+  fb.addEventListener('click', fallbackInicio);
+  chips.appendChild(fb);
   d.appendChild(document.createElement('br')); d.appendChild(chips);
+}
+
+// ── Fallback: enviar sugerencia o incidencia al equipo ────────────────────────
+function fallbackInicio() {
+  const d = msg('Sin problema, te leo. ¿Qué quieres enviarnos?');
+  const chips = document.createElement('div'); chips.className = 'sc-chips';
+  const b1 = document.createElement('button'); b1.className = 'sc-chip';
+  b1.innerHTML = '<span class="material-symbols-outlined">lightbulb</span> Una sugerencia';
+  b1.addEventListener('click', () => formulario('sugerencia'));
+  const b2 = document.createElement('button'); b2.className = 'sc-chip';
+  b2.innerHTML = '<span class="material-symbols-outlined">bug_report</span> Reportar una incidencia';
+  b2.addEventListener('click', () => formulario('incidencia'));
+  chips.appendChild(b1); chips.appendChild(b2);
+  d.appendChild(document.createElement('br')); d.appendChild(chips);
+}
+
+function formulario(tipo) {
+  const esInc = tipo === 'incidencia';
+  const d = msg(esInc
+    ? 'Cuéntame qué <b>falla</b> con el mayor detalle posible (qué hacías, qué pasó). Nuestro equipo lo revisa.'
+    : 'Cuéntame tu <b>idea o mejora</b>. La leemos todas y nos ayudan a priorizar.');
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-top:8px;';
+  wrap.innerHTML = `
+    <input id="fb-asunto" placeholder="Asunto (opcional)" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 11px;color:#f1f5f9;font-size:13px;outline:none"/>
+    <textarea id="fb-texto" rows="4" placeholder="${esInc ? 'Describe la incidencia…' : 'Escribe tu sugerencia…'}" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 11px;color:#f1f5f9;font-size:13px;outline:none;resize:none"></textarea>
+    <button id="fb-enviar" style="background:#0d9488;color:#fff;border:none;border-radius:10px;padding:10px;font:700 13px Manrope,sans-serif;cursor:pointer">Enviar al equipo</button>
+    <span id="fb-err" style="display:none;color:#fb7185;font-size:12px"></span>`;
+  d.appendChild(wrap);
+  wrap.querySelector('#fb-enviar').addEventListener('click', () => enviarTicket(tipo, wrap));
+}
+
+async function enviarTicket(tipo, wrap) {
+  const asunto = (wrap.querySelector('#fb-asunto').value || '').trim();
+  const texto = (wrap.querySelector('#fb-texto').value || '').trim();
+  const err = wrap.querySelector('#fb-err');
+  if (!texto) { err.textContent = 'Escribe un mensaje antes de enviar.'; err.style.display = 'block'; return; }
+  const btn = wrap.querySelector('#fb-enviar'); btn.disabled = true; btn.textContent = 'Enviando…';
+  const nombre = ((perfil.nombre || '') + (perfil.apellido ? ' ' + perfil.apellido : '')).trim();
+  const titulo = asunto || (tipo === 'incidencia' ? 'Incidencia desde el asistente' : 'Sugerencia desde el asistente');
+  try {
+    const { error } = await supabase.from('tickets_soporte').insert({
+      clinica_id: perfil.clinica_id || null, usuario_id: userId, rol: perfil.rol || null,
+      nombre: nombre || null, email: perfil.email || null,
+      asunto: titulo, mensaje: texto,
+      categoria: tipo, prioridad: tipo === 'incidencia' ? 'alta' : 'media', estado: 'abierto',
+    });
+    if (error) throw error;
+    msg(tipo === 'incidencia'
+      ? '✓ Incidencia enviada. Nuestro equipo la revisa y te responde por el <b>widget de soporte</b> (abajo a la izquierda).'
+      : '✓ ¡Gracias por tu sugerencia! La tendremos en cuenta. Te podemos responder por el <b>widget de soporte</b>.');
+  } catch (e) {
+    err.textContent = 'No se pudo enviar, inténtalo de nuevo.'; err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Enviar al equipo'; return;
+  }
+  const back = msg('¿Algo más?');
+  const chips = document.createElement('div'); chips.className = 'sc-chips';
+  const c = document.createElement('button'); c.className = 'sc-chip';
+  c.innerHTML = '<span class="material-symbols-outlined">menu</span> Ver todos los temas';
+  c.addEventListener('click', menuPrincipal);
+  chips.appendChild(c); back.appendChild(document.createElement('br')); back.appendChild(chips);
 }
 
 function responderTema(t) {
