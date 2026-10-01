@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<script>if(localStorage.getItem('tp_tema')==='claro')document.documentElement.style.filter='invert(1) hue-rotate(180deg)'</script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Liquidación EAP | SereneCare</title>
+<link rel="stylesheet" href="/css/tailwind.css">
+  <script>window.tailwind=window.tailwind||{};</script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{fontFamily:{"headline":["Manrope"],"body":["Inter"]}}}}</script>
+<style>
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+  .bg-dark-canvas{background-color:#020617;} .sidebar-dark{background-color:#0f172a;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+</style>
+<style>/* SCALE-BASE-14 */ html{font-size:14px;}</style>
+</head>
+<body class="bg-dark-canvas font-body text-slate-200 antialiased min-h-screen">
+
+<div id="superadmin-sidebar"></div>
+<script src="/js/sidebar-super-admin.js"></script>
+
+<main class="pl-64 min-h-screen">
+  <header class="w-full h-20 sticky top-0 bg-slate-950/80 backdrop-blur-xl flex items-center justify-between px-8 z-40 border-b border-slate-800/10">
+    <div>
+      <h2 class="font-headline text-xl font-extrabold text-slate-50 tracking-tighter">Liquidación a psicólogos</h2>
+      <p class="text-slate-500 text-xs font-medium">Sesiones EAP realizadas — lo que hay que pagar a cada psicólogo</p>
+    </div>
+    <label class="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
+      <input type="checkbox" id="chk-pagadas" class="accent-indigo-500"/> Mostrar ya pagadas
+    </label>
+  </header>
+
+  <div class="p-8 max-w-5xl">
+    <div class="rounded-2xl border border-slate-800/40 bg-slate-900/30 overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead><tr class="text-left text-[11px] uppercase tracking-widest text-slate-500 border-b border-slate-800/40">
+            <th class="px-4 py-3 font-bold">Psicólogo</th>
+            <th class="px-4 py-3 font-bold">País</th>
+            <th class="px-4 py-3 font-bold">Sesiones</th>
+            <th class="px-4 py-3 font-bold">A pagar</th>
+            <th class="px-4 py-3 font-bold">CLABE / cuenta</th>
+            <th class="px-4 py-3 font-bold text-right">Acción</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div id="vacio" class="hidden py-14 text-center text-slate-500 text-sm">
+        <span class="material-symbols-outlined text-4xl text-slate-700 block mb-2">payments</span>
+        No hay sesiones pendientes de liquidar.
+      </div>
+    </div>
+    <p class="text-[11px] text-slate-600 mt-3">La liquidación es mensual por transferencia. "Marcar pagado" registra que ya se abonó (no ejecuta ninguna transferencia).</p>
+  </div>
+</main>
+
+<script type="module">
+import { supabase } from '../js/supabase-client.js'
+import { guardaSuperAdmin } from '../js/admin.js'
+const session = await guardaSuperAdmin()
+if (!session) { throw new Error('redirigiendo') }
+const { data: { session: sess } } = await supabase.auth.getSession()
+const TOKEN = sess && sess.access_token
+const H = { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' }
+const $ = id => document.getElementById(id)
+const money = (cent, moneda) => (cent/100).toLocaleString('es', { minimumFractionDigits: 0 }) + ' ' + (moneda||'')
+
+async function cargar() {
+  const pend = !$('chk-pagadas').checked
+  const r = await fetch('/api/eap/liquidaciones?pendientes=' + pend, { headers: H })
+  const out = await r.json().catch(()=>({}))
+  if (!r.ok) { $('tbody').innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-red-400">'+(out.error||'Error')+'</td></tr>'; return }
+  const lista = out.liquidaciones || []
+  $('vacio').classList.toggle('hidden', lista.length>0)
+  $('tbody').innerHTML = lista.map(l => `
+    <tr class="border-b border-slate-800/20">
+      <td class="px-4 py-3"><p class="font-semibold text-slate-100">${l.nombre}</p></td>
+      <td class="px-4 py-3 text-slate-400">${l.pais||'—'}</td>
+      <td class="px-4 py-3 text-slate-300">${l.sesiones}</td>
+      <td class="px-4 py-3 font-bold text-emerald-400">${money(l.total_cent, l.moneda)}</td>
+      <td class="px-4 py-3 text-slate-400 font-mono text-xs">${l.clabe||'<span class="text-amber-400">falta</span>'}</td>
+      <td class="px-4 py-3 text-right"><button data-pagar="${l.psicologo_id}" data-nombre="${(l.nombre||'').replace(/"/g,'&quot;')}" data-total="${money(l.total_cent, l.moneda)}" class="text-xs font-bold px-2.5 py-1 rounded-lg" style="background:rgba(16,185,129,0.12);color:#34d399;border:none;cursor:pointer;">Marcar pagado</button></td>
+    </tr>`).join('')
+}
+
+$('tbody').addEventListener('click', async e => {
+  const b = e.target.closest('button[data-pagar]'); if (!b) return
+  if (!confirm('¿Marcar como PAGADO a '+b.getAttribute('data-nombre')+' ('+b.getAttribute('data-total')+')?\n\nRegistra el pago; no ejecuta la transferencia.')) return
+  const r = await fetch('/api/eap/liquidaciones/marcar', { method:'POST', headers:H, body: JSON.stringify({ psicologo_id: b.getAttribute('data-pagar') }) })
+  const out = await r.json().catch(()=>({}))
+  if (!r.ok) { alert(out.error||'Error'); return }
+  cargar()
+})
+$('chk-pagadas').addEventListener('change', cargar)
+await cargar()
+</script>
+
+<script>
+(function(){
+  var nombre = localStorage.getItem('tp_nombre') || 'Super Admin';
+  var av=document.getElementById('sa-avatar'), nm=document.getElementById('sa-nombre');
+  if(av) av.textContent = nombre.split(' ').map(function(w){return w[0]||'';}).slice(0,2).join('').toUpperCase()||'SA';
+  if(nm) nm.textContent = nombre;
+  var tema=localStorage.getItem('tp_tema')||'oscuro';
+  var i=document.getElementById('icon-tema'),l=document.getElementById('label-tema');
+  if(i)i.textContent=tema==='claro'?'light_mode':'dark_mode'; if(l)l.textContent=tema==='claro'?'Modo oscuro':'Modo claro';
+})();
+function toggleTema(){var n=(localStorage.getItem('tp_tema')||'oscuro')==='oscuro'?'claro':'oscuro';localStorage.setItem('tp_tema',n);document.documentElement.style.filter=n==='claro'?'invert(1) hue-rotate(180deg)':'';var i=document.getElementById('icon-tema'),l=document.getElementById('label-tema');if(i)i.textContent=n==='claro'?'light_mode':'dark_mode';if(l)l.textContent=n==='claro'?'Modo oscuro':'Modo claro';}
+function cerrarTodasSesiones(){ if(confirm('¿Cerrar todas las sesiones activas?')) alert('Sesiones cerradas (requiere service role)'); }
+function toggleMantenimiento(){var a=localStorage.getItem('tp_mantenimiento')==='1',n=a?'0':'1';localStorage.setItem('tp_mantenimiento',n);var i=document.getElementById('icon-mant'),l=document.getElementById('label-mant');if(i)i.style.color=n==='1'?'#ef4444':'#f59e0b';if(l)l.textContent=n==='1'?'Desactivar mantenimiento':'Modo mantenimiento';}
+</script>
+<script type="module">import { initMantenimientoToggle } from "../js/mantenimiento-toggle.js"; initMantenimientoToggle();</script>
+</body></html>
