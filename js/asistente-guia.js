@@ -197,6 +197,12 @@ const CSS = `
 .sc-chip-fb{background:rgba(251,191,36,.12);color:#fcd34d;border-color:rgba(251,191,36,.3);}
 .sc-cta{display:inline-flex;align-items:center;gap:6px;background:#0d9488;color:#fff;border-radius:10px;padding:9px 14px;font:700 12px Manrope,sans-serif;text-decoration:none;margin-top:4px;}
 .sc-done{color:#34d399;} .sc-pend{color:#fbbf24;}
+.sc-msg-user{align-self:flex-end;background:rgba(79,70,229,.25);border:1px solid rgba(79,70,229,.4);border-radius:14px;border-top-right-radius:4px;color:#e2e8f0;}
+.sc-foot{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.sc-foot input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 11px;color:#f1f5f9;font-size:13px;outline:none;}
+.sc-foot button{width:40px;border:none;border-radius:10px;background:#4f46e5;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sc-foot button:disabled{opacity:.5;cursor:default;}
+.sc-typing{color:#94a3b8;font-style:italic;}
 `;
 
 let token = null;
@@ -234,11 +240,20 @@ function montarUI() {
       <div><h4>Asistente SereneCare</h4><p>Te guío paso a paso</p></div>
       <button id="sc-guia-close"><span class="material-symbols-outlined">close</span></button>
     </div>
-    <div id="sc-guia-body"></div>`;
+    <div id="sc-guia-body"></div>
+    <div class="sc-foot">
+      <input id="sc-guia-input" placeholder="Escribe tu pregunta…" maxlength="400"/>
+      <button id="sc-guia-send"><span class="material-symbols-outlined" style="font-size:18px">send</span></button>
+    </div>`;
   document.body.appendChild(panel);
 
   btn.addEventListener('click', () => { panel.classList.add('open'); btn.style.display = 'none'; abrir(); });
   panel.querySelector('#sc-guia-close').addEventListener('click', () => { panel.classList.remove('open'); btn.style.display = ''; });
+  const input = panel.querySelector('#sc-guia-input');
+  const send = panel.querySelector('#sc-guia-send');
+  const lanzar = () => { const v = (input.value || '').trim(); if (v) { input.value = ''; preguntarIA(v); } };
+  send.addEventListener('click', lanzar);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') lanzar(); });
 }
 
 const body = () => document.getElementById('sc-guia-body');
@@ -246,10 +261,55 @@ function msg(html) {
   const d = document.createElement('div'); d.className = 'sc-msg'; d.innerHTML = html;
   body().appendChild(d); body().scrollTop = body().scrollHeight; return d;
 }
+function msgUser(texto) {
+  const d = document.createElement('div'); d.className = 'sc-msg sc-msg-user';
+  d.textContent = texto; body().appendChild(d); body().scrollTop = body().scrollHeight; return d;
+}
+
+// ── Pregunta libre a la IA (Capa 2) ───────────────────────────────────────────
+let esperandoIA = false;
+async function preguntarIA(texto) {
+  if (esperandoIA) return;
+  esperandoIA = true;
+  const send = document.getElementById('sc-guia-send'); if (send) send.disabled = true;
+  msgUser(texto);
+  const typing = msg('<span class="sc-typing">escribiendo…</span>');
+  try {
+    const r = await fetch(BK + '/api/asistente/preguntar', {
+      method: 'POST', headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pregunta: texto }),
+    });
+    const d = await r.json().catch(() => ({}));
+    typing.remove();
+    const answer = (d.answer || d.error || 'No he podido responder.').replace(/</g, '&lt;').replace(/\n/g, '<br>');
+    msg(answer);
+    if (d.derivar) fallbackInicio();
+    else cierreConMenu();
+  } catch (e) {
+    typing.remove();
+    msg('No he podido conectar. ¿Quieres mandarnos una sugerencia o incidencia?');
+    fallbackInicio();
+  }
+  esperandoIA = false; if (send) send.disabled = false;
+}
+
+// Chips de cierre tras una respuesta (volver al menú o derivar a soporte)
+function cierreConMenu() {
+  const d = msg('¿Algo más?');
+  const chips = document.createElement('div'); chips.className = 'sc-chips';
+  const c = document.createElement('button'); c.className = 'sc-chip';
+  c.innerHTML = '<span class="material-symbols-outlined">menu</span> Todas las áreas';
+  c.addEventListener('click', menuPrincipal);
+  const fb = document.createElement('button'); fb.className = 'sc-chip sc-chip-fb';
+  fb.innerHTML = '<span class="material-symbols-outlined">forum</span> Esto no me resuelve';
+  fb.addEventListener('click', fallbackInicio);
+  chips.appendChild(c); chips.appendChild(fb);
+  d.appendChild(document.createElement('br')); d.appendChild(chips);
+}
 
 async function abrir() {
   body().innerHTML = '';
-  msg('¡Hola! 👋 Soy tu asistente. Te ayudo a dejar tu consulta lista y a saber <b>cómo hacer cada cosa</b>, sin tener que preguntar a nadie.');
+  msg('¡Hola! 👋 Soy tu asistente. Te ayudo a dejar tu consulta lista y a saber <b>cómo hacer cada cosa</b>. Elige un área abajo o <b>escríbeme tu pregunta</b> en la cajita de abajo.');
   await mostrarProgreso();
   menuPrincipal();
 }
