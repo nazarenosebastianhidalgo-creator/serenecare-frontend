@@ -14,87 +14,165 @@ const ROL = (window.__SC_ROL === 'psicologo') ? 'psicologo' : 'admin_clinica';
 // Resuelve pantallas que cambian según el rol (admin clínica vs psicólogo)
 function pant(base) {
   const variantes = {
-    perfil:        ROL === 'psicologo' ? 'perfil_psicologo.html'       : 'perfil_clinica.html',
-    agenda:        ROL === 'psicologo' ? 'agenda_psicologo.html'       : 'agenda_clinica.html',
-    pacientes:     ROL === 'psicologo' ? 'pacientes_psicologo.html'    : 'pacientes_clinica.html',
-    integraciones: ROL === 'psicologo' ? 'integraciones_psicologo.html': 'integraciones_clinica.html',
+    perfil:         ROL === 'psicologo' ? 'perfil_psicologo.html'        : 'perfil_clinica.html',
+    agenda:         ROL === 'psicologo' ? 'agenda_psicologo.html'        : 'agenda_clinica.html',
+    pacientes:      ROL === 'psicologo' ? 'pacientes_psicologo.html'     : 'pacientes_clinica.html',
+    integraciones:  ROL === 'psicologo' ? 'integraciones_psicologo.html' : 'integraciones_clinica.html',
+    consentimientos:ROL === 'psicologo' ? 'consentimientos_psicologo.html': 'consentimientos_clinica.html',
+    mensajes:       ROL === 'psicologo' ? 'mensajes_psicologo.html'      : 'mensajes_clinica.html',
+    analytics:      ROL === 'psicologo' ? 'analytics_ia_psicologo.html'  : 'estadisticas_clinica.html',
   };
   // Pantallas compartidas (misma para ambos roles)
   const fijas = {
-    recepcion: 'recepcion_config.html',
-    recursos:  'recursos_psicologo.html',
-    migracion: 'migracion.html',
+    recepcion:    'recepcion_config.html',
+    recursos:     'recursos_psicologo.html',
+    migracion:    'migracion.html',
+    telemedicina: 'telemedicina_psicologo.html',
+    resenas:      'resenas_psicologo.html',
   };
   return variantes[base] || fijas[base] || base;
 }
 
-// ── Base de conocimiento (temas guiados) ──────────────────────────────────────
-const TEMAS = [
+// ── Base de conocimiento, por categorías (cubre todo el SaaS) ─────────────────
+const CATEGORIAS = [
   {
-    id: 'perfil', icono: 'badge', label: 'Completar mi ficha',
-    pasos: [
-      'Entra en <b>Mi perfil</b> → pestaña <b>Perfil profesional</b>.',
-      'Rellena especialidad, años de experiencia y una <b>biografía</b> (lo que verán tus pacientes).',
-      'Sube tu <b>foto</b> en la pestaña de información personal.',
-      'Cuando esté completa, pulsa <b>Publicar ficha</b> para aparecer en el directorio.',
+    id: 'cuenta', label: 'Configurar mi cuenta', icono: 'settings',
+    temas: [
+      { id: 'perfil', icono: 'badge', label: 'Completar mi ficha y publicarla',
+        pasos: [
+          'Entra en <b>Mi perfil</b> → pestaña <b>Perfil profesional</b>.',
+          'Rellena especialidad, años de experiencia y una <b>biografía</b> (lo que verán tus pacientes).',
+          'Sube tu <b>foto</b> en la pestaña de información personal.',
+          'Cuando esté completa, pulsa <b>Publicar ficha</b> para aparecer en el directorio.',
+        ], cta: { label: 'Ir a Mi perfil', pant: 'perfil' } },
+      { id: 'verificacion', icono: 'verified_user', label: 'Verificar que soy psicólogo (si aplica)',
+        pasos: [
+          'En <b>Mi perfil</b> → <b>Perfil profesional</b>, si tu país lo requiere verás el bloque <b>Verificación profesional</b>.',
+          'Sube tu identificación, tu título y tu cédula/colegiación.',
+          'La verificación es automática; tus documentos se guardan de forma privada.',
+        ], cta: { label: 'Ir a Mi perfil', pant: 'perfil' } },
+      { id: 'plan', icono: 'workspace_premium', label: 'Mi plan y facturación',
+        pasos: [
+          'Entra en <b>Mi perfil</b>: ahí ves tu plan actual.',
+          'Puedes <b>mejorar a Premium</b> para desbloquear la recepcionista IA y más funciones.',
+          'Desde el portal de suscripción gestionas el pago, las facturas y la baja.',
+        ], cta: { label: 'Ir a Mi perfil', pant: 'perfil' } },
+      { id: 'gcal', icono: 'calendar_month', label: 'Conectar Google Calendar',
+        pasos: [
+          'Entra en <b>Integraciones</b>.',
+          'Pulsa <b>Conectar Google Calendar</b> y autoriza con tu cuenta de Google.',
+          'Tus citas se sincronizan con tu calendario automáticamente.',
+        ], cta: { label: 'Ir a Integraciones', pant: 'integraciones' } },
     ],
-    cta: { label: 'Ir a Mi perfil', pant: 'perfil' },
   },
   {
-    id: 'agenda', icono: 'event', label: 'Configurar horarios y reservas',
-    pasos: [
-      'Entra en <b>Recepción y Reservas</b>.',
-      'Marca tus <b>días y franjas horarias</b> de atención.',
-      'Activa el interruptor de <b>Reservas</b> para que te puedan pedir cita.',
-      'Define la <b>duración</b> de la sesión y la antelación mínima.',
+    id: 'pacientes', label: 'Pacientes y citas', icono: 'groups',
+    temas: [
+      { id: 'add-pac', icono: 'person_add', label: 'Añadir o invitar pacientes',
+        pasos: [
+          'Entra en <b>Pacientes</b>.',
+          'Pulsa <b>Añadir paciente</b> y rellena sus datos, o <b>invítale</b> por email para que complete su ficha.',
+          'El paciente recibe un enlace para registrarse y ver sus citas y recursos.',
+        ], cta: { label: 'Ir a Pacientes', pant: 'pacientes' } },
+      { id: 'migracion', icono: 'upload_file', label: 'Migrar mis pacientes (CSV/Excel)',
+        pasos: [
+          'Entra en <b>Migración</b>.',
+          'Sube tu archivo (CSV o Excel) con tus pacientes actuales.',
+          'El sistema mapea las columnas con IA; revisa y confirma la importación.',
+        ], cta: { label: 'Ir a Migración', pant: 'migracion' } },
+      { id: 'agenda', icono: 'event', label: 'Ver y gestionar mi agenda',
+        pasos: [
+          'Entra en <b>Agenda</b> para ver tus citas por día y semana.',
+          'Puedes crear una cita manual, reprogramar o cancelar.',
+          'Los horarios en los que te pueden reservar se configuran en <b>Recepción y Reservas</b>.',
+        ], cta: { label: 'Ir a Agenda', pant: 'agenda' } },
+      { id: 'reservas', icono: 'schedule', label: 'Configurar horarios y reservas',
+        pasos: [
+          'Entra en <b>Recepción y Reservas</b>.',
+          'Marca tus <b>días y franjas horarias</b> de atención.',
+          'Activa el interruptor de <b>Reservas</b> y define duración y antelación mínima.',
+        ], cta: { label: 'Configurar reservas', pant: 'recepcion' } },
+      { id: 'recordatorios', icono: 'notifications_active', label: 'Recordatorios de cita',
+        pasos: [
+          'Los recordatorios por email se envían de forma automática antes de cada cita.',
+          'El paciente puede elegir con cuánta antelación quiere el aviso.',
+          'Sirven para reducir los no-shows (citas a las que no acuden).',
+        ] },
     ],
-    cta: { label: 'Configurar reservas', pant: 'recepcion' },
   },
   {
-    id: 'pacientes', icono: 'groups', label: 'Añadir o invitar pacientes',
-    pasos: [
-      'Entra en <b>Pacientes</b>.',
-      'Pulsa <b>Añadir paciente</b> y rellena sus datos, o <b>invítale</b> por email para que complete su ficha.',
-      'El paciente recibe un enlace para registrarse y ver sus citas y recursos.',
+    id: 'sesion', label: 'Durante y después de la sesión', icono: 'clinical_notes',
+    temas: [
+      { id: 'telemedicina', icono: 'videocam', label: 'Hacer una sesión por videollamada',
+        pasos: [
+          'Desde la cita en tu <b>Agenda</b>, inicia la <b>videollamada</b>.',
+          'El paciente entra desde su enlace a la sala de espera; tú le das paso.',
+          'No necesita instalar nada, funciona en el navegador.',
+        ], cta: { label: 'Ir a Agenda', pant: 'agenda' } },
+      { id: 'soap', icono: 'edit_note', label: 'Escribir notas de sesión (SOAP)',
+        pasos: [
+          'Abre la ficha del paciente en <b>Pacientes</b>.',
+          'Crea una <b>nueva nota de sesión</b> con el formato SOAP.',
+          'Queda guardada en el historial del paciente.',
+        ], cta: { label: 'Ir a Pacientes', pant: 'pacientes' } },
+      { id: 'transcripcion', icono: 'mic', label: 'Dictar y generar el SOAP con IA',
+        pasos: [
+          'En la nota de sesión del paciente, usa la <b>transcripción</b>: dicta o sube el audio.',
+          'La IA redacta un <b>borrador de SOAP</b> a partir de lo dictado.',
+          'Revísalo y edítalo antes de guardarlo (tú tienes la última palabra).',
+        ], cta: { label: 'Ir a Pacientes', pant: 'pacientes' } },
+      { id: 'escalas', icono: 'checklist', label: 'Enviar escalas y cuestionarios (PHQ-9, GAD-7…)',
+        pasos: [
+          'Desde la ficha del paciente, <b>solicita una escala</b> del catálogo.',
+          'El paciente la rellena desde su portal.',
+          'Ves la puntuación y su <b>evolución en el tiempo</b> en una gráfica.',
+        ], cta: { label: 'Ir a Pacientes', pant: 'pacientes' } },
+      { id: 'consentimientos', icono: 'gavel', label: 'Consentimientos RGPD',
+        pasos: [
+          'Entra en <b>Consentimientos</b>.',
+          'Envía al paciente el consentimiento informado para que lo firme.',
+          'Queda registrado para tu cumplimiento legal.',
+        ], cta: { label: 'Ir a Consentimientos', pant: 'consentimientos' } },
+      { id: 'recursos', icono: 'folder_shared', label: 'Compartir recursos con un paciente',
+        pasos: [
+          'Entra en <b>Recursos</b>.',
+          'Sube documentos, ejercicios o materiales.',
+          'Asígnalos a un paciente concreto; lo verá en su portal.',
+        ], cta: { label: 'Ir a Recursos', pant: 'recursos' } },
+      { id: 'mensajes', icono: 'chat', label: 'Mensajes con mis pacientes',
+        pasos: [
+          'Entra en <b>Mensajes</b> para hablar con tus pacientes dentro de la plataforma.',
+          'Las conversaciones quedan guardadas y asociadas a cada paciente.',
+        ], cta: { label: 'Ir a Mensajes', pant: 'mensajes' } },
     ],
-    cta: { label: 'Ir a Pacientes', pant: 'pacientes' },
   },
   {
-    id: 'migracion', icono: 'upload_file', label: 'Migrar mis pacientes (CSV/Excel)',
-    pasos: [
-      'Entra en <b>Migración</b>.',
-      'Sube tu archivo (CSV o Excel) con tus pacientes actuales.',
-      'El sistema mapea las columnas automáticamente; revisa y confirma la importación.',
+    id: 'captar', label: 'Captar más pacientes', icono: 'trending_up',
+    temas: [
+      { id: 'recepcionista', icono: 'support_agent', label: 'Activar la recepcionista IA',
+        pasos: [
+          'Entra en <b>Recepción y Reservas</b>.',
+          'Activa la <b>recepcionista IA</b>: responde a tus pacientes, ofrece huecos y agenda por ti.',
+          'Revisa el mensaje de bienvenida y tus áreas de especialización (las usa para responder).',
+          '<i>Función Premium.</i>',
+        ], cta: { label: 'Configurar recepción', pant: 'recepcion' } },
+      { id: 'resenas', icono: 'star', label: 'Pedir reseñas y mejorar mi ficha de Google',
+        pasos: [
+          'Entra en <b>Reseñas</b>.',
+          'El sistema pide reseña a tus pacientes tras la sesión (las buenas van públicas, las dudas te llegan en privado).',
+          'El optimizador IA te ayuda a mejorar tu ficha de Google Business.',
+        ], cta: { label: 'Ir a Reseñas', pant: 'resenas' } },
+      { id: 'cobros', icono: 'payments', label: 'Cobrar las sesiones online',
+        pasos: [
+          'En <b>Recepción y Reservas</b> puedes activar el <b>cobro al reservar</b>.',
+          'El paciente paga al pedir la cita; tú recibes el dinero en tu cuenta.',
+          'Si no lo ves disponible aún, escríbenos con el botón de abajo.',
+        ], cta: { label: 'Configurar recepción', pant: 'recepcion' } },
+      { id: 'analytics', icono: 'monitoring', label: 'Ver mis estadísticas',
+        pasos: [
+          'Entra en <b>Estadísticas</b> para ver tu actividad: citas, pacientes, ingresos y evolución.',
+        ], cta: { label: 'Ver estadísticas', pant: 'analytics' } },
     ],
-    cta: { label: 'Ir a Migración', pant: 'migracion' },
-  },
-  {
-    id: 'recepcionista', icono: 'support_agent', label: 'Activar la recepcionista IA',
-    pasos: [
-      'Entra en <b>Recepción y Reservas</b>.',
-      'Activa la <b>recepcionista IA</b>: responde a tus pacientes, ofrece huecos y agenda por ti.',
-      'Revisa el mensaje de bienvenida y tus áreas de especialización (las usa para responder).',
-      '<i>La recepcionista IA es una función Premium.</i>',
-    ],
-    cta: { label: 'Configurar recepción', pant: 'recepcion' },
-  },
-  {
-    id: 'gcal', icono: 'calendar_month', label: 'Conectar Google Calendar',
-    pasos: [
-      'Entra en <b>Integraciones</b>.',
-      'Pulsa <b>Conectar Google Calendar</b> y autoriza con tu cuenta de Google.',
-      'A partir de ahí, tus citas se sincronizan con tu calendario automáticamente.',
-    ],
-    cta: { label: 'Ir a Integraciones', pant: 'integraciones' },
-  },
-  {
-    id: 'recursos', icono: 'folder_shared', label: 'Compartir recursos con pacientes',
-    pasos: [
-      'Entra en <b>Recursos</b>.',
-      'Sube documentos, ejercicios o materiales.',
-      'Asígnalos a un paciente concreto; lo verá en su portal.',
-    ],
-    cta: { label: 'Ir a Recursos', pant: 'recursos' },
   },
 ];
 
@@ -205,12 +283,12 @@ async function mostrarProgreso() {
 }
 
 function menuPrincipal() {
-  const d = msg('¿Con qué te ayudo?');
+  const d = msg('¿Con qué te ayudo? Elige un área:');
   const chips = document.createElement('div'); chips.className = 'sc-chips';
-  TEMAS.forEach(t => {
+  CATEGORIAS.forEach(cat => {
     const c = document.createElement('button'); c.className = 'sc-chip';
-    c.innerHTML = `<span class="material-symbols-outlined">${t.icono}</span> ${t.label}`;
-    c.addEventListener('click', () => responderTema(t));
+    c.innerHTML = `<span class="material-symbols-outlined">${cat.icono}</span> ${cat.label}`;
+    c.addEventListener('click', () => mostrarCategoria(cat));
     chips.appendChild(c);
   });
   // Siempre: salida a sugerencia/incidencia si no encuentra lo que busca
@@ -218,6 +296,22 @@ function menuPrincipal() {
   fb.innerHTML = '<span class="material-symbols-outlined">forum</span> No encuentro lo que busco';
   fb.addEventListener('click', fallbackInicio);
   chips.appendChild(fb);
+  d.appendChild(document.createElement('br')); d.appendChild(chips);
+}
+
+function mostrarCategoria(cat) {
+  const d = msg(`<b>${cat.label}</b> — ¿qué quieres hacer?`);
+  const chips = document.createElement('div'); chips.className = 'sc-chips';
+  cat.temas.forEach(t => {
+    const c = document.createElement('button'); c.className = 'sc-chip';
+    c.innerHTML = `<span class="material-symbols-outlined">${t.icono}</span> ${t.label}`;
+    c.addEventListener('click', () => responderTema(t, cat));
+    chips.appendChild(c);
+  });
+  const back = document.createElement('button'); back.className = 'sc-chip';
+  back.innerHTML = '<span class="material-symbols-outlined">arrow_back</span> Volver';
+  back.addEventListener('click', menuPrincipal);
+  chips.appendChild(back);
   d.appendChild(document.createElement('br')); d.appendChild(chips);
 }
 
@@ -282,7 +376,7 @@ async function enviarTicket(tipo, wrap) {
   chips.appendChild(c); back.appendChild(document.createElement('br')); back.appendChild(chips);
 }
 
-function responderTema(t) {
+function responderTema(t, cat) {
   let html = `<b>${t.label}</b><ol>` + t.pasos.map(p => `<li>${p}</li>`).join('') + '</ol>';
   const d = msg(html);
   if (t.cta) {
@@ -290,13 +384,24 @@ function responderTema(t) {
     a.innerHTML = '<span class="material-symbols-outlined" style="font-size:15px">open_in_new</span> ' + t.cta.label;
     d.appendChild(a);
   }
-  // volver al menú
+  // volver al menú + salida a soporte
   const back = msg('¿Algo más?');
   const chips = document.createElement('div'); chips.className = 'sc-chips';
+  if (cat) {
+    const cc = document.createElement('button'); cc.className = 'sc-chip';
+    cc.innerHTML = `<span class="material-symbols-outlined">${cat.icono}</span> ${cat.label}`;
+    cc.addEventListener('click', () => mostrarCategoria(cat));
+    chips.appendChild(cc);
+  }
   const c = document.createElement('button'); c.className = 'sc-chip';
-  c.innerHTML = '<span class="material-symbols-outlined">menu</span> Ver todos los temas';
+  c.innerHTML = '<span class="material-symbols-outlined">menu</span> Todas las áreas';
   c.addEventListener('click', menuPrincipal);
-  chips.appendChild(c); back.appendChild(document.createElement('br')); back.appendChild(chips);
+  chips.appendChild(c);
+  const fb = document.createElement('button'); fb.className = 'sc-chip sc-chip-fb';
+  fb.innerHTML = '<span class="material-symbols-outlined">forum</span> Esto no me resuelve';
+  fb.addEventListener('click', fallbackInicio);
+  chips.appendChild(fb);
+  back.appendChild(document.createElement('br')); back.appendChild(chips);
 }
 
 init();
