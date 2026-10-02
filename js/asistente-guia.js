@@ -247,13 +247,36 @@ function montarUI() {
     </div>`;
   document.body.appendChild(panel);
 
-  btn.addEventListener('click', () => { panel.classList.add('open'); btn.style.display = 'none'; abrir(); });
+  const abrirPanel = () => { panel.classList.add('open'); btn.style.display = 'none'; abrir(); };
+  btn.addEventListener('click', abrirPanel);
   panel.querySelector('#sc-guia-close').addEventListener('click', () => { panel.classList.remove('open'); btn.style.display = ''; });
   const input = panel.querySelector('#sc-guia-input');
   const send = panel.querySelector('#sc-guia-send');
   const lanzar = () => { const v = (input.value || '').trim(); if (v) { input.value = ''; preguntarIA(v); } };
   send.addEventListener('click', lanzar);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') lanzar(); });
+
+  // ENTRADA guiada: se abre SOLO si al usuario le faltan pasos de activación.
+  // Como máximo una vez al día (no molestar al que ya lo tiene), solo en dashboards.
+  autoAbrir(abrirPanel);
+}
+
+async function autoAbrir(abrirPanel) {
+  try {
+    const hoy = new Date().toISOString().slice(0, 10);
+    const marca = 'sc_guia_auto_' + hoy;
+    let yaHoy = false;
+    try { yaHoy = !!localStorage.getItem(marca); } catch (_) {}
+    if (yaHoy) return;
+    const r = await fetch(BK + '/api/eap/mi-elegibilidad', { headers: { Authorization: 'Bearer ' + token } });
+    if (!r.ok) return;
+    const d = await r.json();
+    const pendientes = (d.checks || []).filter(c => !c.done).length;
+    if (pendientes > 0) {
+      try { localStorage.setItem(marca, '1'); } catch (_) {}
+      setTimeout(abrirPanel, 900); // pequeño respiro tras cargar el dashboard
+    }
+  } catch (_) {}
 }
 
 const body = () => document.getElementById('sc-guia-body');
