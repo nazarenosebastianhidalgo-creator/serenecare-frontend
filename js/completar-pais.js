@@ -50,6 +50,7 @@ function mostrarModal(authH) {
         <h3 style="font-family:Manrope,sans-serif;font-weight:800;color:#f1f5f9;font-size:18px;margin:0;">¿Desde qué país ejerces?</h3>
       </div>
       <p style="color:#94a3b8;font-size:13px;line-height:1.6;margin:0 0 18px;">Necesitamos saber tu país para configurar tu cuenta correctamente (impuestos, verificación profesional y pacientes de tu zona). Solo se pide una vez.</p>
+      <style>#pais-select option{color:#0f172a;background:#ffffff;}</style>
       <select id="pais-select" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#f1f5f9;border-radius:12px;padding:12px 14px;font-size:14px;outline:none;margin-bottom:16px;">
         <option value="" disabled selected>Selecciona tu país…</option>
         ${opciones}
