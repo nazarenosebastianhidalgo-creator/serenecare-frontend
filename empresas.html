@@ -5,139 +5,173 @@
 <!-- Página NO listada: no enlazada desde la web y fuera de buscadores. Solo por enlace directo (emails). -->
 <meta name="robots" content="noindex, nofollow"/>
 <title>SereneCare para empresas — bienestar emocional de tu equipo</title>
-<meta name="description" content="Programa de salud mental para empresas por paquetes de sesiones. Pagas por lo que se usa, con informe agregado y confidencial."/>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<meta name="description" content="Programa de salud mental para empresas por paquetes de sesiones. Se paga por lo que se usa, con informe agregado y confidencial."/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=Inter:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
-  :root{
-    --bg:#060d18; --bg2:#0b1626; --card:#0f1d30; --line:rgba(255,255,255,.08);
-    --txt:#e8eef6; --muted:#93a3b8; --teal:#2dd4bf; --teal2:#14b8a6; --ink:#041016;
-  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--txt);font-family:Inter,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
-  h1,h2,h3{font-family:Manrope,sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.15;text-wrap:balance}
-  a{color:inherit}
-  .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
-  .btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--ink);font-family:Manrope,sans-serif;font-weight:800;font-size:15px;padding:14px 24px;border-radius:12px;text-decoration:none;border:none;cursor:pointer}
-  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
-  header.nav{border-bottom:1px solid var(--line);background:rgba(6,13,24,.8);backdrop-filter:blur(10px);position:sticky;top:0;z-index:10}
-  header.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .logo{font-family:Manrope,sans-serif;font-weight:800;font-size:18px}
-  .logo span{color:var(--teal)}
-  /* Hero */
-  .hero{padding:72px 0 56px;background:radial-gradient(1200px 500px at 50% -10%,rgba(45,212,191,.10),transparent 60%)}
-  .hero h1{font-size:clamp(30px,5vw,50px)}
-  .hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:620px;margin:20px 0 28px}
-  .hero .cta-row{display:flex;gap:12px;flex-wrap:wrap}
-  .trust{color:var(--muted);font-size:13px;margin-top:18px}
-  section{padding:52px 0}
-  .section-head{max-width:640px;margin-bottom:34px}
-  .section-head h2{font-size:clamp(24px,3.4vw,34px)}
-  .section-head p{color:var(--muted);margin-top:12px;font-size:16px}
-  .grid{display:grid;gap:16px}
-  .cols-3{grid-template-columns:repeat(3,1fr)}
-  .cols-2{grid-template-columns:repeat(2,1fr)}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}
-  .card h3{font-size:18px;margin-bottom:8px}
-  .card p{color:var(--muted);font-size:14.5px}
-  .num{width:34px;height:34px;border-radius:10px;background:rgba(45,212,191,.12);color:var(--teal);display:flex;align-items:center;justify-content:center;font-family:Manrope,sans-serif;font-weight:800;margin-bottom:14px}
-  .pill{display:inline-block;background:rgba(45,212,191,.1);color:var(--teal);border:1px solid rgba(45,212,191,.25);border-radius:999px;font-size:12px;font-weight:700;padding:5px 12px;margin-bottom:12px}
-  ul.feats{list-style:none;display:grid;gap:12px}
-  ul.feats li{display:flex;gap:10px;color:var(--muted);font-size:15px}
+  :root{
+    --bg:#020617; --card:rgba(255,255,255,0.03); --line:rgba(255,255,255,0.07);
+    --txt:#e2e8f0; --muted:#94a3b8; --dim:#64748b;
+    --teal:#2dd4bf; --teal-d:#0f766e; --indigo:#818cf8; --purple:#a78bfa; --blue:#60a5fa; --ink:#041016;
+  }
+  body{background:var(--bg);color:var(--txt);font-family:'Inter',system-ui,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .font-h{font-family:'Manrope',sans-serif}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  .material-symbols-outlined{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+  h1,h2,h3{font-family:'Manrope',sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.14;text-wrap:balance}
+  a{color:inherit;text-decoration:none}
+  .grad-txt{background:linear-gradient(135deg,var(--teal),var(--indigo));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .eyebrow{font-family:'Manrope',sans-serif;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--teal)}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Manrope',sans-serif;font-weight:800;font-size:15px;padding:14px 26px;border-radius:14px;cursor:pointer;border:1px solid transparent;transition:all .2s}
+  .btn-primary{background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#021613;box-shadow:0 8px 32px rgba(45,212,191,.25)}
+  .btn-primary:hover{opacity:.92}
+  .btn-ghost{background:rgba(255,255,255,.04);border-color:var(--line);color:var(--txt)}
+  .btn-ghost:hover{background:rgba(255,255,255,.07)}
+  /* NAV */
+  nav{position:sticky;top:0;z-index:50;background:rgba(2,6,23,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.05)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .logo{font-family:'Manrope',sans-serif;font-weight:900;font-size:22px;letter-spacing:-.02em}
+  /* HERO */
+  .hero{position:relative;overflow:hidden;padding:84px 0 60px}
+  .hero .glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:620px;height:420px;background:radial-gradient(ellipse,rgba(20,184,166,.10) 0%,transparent 70%);pointer-events:none}
+  .hero .glow2{position:absolute;top:120px;left:12%;width:300px;height:300px;background:radial-gradient(ellipse,rgba(139,92,246,.06) 0%,transparent 70%);pointer-events:none}
+  .hero .inner{position:relative;z-index:1}
+  .badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:999px;background:rgba(20,184,166,.08);border:1px solid rgba(20,184,166,.2);font-size:13px;color:var(--teal);font-weight:600;margin-bottom:26px}
+  .badge .material-symbols-outlined{font-size:17px}
+  .hero h1{font-size:clamp(32px,5.2vw,54px);font-weight:900}
+  .hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:640px;margin:22px 0 30px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+  .trust{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;color:var(--dim);font-size:13.5px}
+  .trust span{display:inline-flex;align-items:center;gap:7px}
+  .trust .material-symbols-outlined{font-size:17px;color:var(--teal)}
+  /* SECTIONS */
+  section{padding:58px 0}
+  .shead{max-width:660px;margin-bottom:38px}
+  .shead h2{font-size:clamp(25px,3.6vw,36px)}
+  .shead p{color:var(--muted);margin-top:14px;font-size:16.5px}
+  .grid{display:grid;gap:18px}
+  .c3{grid-template-columns:repeat(3,1fr)} .c2{grid-template-columns:1.1fr 1fr}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:28px;transition:all .25s}
+  .card:hover{background:rgba(255,255,255,.06);border-color:rgba(20,184,166,.2);transform:translateY(-2px)}
+  .ico{width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+  .ico .material-symbols-outlined{font-size:24px}
+  .ico.t{background:rgba(20,184,166,.12);border:1px solid rgba(20,184,166,.2)} .ico.t .material-symbols-outlined{color:var(--teal)}
+  .ico.p{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2)} .ico.p .material-symbols-outlined{color:var(--purple)}
+  .ico.b{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2)} .ico.b .material-symbols-outlined{color:var(--blue)}
+  .card h3{font-size:19px;margin-bottom:9px}
+  .card p{color:var(--muted);font-size:15px}
+  .step-n{font-family:'Manrope',sans-serif;font-weight:900;font-size:15px;color:var(--teal);opacity:.6}
+  .band{background:linear-gradient(135deg,rgba(20,184,166,.05),rgba(139,92,246,.03));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  ul.feats{list-style:none;display:grid;gap:15px;margin-top:6px}
+  ul.feats li{display:flex;gap:12px;align-items:flex-start;color:var(--muted);font-size:15.5px}
   ul.feats li b{color:var(--txt);font-weight:600}
-  .check{color:var(--teal);font-weight:800;flex-shrink:0}
-  .plan-foot{margin-top:16px;color:var(--muted);font-size:13px}
-  .cta-final{background:linear-gradient(135deg,rgba(45,212,191,.12),rgba(20,184,166,.04));border:1px solid rgba(45,212,191,.22);border-radius:22px;padding:40px;text-align:center}
-  .cta-final h2{font-size:clamp(24px,3.4vw,32px)}
-  .cta-final p{color:var(--muted);max-width:520px;margin:12px auto 24px}
-  footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px;text-align:center}
-  @media(max-width:760px){.cols-3,.cols-2{grid-template-columns:1fr}}
+  ul.feats .material-symbols-outlined{color:var(--teal);font-size:21px;flex-shrink:0;margin-top:1px}
+  .plan{position:relative}
+  .plan.featured{border-color:rgba(45,212,191,.4);background:linear-gradient(135deg,rgba(20,184,166,.07),rgba(139,92,246,.03))}
+  .tag{display:inline-block;font-family:'Manrope',sans-serif;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 12px;border-radius:999px;background:rgba(20,184,166,.12);color:var(--teal);border:1px solid rgba(20,184,166,.25);margin-bottom:16px}
+  .plan .big{font-family:'Manrope',sans-serif;font-weight:900;font-size:30px;margin-bottom:6px}
+  .plan .big small{font-size:15px;font-weight:700;color:var(--muted)}
+  .plan-note{color:var(--dim);font-size:13.5px;margin-top:18px}
+  .cta-final{background:linear-gradient(135deg,rgba(20,184,166,.10),rgba(139,92,246,.05));border:1px solid rgba(45,212,191,.22);border-radius:28px;padding:52px 40px;text-align:center}
+  .cta-final h2{font-size:clamp(26px,3.6vw,34px)}
+  .cta-final p{color:var(--muted);max-width:540px;margin:14px auto 28px;font-size:16.5px}
+  footer{border-top:1px solid var(--line);padding:30px 0;color:var(--dim);font-size:13.5px;text-align:center}
+  @media(max-width:780px){.c3,.c2{grid-template-columns:1fr}.hero{padding:60px 0 44px}}
 </style>
 </head>
 <body>
 
-<header class="nav"><div class="wrap">
-  <div class="logo">Serene<span>Care</span></div>
-  <a class="btn" href="#contacto">Agenda una llamada</a>
-</div></header>
+<nav><div class="wrap">
+  <div class="logo grad-txt">SereneCare</div>
+  <a class="btn btn-primary" href="#contacto">Agenda una llamada</a>
+</div></nav>
 
-<section class="hero"><div class="wrap">
-  <span class="eyebrow">Bienestar emocional para empresas</span>
-  <h1>Terapia para tu equipo, sin cuotas fijas que nadie usa.</h1>
-  <p class="lead">La mayoría de programas de salud mental cobran una mensualidad alta que casi nadie aprovecha. Nosotros funcionamos por <b style="color:#e8eef6">paquetes de sesiones</b>: tu empresa compra un paquete y tus colaboradores lo usan cuando lo necesitan. Pagas por sesiones reales.</p>
-  <div class="cta-row">
-    <a class="btn" href="#contacto">Agenda 15 minutos</a>
-    <a class="btn ghost" href="#como">Ver cómo funciona</a>
+<section class="hero"><div class="glow"></div><div class="glow2"></div>
+  <div class="wrap inner">
+    <span class="badge"><span class="material-symbols-outlined">corporate_fare</span> Bienestar emocional para empresas</span>
+    <h1>Terapia para tu equipo,<br><span class="grad-txt">sin cuotas fijas que nadie usa.</span></h1>
+    <p class="lead">La mayoría de programas de salud mental cobran una mensualidad alta que casi nadie aprovecha. Nosotros funcionamos por paquetes de sesiones: tu empresa adquiere un paquete y el equipo lo utiliza cuando lo necesita. Se paga por sesiones reales.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#contacto">Agenda 15 minutos</a>
+      <a class="btn btn-ghost" href="#como">Ver cómo funciona</a>
+    </div>
+    <div class="trust">
+      <span><span class="material-symbols-outlined">verified</span> Psicólogos profesionales</span>
+      <span><span class="material-symbols-outlined">bolt</span> Acceso sin listas de espera</span>
+      <span><span class="material-symbols-outlined">lock</span> Informe agregado y confidencial</span>
+    </div>
   </div>
-  <p class="trust">Psicólogos profesionales · Acceso sin listas de espera · Informe agregado y confidencial · Apoyo para la NOM-035</p>
+</section>
+
+<section><div class="wrap">
+  <div class="shead">
+    <span class="eyebrow">El problema</span>
+    <h2 style="margin-top:14px">El estrés del equipo sale caro, aunque no aparezca en la nómina</h2>
+    <p>Ausentismo, rotación y días presentes pero improductivos. La salud mental es hoy uno de los principales motivos de ausencia laboral, y casi siempre se atiende tarde.</p>
+  </div>
+  <div class="grid c3">
+    <div class="card"><div class="ico t"><span class="material-symbols-outlined">event_busy</span></div><h3>Ausentismo</h3><p>La ansiedad y los problemas de ánimo se traducen en ausencias y en jornadas de baja productividad.</p></div>
+    <div class="card"><div class="ico p"><span class="material-symbols-outlined">group_remove</span></div><h3>Rotación</h3><p>Retener talento también es cuidar su bienestar. Un equipo acompañado permanece más tiempo.</p></div>
+    <div class="card"><div class="ico b"><span class="material-symbols-outlined">verified_user</span></div><h3>Cumplimiento</h3><p>La NOM-035 obliga a atender los factores de riesgo psicosocial. Este programa es un apoyo real para ello.</p></div>
+  </div>
+</div></section>
+
+<section id="como" class="band"><div class="wrap">
+  <div class="shead">
+    <span class="eyebrow">Cómo funciona</span>
+    <h2 style="margin-top:14px">Simple y por uso real</h2>
+    <p>Sin alta, sin cuota mensual muerta, sin permanencia.</p>
+  </div>
+  <div class="grid c3">
+    <div class="card"><div class="step-n">PASO 1</div><h3 style="margin-top:8px">Adquieren un paquete</h3><p>Eligen un paquete de sesiones según el tamaño del equipo. Una sesión equivale a un crédito.</p></div>
+    <div class="card"><div class="step-n">PASO 2</div><h3 style="margin-top:8px">El equipo lo utiliza</h3><p>Cada colaborador reserva su sesión con un psicólogo cuando la necesita, de forma ágil y confidencial.</p></div>
+    <div class="card"><div class="step-n">PASO 3</div><h3 style="margin-top:8px">Miden el impacto</h3><p>Reciben un informe agregado y confidencial: uso y satisfacción, nunca quién acudió ni de qué habló.</p></div>
+  </div>
 </div></section>
 
 <section><div class="wrap">
-  <div class="section-head">
-    <h2>El estrés del equipo sale caro — aunque no se vea en la nómina</h2>
-    <p>Ausentismo, rotación, bajas y días de baja productividad. La salud mental es hoy uno de los principales motivos de ausencia laboral, y casi siempre se gestiona tarde.</p>
-  </div>
-  <div class="grid cols-3">
-    <div class="card"><h3>Ausentismo</h3><p>Los problemas de ansiedad y ánimo se traducen en ausencias y en días presentes pero improductivos.</p></div>
-    <div class="card"><h3>Rotación</h3><p>Retener talento también es cuidar su bienestar. Un equipo acompañado se queda más tiempo.</p></div>
-    <div class="card"><h3>Cumplimiento</h3><p>La NOM-035 obliga a atender los factores de riesgo psicosocial. Este programa es un apoyo real para ello.</p></div>
-  </div>
-</div></section>
-
-<section id="como" style="background:var(--bg2)"><div class="wrap">
-  <div class="section-head">
-    <h2>Cómo funciona</h2>
-    <p>Simple y por uso real. Sin alta, sin cuota mensual muerta, sin permanencia.</p>
-  </div>
-  <div class="grid cols-3">
-    <div class="card"><div class="num">1</div><h3>Compran un paquete</h3><p>Eligen un paquete de sesiones según el tamaño del equipo. Un crédito equivale a una sesión.</p></div>
-    <div class="card"><div class="num">2</div><h3>El equipo lo usa</h3><p>Tus colaboradores reservan su sesión con un psicólogo cuando la necesitan, de forma ágil y confidencial.</p></div>
-    <div class="card"><div class="num">3</div><h3>Ven el impacto</h3><p>Reciben un informe agregado y confidencial: uso y satisfacción, nunca quién fue ni de qué habló.</p></div>
-  </div>
-</div></section>
-
-<section><div class="wrap">
-  <div class="grid cols-2" style="align-items:center">
+  <div class="grid c2" style="align-items:center">
     <div>
-      <span class="pill">Qué incluye</span>
-      <h2 style="font-size:clamp(24px,3.4vw,32px)">Un programa completo, no solo sesiones</h2>
+      <span class="eyebrow">Qué incluye</span>
+      <h2 style="margin-top:14px;font-size:clamp(25px,3.6vw,34px)">Un programa completo, no solo sesiones sueltas</h2>
+      <p style="color:var(--muted);margin-top:14px">Todo pensado para que el equipo lo use y para que Recursos Humanos vea el retorno, sin comprometer la confidencialidad de nadie.</p>
     </div>
     <ul class="feats">
-      <li><span class="check">✓</span> <span><b>Terapia con psicólogos profesionales</b>, verificados.</span></li>
-      <li><span class="check">✓</span> <span><b>Acceso ágil</b> para el empleado, sin listas de espera eternas.</span></li>
-      <li><span class="check">✓</span> <span><b>Informe agregado y confidencial</b> para RR. HH. (uso y satisfacción).</span></li>
-      <li><span class="check">✓</span> <span><b>Apoyo para la NOM-035</b> en factores de riesgo psicosocial.</span></li>
-      <li><span class="check">✓</span> <span><b>Sin cuota fija ni permanencia</b>: pagas por las sesiones que se usan.</span></li>
+      <li><span class="material-symbols-outlined">check_circle</span><span><b>Terapia con psicólogos profesionales</b> y verificados.</span></li>
+      <li><span class="material-symbols-outlined">check_circle</span><span><b>Acceso ágil</b> para el colaborador, sin listas de espera eternas.</span></li>
+      <li><span class="material-symbols-outlined">check_circle</span><span><b>Informe agregado y confidencial</b> para Recursos Humanos: uso y satisfacción.</span></li>
+      <li><span class="material-symbols-outlined">check_circle</span><span><b>Apoyo para la NOM-035</b> en factores de riesgo psicosocial.</span></li>
+      <li><span class="material-symbols-outlined">check_circle</span><span><b>Sin cuota fija ni permanencia:</b> se paga por las sesiones que se usan.</span></li>
     </ul>
   </div>
 </div></section>
 
-<section id="planes" style="background:var(--bg2)"><div class="wrap">
-  <div class="section-head">
-    <h2>Paquetes de sesiones</h2>
-    <p>Eliges el tamaño según tu equipo. Vigencia de 12 meses. Te preparamos una propuesta a medida.</p>
+<section id="planes" class="band"><div class="wrap">
+  <div class="shead">
+    <span class="eyebrow">Paquetes</span>
+    <h2 style="margin-top:14px">Elige el tamaño según tu equipo</h2>
+    <p>Vigencia de 12 meses. Preparamos una propuesta a medida en una llamada breve.</p>
   </div>
-  <div class="grid cols-3">
-    <div class="card"><span class="pill">Starter</span><h3>25 sesiones</h3><p>Para equipos pequeños o para empezar con un piloto sin permanencia.</p></div>
-    <div class="card" style="border-color:rgba(45,212,191,.4)"><span class="pill">Team · recomendado</span><h3>50 sesiones</h3><p>El más elegido. Incluye un taller de bienestar para el equipo.</p></div>
-    <div class="card"><span class="pill">Company</span><h3>100 sesiones</h3><p>Para equipos grandes. Talleres y reporting ampliado.</p></div>
+  <div class="grid c3">
+    <div class="card plan"><span class="tag">Starter</span><div class="big">25 <small>sesiones</small></div><p>Para equipos pequeños o para comenzar con un piloto sin permanencia.</p></div>
+    <div class="card plan featured"><span class="tag">Team · recomendado</span><div class="big">50 <small>sesiones</small></div><p>El más elegido. Incluye un taller de bienestar para el equipo.</p></div>
+    <div class="card plan"><span class="tag">Company</span><div class="big">100 <small>sesiones</small></div><p>Para equipos grandes. Talleres y reporting ampliado.</p></div>
   </div>
-  <p class="plan-foot">¿No sabes cuál encaja? En 15 minutos te ayudamos a dimensionarlo según tu plantilla.</p>
+  <p class="plan-note">¿No sabes cuál encaja? En 15 minutos te ayudamos a dimensionarlo según tu plantilla.</p>
 </div></section>
 
 <section id="contacto"><div class="wrap">
   <div class="cta-final">
-    <h2>Hablemos 15 minutos</h2>
-    <p>Te enseñamos el recorrido del empleado y vemos si encaja con tu equipo. Sin compromiso.</p>
+    <span class="eyebrow">Hablemos</span>
+    <h2 style="margin-top:14px">15 minutos para ver si encaja con tu equipo</h2>
+    <p>Te mostramos el recorrido del colaborador y resolvemos tus dudas. Sin compromiso.</p>
     <div class="cta-row" style="justify-content:center">
-      <a class="btn" href="mailto:sebastian@serenecare.es?subject=Bienestar%20para%20mi%20equipo%20-%20SereneCare">Escríbenos por correo</a>
-      <a class="btn ghost" href="https://wa.me/34624155246?text=Hola,%20me%20interesa%20el%20programa%20de%20bienestar%20para%20empresas%20de%20SereneCare" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+      <a class="btn btn-primary" href="mailto:sebastian@serenecare.es?subject=Bienestar%20para%20mi%20equipo%20-%20SereneCare">Escríbenos por correo</a>
+      <a class="btn btn-ghost" href="https://wa.me/34624155246?text=Hola,%20me%20interesa%20el%20programa%20de%20bienestar%20para%20empresas%20de%20SereneCare" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
     </div>
   </div>
 </div></section>
 
-<footer><div class="wrap">
-  SereneCare · Bienestar emocional para empresas · sebastian@serenecare.es
-</div></footer>
+<footer><div class="wrap">SereneCare · Bienestar emocional para empresas · sebastian@serenecare.es</div></footer>
 
 </body></html>
