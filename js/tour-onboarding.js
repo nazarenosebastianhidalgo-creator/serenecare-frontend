@@ -19,24 +19,28 @@ const setActivo = (v) => { try { v ? localStorage.setItem(K_ON, '1') : localStor
 const hecho = () => { try { return !!localStorage.getItem(K_DONE); } catch { return false; } };
 
 const PAGES = [
+  // 1 · Bienvenida (dashboard) → navega al perfil
   { page: 'dashboard_admin_clinica.html', steps: [
-    { title: 'Bienvenido a SereneCare', description: 'Te enseño lo esencial en menos de 1 minuto, pantalla por pantalla. Puedes saltarlo cuando quieras.' },
-    { el: 'a[href="pacientes_clinica.html"]', title: 'Empezamos por Pacientes', description: 'Lo primero: tener a tus pacientes dentro. Vamos allí.' },
+    { title: 'Bienvenido a SereneCare', description: 'En menos de 1 minuto te dejo la consulta lista para recibir pacientes. Puedes saltarlo cuando quieras.' },
   ] },
+  // 2 · Completa tu ficha (perfil)
+  { page: 'perfil_clinica.html', steps: [
+    { el: '#tab-profesional', title: 'Completa tu ficha', description: 'Abre "Perfil profesional" y rellena tu especialidad y una breve descripción. Es lo que ven tus pacientes y lo que te hace aparecer.' },
+  ] },
+  // 3 · Trae tus pacientes (el paso que más activa)
   { page: 'pacientes_clinica.html', steps: [
-    { el: '#btn-nuevo-paciente', title: 'Añade tu primer paciente', description: 'Desde aquí creas un paciente nuevo. El mejor arranque: mete a los que ya tienes en consulta.' },
+    { el: '#btn-nuevo-paciente', title: 'Trae tus pacientes', description: 'Mete a los que ya tienes en consulta y gestiónalo todo gratis desde aquí: agenda, historia y recordatorios en un sitio.' },
   ] },
+  // 4 · Activa las reservas (recepción)
   { page: 'recepcion_config.html', steps: [
-    { el: '#t-activo', title: 'Tu recepción', description: 'Aquí activas tu página de reservas para que los pacientes te encuentren y pidan cita.' },
-    { el: '#t-reservas', title: 'Activa las reservas', description: 'Enciende esto y tus pacientes reservan solos 24/7 desde tu enlace, sin llamarte.' },
+    { el: '#t-activo', title: 'Tu página de reservas', description: 'Enciende esto para tener tu página pública donde los pacientes te encuentran.' },
+    { el: '#t-reservas', title: 'Activa las reservas', description: 'Y con esto te reservan cita solos 24/7 desde tu enlace, sin llamarte.' },
   ] },
-  { page: 'agenda_clinica.html', steps: [
-    { el: '#btn-nueva-cita', title: 'Tu agenda', description: 'Aquí ves todas tus citas y puedes crear una a mano cuando lo necesites.' },
-  ] },
+  // 5 · Dónde pedir ayuda (vuelta al dashboard) + cierre
   { page: 'dashboard_admin_clinica.html', steps: [
-    { el: '#sop-fab', title: 'Soporte', description: '¿Una duda? Escríbenos desde aquí, sin salir de SereneCare.' },
-    { el: '#sc-guia-btn', title: 'Tu asistente', description: 'Y cuando no sepas cómo hacer algo, este asistente te guía paso a paso.' },
-    { title: '¡Listo!', description: 'Ya conoces lo esencial. Ahora a trabajar.' },
+    { el: '#sop-fab', title: '¿Dudas? Soporte', description: 'Escríbenos desde aquí, sin salir de SereneCare ni buscar un correo.' },
+    { el: '#sc-guia-btn', title: 'Tu asistente', description: 'Y cuando no sepas cómo hacer algo, este asistente te guía paso a paso siempre.' },
+    { title: '¡Listo!', description: 'Ya conoces lo esencial. Empieza por traer tus pacientes y activar tus reservas.' },
   ] },
 ];
 
