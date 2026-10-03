@@ -100,6 +100,14 @@ async function correr(stops) {
     alert('DIAG 3 · driver creado, llamando drive()');
     d.drive();
     alert('DIAG 4 · drive() llamado OK');
+    setTimeout(() => {
+      const pop = document.querySelector('.driver-popover');
+      const ov = document.querySelector('.driver-overlay') || document.querySelector('svg.driver-overlay');
+      if (!pop && !ov) { alert('DIAG 5 · NO hay elementos driver en el DOM'); return; }
+      const r = pop ? pop.getBoundingClientRect() : { width: 0, height: 0 };
+      const cs = pop ? getComputedStyle(pop) : {};
+      alert('DIAG 5 · popover=' + !!pop + ' overlay=' + !!ov + ' tam=' + Math.round(r.width) + 'x' + Math.round(r.height) + ' display=' + (cs.display || '?') + ' vis=' + (cs.visibility || '?') + ' z=' + (cs.zIndex || '?'));
+    }, 400);
   } catch (e) { alert('DIAG ERROR · ' + (e && e.message ? e.message : e)); }
 }
 
