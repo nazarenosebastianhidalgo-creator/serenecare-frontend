@@ -100,14 +100,16 @@ async function init() {
   // Botón de prueba para relanzar (solo en el dashboard)
   if (pagina() === 'dashboard_admin_clinica.html' && !document.getElementById('sc-tour-test')) {
     const b = document.createElement('button');
-    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido v5';
+    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido v6';
     b.style.cssText = 'position:fixed;right:24px;bottom:170px;z-index:9995;background:#7c3aed;color:#fff;border:none;border-radius:999px;padding:10px 16px;font:700 12px Manrope,system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.4)';
     b.addEventListener('click', async () => {
       try {
+        try { localStorage.removeItem(K_DONE); } catch {}
+        setActivo(true); setI(0);
         const okLoad = await cargarDriver();
         const okGlobal = !!(window.driver && window.driver.js && window.driver.js.driver);
         if (!okLoad || !okGlobal) { alert('Driver no cargó. load=' + okLoad + ' global=' + okGlobal); return; }
-        window.__scTour();
+        await correr(PAGES[0].steps);   // await => cualquier error del tour sale por el catch
       } catch (e) { alert('TOUR ERROR: ' + (e && e.message ? e.message : e)); }
     });
     document.body.appendChild(b);
