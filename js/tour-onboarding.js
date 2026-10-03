@@ -36,7 +36,11 @@ const PAGES = [
     { el: '#t-activo', title: 'Tu página de reservas', description: 'Enciende esto para tener tu página pública donde los pacientes te encuentran.' },
     { el: '#t-reservas', title: 'Activa las reservas', description: 'Y con esto te reservan cita solos 24/7 desde tu enlace, sin llamarte.' },
   ] },
-  // 5 · Dónde pedir ayuda (vuelta al dashboard) + cierre
+  // 5 · Conecta tu calendario (todo en un sitio)
+  { page: 'integraciones_clinica.html', steps: [
+    { el: '#gcal-card', title: 'Conecta tu calendario', description: 'Enlaza tu Google Calendar y tendrás tus citas de SereneCare y tu agenda personal en un mismo sitio, sin choques de horarios.' },
+  ] },
+  // 6 · Dónde pedir ayuda (vuelta al dashboard) + cierre
   { page: 'dashboard_admin_clinica.html', steps: [
     { el: '#sop-fab', title: '¿Dudas? Soporte', description: 'Escríbenos desde aquí, sin salir de SereneCare ni buscar un correo.' },
     { el: '#sc-guia-btn', title: 'Tu asistente', description: 'Y cuando no sepas cómo hacer algo, este asistente te guía paso a paso siempre.' },
