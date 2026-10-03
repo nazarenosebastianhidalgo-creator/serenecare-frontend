@@ -140,14 +140,24 @@
               ? '<div class="py-2">' + txt + '</div>'
               : '<a href="' + c.url + '" class="py-2 flex items-center justify-between hover:bg-white/5 rounded-lg px-2 -mx-2"><span>' + txt + '</span><span class="text-teal-400 text-xs font-bold whitespace-nowrap">Completar ›</span></a>'
           }).join('')
-          card.innerHTML =
-            '<div class="flex flex-wrap items-center justify-between gap-3 mb-4">'
-            + '<h3 class="font-headline text-lg font-bold text-white">Tu visibilidad</h3>'
-            + '<div class="flex gap-2">' + badge(j.directorio && j.directorio.visible, 'Directorio') + badge(j.empresas && j.empresas.elegible, 'Empresas') + '</div>'
-            + '</div>'
-            + (pend.length
-              ? '<p class="text-slate-400 text-sm mb-2">Completa esto para que te lleguen pacientes:</p><div class="divide-y divide-slate-800/30">' + lista + '</div>'
-              : '<p class="text-emerald-400 text-sm">¡Todo listo! Estás visible en el directorio y elegible para empresas. 🎉</p>')
+          const badges = '<div class="flex gap-2">' + badge(j.directorio && j.directorio.visible, 'Directorio') + badge(j.empresas && j.empresas.elegible, 'Empresas') + '</div>'
+          if (pend.length) {
+            // Incompleto → recuadro completo con la checklist
+            card.className = 'fade-up card rounded-2xl p-6'
+            card.innerHTML =
+              '<div class="flex flex-wrap items-center justify-between gap-3 mb-4">'
+              + '<h3 class="font-headline text-lg font-bold text-white">Tu visibilidad</h3>' + badges
+              + '</div>'
+              + '<p class="text-slate-400 text-sm mb-2">Completa esto para que te lleguen pacientes:</p><div class="divide-y divide-slate-800/30">' + lista + '</div>'
+          } else {
+            // Todo listo → recuadro compacto (una línea)
+            card.className = 'fade-up card rounded-2xl px-4 py-2.5'
+            card.innerHTML =
+              '<div class="flex items-center justify-between gap-3">'
+              + '<span class="font-headline text-sm font-bold text-emerald-400">✓ Visible y elegible</span>'
+              + badges
+              + '</div>'
+          }
           card.classList.remove('hidden')
         } catch (e) { /* no romper el dashboard */ }
       })()
