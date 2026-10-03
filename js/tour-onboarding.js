@@ -11,8 +11,8 @@
 import { supabase } from './supabase-client.js';
 
 const TEST_EMAIL = 'nazarenoo.sebastiann.hidalgoo@hotmail.com';
-const DRIVER_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/driver.js/1.3.1/driver.css';
-const DRIVER_JS  = 'https://cdnjs.cloudflare.com/ajax/libs/driver.js/1.3.1/driver.js.iife.js';
+const DRIVER_CSS = '/js/driver.css';        // vendorizado local (mismo origen, sin depender de CDN)
+const DRIVER_JS  = '/js/driver.iife.js';
 const K_ON = 'sc_tour_on';     // tour en curso
 const K_I  = 'sc_tour_i';      // índice de pantalla actual
 const K_DONE = 'sc_tour_done'; // ya completado alguna vez
