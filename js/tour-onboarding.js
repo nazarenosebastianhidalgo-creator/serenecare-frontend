@@ -8,7 +8,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import { supabase } from './supabase-client.js';
 
-const TEST_EMAIL = 'nazarenoo.sebastiann.hidalgoo@hotmail.com';
 const K_ON = 'sc_tour_on', K_I = 'sc_tour_i', K_DONE = 'sc_tour_done';
 
 const pagina = () => location.pathname.split('/').pop();
@@ -120,18 +119,9 @@ function empezar() { setActivo(true); setI(0); if (pagina() === PAGES[0].page) r
 window.__scTour = () => { try { localStorage.removeItem(K_DONE); } catch {} empezar(); };
 
 async function init() {
-  // GATE: solo la cuenta de prueba. (Para hacerlo general: borrar este bloque.)
-  let email = '';
-  try { const { data: { session } } = await supabase.auth.getSession(); email = (session && session.user && session.user.email || '').toLowerCase(); } catch { return; }
-  if (email !== TEST_EMAIL.toLowerCase()) return;
-
-  if (pagina() === 'dashboard_admin_clinica.html' && !document.getElementById('sc-tour-test')) {
-    const b = document.createElement('button');
-    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido';
-    b.style.cssText = 'position:fixed;top:112px;right:16px;z-index:2147483000;background:#7c3aed;color:#fff;border:none;border-radius:999px;padding:10px 16px;font:700 12px Manrope,system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.5)';
-    b.addEventListener('click', () => window.__scTour());
-    document.body.appendChild(b);
-  }
+  // GENERAL para todos los admin de clínica con sesión. Arranca solo la 1ª vez
+  // (sc_tour_done). Relanzable con window.__scTour().
+  try { const { data: { session } } = await supabase.auth.getSession(); if (!session) return; } catch { return; }
 
   if (activo()) {
     const cur = PAGES[getI()];
