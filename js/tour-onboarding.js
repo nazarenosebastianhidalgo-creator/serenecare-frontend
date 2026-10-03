@@ -73,23 +73,32 @@ function avanzar() {
 }
 
 async function correr(stops) {
-  if (!(await cargarDriver())) return;
+  const loaded = await cargarDriver();
+  const g = !!(window.driver && window.driver.js && window.driver.js.driver);
+  alert('DIAG 1 · load=' + loaded + ' global=' + g + ' tipo=' + (g ? typeof window.driver.js.driver : 'n/a'));
+  if (!g) return;
   const driver = window.driver.js.driver;
   const steps = stops
     .filter(s => !s.el || document.querySelector(s.el))
     .map(s => s.el ? { element: s.el, popover: { title: s.title, description: s.description } } : { popover: { title: s.title, description: s.description } });
+  alert('DIAG 2 · pasos=' + steps.length);
   if (!steps.length) { avanzar(); return; }  // nada que enseñar aquí → siguiente pantalla
   const ultimaPantalla = !PAGES[getI() + 1];
   let skip = false;
-  const d = driver({
+  let d;
+  try {
+    d = driver({
     showProgress: true, progressText: '{{current}} de {{total}}',
     nextBtnText: 'Siguiente', prevBtnText: 'Atrás',
     doneBtnText: ultimaPantalla ? 'Terminar' : 'Siguiente →',
     allowClose: true, overlayColor: '#020617', stagePadding: 6,
     onCloseClick: () => { skip = true; d.destroy(); },
     onDestroyed: () => { if (skip) parar(); else avanzar(); },
-  });
-  d.drive();
+    });
+    alert('DIAG 3 · driver creado, llamando drive()');
+    d.drive();
+    alert('DIAG 4 · drive() llamado OK');
+  } catch (e) { alert('DIAG ERROR · ' + (e && e.message ? e.message : e)); }
 }
 
 function empezar() { setActivo(true); setI(0); if (pagina() === PAGES[0].page) correr(PAGES[0].steps); else window.location.href = PAGES[0].page; }
@@ -104,7 +113,7 @@ async function init() {
   // Botón de prueba para relanzar (solo en el dashboard)
   if (pagina() === 'dashboard_admin_clinica.html' && !document.getElementById('sc-tour-test')) {
     const b = document.createElement('button');
-    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido v10';
+    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido v11';
     b.style.cssText = 'position:fixed;top:112px;right:16px;z-index:2147483000;background:#7c3aed;color:#fff;border:none;border-radius:999px;padding:10px 16px;font:700 12px Manrope,system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.5)';
     b.addEventListener('click', async () => {
       try {
