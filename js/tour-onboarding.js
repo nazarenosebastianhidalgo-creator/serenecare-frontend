@@ -1,18 +1,22 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Tour guiado de bienvenida (v1 — dashboard admin clínica). Spotlight con Driver.js.
 // Toma el mando ~60s la PRIMERA vez y enseña dónde está cada cosa. Se puede saltar
-// y no se repite (localStorage sc_tour_done). El asistente de chat queda para el día
-// a día; este tour es la primera impresión ("ah, esto es fácil").
+// y no se repite (localStorage sc_tour_done).
+//
+// BOTÓN DE PRUEBA: solo visible para la cuenta de test (TEST_EMAIL) para afinar el
+// tour. Quitar cuando esté listo (borrar el bloque "botón de prueba").
 // ─────────────────────────────────────────────────────────────────────────────
+import { supabase } from './supabase-client.js';
+
 const DONE_KEY = 'sc_tour_done';
 const DRIVER_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/driver.js/1.3.1/driver.css';
 const DRIVER_JS  = 'https://cdnjs.cloudflare.com/ajax/libs/driver.js/1.3.1/driver.js.iife.js';
+const TEST_EMAIL = 'nazarenoo.sebastiann.hidalgoo@hotmail.com';
 
 function yaHecho() { try { return !!localStorage.getItem(DONE_KEY); } catch { return false; } }
 function marcarHecho() {
   try {
     localStorage.setItem(DONE_KEY, '1');
-    // Evita que el asistente de chat se auto-abra el mismo día que se hizo el tour
     localStorage.setItem('sc_guia_auto_' + new Date().toISOString().slice(0, 10), '1');
   } catch {}
 }
@@ -40,20 +44,18 @@ const PASOS = [
   { popover: { title: '¡Listo!', description: 'Ya conoces lo esencial de SereneCare. Ahora puedes empezar a trabajar.' } },
 ];
 
-async function run() {
-  if (yaHecho()) return;
+let driverCargado = false;
+async function lanzarTour() {
   try {
-    await cargar(DRIVER_CSS, true);
-    await cargar(DRIVER_JS, false);
-  } catch { return; } // si el CDN falla, no pasa nada: no hay tour
+    if (!driverCargado) { await cargar(DRIVER_CSS, true); await cargar(DRIVER_JS, false); driverCargado = true; }
+  } catch { return; }
   const driver = window.driver && window.driver.js && window.driver.js.driver;
   if (!driver) return;
 
-  // Construye solo los pasos cuyo elemento exista (robustez ante cambios de UI)
   const steps = PASOS
     .filter(p => !p.sel || document.querySelector(p.sel))
     .map(p => p.popover ? { popover: p.popover } : { element: p.sel, popover: { title: p.title, description: p.description } });
-  if (steps.length <= 1) return; // nada que enseñar
+  if (steps.length <= 1) return;
 
   const d = driver({
     showProgress: true,
@@ -66,9 +68,23 @@ async function run() {
     steps,
     onDestroyed: marcarHecho,
   });
-  window.__scTour = () => { try { localStorage.removeItem(DONE_KEY); } catch {} d.drive(); }; // re-lanzable
   d.drive();
 }
+window.__scTour = lanzarTour;
 
-// Espera a que monten sidebar y FABs (se cargan async) antes de arrancar.
-setTimeout(run, 1800);
+// Botón de prueba (SOLO cuenta de test) para relanzar el tour al afinarlo.
+async function botonPrueba() {
+  let email = '';
+  try { const { data: { session } } = await supabase.auth.getSession(); email = (session && session.user && session.user.email || '').toLowerCase(); } catch { return; }
+  if (email !== TEST_EMAIL.toLowerCase()) return;
+  if (document.getElementById('sc-tour-test')) return;
+  const b = document.createElement('button');
+  b.id = 'sc-tour-test';
+  b.textContent = '▶ Recorrido (test)';
+  b.style.cssText = 'position:fixed;right:24px;bottom:170px;z-index:9995;background:#7c3aed;color:#fff;border:none;border-radius:999px;padding:10px 16px;font:700 12px Manrope,system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.4)';
+  b.addEventListener('click', () => { try { localStorage.removeItem(DONE_KEY); } catch {} lanzarTour(); });
+  document.body.appendChild(b);
+}
+
+// Primera vez: arranca solo tras montar sidebar/FABs. Y pinta el botón de prueba.
+setTimeout(() => { if (!yaHecho()) lanzarTour(); botonPrueba(); }, 1800);
