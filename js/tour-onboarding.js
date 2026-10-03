@@ -3,8 +3,9 @@
 // divs normales (box-shadow) + tooltip. Garantizado que renderiza en cualquier
 // navegador/tablet. Entra en cada sección y resalta el botón real.
 //
-// ⚠️ CAPADO a TEST_EMAIL mientras se afina. Para hacerlo general: borrar el GATE.
-// Incluir en: dashboard_admin_clinica, pacientes_clinica, recepcion_config, agenda_clinica.
+// GENERAL para todos los admin de clínica (arranca la 1ª vez; sc_tour_done lo recuerda).
+// Incluido en: dashboard_admin_clinica, perfil_clinica, pacientes_clinica, recepcion_config,
+// integraciones_clinica, agenda_clinica.
 // ─────────────────────────────────────────────────────────────────────────────
 import { supabase } from './supabase-client.js';
 
