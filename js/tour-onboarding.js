@@ -50,12 +50,16 @@ const PAGES = [
 let driverCargado = false;
 async function cargarDriver() {
   if (driverCargado) return true;
-  try {
-    await new Promise((ok, no) => { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = DRIVER_CSS; l.onload = ok; l.onerror = no; document.head.appendChild(l); });
-    await new Promise((ok, no) => { const s = document.createElement('script'); s.src = DRIVER_JS; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
-    driverCargado = true;
-  } catch { return false; }
-  return !!(window.driver && window.driver.js && window.driver.js.driver);
+  // CSS: se añade SIN esperar su onload (en algunas tablets ese evento no llega y colgaría).
+  if (!document.querySelector('link[data-driver-css]')) {
+    const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = DRIVER_CSS; l.setAttribute('data-driver-css', '1'); document.head.appendChild(l);
+  }
+  // JS: aquí sí esperamos onload (fiable en <script>); onerror también resuelve para no colgar.
+  if (!(window.driver && window.driver.js && window.driver.js.driver)) {
+    await new Promise((ok) => { const s = document.createElement('script'); s.src = DRIVER_JS; s.onload = ok; s.onerror = ok; document.head.appendChild(s); });
+  }
+  driverCargado = !!(window.driver && window.driver.js && window.driver.js.driver);
+  return driverCargado;
 }
 
 function parar() { setActivo(false); try { localStorage.setItem(K_DONE, '1'); } catch {} }
@@ -100,10 +104,9 @@ async function init() {
   // Botón de prueba para relanzar (solo en el dashboard)
   if (pagina() === 'dashboard_admin_clinica.html' && !document.getElementById('sc-tour-test')) {
     const b = document.createElement('button');
-    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido v9';
+    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido v10';
     b.style.cssText = 'position:fixed;top:112px;right:16px;z-index:2147483000;background:#7c3aed;color:#fff;border:none;border-radius:999px;padding:10px 16px;font:700 12px Manrope,system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.5)';
     b.addEventListener('click', async () => {
-      alert('CLICK OK v9 — arrancando tour…');  // diagnóstico: si ves esto, el toque llega
       try {
         try { localStorage.removeItem(K_DONE); } catch {}
         setActivo(true); setI(0);
