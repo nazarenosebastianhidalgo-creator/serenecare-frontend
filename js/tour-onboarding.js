@@ -47,12 +47,14 @@ const PAGES = [
   ] },
 ];
 
+// CSS de Driver.js INCRUSTADO (no depende de cargar /js/driver.css → se aplica siempre).
+const DRIVER_CSS_INLINE = `.driver-active .driver-overlay,.driver-active *{pointer-events:none}.driver-active .driver-active-element,.driver-active .driver-active-element *,.driver-popover,.driver-popover *{pointer-events:auto}@keyframes animate-fade-in{0%{opacity:0}to{opacity:1}}.driver-fade .driver-overlay{animation:animate-fade-in .2s ease-in-out}.driver-fade .driver-popover{animation:animate-fade-in .2s}.driver-popover{all:unset;box-sizing:border-box;color:#2d2d2d;margin:0;padding:15px;border-radius:5px;min-width:250px;max-width:300px;box-shadow:0 1px 10px #0006;z-index:1000000000;position:fixed;top:0;right:0;background-color:#fff}.driver-popover *{font-family:Helvetica Neue,Inter,ui-sans-serif,"Apple Color Emoji",Helvetica,Arial,sans-serif}.driver-popover-title{font:19px/normal sans-serif;font-weight:700;display:block;position:relative;line-height:1.5;zoom:1;margin:0}.driver-popover-close-btn{all:unset;position:absolute;top:0;right:0;width:32px;height:28px;cursor:pointer;font-size:18px;font-weight:500;color:#d2d2d2;z-index:1;text-align:center;transition:color;transition-duration:.2s}.driver-popover-close-btn:hover,.driver-popover-close-btn:focus{color:#2d2d2d}.driver-popover-title[style*=block]+.driver-popover-description{margin-top:5px}.driver-popover-description{margin-bottom:0;font:14px/normal sans-serif;line-height:1.5;font-weight:400;zoom:1}.driver-popover-footer{margin-top:15px;text-align:right;zoom:1;display:flex;align-items:center;justify-content:space-between}.driver-popover-progress-text{font-size:13px;font-weight:400;color:#727272;zoom:1}.driver-popover-footer button{all:unset;display:inline-block;box-sizing:border-box;padding:3px 7px;text-decoration:none;text-shadow:1px 1px 0 #fff;background-color:#fff;color:#2d2d2d;font:12px/normal sans-serif;cursor:pointer;outline:0;zoom:1;line-height:1.3;border:1px solid #ccc;border-radius:3px}.driver-popover-footer .driver-popover-btn-disabled{opacity:.5;pointer-events:none}:not(body):has(>.driver-active-element){overflow:hidden!important}.driver-no-interaction,.driver-no-interaction *{pointer-events:none!important}.driver-popover-footer button:hover,.driver-popover-footer button:focus{background-color:#f7f7f7}.driver-popover-navigation-btns{display:flex;flex-grow:1;justify-content:flex-end}.driver-popover-navigation-btns button+button{margin-left:4px}.driver-popover-arrow{content:"";position:absolute;border:5px solid #fff}.driver-popover-arrow-side-over{display:none}.driver-popover-arrow-side-left{left:100%;border-right-color:transparent;border-bottom-color:transparent;border-top-color:transparent}.driver-popover-arrow-side-right{right:100%;border-left-color:transparent;border-bottom-color:transparent;border-top-color:transparent}.driver-popover-arrow-side-top{top:100%;border-right-color:transparent;border-bottom-color:transparent;border-left-color:transparent}.driver-popover-arrow-side-bottom{bottom:100%;border-left-color:transparent;border-top-color:transparent;border-right-color:transparent}.driver-popover-arrow-side-center{display:none}.driver-popover-arrow-align-end.driver-popover-arrow-side-left,.driver-popover-arrow-align-end.driver-popover-arrow-side-right{bottom:15px}.driver-popover-arrow-none{display:none}`;
 let driverCargado = false;
 async function cargarDriver() {
   if (driverCargado) return true;
-  // CSS: se añade SIN esperar su onload (en algunas tablets ese evento no llega y colgaría).
-  if (!document.querySelector('link[data-driver-css]')) {
-    const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = DRIVER_CSS; l.setAttribute('data-driver-css', '1'); document.head.appendChild(l);
+  // CSS incrustado vía <style> (garantizado, sin esperar red ni onload).
+  if (!document.getElementById('driver-css-inline')) {
+    const st = document.createElement('style'); st.id = 'driver-css-inline'; st.textContent = DRIVER_CSS_INLINE; document.head.appendChild(st);
   }
   // JS: aquí sí esperamos onload (fiable en <script>); onerror también resuelve para no colgar.
   if (!(window.driver && window.driver.js && window.driver.js.driver)) {
@@ -113,7 +115,7 @@ async function init() {
   // Botón de prueba para relanzar (solo en el dashboard)
   if (pagina() === 'dashboard_admin_clinica.html' && !document.getElementById('sc-tour-test')) {
     const b = document.createElement('button');
-    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido v11';
+    b.id = 'sc-tour-test'; b.textContent = '▶ Recorrido v12';
     b.style.cssText = 'position:fixed;top:112px;right:16px;z-index:2147483000;background:#7c3aed;color:#fff;border:none;border-radius:999px;padding:10px 16px;font:700 12px Manrope,system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(124,58,237,.5)';
     b.addEventListener('click', async () => {
       try {
