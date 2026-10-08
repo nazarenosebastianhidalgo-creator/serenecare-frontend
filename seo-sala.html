@@ -105,45 +105,23 @@
 
   footer{position:relative;z-index:1;color:var(--faint);font-size:12px;text-align:center;padding:26px 0 46px}
 
-  /* ---------- PLANO DE LA FÁBRICA (vista cenital) ---------- */
+  /* ---------- FÁBRICA 3D ISOMÉTRICA ---------- */
   .fh{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:30px 0 12px}
-  .fh .ms{font-size:18px;color:#60a5fa}
-  .planowrap{overflow-x:auto;border:1px solid rgba(95,132,173,.35);border-radius:22px;background:#0b1322;box-shadow:inset 0 0 90px rgba(0,0,0,.5)}
-  .plano{position:relative;width:960px;height:520px;margin:0 auto;
-    background:
-      repeating-linear-gradient(0deg,rgba(120,160,210,.05) 0 1px,transparent 1px 40px),
-      repeating-linear-gradient(90deg,rgba(120,160,210,.05) 0 1px,transparent 1px 40px),
-      radial-gradient(120% 90% at 50% 40%,#13203a,#0b1322);}
-  .plano .paths{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-  .rooms{position:absolute;inset:0;z-index:2}
-  .walkers{position:absolute;inset:0;z-index:4;pointer-events:none}
-
-  .room{position:absolute;border:2px solid var(--zc);border-radius:9px;
-    background:linear-gradient(180deg,color-mix(in srgb,var(--zc) 13%,rgba(10,16,26,.72)),rgba(10,16,26,.68));
-    box-shadow:0 0 26px color-mix(in srgb,var(--zc) 15%,transparent),inset 0 0 34px rgba(0,0,0,.35)}
-  .room .rlabel{position:absolute;top:7px;left:9px;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--zc)}
-  .room .rbulb{position:absolute;top:9px;right:9px;width:9px;height:9px;border-radius:50%;background:var(--st,#5b6b86);box-shadow:0 0 9px var(--st,transparent)}
-  .room .ricon{position:absolute;right:8px;bottom:6px;color:var(--zc);opacity:.32}
-  .room .ricon .ms{font-size:40px}
-  .room .door{position:absolute;background:#0b1322;box-shadow:0 0 0 2px color-mix(in srgb,var(--zc) 40%,transparent) inset}
-  .seats{position:absolute;left:10px;right:10px;bottom:9px;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
-  .seat{cursor:pointer;position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .14s}
-  .seat:hover{transform:translateY(-3px)}
-  .seat .desk2{width:40px;height:16px;border-radius:3px;background:#243049;border:1px solid rgba(255,255,255,.08);position:relative;box-shadow:0 3px 6px rgba(0,0,0,.4)}
-  .seat .scr{position:absolute;left:5px;top:3px;width:30px;height:7px;border-radius:2px;background:var(--zc);opacity:.6}
-  .seat .pers{position:absolute;left:50%;top:-15px;transform:translateX(-50%)}
-  .seat .snm{font-size:8px;font-weight:700;color:#cdd8ea;text-align:center;line-height:1.05;max-width:52px}
-  .pers.work{animation:wig .5s ease-in-out infinite alternate}
-  @keyframes wig{from{transform:translateX(-50%) rotate(-3deg)}to{transform:translateX(-50%) rotate(3deg)}}
-  .pers.off{filter:grayscale(.45) brightness(.92);opacity:.82}
-
-  /* gente andando por los pasillos */
-  @keyframes flow{to{offset-distance:100%}}
-  .walker{position:absolute;left:0;top:0;width:20px;height:20px;offset-rotate:0deg;will-change:offset-distance}
-  .walkbob{display:block;animation:wb .42s ease-in-out infinite}
-  @keyframes wb{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.6px)}}
-
-  @media(max-width:820px){.plano{transform-origin:top left}}
+  .fh .ms{font-size:18px;color:#f0a24e}
+  .iso{overflow-x:auto;border:1px solid rgba(120,80,40,.4);border-radius:22px;
+    background:radial-gradient(120% 90% at 50% 8%,#2a1d14,#150d08 70%);box-shadow:inset 0 0 120px rgba(0,0,0,.6)}
+  #facsvg{width:1180px;max-width:none;height:auto;display:block;margin:0 auto}
+  .fig{cursor:default}
+  .fig .arm,.fig .arm2{transform-box:fill-box;transform-origin:50% 0}
+  .fig.work .arm{animation:aswing .5s ease-in-out infinite alternate}
+  .fig.work .arm2{animation:aswing .5s ease-in-out infinite alternate-reverse}
+  @keyframes aswing{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+  .fig.off{opacity:.82;filter:grayscale(.4)}
+  .lite.on{animation:litep 1.6s ease-in-out infinite}
+  @keyframes litep{0%,100%{opacity:1}50%{opacity:.45}}
+  .walkbobg{animation:wbob .42s ease-in-out infinite}
+  @keyframes wbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+  .capsule{animation:none}
 
   /* modal */
   .modal{position:fixed;inset:0;z-index:60;background:rgba(4,8,20,.74);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
@@ -189,21 +167,8 @@
   <div class="ceo-wrap"><div class="ceo" id="ceo"></div></div>
   <div class="stem"></div>
 
-  <h2 class="fh"><span class="ms">map</span> Plano de la fábrica <span style="color:var(--faint);font-weight:500;letter-spacing:0;text-transform:none">· vista cenital · la gente se mueve entre departamentos</span></h2>
-  <div class="planowrap">
-    <div class="plano">
-      <svg class="paths" viewBox="0 0 960 520" preserveAspectRatio="none" aria-hidden="true">
-        <rect x="26" y="26" width="908" height="468" rx="16" fill="none" stroke="#3b5572" stroke-width="3"/>
-        <rect x="40" y="213" width="880" height="96" fill="rgba(120,160,210,.07)"/>
-        <rect x="46" y="46" width="868" height="428" rx="10" fill="none" stroke="rgba(120,160,210,.14)" stroke-width="20"/>
-        <path d="M70,261 H890" stroke="#5f84ad" stroke-width="1.4" stroke-dasharray="6 8" opacity=".5"/>
-        <rect x="56" y="56" width="848" height="408" rx="8" fill="none" stroke="#5f84ad" stroke-width="1.2" stroke-dasharray="6 8" opacity=".4"/>
-        <text x="46" y="20" fill="#5f84ad" font-size="11" font-family="ui-monospace,monospace" opacity=".7">PLANTA · MÉXICO · esc. 1:100</text>
-      </svg>
-      <div class="rooms" id="stations"></div>
-      <div class="walkers" id="walkers"></div>
-    </div>
-  </div>
+  <h2 class="fh"><span class="ms">deployed_code</span> Fábrica 3D <span style="color:var(--faint);font-weight:500;letter-spacing:0;text-transform:none">· corte isométrico · 3 niveles · la gente se mueve entre departamentos</span></h2>
+  <div class="iso"><svg id="facsvg" viewBox="0 0 1180 760" aria-label="Fábrica isométrica"></svg></div>
 
   <h2 class="fh"><span class="ms">conveyor_belt</span> Cadena de montaje <span style="color:var(--faint);font-weight:500;letter-spacing:0;text-transform:none">· detalle por estado</span></h2>
   <div class="line" id="line"></div>
@@ -269,99 +234,160 @@ function renderCEO(a){
     <div class="st"><span style="color:${e.c}">●</span> ${e.t} · coordina todo el pipeline</div></div></div>`;
 }
 
-// --- persona cenital (vista de arriba) ---
+// ---------- MOTOR ISOMÉTRICO ----------
 const SKINS=["#f0c8a0","#e3b184","#cf9b6a","#a9784f","#8a5a38"];
 const HAIRS=["#2b211a","#4a2f1c","#6b4423","#8a6a3a","#caa94e","#b7b2ab","#1f1f24"];
 function seedi(s){let h=0;for(let i=0;i<String(s).length;i++)h=(h*31+String(s).charCodeAt(i))>>>0;return h;}
-function personaTop(color,state,seed){
-  const sk=SKINS[seed%SKINS.length], ha=HAIRS[(seed>>3)%HAIRS.length];
-  return `<svg class="pers ${state}" width="26" height="24" viewBox="0 0 26 24" aria-hidden="true">
-    <ellipse cx="13" cy="21" rx="9" ry="2.4" fill="rgba(0,0,0,.4)"/>
-    <path d="M3 17 q0 -8 10 -8 t10 8z" fill="${color}"/>
-    <circle cx="13" cy="8" r="5.4" fill="${sk}"/>
-    <path d="M7.4 7.2 a5.6 5.6 0 0 1 11.2 0 q-5.6 -4 -11.2 0z" fill="${ha}"/>
-  </svg>`;
-}
-// posiciones de cada sala en el plano (x,y,w,h) sobre lienzo 960x520
-const POS={
-  "Inteligencia":[66,64,196,140], "Estrategia":[282,64,196,140],
-  "Produccion":[498,64,196,140], "Calidad":[714,64,196,140],
-  "Monetizacion":[66,316,196,140], "Publicacion":[282,316,196,140],
-  "Aprendizaje":[498,316,196,140], "Direccion":[714,316,196,140],
-};
+const AX=42, AY=21, AZ=118;           // iso: medio ancho, medio alto de rombo, altura por nivel
+const ORX=470, ORY=215;
+function pt(x,y,z){ return [ORX+(x-y)*AX, ORY+(x+y)*AY - z*AZ]; }
+function P(a){ return a.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" "); }
+function hx(h){ h=h.replace("#",""); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+function mix(c,t){ const a=hx(c),b=[11,19,34]; return "#"+a.map((v,i)=>Math.round(v*(1-t)+b[i]*t).toString(16).padStart(2,"0")).join(""); }
 
-function salaHTML(nombre, pos, zc, stColor, iconSym, seatsHTML){
-  const [x,y,w,h]=pos;
-  const doorTop = y>260; // salas de abajo: puerta arriba; de arriba: puerta abajo
-  const door = doorTop
-    ? `<div class="door" style="left:${w/2-16}px;top:-2px;width:32px;height:4px"></div>`
-    : `<div class="door" style="left:${w/2-16}px;bottom:-2px;width:32px;height:4px"></div>`;
-  return `<div class="room" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px;--zc:${zc};--st:${stColor}">
-    <div class="rlabel">${nombre}</div><span class="rbulb"></span>
-    <span class="ricon"><span class="ms">${iconSym}</span></span>
-    ${door}
-    <div class="seats">${seatsHTML}</div>
-  </div>`;
+function figura(X,Y,color,seed,working,slug,nm,estLabel){
+  const sk=SKINS[seed%SKINS.length], ha=HAIRS[(seed>>3)%HAIRS.length];
+  const cls="fig"+(working?" work":" off");
+  const clickable=slug?`onclick="openAgent('${slug}')" style="cursor:pointer"`:"";
+  const label=nm?`<text x="0" y="16" text-anchor="middle" font-size="9" font-weight="700" fill="#e8dcc8" font-family="Inter,sans-serif">${nm}</text>`:"";
+  const tit=slug?`<title>${nm||slug} · ${estLabel||""}</title>`:"";
+  return `<g class="${cls}" ${clickable} transform="translate(${X.toFixed(1)},${Y.toFixed(1)})">${tit}
+    <ellipse cx="0" cy="3" rx="11" ry="3.4" fill="rgba(0,0,0,.4)"/>
+    <rect x="-3.2" y="-1" width="2.6" height="7" rx="1" fill="#2a3242"/><rect x="0.6" y="-1" width="2.6" height="7" rx="1" fill="#2a3242"/>
+    <rect x="-7" y="-19" width="14" height="20" rx="6" fill="${color}"/>
+    <rect class="arm" x="-9.5" y="-18" width="4.6" height="14" rx="2.3" fill="${mix(color,.12)}"/>
+    <rect class="arm2" x="4.9" y="-18" width="4.6" height="14" rx="2.3" fill="${mix(color,.12)}"/>
+    <circle cx="0" cy="-25" r="6.6" fill="${sk}"/>
+    <path d="M-6.4,-27 a6.6 6.6 0 0 1 12.8 0 q-6.4 -5.4 -12.8 0z" fill="${ha}"/>
+    <circle cx="-2.4" cy="-25" r="1" fill="#2a1a12"/><circle cx="2.4" cy="-25" r="1" fill="#2a1a12"/>
+    ${working?'<circle cx="9" cy="-14" r="2" fill="#fde68a"><animate attributeName="opacity" values="0;1;0" dur="0.6s" repeatCount="indefinite"/></circle>':''}
+    ${label}</g>`;
+}
+
+// sala-caja isométrica con corte (sin paredes delanteras), suelo + 2 paredes traseras
+function sala(bx,by,z,sx,sy,color,label,key,stColor){
+  const wh=0.82;
+  const A=pt(bx,by,z),B=pt(bx+sx,by,z),C=pt(bx+sx,by+sy,z),D=pt(bx,by+sy,z);
+  const A2=pt(bx,by,z+wh),B2=pt(bx+sx,by,z+wh),D2=pt(bx,by+sy,z+wh);
+  // zócalo (grosor del nivel) bajo el suelo para dar volumen
+  const zz=0.16;
+  const Ad=pt(bx,by,z-zz),Dd=pt(bx,by+sy,z-zz),Cd=pt(bx+sx,by+sy,z-zz),Bd=pt(bx+sx,by,z-zz);
+  const base_l=`<polygon points="${P([D,C,Cd,Dd])}" fill="${mix(color,.86)}"/>`;
+  const base_r=`<polygon points="${P([C,B,Bd,Cd])}" fill="${mix(color,.9)}"/>`;
+  const floor=`<polygon points="${P([A,B,C,D])}" fill="${mix(color,.74)}" stroke="${mix(color,.5)}" stroke-width="1"/>`;
+  const rwall=`<polygon points="${P([A,B,B2,A2])}" fill="${mix(color,.5)}"/>`;
+  const lwall=`<polygon points="${P([A,D,D2,A2])}" fill="${mix(color,.66)}"/>`;
+  // franja de color en lo alto de la pared (cornisa)
+  const corn=`<polygon points="${P([A2,B2,[B2[0],B2[1]+5],[A2[0],A2[1]+5]])}" fill="${color}" opacity=".75"/>`;
+  // cartel billboard sobre la sala
+  const [sxp,syp]=pt(bx+sx*0.5,by,z+wh);
+  const sign=`<g transform="translate(${sxp.toFixed(1)},${(syp-20).toFixed(1)})">
+    <rect x="-62" y="-14" width="124" height="21" rx="5" fill="#14100a" stroke="${color}"/>
+    <circle class="lite ${stColor==='#2dd4bf'?'on':''}" cx="-52" cy="-3.5" r="4.2" fill="${stColor}"/>
+    <text x="4" y="0" text-anchor="middle" font-size="10.5" font-weight="800" fill="${color}" font-family="Inter,sans-serif" letter-spacing=".3">${label.toUpperCase()}</text></g>`;
+  return {back:base_l+base_r+floor+lwall+rwall+corn, front:sign, A, floorZ:z, bx,by,sx,sy};
+}
+
+// config de salas: 3 niveles (dibujo de atrás→delante = L3,L2,L1)
+function layout(){
+  const SX=3.4, SY=3.4;
+  return [
+    // NIVEL 3 (arriba/atrás) — Control
+    {key:"control", bx:1.6, by:-0.2, z:2, color:"#fcd34d", label:"Dirección · CEO", agents:["orquestador"]},
+    {key:"health",  bx:5.6, by:-0.2, z:2, color:"#34d399", label:"Health · Veto", agents:["health_qa"]},
+    {key:"monet",   bx:9.6, by:-0.2, z:2, color:"#f59e0b", label:"Monetización", agents:["monetization"]},
+    // NIVEL 2 (medio) — Inteligencia
+    {key:"keyword", bx:0.8, by:3.4, z:1, color:"#22d3ee", label:"Keyword Hunter", agents:["keyword_intelligence"]},
+    {key:"serp",    bx:4.8, by:3.4, z:1, color:"#38bdf8", label:"SERP · Opportunity", agents:["serp_opportunity"]},
+    {key:"research",bx:8.8, by:3.4, z:1, color:"#67e8f9", label:"Research · Evidence", agents:["research_evidence"]},
+    // NIVEL 1 (abajo/delante) — Producción y Lanzamiento
+    {key:"strat",   bx:-0.4,by:7.0, z:0, color:"#a78bfa", label:"Page Strategist", agents:["page_strategist"]},
+    {key:"content", bx:3.6, by:7.0, z:0, color:"#60a5fa", label:"Content · SEO", agents:["content_seo"]},
+    {key:"web",     bx:7.6, by:7.0, z:0, color:"#818cf8", label:"Web Builder", agents:["web_factory"]},
+    {key:"launch",  bx:11.6,by:7.0, z:0, color:"#2dd4bf", label:"QA · Growth · Launch", agents:["final_qa","analytics_loop"]},
+  ].map(r=>({...r,sx:SX,sy:SY}));
 }
 
 function renderFactory(ag){
-  const bySec={}; ag.forEach(a=>{ if(a.slug==="orquestador")return; (bySec[a.departamento]=bySec[a.departamento]||[]).push(a); });
-  const ceo=ag.find(a=>a.slug==="orquestador");
-  let html="";
-  // salas por sector
-  ORDER.filter(s=>bySec[s]).forEach(s=>{
-    const sec=SEC[s], team=bySec[s];
-    const anyWork=team.some(a=>a.estado==="trabajando");
-    const stColor=anyWork?"var(--work)":(team.some(a=>a.estado==="bloqueado")?"var(--block)":(team.every(a=>a.estado==="sin_conectar")?"var(--sin)":"var(--idle)"));
-    const seats=team.map(a=>{
+  if(window._isoBuilt){ updateFactory(ag); return; }
+  const byslug={}; ag.forEach(a=>byslug[a.slug]=a);
+  const L=layout();
+  // fondo: nave con ladrillo + vigas
+  let back=`<defs>
+    <linearGradient id="gfloorbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#241812"/><stop offset="1" stop-color="#140d08"/></linearGradient>
+    <radialGradient id="warm" cx="50%" cy="12%" r="70%"><stop offset="0" stop-color="rgba(255,180,90,.22)"/><stop offset="1" stop-color="rgba(255,180,90,0)"/></radialGradient>
+  </defs>
+  <rect x="0" y="0" width="1180" height="760" fill="url(#gfloorbg)"/>
+  <rect x="0" y="0" width="1180" height="760" fill="url(#warm)"/>`;
+
+  // pasarelas/rampas entre niveles + tubo neumático
+  const ramps=[
+    [pt(10.4,3.0,1),pt(12.2,3.0,1),pt(13.0,6.8,0),pt(11.2,6.8,0)], // L2->L1 dcha
+    [pt(2.2,0.6,2),pt(3.6,0.6,2),pt(2.6,3.2,1),pt(1.2,3.2,1)],     // L3->L2 izq
+  ].map(q=>`<polygon points="${P(q)}" fill="#3a2a1b" stroke="#1d140c" stroke-width="1"/>
+            <polygon points="${P(q)}" fill="none" stroke="rgba(255,200,120,.12)" stroke-width="1" stroke-dasharray="4 5"/>`).join("");
+
+  // montamos cada sala
+  const parts=L.map(r=>{
+    const anyWork=r.agents.some(s=>byslug[s]&&byslug[s].estado==="trabajando");
+    const stColor=anyWork?"#2dd4bf":(r.agents.some(s=>byslug[s]&&byslug[s].estado==="bloqueado")?"#fbbf24":(r.agents.every(s=>!byslug[s]||byslug[s].estado==="sin_conectar")?"#5b6b86":"#818cf8"));
+    const box=sala(r.bx,r.by,r.z,r.sx,r.sy,r.color,r.label,r.key,stColor);
+    // agentes dentro
+    const n=r.agents.length;
+    const figs=r.agents.map((slug,i)=>{
+      const a=byslug[slug]; if(!a) return "";
+      const fx=r.bx + r.sx*(n===1?0.5:(0.32+i*0.4));
+      const fy=r.by + r.sy*0.5;
+      const [X,Y]=pt(fx,fy,r.z);
+      const nm=a.nombre.split("/")[0].split("·")[0].split("&")[0].trim().split(" ").slice(0,1).join(" ");
       const e=EST[a.estado]||EST.sin_conectar;
-      const st=a.estado==="trabajando"?"work":(a.estado==="sin_conectar"?"off":"");
-      const nm=a.nombre.split("/")[0].split("&")[0].trim().split(" ")[0];
-      return `<div class="seat" onclick="openAgent('${a.slug}')" title="${a.nombre} · ${e.t}">
-        ${personaTop(sec.c,st,seedi(a.slug))}
-        <div class="desk2"><span class="scr"></span></div>
-        <div class="snm" style="color:${e.c}">${nm}</div></div>`;
+      return `<g id="fig_${slug}">${figura(X,Y,r.color,seedi(slug),a.estado==="trabajando",slug,slug==='orquestador'?'CEO':nm,e.t)}</g>`;
     }).join("");
-    html+=salaHTML(s,POS[s],sec.c,stColor,sec.i,seats);
+    return {z:r.z, by:r.by, back:box.back, front:box.front+figs};
   });
-  // sala de Dirección (CEO)
-  if(ceo){
-    const e=EST[ceo.estado]||EST.sin_conectar;
-    const st=ceo.estado==="trabajando"?"work":(ceo.estado==="sin_conectar"?"off":"");
-    const seat=`<div class="seat" onclick="openAgent('orquestador')" title="${ceo.nombre} · ${e.t}">
-      ${personaTop("#fcd34d",st,7)}<div class="desk2"><span class="scr" style="background:#fcd34d"></span></div>
-      <div class="snm" style="color:${e.c}">CEO</div></div>`;
-    html+=salaHTML("Dirección",POS["Direccion"],"#fcd34d",st==="work"?"var(--work)":(st==="off"?"var(--sin)":"var(--idle)"),"hub",seat);
-  }
-  document.getElementById("stations").innerHTML=html;
-  if(!window._walkersDone){ renderWalkers(); window._walkersDone=true; }
+  // orden de pintado: atrás(z alto / y bajo) primero
+  parts.sort((a,b)=> (a.by - b.by) || (b.z - a.z));
+  const backs=parts.map(p=>p.back).join("");
+  const fronts=parts.map(p=>p.front).join("");
+
+  // tubo neumático de Launch(L1) a CEO(L3)
+  const t0=pt(13.0,7.2,0.6), t1=pt(6.0,2.0,2.4), tc=pt(14,1.0,2.6);
+  const tube=`<path id="tubo" d="M${t0[0].toFixed(0)},${t0[1].toFixed(0)} Q${tc[0].toFixed(0)},${tc[1].toFixed(0)} ${t1[0].toFixed(0)},${t1[1].toFixed(0)}" fill="none" stroke="rgba(190,220,255,.18)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M${t0[0].toFixed(0)},${t0[1].toFixed(0)} Q${tc[0].toFixed(0)},${tc[1].toFixed(0)} ${t1[0].toFixed(0)},${t1[1].toFixed(0)}" fill="none" stroke="rgba(190,220,255,.5)" stroke-width="2"/>
+    <circle class="capsule" r="5" fill="#bfe0ff"><animateMotion dur="4s" repeatCount="indefinite"><mpath href="#tubo"/></animateMotion></circle>`;
+
+  // gente andando por pasarelas/pasillos (animateMotion)
+  const paths=[
+    {a:pt(-1,10.4,0),b:pt(14,10.4,0),dur:17},   // pasillo frontal L1
+    {a:pt(14,11.2,0),b:pt(-1,11.2,0),dur:21},
+    {a:pt(0,6.4,1),b:pt(12.5,6.4,1),dur:19},     // pasillo frontal L2
+    {a:pt(12.5,7.0,1),b:pt(0,7.0,1),dur:23},
+    {a:pt(1,2.4,2),b:pt(13,2.4,2),dur:22},       // pasillo L3
+  ];
+  let walkersSvg="";
+  paths.forEach((pz,idx)=>{
+    const cnt= idx<2?3:2;
+    for(let k=0;k<cnt;k++){
+      const seed=seedi("walk"+idx+"_"+k);
+      const col=["#22d3ee","#a78bfa","#60a5fa","#34d399","#f59e0b","#2dd4bf","#f472b6","#e2e8f0"][seed%8];
+      walkersSvg+=`<g><animateMotion dur="${pz.dur}s" begin="-${(pz.dur*k/cnt).toFixed(1)}s" repeatCount="indefinite" path="M${pz.a[0].toFixed(0)},${pz.a[1].toFixed(0)} L${pz.b[0].toFixed(0)},${pz.b[1].toFixed(0)}"/>
+        <g class="walkbobg">${figura(0,0,col,seed,true,null,null,null)}</g></g>`;
+    }
+  });
+
+  document.getElementById("facsvg").innerHTML = back + ramps + tube + backs + fronts + walkersSvg;
+  window._isoBuilt=true;
 }
 
-function renderWalkers(){
-  const CORRIDOR="M70,258 L890,258 L890,264 L70,264 Z";
-  const RING="M60,60 L900,60 L900,460 L60,460 Z";
-  const VERT1="M166,206 L166,258"; const VERT2="M598,316 L598,264";
-  const palette=["#22d3ee","#a78bfa","#60a5fa","#34d399","#f59e0b","#2dd4bf","#f472b6","#e2e8f0"];
-  const defs=[];
-  // flujo por el pasillo central (varios, en ambos sentidos)
-  for(let i=0;i<9;i++) defs.push({path:CORRIDOR,dur:16+Math.random()*8,delay:-(i*2.2),rev:i%2===0});
-  // gente dando vueltas por el pasillo perimetral
-  for(let i=0;i<6;i++) defs.push({path:RING,dur:34+Math.random()*12,delay:-(i*6),rev:i%2===1});
-  // alguno entrando/saliendo de salas
-  defs.push({path:VERT1,dur:5,delay:0,rev:false});
-  defs.push({path:VERT2,dur:6,delay:-2,rev:true});
-  const html=defs.map((d,i)=>{
-    const seed=seedi("w"+i+d.path);
-    const col=palette[seed%palette.length];
-    const sk=SKINS[(seed>>2)%SKINS.length], ha=HAIRS[(seed>>5)%HAIRS.length];
-    const svg=`<span class="walkbob"><svg width="22" height="22" viewBox="0 0 22 22">
-      <ellipse cx="11" cy="18" rx="7" ry="2" fill="rgba(0,0,0,.45)"/>
-      <path d="M3 15 q0 -7 8 -7 t8 7z" fill="${col}"/>
-      <circle cx="11" cy="7" r="4.6" fill="${sk}"/>
-      <path d="M6.2 6.2 a4.8 4.8 0 0 1 9.6 0 q-4.8 -3.4 -9.6 0z" fill="${ha}"/></svg></span>`;
-    return `<div class="walker" style="offset-path:path('${d.path}');animation:flow ${d.dur.toFixed(1)}s linear infinite ${d.rev?'reverse':''};animation-delay:${d.delay.toFixed(1)}s">${svg}</div>`;
-  }).join("");
-  document.getElementById("walkers").innerHTML=html;
+function updateFactory(ag){
+  const byslug={}; ag.forEach(a=>byslug[a.slug]=a);
+  layout().forEach(r=>{
+    r.agents.forEach(slug=>{
+      const a=byslug[slug]; const g=document.getElementById("fig_"+slug); if(!a||!g) return;
+      const fig=g.querySelector(".fig");
+      if(fig){ fig.classList.toggle("work",a.estado==="trabajando"); fig.classList.toggle("off",a.estado==="sin_conectar"); }
+    });
+  });
 }
 
 function node(a){
