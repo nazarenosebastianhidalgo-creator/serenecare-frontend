@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Paneles internos (no son contenido público)
+Disallow: /seo
+Disallow: /sala
+
+Sitemap: https://serenecare.es/sitemap-seo.xml
+Sitemap: https://serenecare.es/sitemap-psicologos.xml
