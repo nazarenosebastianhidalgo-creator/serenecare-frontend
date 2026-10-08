@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Platícalo — Encuentra a tu psicólogo ideal</title>
+<meta name="description" content="Te conectamos con el psicólogo que mejor encaja contigo. Online, desde cualquier lugar y a un precio accesible. Haz el test de 2 minutos." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+  :root{
+    --bg:#FBF7F2; --surface:#ffffff; --ink:#2A2440; --muted:#6B6480;
+    --primary:#5B4B8A; --primary-d:#473a6e;
+    --accent:#F2765E; --accent-d:#e05f47;
+    --ring:rgba(91,75,138,.18); --line:#ECE6DC; --ok:#2f9e73;
+    --shadow:0 18px 50px rgba(42,36,64,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:20px}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;line-height:1.1;text-wrap:balance;margin:0}
+  a{color:inherit}
+  img{max-width:100%}
+
+  /* top */
+  header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(251,247,242,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:14px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:Fraunces,serif;font-weight:700;font-size:21px;color:var(--primary)}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(242,118,94,.18)}
+  .top .cta{display:inline-flex;align-items:center;gap:7px;background:var(--primary);color:#fff;border:none;border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none}
+
+  /* hero */
+  .hero{padding-block:54px 30px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);color:var(--primary);font-weight:600;font-size:13px;padding:7px 14px;border-radius:999px;box-shadow:0 2px 10px rgba(42,36,64,.04)}
+  .hero h1{font-size:clamp(34px,6vw,58px);margin:18px 0 0;letter-spacing:-.01em}
+  .hero h1 .hi{color:var(--primary);position:relative}
+  .hero p.lead{font-size:clamp(17px,2.3vw,20px);color:var(--muted);max-width:46ch;margin:18px 0 0}
+  .hero .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+  .btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:15px 26px;font-weight:600;font-size:16px;cursor:pointer;border:none;text-decoration:none;transition:transform .12s ease,box-shadow .12s ease}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 14px 30px rgba(242,118,94,.32)}
+  .btn-primary:hover{box-shadow:0 18px 40px rgba(242,118,94,.4)}
+  .btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .trust{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:30px;color:var(--muted);font-size:14px}
+  .trust span{display:inline-flex;align-items:center;gap:8px}
+  .trust b{color:var(--ink);font-weight:600}
+  .tick{width:20px;height:20px;border-radius:50%;background:rgba(47,158,115,.14);color:var(--ok);display:grid;place-items:center;font-size:12px;font-weight:800}
+
+  /* how */
+  .how{padding-block:46px}
+  .how h2{font-size:clamp(24px,3.4vw,32px);text-align:center}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px}
+  .step .n{font-family:Fraunces,serif;font-weight:700;color:var(--accent);font-size:15px}
+  .step h3{font-size:19px;margin:8px 0 6px;color:var(--ink)}
+  .step p{margin:0;color:var(--muted);font-size:14.5px}
+
+  /* quiz */
+  .quizwrap{padding-block:20px 70px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);max-width:620px;margin:0 auto;overflow:hidden}
+  .qhead{padding:22px 26px 0}
+  .progress{height:7px;background:#F0EAE0;border-radius:999px;overflow:hidden}
+  .bar{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:999px;transition:width .35s ease}
+  .qcount{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:10px;letter-spacing:.02em}
+  .qbody{padding:16px 26px 26px}
+  .q{display:none;animation:fade .3s ease}
+  .q.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .q h3{font-size:22px;margin:6px 0 4px}
+  .q .sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;align-items:center;gap:13px;border:1.5px solid var(--line);background:#fff;border-radius:15px;padding:15px 16px;cursor:pointer;font-size:15.5px;font-weight:500;text-align:left;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--ring)}
+  .opt.sel{border-color:var(--primary);background:#F6F3FC}
+  .opt .emo{font-size:20px;width:26px;text-align:center}
+  input.fld,select.fld{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px 15px;font-size:15.5px;font-family:inherit;color:var(--ink);background:#fff;outline:none}
+  input.fld:focus,select.fld:focus{border-color:var(--primary);box-shadow:0 0 0 4px var(--ring)}
+  label.lab{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:12px 0 6px}
+  .nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px}
+  .back{background:none;border:none;color:var(--muted);font-weight:600;font-size:14px;cursor:pointer;padding:8px}
+  .next{background:var(--primary);color:#fff;border:none;border-radius:999px;padding:13px 28px;font-weight:600;font-size:15px;cursor:pointer}
+  .next:disabled{opacity:.4;cursor:not-allowed}
+  .err{color:var(--accent-d);font-size:13px;font-weight:600;margin-top:10px;min-height:16px}
+
+  /* done */
+  .done{display:none;text-align:center;padding:46px 26px}
+  .done.active{display:block}
+  .done .big{width:76px;height:76px;border-radius:50%;background:rgba(47,158,115,.14);color:var(--ok);display:grid;place-items:center;font-size:38px;margin:0 auto 18px}
+  .done h3{font-size:26px}
+  .done p{color:var(--muted);max-width:40ch;margin:12px auto 0}
+
+  footer{border-top:1px solid var(--line);padding-block:26px;color:var(--muted);font-size:13px;text-align:center}
+  footer a{color:var(--primary);text-decoration:none;font-weight:600}
+
+  @media(max-width:720px){
+    .steps{grid-template-columns:1fr}
+    .hero{padding-block:36px 20px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>Platícalo</div>
+    <a class="cta" href="#test">Empezar test</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">💬 Terapia psicológica accesible</span>
+    <h1>Encuentra al <span class="hi">psicólogo ideal</span> para ti en 2 minutos.</h1>
+    <p class="lead">Responde unas preguntas y te conectamos con el profesional que mejor encaja con lo que necesitas. Online, desde donde estés y a un precio que sí puedes pagar.</p>
+    <div class="btns">
+      <a class="btn btn-primary" href="#test">Hacer el test gratis →</a>
+      <a class="btn btn-ghost" href="#como">Cómo funciona</a>
+    </div>
+    <div class="trust">
+      <span><span class="tick">✓</span> <b>Hasta 70% más barato</b> que una consulta tradicional</span>
+      <span><span class="tick">✓</span> Psicólogos con <b>cédula verificada</b></span>
+      <span><span class="tick">✓</span> <b>100% online</b>, primera cita esta misma semana</span>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="como">
+  <div class="wrap">
+    <h2>Así de fácil</h2>
+    <div class="steps">
+      <div class="step"><div class="n">Paso 1</div><h3>Cuéntanos qué necesitas</h3><p>Un test de 2 minutos sobre lo que te pasa y lo que buscas. Sin rodeos, sin registro.</p></div>
+      <div class="step"><div class="n">Paso 2</div><h3>Te buscamos tu match</h3><p>Revisamos tu perfil y elegimos a mano los psicólogos que mejor encajan contigo.</p></div>
+      <div class="step"><div class="n">Paso 3</div><h3>Reserva tu primera cita</h3><p>Te escribimos con tus opciones. Eliges, agendas y empiezas. Tú decides con quién.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="quizwrap" id="test">
+  <div class="card">
+    <div class="qhead" id="qhead">
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="qcount" id="qcount">Pregunta 1 de 8</div>
+    </div>
+    <div class="qbody" id="qbody"><!-- steps injected --></div>
+
+    <div class="done" id="done">
+      <div class="big">✓</div>
+      <h3>¡Listo! Ya tenemos tu perfil.</h3>
+      <p>En las próximas horas te escribimos con <b>2 o 3 psicólogos</b> que encajan contigo y sus horarios. Revisa tu WhatsApp / correo.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Platícalo · Terapia psicológica online · <a href="https://serenecare.es" target="_blank" rel="noopener">parte de SereneCare</a><br/>
+    Al enviar aceptas que te contactemos para darte tus opciones de psicólogo.
+  </div>
+</footer>
+
+<script>
+const SB_URL = "https://wnuwuxenzwfqmhxagryk.supabase.co";
+const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o";
+
+// Definición del test. type: choice | text | contact
+const STEPS = [
+  { key:"motivo", type:"choice", title:"¿Qué es lo que más te está pesando ahora?", sub:"Elige lo que más se acerque. No tiene que ser perfecto.",
+    opts:[
+      ["😰","Ansiedad, estrés o preocupación constante"],
+      ["🌧️","Tristeza, desánimo o depresión"],
+      ["💔","Problemas de pareja o relaciones"],
+      ["🪞","Autoestima, inseguridad o quererme más"],
+      ["🕯️","Un duelo o una pérdida"],
+      ["🧭","Me siento perdido/a, necesito ordenarme"],
+      ["💬","Otra cosa / prefiero contarlo en la cita"],
+    ]},
+  { key:"primera_vez", type:"choice", title:"¿Habías ido antes a terapia?", sub:"",
+    opts:[["🌱","Es mi primera vez"],["🔁","Sí, ya he ido antes"]]},
+  { key:"modalidad", type:"choice", title:"¿Cómo prefieres las sesiones?", sub:"",
+    opts:[["💻","Online (videollamada)"],["🏢","Presencial, en mi ciudad"],["🤷","Me da igual, lo que haya"]]},
+  { key:"ciudad", type:"text", title:"¿En qué ciudad estás?", sub:"Así te buscamos opciones de tu zona horaria (o presenciales si las quieres).",
+    placeholder:"Ej. Ciudad de México, Guadalajara…", optional:true },
+  { key:"genero_pref", type:"choice", title:"¿Prefieres psicólogo o psicóloga?", sub:"",
+    opts:[["👩","Psicóloga (mujer)"],["👨","Psicólogo (hombre)"],["✨","Me da igual, lo importante es que encaje"]]},
+  { key:"urgencia", type:"choice", title:"¿Para cuándo lo necesitas?", sub:"",
+    opts:[["⚡","Lo antes posible, esta semana"],["📅","Este mes está bien"],["👀","Solo estoy explorando por ahora"]]},
+  { key:"horario", type:"choice", title:"¿Cuándo te viene mejor?", sub:"",
+    opts:[["🌅","Mañanas"],["☀️","Tardes"],["🌙","Noches"],["📆","Fines de semana"]]},
+  { key:"presupuesto", type:"choice", title:"¿Cuánto podrías invertir por sesión?", sub:"Trabajamos precios accesibles. Esto nos ayuda a ajustar tus opciones.",
+    opts:[
+      ["💵","$250 – $400 MXN"],
+      ["💳","$400 – $600 MXN"],
+      ["💰","$600 – $900 MXN"],
+      ["🫶","Soy flexible / lo hablamos"],
+    ]},
+  { key:"contacto", type:"contact", title:"¿A dónde te mandamos tus opciones?", sub:"Te escribimos con tus psicólogos recomendados. Sin spam, de verdad." },
+];
+
+const answers = {};
+let i = 0;
+const body = document.getElementById("qbody");
+const head = document.getElementById("qhead");
+const done = document.getElementById("done");
+const bar = document.getElementById("bar");
+const qcount = document.getElementById("qcount");
+
+function render(){
+  const total = STEPS.length;
+  bar.style.width = ((i)/total*100) + "%";
+  qcount.textContent = "Pregunta " + (i+1) + " de " + total;
+  const s = STEPS[i];
+  let inner = '<div class="q active"><h3>'+s.title+'</h3>'+(s.sub?'<p class="sub">'+s.sub+'</p>':'');
+
+  if(s.type==="choice"){
+    inner += '<div class="opts">';
+    s.opts.forEach((o,idx)=>{
+      const sel = answers[s.key]===o[1] ? ' sel':'';
+      inner += '<button class="opt'+sel+'" data-v="'+o[1].replace(/"/g,'&quot;')+'"><span class="emo">'+o[0]+'</span>'+o[1]+'</button>';
+    });
+    inner += '</div>';
+  } else if(s.type==="text"){
+    inner += '<input class="fld" id="fld" placeholder="'+(s.placeholder||'')+'" value="'+(answers[s.key]||'')+'" />';
+  } else if(s.type==="contact"){
+    inner += '<label class="lab">Tu nombre</label><input class="fld" id="c_nombre" placeholder="¿Cómo te llamas?" value="'+(answers._nombre||'')+'" />';
+    inner += '<label class="lab">WhatsApp o correo</label><input class="fld" id="c_via" placeholder="Ej. +52 55 1234 5678 o tu@correo.com" value="'+(answers._via||'')+'" />';
+  }
+
+  inner += '<div class="err" id="err"></div>';
+  inner += '<div class="nav">';
+  inner += i>0 ? '<button class="back" id="back">← Atrás</button>' : '<span></span>';
+  const lastLabel = (s.type==="contact") ? "Enviar y ver mis opciones" : (s.optional ? "Siguiente" : "Siguiente");
+  inner += '<button class="next" id="next">'+lastLabel+'</button>';
+  inner += '</div></div>';
+  body.innerHTML = inner;
+
+  // choice handlers
+  body.querySelectorAll(".opt").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      answers[STEPS[i].key] = btn.getAttribute("data-v");
+      body.querySelectorAll(".opt").forEach(b=>b.classList.remove("sel"));
+      btn.classList.add("sel");
+      setTimeout(next, 180); // auto-avanza en las de opción
+    });
+  });
+  const backBtn = document.getElementById("back");
+  if(backBtn) backBtn.addEventListener("click", ()=>{ if(i>0){i--;render();} });
+  document.getElementById("next").addEventListener("click", next);
+}
+
+function next(){
+  const s = STEPS[i];
+  const err = document.getElementById("err");
+  if(s.type==="choice"){
+    if(!answers[s.key]){ if(err)err.textContent="Elige una opción para seguir."; return; }
+  } else if(s.type==="text"){
+    const v = (document.getElementById("fld").value||"").trim();
+    if(!v && !s.optional){ err.textContent="Escribe una respuesta."; return; }
+    answers[s.key]=v;
+  } else if(s.type==="contact"){
+    const nombre=(document.getElementById("c_nombre").value||"").trim();
+    const via=(document.getElementById("c_via").value||"").trim();
+    if(nombre.length<2){ err.textContent="Dinos tu nombre."; return; }
+    if(via.length<6){ err.textContent="Déjanos un WhatsApp o correo para contactarte."; return; }
+    answers._nombre=nombre; answers._via=via;
+    answers[s.key]=nombre+" · "+via;
+    return enviar();
+  }
+  if(i<STEPS.length-1){ i++; render(); }
+}
+
+async function enviar(){
+  const next=document.getElementById("next"); const err=document.getElementById("err");
+  if(next){ next.disabled=true; next.textContent="Enviando…"; }
+  const payload = {
+    pais:"México",
+    motivo:answers.motivo||null, modalidad:answers.modalidad||null, ciudad:answers.ciudad||null,
+    urgencia:answers.urgencia||null, horario:answers.horario||null, presupuesto:answers.presupuesto||null,
+    genero_pref:answers.genero_pref||null, primera_vez:answers.primera_vez||null, contacto:answers.contacto||null,
+  };
+  try{
+    const r = await fetch(SB_URL+"/rest/v1/match_solicitudes",{
+      method:"POST",
+      headers:{ "apikey":SB_KEY, "Authorization":"Bearer "+SB_KEY, "Content-Type":"application/json", "Prefer":"return=minimal" },
+      body: JSON.stringify(payload),
+    });
+    if(!r.ok) throw new Error("http "+r.status);
+    head.style.display="none"; body.style.display="none"; done.classList.add("active");
+    bar.style.width="100%";
+    try{ document.getElementById("test").scrollIntoView({behavior:"smooth",block:"start"}); }catch(_){}
+  }catch(e){
+    if(err){ err.textContent="No se pudo enviar. Revisa tu conexión e inténtalo otra vez."; }
+    if(next){ next.disabled=false; next.textContent="Enviar y ver mis opciones"; }
+  }
+}
+
+render();
+</script>
+</body>
+</html>

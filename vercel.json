@@ -45,6 +45,7 @@
     { "source": "/api/:path*", "destination": "https://serenecare-backend-production.up.railway.app/api/:path*" },
     { "source": "/acceso", "destination": "/acceso.html" },
     { "source": "/empresas", "destination": "/empresas.html" },
+    { "source": "/platicalo", "destination": "/platicalo.html" },
     { "source": "/creadores", "destination": "/screens/creadores.html" },
     { "source": "/panel", "destination": "/screens/panel_creador.html" },
     { "source": "/registro", "destination": "/screens/registro_clinica.html" },
