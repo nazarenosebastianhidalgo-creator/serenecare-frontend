@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex,nofollow" />
+<title>SEO Factory — Centro de Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
+<style>
+  :root{
+    --bg:#020617; --surface:#0b1220; --surface2:#0f1b30; --line:rgba(148,163,184,.14);
+    --ink:#e8eefb; --muted:#93a3bd; --faint:#64748b;
+    --teal:#2dd4bf; --indigo:#818cf8; --amber:#fbbf24; --red:#f87171; --green:#34d399; --slate:#64748b;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;line-height:1;vertical-align:middle;-webkit-font-feature-settings:'liga';}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+
+  header{position:sticky;top:0;z-index:30;background:rgba(2,6,23,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  header .wrap{display:flex;align-items:center;gap:16px;padding:14px 20px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.01em}
+  .logo .badge{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--indigo));display:grid;place-items:center;color:#041016}
+  .logo small{display:block;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.04em}
+  .spacer{flex:1}
+  .live{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);font-weight:600}
+  .pulse{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:pl 2s infinite}
+  @keyframes pl{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 7px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+  .pais{background:var(--surface2);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:7px 12px;font-size:13px;font-weight:600}
+
+  h2.sec{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:34px 0 14px;display:flex;align-items:center;gap:8px}
+
+  /* KPIs */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:22px}
+  .kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .kpi .l{font-size:12px;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:7px}
+  .kpi .v{font-size:30px;font-weight:800;margin-top:8px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .kpi .s{font-size:12px;color:var(--faint);margin-top:2px}
+  .kpi .ms{font-size:18px}
+
+  /* pipeline chips */
+  .pipe{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .panel h3{margin:0 0 14px;font-size:14px;font-weight:700}
+  .flow{display:flex;flex-wrap:wrap;gap:8px}
+  .stg{background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:8px}
+  .stg b{font-variant-numeric:tabular-nums}
+  .dotc{width:8px;height:8px;border-radius:50%}
+
+  /* agents */
+  .dep{margin-bottom:8px}
+  .depname{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.03em;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+  .depname .line{flex:1;height:1px;background:var(--line)}
+  .agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+  .ag{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;position:relative;transition:border-color .15s,transform .15s}
+  .ag:hover{border-color:rgba(129,140,248,.4);transform:translateY(-2px)}
+  .ag .top{display:flex;align-items:center;gap:11px}
+  .ag .ic{width:40px;height:40px;border-radius:11px;background:var(--surface2);display:grid;place-items:center;color:var(--indigo);flex:0 0 auto}
+  .ag .ic .ms{font-size:22px}
+  .ag .nm{font-weight:700;font-size:15px;line-height:1.2}
+  .ag .chip{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;margin-top:5px}
+  .ag .mis{color:var(--muted);font-size:12.5px;line-height:1.5;margin:12px 0 0}
+  .ag .meta{display:flex;gap:14px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--faint)}
+  .ag .meta b{color:var(--ink);font-weight:700}
+  .flags{position:absolute;top:14px;right:14px;display:flex;gap:6px}
+  .flag{font-size:10px;font-weight:700;padding:3px 7px;border-radius:7px;background:var(--surface2);color:var(--muted);border:1px solid var(--line)}
+  .flag.veto{color:var(--red);border-color:rgba(248,113,113,.35)}
+  .flag.pub{color:var(--teal);border-color:rgba(45,212,191,.35)}
+
+  /* feed */
+  .feed{display:flex;flex-direction:column}
+  .ev{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .ev:last-child{border-bottom:none}
+  .ev .ed{width:9px;height:9px;border-radius:50%;margin-top:6px;flex:0 0 auto}
+  .ev .et{flex:1}
+  .ev .ea{font-weight:700;font-size:13px}
+  .ev .er{color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.5}
+  .ev .ets{color:var(--faint);font-size:11px;white-space:nowrap}
+
+  /* opp table */
+  .tbl{width:100%;border-collapse:collapse;font-size:13px}
+  .tbl th{text-align:left;color:var(--faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:9px 10px;border-bottom:1px solid var(--line)}
+  .tbl td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  .tbl tr:hover td{background:rgba(129,140,248,.04)}
+  .kw{font-weight:600}
+  .url{color:var(--faint);font-size:11.5px;font-family:ui-monospace,monospace}
+  .sc{font-weight:800;font-variant-numeric:tabular-nums}
+  .est{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .mot{color:var(--muted);font-size:12px;line-height:1.45}
+  .tabs{display:flex;gap:8px;margin-bottom:12px}
+  .tab{background:var(--surface2);border:1px solid var(--line);color:var(--muted);border-radius:9px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer}
+  .tab.on{background:rgba(129,140,248,.16);color:var(--ink);border-color:rgba(129,140,248,.45)}
+
+  .note{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:13px 15px;font-size:12.5px;color:#fde68a;line-height:1.55;margin-top:14px;display:flex;gap:10px}
+  footer{color:var(--faint);font-size:12px;text-align:center;padding:30px 0 50px}
+
+  @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.pipe{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo"><span class="badge"><span class="ms">factory</span></span><span>SEO Factory<small>Centro de control · SereneCare</small></span></div>
+    <div class="spacer"></div>
+    <select class="pais" id="pais"><option value="México">🇲🇽 México</option></select>
+    <span class="live"><span class="pulse"></span><span id="livetxt">En vivo</span></span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="kpis" id="kpis"></div>
+
+  <h2 class="sec"><span class="ms">conveyor_belt</span> Pipeline</h2>
+  <div class="pipe">
+    <div class="panel"><h3>Oportunidades (keywords)</h3><div class="flow" id="flow-op"></div></div>
+    <div class="panel"><h3>Páginas</h3><div class="flow" id="flow-pg"></div>
+      <div class="note"><span class="ms" style="font-size:18px">lightbulb</span><span id="pgnote">Aún no se ha generado ninguna página. El siguiente módulo (Page Factory) construirá primero las <b>aprobadas Tipo C</b> — guías útiles que no dependen de oferta — y las publicará con CTA al matching de Háblalo.</span></div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="ms">groups</span> Agentes <span style="color:var(--muted);font-weight:600;text-transform:none;letter-spacing:0" id="agcount"></span></h2>
+  <div id="agents"></div>
+
+  <div class="pipe" style="margin-top:20px;grid-template-columns:1fr 1fr">
+    <div>
+      <h2 class="sec"><span class="ms">bolt</span> Actividad reciente</h2>
+      <div class="panel feed" id="feed"></div>
+    </div>
+    <div>
+      <h2 class="sec"><span class="ms">target</span> Oportunidades</h2>
+      <div class="panel">
+        <div class="tabs">
+          <button class="tab on" data-f="aprobada">Aprobadas</button>
+          <button class="tab" data-f="pendiente">Pendientes</button>
+          <button class="tab" data-f="bloqueada_sin_oferta">Bloqueadas</button>
+        </div>
+        <div style="overflow-x:auto"><table class="tbl" id="opptbl"></table></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Panel interno · lee en vivo de Supabase · se actualiza cada 20&nbsp;s</footer>
+
+<script>
+const SB="https://wnuwuxenzwfqmhxagryk.supabase.co";
+const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o";
+const H={apikey:KEY,Authorization:"Bearer "+KEY};
+const q=(p)=>fetch(SB+"/rest/v1/"+p,{headers:H}).then(r=>r.json()).catch(()=>[]);
+
+const EST={ // estados de agente
+  sin_conectar:{c:"var(--slate)",t:"Sin conectar"}, idle:{c:"var(--indigo)",t:"En espera"},
+  trabajando:{c:"var(--teal)",t:"Trabajando"}, bloqueado:{c:"var(--amber)",t:"Bloqueado"}, error:{c:"var(--red)",t:"Error"},
+};
+const OEST={ // estados de oportunidad
+  aprobada:{c:"var(--green)",t:"Aprobada"}, pendiente_oferta:{c:"var(--amber)",t:"Pend. oferta"},
+  pendiente_datos:{c:"var(--amber)",t:"Pend. datos"}, bloqueada_sin_oferta:{c:"var(--red)",t:"Bloqueada"},
+  candidata:{c:"var(--slate)",t:"Candidata"}, publicada:{c:"var(--teal)",t:"Publicada"}, noindex:{c:"var(--slate)",t:"Noindex"},
+};
+const col=(e,m)=>(m[e]||{c:"var(--slate)",t:e});
+function hace(ts){ if(!ts)return "—"; const s=(Date.now()-new Date(ts))/1000;
+  if(s<60)return "hace "+Math.floor(s)+"s"; if(s<3600)return "hace "+Math.floor(s/60)+"m";
+  if(s<86400)return "hace "+Math.floor(s/3600)+"h"; return "hace "+Math.floor(s/86400)+"d"; }
+
+let OPPS=[], FILTER="aprobada";
+
+async function load(){
+  const [ag,runs,ops,pgs]=await Promise.all([
+    q("seo_agentes?select=*&order=orden.asc"),
+    q("seo_runs?select=*&order=created_at.desc&limit=20"),
+    q("seo_oportunidades?select=keyword,tipo,score,url_objetivo,estado,profesionales_disponibles,motivo,intencion&order=score.desc"),
+    q("seo_paginas?select=estado"),
+  ]);
+  OPPS=ops||[];
+  renderKpis(ag,ops,pgs); renderFlows(ops,pgs); renderAgents(ag); renderFeed(runs); renderOpps();
+  document.getElementById("livetxt").textContent="En vivo · "+new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+
+function renderKpis(ag,ops,pgs){
+  const conn=ag.filter(a=>a.estado!=="sin_conectar").length;
+  const apr=ops.filter(o=>o.estado==="aprobada").length;
+  const blo=ops.filter(o=>o.estado.startsWith("bloqueada")||o.estado.startsWith("pendiente")).length;
+  const pub=(pgs||[]).filter(p=>p.estado==="publicada").length;
+  const K=[
+    ["target","Oportunidades",ops.length,"keywords en el radar"],
+    ["check_circle","Aprobadas",apr,"listas para construir"],
+    ["block","No publicables",blo,"sin oferta / faltan datos"],
+    ["language","Páginas publicadas",pub,"en vivo e indexables"],
+    ["groups","Agentes conectados",conn+" / "+ag.length,"plazas activas"],
+  ];
+  document.getElementById("kpis").innerHTML=K.map(k=>
+    `<div class="kpi"><div class="l"><span class="ms">${k[0]}</span>${k[1]}</div><div class="v">${k[2]}</div><div class="s">${k[3]}</div></div>`).join("");
+}
+
+function flow(container,items,map,order){
+  const counts={}; items.forEach(x=>counts[x.estado]=(counts[x.estado]||0)+1);
+  const keys=order.filter(k=>counts[k]!==undefined);
+  if(!keys.length){ document.getElementById(container).innerHTML='<span style="color:var(--faint);font-size:13px">— vacío —</span>'; return; }
+  document.getElementById(container).innerHTML=keys.map(k=>{
+    const c=col(k,map); return `<span class="stg"><span class="dotc" style="background:${c.c}"></span>${c.t} <b>${counts[k]}</b></span>`;
+  }).join("");
+}
+function renderFlows(ops,pgs){
+  flow("flow-op",ops,OEST,["candidata","aprobada","pendiente_oferta","pendiente_datos","bloqueada_sin_oferta","publicada","noindex"]);
+  flow("flow-pg",pgs||[],{borrador:{c:"var(--slate)",t:"Borrador"},fact_check:{c:"var(--amber)",t:"Fact-check"},seo_qa:{c:"var(--amber)",t:"SEO QA"},aprobada:{c:"var(--green)",t:"Aprobada"},publicada:{c:"var(--teal)",t:"Publicada"},noindex:{c:"var(--slate)",t:"Noindex"}},["borrador","fact_check","seo_qa","aprobada","publicada","noindex"]);
+}
+
+function renderAgents(ag){
+  document.getElementById("agcount").textContent="· "+ag.filter(a=>a.estado!=="sin_conectar").length+" de "+ag.length+" conectados";
+  const deps=[]; const by={};
+  ag.forEach(a=>{ if(!by[a.departamento]){by[a.departamento]=[];deps.push(a.departamento);} by[a.departamento].push(a); });
+  document.getElementById("agents").innerHTML=deps.map(d=>{
+    const cards=by[d].map(a=>{
+      const e=col(a.estado,EST);
+      const flags=(a.tiene_veto?'<span class="flag veto">VETO</span>':'')+(a.puede_publicar?'<span class="flag pub">PUBLICA</span>':'');
+      return `<div class="ag">
+        <div class="flags">${flags}</div>
+        <div class="top"><div class="ic"><span class="ms">${a.icono||'smart_toy'}</span></div>
+          <div><div class="nm">${a.nombre}</div>
+          <span class="chip" style="background:${e.c}22;color:${e.c}"><span class="dotc" style="background:${e.c}"></span>${e.t}</span></div></div>
+        <p class="mis">${a.mision||''}</p>
+        <div class="meta"><span>Cola: <b>${a.cola||0}</b></span><span>Última: <b>${hace(a.ultima_ejecucion)}</b></span></div>
+      </div>`;
+    }).join("");
+    return `<div class="dep"><div class="depname">${d}<span class="line"></span></div><div class="agrid">${cards}</div></div>`;
+  }).join("");
+}
+
+function renderFeed(runs){
+  if(!runs||!runs.length){ document.getElementById("feed").innerHTML='<span style="color:var(--faint);font-size:13px">Sin actividad.</span>'; return; }
+  const C={ok:"var(--green)",info:"var(--indigo)",bloqueado:"var(--amber)",error:"var(--red)"};
+  document.getElementById("feed").innerHTML=runs.map(r=>`
+    <div class="ev"><span class="ed" style="background:${C[r.estado]||'var(--slate)'}"></span>
+      <div class="et"><div class="ea">${r.accion} <span style="color:var(--faint);font-weight:500">· ${r.agente}</span></div>
+        <div class="er">${r.resumen||''}${r.items_out?' <span style="color:var(--teal)">(+'+r.items_out+')</span>':''}</div></div>
+      <div class="ets">${hace(r.created_at)}</div></div>`).join("");
+}
+
+function renderOpps(){
+  let rows=OPPS;
+  if(FILTER==="aprobada") rows=OPPS.filter(o=>o.estado==="aprobada");
+  else if(FILTER==="pendiente") rows=OPPS.filter(o=>o.estado.startsWith("pendiente"));
+  else rows=OPPS.filter(o=>o.estado==="bloqueada_sin_oferta");
+  const head='<tr><th>Keyword</th><th>Score</th><th>Estado</th><th>Motivo / nota</th></tr>';
+  const body=rows.map(o=>{ const e=col(o.estado,OEST);
+    return `<tr><td><div class="kw">${o.keyword}</div><div class="url">/${o.url_objetivo}</div></td>
+      <td class="sc">${o.score}</td>
+      <td><span class="est" style="background:${e.c}22;color:${e.c}">${e.t}</span></td>
+      <td class="mot">${o.motivo||''}</td></tr>`;
+  }).join("");
+  document.getElementById("opptbl").innerHTML=head+(body||'<tr><td colspan="4" style="color:var(--faint);padding:16px">Nada aquí.</td></tr>');
+}
+
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on")); t.classList.add("on");
+  FILTER=t.getAttribute("data-f"); renderOpps();
+}));
+
+load(); setInterval(load,20000);
+</script>
+</body>
+</html>
