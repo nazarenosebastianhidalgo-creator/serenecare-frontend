@@ -105,6 +105,54 @@
 
   footer{position:relative;z-index:1;color:var(--faint);font-size:12px;text-align:center;padding:26px 0 46px}
 
+  /* ---------- PLANTA / FÁBRICA ---------- */
+  .fh{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:30px 0 12px}
+  .fh .ms{font-size:18px;color:var(--work)}
+  .scene{position:relative;border:1px solid var(--line);border-radius:22px;overflow:hidden;
+    background:linear-gradient(180deg,#0a1228 0,#0a1228 60%,#0c1736 60%,#0c1736 100%);
+    box-shadow:inset 0 40px 90px rgba(0,0,0,.45)}
+  .scene .sky{position:absolute;left:0;right:0;top:0;height:60%;pointer-events:none;
+    background:radial-gradient(700px 220px at 50% -40px,rgba(34,211,238,.12),transparent 70%)}
+  .scene .pipes{position:absolute;left:0;right:0;top:14px;height:8px;background:
+    repeating-linear-gradient(90deg,transparent 0 60px,rgba(148,163,184,.12) 60px 64px);pointer-events:none}
+  .stations{display:flex;gap:4px;overflow-x:auto;padding:28px 16px 6px;position:relative;z-index:2;align-items:flex-end}
+  .station{flex:0 0 auto;min-width:160px;display:flex;flex-direction:column;align-items:center;gap:9px;padding:0 8px}
+  .sign{display:flex;align-items:center;gap:7px;background:#0b1223;border:1px solid var(--zc);border-radius:9px;padding:5px 11px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--zc);box-shadow:0 0 16px color-mix(in srgb,var(--zc) 28%,transparent)}
+  .sign .bulb{width:9px;height:9px;border-radius:50%;background:var(--st,#5b6b86);box-shadow:0 0 9px var(--st,transparent)}
+  .team{display:flex;gap:4px;align-items:flex-end;justify-content:center}
+  .worker{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .14s}
+  .worker:hover{transform:translateY(-4px)}
+  .worker .wn{font-size:9.5px;font-weight:700;color:var(--ink);text-align:center;max-width:72px;line-height:1.15}
+  .worker .wst{font-size:8.5px;font-weight:700}
+  .mp{display:block;animation:bob 2.4s ease-in-out infinite}
+  .mp.off{filter:grayscale(.65) brightness(.9);opacity:.7}
+  .worker:nth-child(2) .mp{animation-delay:.5s}.worker:nth-child(3) .mp{animation-delay:1s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+  .mp .arm{transform-box:fill-box;transform-origin:50% 0}
+  .mp.work .ra{animation:ham .5s ease-in-out infinite}
+  @keyframes ham{0%,100%{transform:rotate(10deg)}50%{transform:rotate(-40deg)}}
+  .mp .spark{opacity:0}
+  .mp.work .spark{animation:spk .55s infinite}
+  @keyframes spk{0%{opacity:0;transform:translateY(0) scale(1)}30%{opacity:1}100%{opacity:0;transform:translateY(-12px) scale(.3)}}
+  .machine{width:132px;height:50px;border-radius:12px 12px 5px 5px;background:linear-gradient(#1c2a4a,#111b33);border:1px solid var(--line);position:relative;display:flex;align-items:center;justify-content:center;margin-top:-4px;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+  .machine .screen{width:46px;height:22px;border-radius:5px;background:#04101a;border:1px solid var(--zc);box-shadow:inset 0 0 12px color-mix(in srgb,var(--zc) 45%,transparent)}
+  .machine .screen::after{content:"";display:block;width:60%;height:3px;margin:5px auto;border-radius:2px;background:var(--zc);opacity:.7;animation:scan 1.6s ease-in-out infinite}
+  @keyframes scan{0%,100%{opacity:.25;width:40%}50%{opacity:.9;width:70%}}
+  .machine .mlight{position:absolute;top:6px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--st,#5b6b86);box-shadow:0 0 9px var(--st,transparent)}
+  .machine .foot{position:absolute;bottom:-9px;width:7px;height:9px;background:#0e1830;border-radius:0 0 2px 2px}
+  .machine .foot.l{left:16px}.machine .foot.r{right:16px}
+  /* cinta */
+  .belt{position:relative;z-index:1;height:30px;margin:2px 10px 16px;border-radius:7px;overflow:hidden;
+    background:repeating-linear-gradient(90deg,#17203a 0 15px,#243457 15px 30px);background-size:30px 100%;
+    animation:beltmove 1.1s linear infinite;border-top:3px solid #2e3f66;border-bottom:4px solid #0a1120}
+  @keyframes beltmove{to{background-position:-30px 0}}
+  .box{position:absolute;top:-13px;width:30px;height:26px;border-radius:4px;
+    background:linear-gradient(#e0ad63,#bd8540);border:1px solid #8a5f28;box-shadow:0 3px 7px rgba(0,0,0,.45);
+    display:grid;place-items:center;font-size:7.5px;color:#3c250a;font-weight:800;letter-spacing:.02em;
+    animation:travel 11s linear infinite}
+  .box::before{content:"";position:absolute;left:3px;right:3px;top:9px;height:2px;background:rgba(0,0,0,.18)}
+  @keyframes travel{from{left:-5%}to{left:103%}}
+
   /* modal */
   .modal{position:fixed;inset:0;z-index:60;background:rgba(4,8,20,.74);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
   .modal.on{display:flex}
@@ -149,6 +197,14 @@
   <div class="ceo-wrap"><div class="ceo" id="ceo"></div></div>
   <div class="stem"></div>
 
+  <h2 class="fh"><span class="ms">factory</span> Planta de producción</h2>
+  <div class="scene">
+    <div class="sky"></div><div class="pipes"></div>
+    <div class="stations" id="stations"></div>
+    <div class="belt" id="belt"></div>
+  </div>
+
+  <h2 class="fh"><span class="ms">conveyor_belt</span> Cadena de montaje <span style="color:var(--faint);font-weight:500;letter-spacing:0;text-transform:none">· detalle por estado</span></h2>
   <div class="line" id="line"></div>
 
   <div class="loop"><span class="ms">sync</span> El <b>Analytics / Loop</b> devuelve el aprendizaje al <b>Orquestador</b> → nuevas oportunidades</div>
@@ -199,6 +255,7 @@ async function load(){
   document.getElementById("cxfill").style.width=(conn/(ag.length||11)*100)+"%";
   document.getElementById("cxnum").textContent=conn+" / "+(ag.length||11);
   renderCEO(ag.find(a=>a.slug==="orquestador"));
+  renderFactory(ag);
   renderLine(ag);
   document.getElementById("livetxt").textContent="En vivo · "+new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
@@ -209,6 +266,53 @@ function renderCEO(a){
     <div class="ic"><span class="ms">hub</span></div>
     <div><div class="ro">Orquestador · CEO</div><div class="nm">${a.nombre}</div>
     <div class="st"><span style="color:${e.c}">●</span> ${e.t} · coordina todo el pipeline</div></div></div>`;
+}
+
+function muppet(color,working){
+  return `<svg class="mp${working?' work':' off'}" viewBox="0 0 64 88" width="52" height="72" aria-hidden="true">
+    <ellipse cx="32" cy="84" rx="17" ry="3.2" fill="rgba(0,0,0,.4)"/>
+    <rect class="leg" x="24" y="60" width="6" height="15" rx="3" fill="#2a3547"/>
+    <rect class="leg" x="34" y="60" width="6" height="15" rx="3" fill="#2a3547"/>
+    <rect x="18" y="38" width="28" height="26" rx="11" fill="${color}"/>
+    <rect x="27" y="42" width="10" height="16" rx="3" fill="rgba(255,255,255,.18)"/>
+    <rect class="arm la" x="12" y="40" width="8" height="21" rx="4" fill="${color}"/>
+    <rect class="arm ra" x="44" y="40" width="8" height="21" rx="4" fill="${color}"/>
+    <circle cx="48" cy="60" r="3.5" fill="#cbd5e1"/>
+    <circle cx="32" cy="23" r="16" fill="${color}"/>
+    <path d="M15 20 a17 14 0 0 1 34 0 z" fill="rgba(255,255,255,.22)"/>
+    <rect x="14" y="19" width="36" height="4" rx="2" fill="rgba(0,0,0,.25)"/>
+    <ellipse cx="26" cy="24" rx="5" ry="6" fill="#fff"/><ellipse cx="38" cy="24" rx="5" ry="6" fill="#fff"/>
+    <circle cx="26.5" cy="25" r="2.3" fill="#0b1020"/><circle cx="37.5" cy="25" r="2.3" fill="#0b1020"/>
+    <path d="M27 33 q5 4 10 0" stroke="#0b1020" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <circle class="spark" cx="50" cy="40" r="2.6" fill="#fde68a"/>
+    <circle class="spark" cx="54" cy="44" r="1.8" fill="#fca5a5" style="animation-delay:.2s"/>
+  </svg>`;
+}
+
+function renderFactory(ag){
+  const bySec={}; ag.forEach(a=>{ if(a.slug==="orquestador")return; (bySec[a.departamento]=bySec[a.departamento]||[]).push(a); });
+  const secs=ORDER.filter(s=>bySec[s]);
+  document.getElementById("stations").innerHTML=secs.map(s=>{
+    const sec=SEC[s]; const team=bySec[s];
+    const anyWork=team.some(a=>a.estado==="trabajando");
+    const stColor=anyWork?"var(--work)":(team.some(a=>a.estado==="bloqueado")?"var(--block)":(team.every(a=>a.estado==="sin_conectar")?"var(--sin)":"var(--idle)"));
+    const workers=team.map(a=>{
+      const e=EST[a.estado]||EST.sin_conectar; const w=a.estado==="trabajando";
+      return `<div class="worker" onclick="openAgent('${a.slug}')" title="${a.nombre}">
+        ${muppet(sec.c,w)}
+        <div class="wn">${a.nombre.split(" ")[0].split("/")[0]}</div>
+        <div class="wst" style="color:${e.c}">${e.t}</div></div>`;
+    }).join("");
+    return `<div class="station" style="--zc:${sec.c};--st:${stColor}">
+      <div class="sign"><span class="bulb"></span>${s}</div>
+      <div class="team">${workers}</div>
+      <div class="machine"><span class="mlight"></span><div class="screen"></div><span class="foot l"></span><span class="foot r"></span></div>
+    </div>`;
+  }).join("");
+  // cinta con cajas
+  const labels=["KEYWORD","SERP","RESEARCH","BLUEPRINT","CONTENT","WEB","QA","LIVE"];
+  document.getElementById("belt").innerHTML=labels.map((l,i)=>
+    `<div class="box" style="animation-delay:${(-i*1.35).toFixed(2)}s">${l}</div>`).join("");
 }
 
 function node(a){
