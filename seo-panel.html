@@ -98,6 +98,22 @@
   .note{background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.25);border-radius:12px;padding:13px 15px;font-size:12.5px;color:#fde68a;line-height:1.55;margin-top:14px;display:flex;gap:10px}
   footer{color:var(--faint);font-size:12px;text-align:center;padding:30px 0 50px}
 
+  .pstates{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .pst{background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+  .pst.block{color:var(--red);border-color:rgba(248,113,113,.3)}
+  .pst .ar{color:var(--faint);margin:0 3px}
+  .io{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--faint);margin-top:10px;font-family:ui-monospace,monospace}
+  .io b{color:var(--teal);font-weight:700}
+  .ag{cursor:pointer}
+  .modal{position:fixed;inset:0;z-index:60;background:rgba(2,6,23,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+  .modal.on{display:flex}
+  .mcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;max-width:580px;width:100%;max-height:86vh;overflow:auto;padding:24px}
+  .mcard h3{margin:0;font-size:19px}
+  .mcard .msub{color:var(--muted);font-size:13px;margin:6px 0 0;line-height:1.55}
+  .mcard pre{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:11.5px;color:var(--teal);overflow:auto;white-space:pre-wrap;margin:6px 0 0}
+  .mcard ul{margin:6px 0 0;padding-left:18px;color:var(--muted);font-size:13px;line-height:1.65}
+  .mx{float:right;background:var(--surface2);border:1px solid var(--line);color:var(--muted);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:15px}
+  .lbl{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:18px 0 0}
   @media(max-width:900px){.kpis{grid-template-columns:repeat(2,1fr)}.pipe{grid-template-columns:1fr}}
 </style>
 </head>
@@ -124,7 +140,10 @@
     </div>
   </div>
 
-  <h2 class="sec"><span class="ms">groups</span> Agentes <span style="color:var(--muted);font-weight:600;text-transform:none;letter-spacing:0" id="agcount"></span></h2>
+  <h2 class="sec"><span class="ms">account_tree</span> Pipeline oficial de página <span style="color:var(--faint);font-weight:600;text-transform:none;letter-spacing:0">· Discover → Validate → Research → Strategize → Create → Build → Verify → Approve → Publish → Measure</span></h2>
+  <div class="panel"><div class="pstates" id="pstates"></div></div>
+
+  <h2 class="sec"><span class="ms">groups</span> Agentes <span style="color:var(--muted);font-weight:600;text-transform:none;letter-spacing:0" id="agcount"></span> <span style="color:var(--faint);font-weight:500;text-transform:none;letter-spacing:0">· clic en cada uno para ver su contrato</span></h2>
   <div id="agents"></div>
 
   <div class="pipe" style="margin-top:20px;grid-template-columns:1fr 1fr">
@@ -149,6 +168,8 @@
 
 <footer>Panel interno · lee en vivo de Supabase · se actualiza cada 20&nbsp;s</footer>
 
+<div class="modal" id="modal"><div class="mcard" id="mcard"></div></div>
+
 <script>
 const SB="https://wnuwuxenzwfqmhxagryk.supabase.co";
 const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndudXd1eGVuendmcW1oeGFncnlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxMjYwMDQsImV4cCI6MjA5NDcwMjAwNH0.9mlijBd57cKtso2acSSKnU2LKQFZ_sUEKuqtAguZk5o";
@@ -169,25 +190,53 @@ function hace(ts){ if(!ts)return "—"; const s=(Date.now()-new Date(ts))/1000;
   if(s<60)return "hace "+Math.floor(s)+"s"; if(s<3600)return "hace "+Math.floor(s/60)+"m";
   if(s<86400)return "hace "+Math.floor(s/3600)+"h"; return "hace "+Math.floor(s/86400)+"d"; }
 
-let OPPS=[], FILTER="aprobada";
+let OPPS=[], FILTER="aprobada", AG={};
 
 async function load(){
-  const [ag,runs,ops,pgs]=await Promise.all([
+  const [ag,runs,ops,pgs,cfg]=await Promise.all([
     q("seo_agentes?select=*&order=orden.asc"),
     q("seo_runs?select=*&order=created_at.desc&limit=20"),
     q("seo_oportunidades?select=keyword,tipo,score,url_objetivo,estado,profesionales_disponibles,motivo,intencion&order=score.desc"),
-    q("seo_paginas?select=estado"),
+    q("seo_paginas?select=estado_pipeline"),
+    q("seo_config?select=clave,valor"),
   ]);
-  OPPS=ops||[];
-  renderKpis(ag,ops,pgs); renderFlows(ops,pgs); renderAgents(ag); renderFeed(runs); renderOpps();
+  OPPS=ops||[]; AG={}; (ag||[]).forEach(a=>AG[a.slug]=a);
+  const C={}; (cfg||[]).forEach(r=>C[r.clave]=r.valor);
+  renderKpis(ag,ops,pgs); renderFlows(ops,pgs); renderPipeline(C); renderAgents(ag); renderFeed(runs); renderOpps();
   document.getElementById("livetxt").textContent="En vivo · "+new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
+
+function renderPipeline(C){
+  const st=C.estados_pagina||[];
+  document.getElementById("pstates").innerHTML=st.map((s,i)=>{
+    const block=(s==="BLOCKED"||s==="UPDATE_REQUIRED");
+    const arrow=(i<st.length-1 && !block)?'<span class="ar">›</span>':'';
+    return `<span class="pst${block?' block':''}">${s}</span>${arrow}`;
+  }).join("");
+}
+
+function openAgent(slug){
+  const a=AG[slug]; if(!a) return;
+  const regs=(a.reglas||[]).map(r=>`<li>${r}</li>`).join("");
+  const e=col(a.estado,EST);
+  const flags=(a.tiene_veto?' · VETO absoluto':'')+(a.puede_publicar?' · único que publica':'');
+  document.getElementById("mcard").innerHTML=`
+    <button class="mx" onclick="document.getElementById('modal').classList.remove('on')">✕</button>
+    <h3>${a.nombre}</h3>
+    <p class="msub"><b style="color:var(--ink)">${a.departamento}</b> · <span style="color:${e.c}">${e.t}</span>${flags}</p>
+    <div class="io">consume <b>${a.pipeline_in}</b> → produce <b>${a.pipeline_out}</b></div>
+    <div class="lbl">Misión</div><p class="msub">${a.mision||''}</p>
+    <div class="lbl">Reglas</div><ul>${regs}</ul>
+    <div class="lbl">Output obligatorio</div><pre>${a.output_schema?JSON.stringify(a.output_schema,null,2):'—'}</pre>`;
+  document.getElementById("modal").classList.add("on");
+}
+document.getElementById("modal").addEventListener("click",e=>{ if(e.target.id==="modal") e.currentTarget.classList.remove("on"); });
 
 function renderKpis(ag,ops,pgs){
   const conn=ag.filter(a=>a.estado!=="sin_conectar").length;
   const apr=ops.filter(o=>o.estado==="aprobada").length;
   const blo=ops.filter(o=>o.estado.startsWith("bloqueada")||o.estado.startsWith("pendiente")).length;
-  const pub=(pgs||[]).filter(p=>p.estado==="publicada").length;
+  const pub=(pgs||[]).filter(p=>p.estado_pipeline==="PUBLISHED").length;
   const K=[
     ["target","Oportunidades",ops.length,"keywords en el radar"],
     ["check_circle","Aprobadas",apr,"listas para construir"],
@@ -209,7 +258,9 @@ function flow(container,items,map,order){
 }
 function renderFlows(ops,pgs){
   flow("flow-op",ops,OEST,["candidata","aprobada","pendiente_oferta","pendiente_datos","bloqueada_sin_oferta","publicada","noindex"]);
-  flow("flow-pg",pgs||[],{borrador:{c:"var(--slate)",t:"Borrador"},fact_check:{c:"var(--amber)",t:"Fact-check"},seo_qa:{c:"var(--amber)",t:"SEO QA"},aprobada:{c:"var(--green)",t:"Aprobada"},publicada:{c:"var(--teal)",t:"Publicada"},noindex:{c:"var(--slate)",t:"Noindex"}},["borrador","fact_check","seo_qa","aprobada","publicada","noindex"]);
+  const pgNorm=(pgs||[]).map(p=>({estado:p.estado_pipeline}));
+  const M={}; ["DISCOVERED","KEYWORD_VALIDATED","OPPORTUNITY_VALIDATED","RESEARCHED","BLUEPRINT_READY","CONTENT_READY","WEB_READY","HEALTH_APPROVED","MONETIZATION_READY","FINAL_APPROVED","PUBLISHED","MONITORING","UPDATE_REQUIRED","BLOCKED"].forEach(s=>{M[s]={c:(s==="PUBLISHED")?"var(--teal)":(s==="BLOCKED"||s==="UPDATE_REQUIRED")?"var(--red)":(s==="HEALTH_APPROVED"||s==="FINAL_APPROVED")?"var(--green)":"var(--indigo)",t:s};});
+  flow("flow-pg",pgNorm,M,Object.keys(M));
 }
 
 function renderAgents(ag){
@@ -220,12 +271,14 @@ function renderAgents(ag){
     const cards=by[d].map(a=>{
       const e=col(a.estado,EST);
       const flags=(a.tiene_veto?'<span class="flag veto">VETO</span>':'')+(a.puede_publicar?'<span class="flag pub">PUBLICA</span>':'');
-      return `<div class="ag">
+      const io=(a.pipeline_in&&a.pipeline_in!=="*")?`<div class="io"><b>${a.pipeline_in}</b> → <b>${a.pipeline_out}</b></div>`:'<div class="io">coordina todo el pipeline</div>';
+      return `<div class="ag" onclick="openAgent('${a.slug}')">
         <div class="flags">${flags}</div>
         <div class="top"><div class="ic"><span class="ms">${a.icono||'smart_toy'}</span></div>
           <div><div class="nm">${a.nombre}</div>
           <span class="chip" style="background:${e.c}22;color:${e.c}"><span class="dotc" style="background:${e.c}"></span>${e.t}</span></div></div>
-        <p class="mis">${a.mision||''}</p>
+        <p class="mis">${(a.mision||'').slice(0,135)}${(a.mision||'').length>135?'…':''}</p>
+        ${io}
         <div class="meta"><span>Cola: <b>${a.cola||0}</b></span><span>Última: <b>${hace(a.ultima_ejecucion)}</b></span></div>
       </div>`;
     }).join("");
