@@ -105,53 +105,78 @@
 
   footer{position:relative;z-index:1;color:var(--faint);font-size:12px;text-align:center;padding:26px 0 46px}
 
-  /* ---------- PLANTA / FÁBRICA ---------- */
+  /* ---------- TALLER-ESTUDIO RETRO ---------- */
   .fh{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:30px 0 12px}
-  .fh .ms{font-size:18px;color:var(--work)}
-  .scene{position:relative;border:1px solid var(--line);border-radius:22px;overflow:hidden;
-    background:linear-gradient(180deg,#0a1228 0,#0a1228 60%,#0c1736 60%,#0c1736 100%);
-    box-shadow:inset 0 40px 90px rgba(0,0,0,.45)}
-  .scene .sky{position:absolute;left:0;right:0;top:0;height:60%;pointer-events:none;
-    background:radial-gradient(700px 220px at 50% -40px,rgba(34,211,238,.12),transparent 70%)}
-  .scene .pipes{position:absolute;left:0;right:0;top:14px;height:8px;background:
-    repeating-linear-gradient(90deg,transparent 0 60px,rgba(148,163,184,.12) 60px 64px);pointer-events:none}
-  .stations{display:flex;gap:4px;overflow-x:auto;padding:28px 16px 6px;position:relative;z-index:2;align-items:flex-end}
-  .station{flex:0 0 auto;min-width:160px;display:flex;flex-direction:column;align-items:center;gap:9px;padding:0 8px}
-  .sign{display:flex;align-items:center;gap:7px;background:#0b1223;border:1px solid var(--zc);border-radius:9px;padding:5px 11px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--zc);box-shadow:0 0 16px color-mix(in srgb,var(--zc) 28%,transparent)}
+  .fh .ms{font-size:18px;color:#e0a657}
+  .scene{position:relative;border:1px solid rgba(120,80,40,.45);border-radius:22px;overflow:hidden;min-height:360px;
+    background:#241812;box-shadow:inset 0 0 120px rgba(0,0,0,.6)}
+  /* pared de ladrillo */
+  .scene .room{position:absolute;inset:0;z-index:0;
+    background:
+      repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 1px, transparent 1px 72px),
+      repeating-linear-gradient(0deg, rgba(0,0,0,.30) 0 1px, transparent 1px 30px),
+      linear-gradient(180deg,#4a3024,#38231a 55%,#2b1a12);}
+  .scene .room::after{content:"";position:absolute;left:0;right:0;top:30px;height:30px;
+    background:repeating-linear-gradient(90deg, rgba(0,0,0,.28) 0 1px, transparent 1px 72px);transform:translateX(36px)}
+  /* tuberías de cobre */
+  .pipe{position:absolute;left:0;right:0;height:11px;border-radius:7px;z-index:1;
+    background:linear-gradient(180deg,#f3c08a,#c47d33 42%,#7d4714);box-shadow:0 3px 7px rgba(0,0,0,.5),inset 0 2px 2px rgba(255,255,255,.45)}
+  .pipe.p1{top:22px}.pipe.p2{top:44px;left:34%}.pipe.p3{bottom:92px;left:-10%;right:46%;transform:rotate(-1deg)}
+  .pipe::before,.pipe::after{content:"";position:absolute;width:17px;height:17px;top:-3px;border-radius:4px;background:linear-gradient(#cf8a3f,#8a4e18);box-shadow:inset 0 0 3px rgba(0,0,0,.6)}
+  .pipe::before{left:16%}.pipe::after{right:12%}
+  /* lámparas colgantes cálidas */
+  .lamp{position:absolute;top:0;width:2px;height:26px;background:#140d08;z-index:1}
+  .lamp::after{content:"";position:absolute;left:-12px;top:24px;width:26px;height:13px;border-radius:0 0 14px 14px;
+    background:linear-gradient(#2a1d10,#e4a84a);box-shadow:0 20px 70px 14px rgba(255,175,70,.22)}
+  .lamp.l1{left:15%}.lamp.l2{left:38%}.lamp.l3{left:62%}.lamp.l4{left:85%}
+  /* ventanas con luz cálida */
+  .win{position:absolute;top:58px;width:64px;height:78px;border-radius:5px;z-index:1;
+    background:linear-gradient(160deg,rgba(255,206,120,.35),rgba(255,150,60,.12));
+    border:4px solid #3a2415;box-shadow:0 0 50px rgba(255,180,80,.2)}
+  .win::before{content:"";position:absolute;inset:0;background:linear-gradient(#3a2415,#3a2415) ,linear-gradient(#3a2415,#3a2415);background-size:100% 4px,4px 100%;background-position:center,center;background-repeat:no-repeat}
+  .win.w1{left:6%}.win.w2{right:6%}
+  /* suelo de madera */
+  .floor{position:absolute;left:0;right:0;bottom:0;height:84px;z-index:1;
+    background:repeating-linear-gradient(90deg,#5a3a20 0 46px,#4e3119 46px 48px),linear-gradient(180deg,#5a3a20,#331f11);
+    box-shadow:inset 0 10px 24px rgba(0,0,0,.45)}
+  /* vignette + luz cinematográfica */
+  .scene::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+    background:radial-gradient(130% 95% at 50% 18%,transparent 52%,rgba(0,0,0,.6)),
+              radial-gradient(70% 55% at 50% 26%,rgba(255,170,80,.12),transparent 72%)}
+
+  /* cubículos temáticos */
+  .cubes{position:relative;z-index:3;display:flex;gap:16px;overflow-x:auto;padding:70px 20px 64px;align-items:flex-end}
+  .cube{flex:0 0 auto;width:210px;position:relative;border-radius:14px;padding:12px 10px 0;display:flex;flex-direction:column;align-items:center;min-height:250px;justify-content:flex-end}
+  .cube .panel{position:absolute;inset:0;border-radius:14px;z-index:0;
+    background:linear-gradient(180deg,color-mix(in srgb,var(--zc) 20%,rgba(28,20,14,.92)),rgba(20,14,10,.8));
+    border:1px solid color-mix(in srgb,var(--zc) 42%,transparent);
+    box-shadow:0 0 42px color-mix(in srgb,var(--zc) 15%,transparent),inset 0 -34px 46px rgba(0,0,0,.5)}
+  .cube .glow{position:absolute;left:50%;top:-24px;width:170px;height:120px;transform:translateX(-50%);z-index:0;pointer-events:none;
+    background:radial-gradient(closest-side,color-mix(in srgb,var(--zc) 34%,transparent),transparent);filter:blur(8px);opacity:.5}
+  .cube>.layer{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center}
+  .shelf{height:64px;display:flex;align-items:flex-end;justify-content:center;z-index:1;position:relative}
+  .sign{display:inline-flex;align-items:center;gap:7px;background:#19110a;border:1px solid var(--zc);border-radius:9px;padding:4px 10px;margin-top:6px;
+    font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--zc);box-shadow:0 0 16px color-mix(in srgb,var(--zc) 30%,transparent)}
   .sign .bulb{width:9px;height:9px;border-radius:50%;background:var(--st,#5b6b86);box-shadow:0 0 9px var(--st,transparent)}
-  .team{display:flex;gap:4px;align-items:flex-end;justify-content:center}
-  .worker{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .14s}
+  .crew{display:flex;gap:0;align-items:flex-end;justify-content:center;margin-top:8px;flex-wrap:wrap;position:relative;z-index:2}
+  .worker{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .14s;width:68px}
   .worker:hover{transform:translateY(-4px)}
-  .worker .wn{font-size:9.5px;font-weight:700;color:var(--ink);text-align:center;max-width:72px;line-height:1.15}
-  .worker .wst{font-size:8.5px;font-weight:700}
-  .mp{display:block;animation:bob 2.4s ease-in-out infinite}
-  .mp.off{filter:grayscale(.65) brightness(.9);opacity:.7}
-  .worker:nth-child(2) .mp{animation-delay:.5s}.worker:nth-child(3) .mp{animation-delay:1s}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-  .mp .arm{transform-box:fill-box;transform-origin:50% 0}
-  .mp.work .ra{animation:ham .5s ease-in-out infinite}
-  @keyframes ham{0%,100%{transform:rotate(10deg)}50%{transform:rotate(-40deg)}}
-  .mp .spark{opacity:0}
-  .mp.work .spark{animation:spk .55s infinite}
-  @keyframes spk{0%{opacity:0;transform:translateY(0) scale(1)}30%{opacity:1}100%{opacity:0;transform:translateY(-12px) scale(.3)}}
-  .machine{width:132px;height:50px;border-radius:12px 12px 5px 5px;background:linear-gradient(#1c2a4a,#111b33);border:1px solid var(--line);position:relative;display:flex;align-items:center;justify-content:center;margin-top:-4px;box-shadow:0 10px 24px rgba(0,0,0,.4)}
-  .machine .screen{width:46px;height:22px;border-radius:5px;background:#04101a;border:1px solid var(--zc);box-shadow:inset 0 0 12px color-mix(in srgb,var(--zc) 45%,transparent)}
-  .machine .screen::after{content:"";display:block;width:60%;height:3px;margin:5px auto;border-radius:2px;background:var(--zc);opacity:.7;animation:scan 1.6s ease-in-out infinite}
-  @keyframes scan{0%,100%{opacity:.25;width:40%}50%{opacity:.9;width:70%}}
-  .machine .mlight{position:absolute;top:6px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--st,#5b6b86);box-shadow:0 0 9px var(--st,transparent)}
-  .machine .foot{position:absolute;bottom:-9px;width:7px;height:9px;background:#0e1830;border-radius:0 0 2px 2px}
-  .machine .foot.l{left:16px}.machine .foot.r{right:16px}
-  /* cinta */
-  .belt{position:relative;z-index:1;height:30px;margin:2px 10px 16px;border-radius:7px;overflow:hidden;
-    background:repeating-linear-gradient(90deg,#17203a 0 15px,#243457 15px 30px);background-size:30px 100%;
-    animation:beltmove 1.1s linear infinite;border-top:3px solid #2e3f66;border-bottom:4px solid #0a1120}
-  @keyframes beltmove{to{background-position:-30px 0}}
-  .box{position:absolute;top:-13px;width:30px;height:26px;border-radius:4px;
-    background:linear-gradient(#e0ad63,#bd8540);border:1px solid #8a5f28;box-shadow:0 3px 7px rgba(0,0,0,.45);
-    display:grid;place-items:center;font-size:7.5px;color:#3c250a;font-weight:800;letter-spacing:.02em;
-    animation:travel 11s linear infinite}
-  .box::before{content:"";position:absolute;left:3px;right:3px;top:9px;height:2px;background:rgba(0,0,0,.18)}
-  @keyframes travel{from{left:-5%}to{left:103%}}
+  .worker .wn{font-size:9px;font-weight:700;color:#f1e7d8;text-align:center;line-height:1.1}
+  .worker .wst{font-size:8px;font-weight:700}
+  .pp{display:block;margin-bottom:-9px;animation:bob 2.6s ease-in-out infinite}
+  .pp.off{filter:grayscale(.45) brightness(.92);opacity:.8}
+  .worker:nth-child(2) .pp{animation-delay:.6s}.worker:nth-child(3) .pp{animation-delay:1.1s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+  .pp .arm{transform-box:fill-box;transform-origin:50% 0}
+  .pp.work .arm{animation:typ .45s ease-in-out infinite alternate}
+  .pp.work .arm2{animation-delay:.22s}
+  @keyframes typ{from{transform:translateY(0) rotate(0)}to{transform:translateY(2px) rotate(-4deg)}}
+  .pp .spark{opacity:0}.pp.work .spark{animation:spk .6s infinite}
+  @keyframes spk{0%{opacity:0;transform:translateY(0)}30%{opacity:1}100%{opacity:0;transform:translateY(-10px) scale(.3)}}
+  .desk{width:calc(100% + 20px);margin:-2px -10px 0;height:28px;border-radius:5px 5px 0 0;z-index:3;position:relative;
+    background:linear-gradient(#6e4624,#49301a);border-top:3px solid #8a5a30;box-shadow:0 -5px 12px rgba(0,0,0,.45)}
+  .desk::before{content:"";position:absolute;left:14px;right:14px;top:9px;height:2px;background:rgba(0,0,0,.25)}
+  .prop{filter:drop-shadow(0 3px 5px rgba(0,0,0,.4))}
 
   /* modal */
   .modal{position:fixed;inset:0;z-index:60;background:rgba(4,8,20,.74);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
@@ -199,9 +224,13 @@
 
   <h2 class="fh"><span class="ms">factory</span> Planta de producción</h2>
   <div class="scene">
-    <div class="sky"></div><div class="pipes"></div>
-    <div class="stations" id="stations"></div>
-    <div class="belt" id="belt"></div>
+    <div class="room">
+      <div class="pipe p1"></div><div class="pipe p2"></div><div class="pipe p3"></div>
+      <span class="lamp l1"></span><span class="lamp l2"></span><span class="lamp l3"></span><span class="lamp l4"></span>
+      <div class="win w1"></div><div class="win w2"></div>
+    </div>
+    <div class="floor"></div>
+    <div class="cubes" id="stations"></div>
   </div>
 
   <h2 class="fh"><span class="ms">conveyor_belt</span> Cadena de montaje <span style="color:var(--faint);font-weight:500;letter-spacing:0;text-transform:none">· detalle por estado</span></h2>
@@ -268,26 +297,44 @@ function renderCEO(a){
     <div class="st"><span style="color:${e.c}">●</span> ${e.t} · coordina todo el pipeline</div></div></div>`;
 }
 
-function muppet(color,working){
-  return `<svg class="mp${working?' work':' off'}" viewBox="0 0 64 88" width="52" height="72" aria-hidden="true">
-    <ellipse cx="32" cy="84" rx="17" ry="3.2" fill="rgba(0,0,0,.4)"/>
-    <rect class="leg" x="24" y="60" width="6" height="15" rx="3" fill="#2a3547"/>
-    <rect class="leg" x="34" y="60" width="6" height="15" rx="3" fill="#2a3547"/>
-    <rect x="18" y="38" width="28" height="26" rx="11" fill="${color}"/>
-    <rect x="27" y="42" width="10" height="16" rx="3" fill="rgba(255,255,255,.18)"/>
-    <rect class="arm la" x="12" y="40" width="8" height="21" rx="4" fill="${color}"/>
-    <rect class="arm ra" x="44" y="40" width="8" height="21" rx="4" fill="${color}"/>
-    <circle cx="48" cy="60" r="3.5" fill="#cbd5e1"/>
-    <circle cx="32" cy="23" r="16" fill="${color}"/>
-    <path d="M15 20 a17 14 0 0 1 34 0 z" fill="rgba(255,255,255,.22)"/>
-    <rect x="14" y="19" width="36" height="4" rx="2" fill="rgba(0,0,0,.25)"/>
-    <ellipse cx="26" cy="24" rx="5" ry="6" fill="#fff"/><ellipse cx="38" cy="24" rx="5" ry="6" fill="#fff"/>
-    <circle cx="26.5" cy="25" r="2.3" fill="#0b1020"/><circle cx="37.5" cy="25" r="2.3" fill="#0b1020"/>
-    <path d="M27 33 q5 4 10 0" stroke="#0b1020" stroke-width="2" fill="none" stroke-linecap="round"/>
-    <circle class="spark" cx="50" cy="40" r="2.6" fill="#fde68a"/>
-    <circle class="spark" cx="54" cy="44" r="1.8" fill="#fca5a5" style="animation-delay:.2s"/>
+// --- mini persona (humano) ---
+const SKINS=["#f0c8a0","#e3b184","#cf9b6a","#a9784f","#8a5a38"];
+const HAIRS=["#2b211a","#4a2f1c","#6b4423","#8a6a3a","#caa94e","#b7b2ab","#1f1f24"];
+const SHIRTS_EXTRA=["#e5e7eb","#1f2937","#f59e0b","#0ea5e9"];
+function seedi(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return h;}
+function person(color,work,seed){
+  const sk=SKINS[seed%SKINS.length], ha=HAIRS[(seed>>3)%HAIRS.length];
+  const hairStyle=(seed>>6)%3; // 0 corto, 1 flequillo, 2 moño/coleta
+  let hair;
+  if(hairStyle===0) hair=`<path d="M22 26 a16 15 0 0 1 32 0 q-16 -11 -32 0z" fill="${ha}"/>`;
+  else if(hairStyle===1) hair=`<path d="M22 27 a16 15 0 0 1 32 0 l0 -2 q-16 -12 -32 0z" fill="${ha}"/><rect x="24" y="22" width="28" height="6" rx="3" fill="${ha}"/>`;
+  else hair=`<path d="M22 27 a16 15 0 0 1 32 0 q-16 -12 -32 0z" fill="${ha}"/><circle cx="54" cy="18" r="6" fill="${ha}"/>`;
+  return `<svg class="pp${work?' work':' off'}" viewBox="0 0 76 78" width="70" height="72" aria-hidden="true">
+    <rect x="22" y="34" width="32" height="40" rx="9" fill="#3a281b"/>
+    <path d="M16 78 q0 -28 22 -28 t22 28 z" fill="${color}"/>
+    <path d="M30 52 h16 v26 h-16z" fill="rgba(255,255,255,.14)"/>
+    <rect class="arm" x="14" y="50" width="10" height="22" rx="5" fill="${color}"/>
+    <rect class="arm arm2" x="52" y="50" width="10" height="22" rx="5" fill="${color}"/>
+    <circle cx="19" cy="71" r="5" fill="${sk}"/><circle cx="57" cy="71" r="5" fill="${sk}"/>
+    <rect x="33" y="40" width="10" height="11" rx="3" fill="${sk}"/>
+    <circle cx="38" cy="29" r="15" fill="${sk}"/>
+    ${hair}
+    <circle cx="32.5" cy="30" r="1.9" fill="#2a1a12"/><circle cx="43.5" cy="30" r="1.9" fill="#2a1a12"/>
+    <path d="M34 36 q4 3.5 8 0" stroke="#7a3b2a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <circle class="spark" cx="60" cy="52" r="2.4" fill="#fde68a"/>
   </svg>`;
 }
+
+// --- props temáticos por sector (SVG) ---
+const THEME={
+ "Inteligencia":`<svg class="prop" width="120" height="60" viewBox="0 0 120 60"><rect x="8" y="18" width="7" height="30" rx="3" fill="rgba(34,211,238,.3)" stroke="#22d3ee"/><rect x="19" y="12" width="7" height="36" rx="3" fill="rgba(34,211,238,.3)" stroke="#22d3ee"/><path d="M78 6 h12 v12 l11 25 a7 7 0 0 1-6 11 h-23 a7 7 0 0 1-6-11 l12-25z" fill="rgba(34,211,238,.16)" stroke="#22d3ee" stroke-width="1.5"/><circle cx="87" cy="47" r="2.6" fill="#67e8f9"/><circle cx="93" cy="41" r="1.8" fill="#67e8f9"/><circle cx="82" cy="52" r="1.6" fill="#67e8f9"/></svg>`,
+ "Estrategia":`<svg class="prop" width="120" height="60" viewBox="0 0 120 60"><rect x="12" y="14" width="58" height="26" rx="13" fill="none" stroke="#a78bfa" stroke-width="3" style="filter:drop-shadow(0 0 5px #a78bfa)"/><text x="41" y="32" text-anchor="middle" font-size="12" fill="#c4b5fd" font-family="Inter,sans-serif" font-weight="800">IDEA</text><rect x="82" y="8" width="30" height="38" rx="2" fill="#241a3a" stroke="#a78bfa"/><path d="M86 42 l9-18 l7 12 l5 -7" stroke="#c4b5fd" stroke-width="2" fill="none"/></svg>`,
+ "Produccion":`<svg class="prop" width="120" height="60" viewBox="0 0 120 60"><rect x="8" y="8" width="56" height="36" rx="3" fill="#0b1a33" stroke="#60a5fa"/><rect x="14" y="15" width="30" height="3" fill="#60a5fa" opacity=".8"/><rect x="14" y="22" width="40" height="3" fill="#60a5fa" opacity=".6"/><rect x="14" y="29" width="22" height="3" fill="#60a5fa" opacity=".6"/><rect x="30" y="44" width="12" height="4" fill="#0b1a33"/><g transform="translate(78,14)"><rect x="0" y="6" width="34" height="26" rx="2" fill="#efe6d2" transform="rotate(-6)"/><rect x="4" y="2" width="34" height="26" rx="2" fill="#f7efdc"/><rect x="9" y="8" width="24" height="2.5" fill="#b9a980"/><rect x="9" y="14" width="24" height="2.5" fill="#b9a980"/><rect x="9" y="20" width="16" height="2.5" fill="#b9a980"/></g></svg>`,
+ "Calidad":`<svg class="prop" width="120" height="60" viewBox="0 0 120 60"><rect x="12" y="6" width="34" height="46" rx="4" fill="#102a1e" stroke="#34d399"/><rect x="22" y="2" width="14" height="7" rx="2" fill="#34d399"/><path d="M19 28 l6 6 l12 -14" stroke="#34d399" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M80 6 l22 7 v13 c0 13 -11 20 -22 25 c-11 -5 -22 -12 -22 -25 v-13z" fill="rgba(52,211,153,.14)" stroke="#34d399" stroke-width="1.5"/></svg>`,
+ "Monetizacion":`<svg class="prop" width="120" height="60" viewBox="0 0 120 60"><g><ellipse cx="26" cy="46" rx="16" ry="5" fill="#f59e0b"/><ellipse cx="26" cy="40" rx="16" ry="5" fill="#fbbf24"/><ellipse cx="26" cy="34" rx="16" ry="5" fill="#f59e0b"/><ellipse cx="26" cy="28" rx="16" ry="5" fill="#fbbf24"/><text x="26" y="31" text-anchor="middle" font-size="7" fill="#7c4a06" font-weight="800">$</text></g><path d="M64 44 l12 -12 l9 7 l16 -20" stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M101 19 l0 8 l-8 0" stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`,
+ "Publicacion":`<svg class="prop" width="120" height="60" viewBox="0 0 120 60"><path d="M10 26 l26 -10 v30 l-26 -10z" fill="rgba(45,212,191,.2)" stroke="#2dd4bf" stroke-width="1.5"/><path d="M36 18 l10 -4 v34 l-10 -4z" fill="#2dd4bf"/><path d="M50 22 q8 8 0 18" stroke="#2dd4bf" stroke-width="2" fill="none"/><path d="M56 16 q14 14 0 30" stroke="#2dd4bf" stroke-width="2" fill="none" opacity=".6"/><rect x="78" y="20" width="36" height="18" rx="4" fill="#07332d" stroke="#2dd4bf"/><circle cx="86" cy="29" r="3" fill="#f87171"/><text x="99" y="33" text-anchor="middle" font-size="10" fill="#5eead4" font-weight="800">LIVE</text></svg>`,
+ "Aprendizaje":`<svg class="prop" width="120" height="60" viewBox="0 0 120 60"><rect x="10" y="34" width="9" height="16" fill="#f472b6"/><rect x="22" y="24" width="9" height="26" fill="#f472b6"/><rect x="34" y="14" width="9" height="36" fill="#f9a8d4"/><rect x="46" y="28" width="9" height="22" fill="#f472b6"/><circle cx="86" cy="24" r="13" fill="none" stroke="#f472b6" stroke-width="3"/><line x1="96" y1="34" x2="108" y2="46" stroke="#f472b6" stroke-width="4" stroke-linecap="round"/></svg>`,
+};
 
 function renderFactory(ag){
   const bySec={}; ag.forEach(a=>{ if(a.slug==="orquestador")return; (bySec[a.departamento]=bySec[a.departamento]||[]).push(a); });
@@ -298,21 +345,22 @@ function renderFactory(ag){
     const stColor=anyWork?"var(--work)":(team.some(a=>a.estado==="bloqueado")?"var(--block)":(team.every(a=>a.estado==="sin_conectar")?"var(--sin)":"var(--idle)"));
     const workers=team.map(a=>{
       const e=EST[a.estado]||EST.sin_conectar; const w=a.estado==="trabajando";
+      const nm=a.nombre.split("/")[0].split("&")[0].trim().split(" ").slice(0,2).join(" ");
       return `<div class="worker" onclick="openAgent('${a.slug}')" title="${a.nombre}">
-        ${muppet(sec.c,w)}
-        <div class="wn">${a.nombre.split(" ")[0].split("/")[0]}</div>
+        ${person(sec.c,w,seedi(a.slug))}
+        <div class="wn">${nm}</div>
         <div class="wst" style="color:${e.c}">${e.t}</div></div>`;
     }).join("");
-    return `<div class="station" style="--zc:${sec.c};--st:${stColor}">
-      <div class="sign"><span class="bulb"></span>${s}</div>
-      <div class="team">${workers}</div>
-      <div class="machine"><span class="mlight"></span><div class="screen"></div><span class="foot l"></span><span class="foot r"></span></div>
+    return `<div class="cube" style="--zc:${sec.c};--st:${stColor}">
+      <div class="panel"></div><div class="glow"></div>
+      <div class="layer">
+        <div class="shelf">${THEME[s]||''}</div>
+        <div class="sign"><span class="bulb"></span>${s}</div>
+        <div class="crew">${workers}</div>
+      </div>
+      <div class="desk"></div>
     </div>`;
   }).join("");
-  // cinta con cajas
-  const labels=["KEYWORD","SERP","RESEARCH","BLUEPRINT","CONTENT","WEB","QA","LIVE"];
-  document.getElementById("belt").innerHTML=labels.map((l,i)=>
-    `<div class="box" style="animation-delay:${(-i*1.35).toFixed(2)}s">${l}</div>`).join("");
 }
 
 function node(a){
