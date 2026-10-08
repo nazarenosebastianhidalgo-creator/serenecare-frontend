@@ -40,6 +40,8 @@
   ],
   "rewrites": [
     { "source": "/psi/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/perfil-publico/:slug" },
+    { "source": "/mx/:path*", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/pagina/mx/:path*" },
+    { "source": "/sitemap-seo.xml", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/sitemap.xml" },
     { "source": "/directorio", "destination": "https://serenecare-backend-production.up.railway.app/api/directorio" },
     { "source": "/sitemap-psicologos.xml", "destination": "https://serenecare-backend-production.up.railway.app/api/perfil-publico/sitemap.xml" },
     { "source": "/api/:path*", "destination": "https://serenecare-backend-production.up.railway.app/api/:path*" },
