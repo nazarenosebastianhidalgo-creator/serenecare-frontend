@@ -47,6 +47,7 @@
     { "source": "/empresas", "destination": "/empresas.html" },
     { "source": "/hablalo", "destination": "/hablalo.html" },
     { "source": "/seo", "destination": "/seo-panel.html" },
+    { "source": "/sala", "destination": "/seo-sala.html" },
     { "source": "/creadores", "destination": "/screens/creadores.html" },
     { "source": "/panel", "destination": "/screens/panel_creador.html" },
     { "source": "/registro", "destination": "/screens/registro_clinica.html" },
