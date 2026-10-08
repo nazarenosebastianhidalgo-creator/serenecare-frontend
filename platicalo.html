@@ -75,7 +75,8 @@
   .opt{display:flex;align-items:center;gap:13px;border:1.5px solid var(--line);background:#fff;border-radius:15px;padding:15px 16px;cursor:pointer;font-size:15.5px;font-weight:500;text-align:left;transition:border-color .12s,background .12s}
   .opt:hover{border-color:var(--ring)}
   .opt.sel{border-color:var(--primary);background:#F6F3FC}
-  .opt .emo{font-size:20px;width:26px;text-align:center}
+  .opt .rad{flex:0 0 auto;width:20px;height:20px;border-radius:50%;border:2px solid #D8D0E4;background:#fff;transition:border-color .12s,box-shadow .12s;position:relative}
+  .opt.sel .rad{border-color:var(--primary);box-shadow:inset 0 0 0 4px var(--primary)}
   input.fld,select.fld{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:14px 15px;font-size:15.5px;font-family:inherit;color:var(--ink);background:#fff;outline:none}
   input.fld:focus,select.fld:focus{border-color:var(--primary);box-shadow:0 0 0 4px var(--ring)}
   label.lab{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:12px 0 6px}
@@ -112,7 +113,7 @@
 
 <section class="hero">
   <div class="wrap">
-    <span class="eyebrow">💬 Terapia psicológica accesible</span>
+    <span class="eyebrow">Terapia psicológica accesible</span>
     <h1>Encuentra al <span class="hi">psicólogo ideal</span> para ti en 2 minutos.</h1>
     <p class="lead">Responde unas preguntas y te conectamos con el profesional que mejor encaja con lo que necesitas. Online, desde donde estés y a un precio que sí puedes pagar.</p>
     <div class="btns">
@@ -169,32 +170,32 @@ const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const STEPS = [
   { key:"motivo", type:"choice", title:"¿Qué es lo que más te está pesando ahora?", sub:"Elige lo que más se acerque. No tiene que ser perfecto.",
     opts:[
-      ["😰","Ansiedad, estrés o preocupación constante"],
-      ["🌧️","Tristeza, desánimo o depresión"],
-      ["💔","Problemas de pareja o relaciones"],
-      ["🪞","Autoestima, inseguridad o quererme más"],
-      ["🕯️","Un duelo o una pérdida"],
-      ["🧭","Me siento perdido/a, necesito ordenarme"],
-      ["💬","Otra cosa / prefiero contarlo en la cita"],
+      "Ansiedad, estrés o preocupación constante",
+      "Tristeza, desánimo o depresión",
+      "Problemas de pareja o relaciones",
+      "Autoestima, inseguridad o quererme más",
+      "Un duelo o una pérdida",
+      "Me siento perdido/a, necesito ordenarme",
+      "Otra cosa / prefiero contarlo en la cita",
     ]},
   { key:"primera_vez", type:"choice", title:"¿Habías ido antes a terapia?", sub:"",
-    opts:[["🌱","Es mi primera vez"],["🔁","Sí, ya he ido antes"]]},
+    opts:["Es mi primera vez","Sí, ya he ido antes"]},
   { key:"modalidad", type:"choice", title:"¿Cómo prefieres las sesiones?", sub:"",
-    opts:[["💻","Online (videollamada)"],["🏢","Presencial, en mi ciudad"],["🤷","Me da igual, lo que haya"]]},
+    opts:["Online (videollamada)","Presencial, en mi ciudad","Me da igual, lo que haya"]},
   { key:"ciudad", type:"text", title:"¿En qué ciudad estás?", sub:"Así te buscamos opciones de tu zona horaria (o presenciales si las quieres).",
     placeholder:"Ej. Ciudad de México, Guadalajara…", optional:true },
   { key:"genero_pref", type:"choice", title:"¿Prefieres psicólogo o psicóloga?", sub:"",
-    opts:[["👩","Psicóloga (mujer)"],["👨","Psicólogo (hombre)"],["✨","Me da igual, lo importante es que encaje"]]},
+    opts:["Psicóloga (mujer)","Psicólogo (hombre)","Me da igual, lo importante es que encaje"]},
   { key:"urgencia", type:"choice", title:"¿Para cuándo lo necesitas?", sub:"",
-    opts:[["⚡","Lo antes posible, esta semana"],["📅","Este mes está bien"],["👀","Solo estoy explorando por ahora"]]},
+    opts:["Lo antes posible, esta semana","Este mes está bien","Solo estoy explorando por ahora"]},
   { key:"horario", type:"choice", title:"¿Cuándo te viene mejor?", sub:"",
-    opts:[["🌅","Mañanas"],["☀️","Tardes"],["🌙","Noches"],["📆","Fines de semana"]]},
+    opts:["Mañanas","Tardes","Noches","Fines de semana"]},
   { key:"presupuesto", type:"choice", title:"¿Cuánto podrías invertir por sesión?", sub:"Trabajamos precios accesibles. Esto nos ayuda a ajustar tus opciones.",
     opts:[
-      ["💵","$250 – $400 MXN"],
-      ["💳","$400 – $600 MXN"],
-      ["💰","$600 – $900 MXN"],
-      ["🫶","Soy flexible / lo hablamos"],
+      "$250 – $400 MXN",
+      "$400 – $600 MXN",
+      "$600 – $900 MXN",
+      "Soy flexible / lo hablamos",
     ]},
   { key:"contacto", type:"contact", title:"¿A dónde te mandamos tus opciones?", sub:"Te escribimos con tus psicólogos recomendados. Sin spam, de verdad." },
 ];
@@ -216,9 +217,9 @@ function render(){
 
   if(s.type==="choice"){
     inner += '<div class="opts">';
-    s.opts.forEach((o,idx)=>{
-      const sel = answers[s.key]===o[1] ? ' sel':'';
-      inner += '<button class="opt'+sel+'" data-v="'+o[1].replace(/"/g,'&quot;')+'"><span class="emo">'+o[0]+'</span>'+o[1]+'</button>';
+    s.opts.forEach((o)=>{
+      const sel = answers[s.key]===o ? ' sel':'';
+      inner += '<button class="opt'+sel+'" data-v="'+o.replace(/"/g,'&quot;')+'"><span class="rad"></span>'+o+'</button>';
     });
     inner += '</div>';
   } else if(s.type==="text"){
