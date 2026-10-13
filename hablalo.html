@@ -180,9 +180,7 @@ const STEPS = [
     ]},
   { key:"primera_vez", type:"choice", title:"¿Habías ido antes a terapia?", sub:"",
     opts:["Es mi primera vez","Sí, ya he ido antes"]},
-  { key:"modalidad", type:"choice", title:"¿Cómo prefieres las sesiones?", sub:"",
-    opts:["Online (videollamada)","Presencial, en mi ciudad","Me da igual, lo que haya"]},
-  { key:"ciudad", type:"text", title:"¿En qué ciudad estás?", sub:"Así te buscamos opciones de tu zona horaria (o presenciales si las quieres).",
+  { key:"ciudad", type:"text", title:"¿En qué ciudad estás?", sub:"Las sesiones son online; esto solo nos sirve para ajustar la zona horaria.",
     placeholder:"Ej. Ciudad de México, Guadalajara…", optional:true },
   { key:"genero_pref", type:"choice", title:"¿Prefieres psicólogo o psicóloga?", sub:"",
     opts:["Psicóloga (mujer)","Psicólogo (hombre)","Me da igual, lo importante es que encaje"]},
@@ -277,7 +275,7 @@ async function enviar(){
   if(next){ next.disabled=true; next.textContent="Enviando…"; }
   const payload = {
     pais:"México",
-    motivo:answers.motivo||null, modalidad:answers.modalidad||null, ciudad:answers.ciudad||null,
+    motivo:answers.motivo||null, modalidad:"Online (videollamada)", ciudad:answers.ciudad||null,
     urgencia:answers.urgencia||null, horario:answers.horario||null, presupuesto:answers.presupuesto||null,
     genero_pref:answers.genero_pref||null, primera_vez:answers.primera_vez||null, contacto:answers.contacto||null,
   };
