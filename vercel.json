@@ -57,6 +57,7 @@
     { "source": "/screens/:path*", "destination": "/screens/:path*" }
   ],
   "redirects": [
-    { "source": "/r/:code", "destination": "/screens/registro_clinica.html?ref=:code", "permanent": false }
+    { "source": "/r/:code", "destination": "/screens/registro_clinica.html?ref=:code", "permanent": false },
+    { "source": "/index.html", "destination": "/", "permanent": true }
   ]
 }
