@@ -41,6 +41,7 @@
   "rewrites": [
     { "source": "/psi/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/perfil-publico/:slug" },
     { "source": "/hablalo/autor/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/autor/:slug" },
+    { "source": "/hablalo/articulo/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/articulo/:slug" },
     { "source": "/mx", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/mx-index" },
     { "source": "/mx/:path*", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/pagina/mx/:path*" },
     { "source": "/directorio", "destination": "https://serenecare-backend-production.up.railway.app/api/directorio" },
@@ -49,6 +50,7 @@
     { "source": "/acceso", "destination": "/acceso.html" },
     { "source": "/empresas", "destination": "/empresas.html" },
     { "source": "/hablalo", "destination": "/hablalo.html" },
+    { "source": "/hablalo-admin", "destination": "/screens/hablalo_admin.html" },
     { "source": "/seo", "destination": "/seo-panel.html" },
     { "source": "/sala", "destination": "/seo-sala.html" },
     { "source": "/creadores", "destination": "/screens/creadores.html" },
