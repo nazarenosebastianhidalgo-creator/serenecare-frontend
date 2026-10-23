@@ -40,6 +40,7 @@
   ],
   "rewrites": [
     { "source": "/psi/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/perfil-publico/:slug" },
+    { "source": "/hablalo/autor/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/autor/:slug" },
     { "source": "/mx", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/mx-index" },
     { "source": "/mx/:path*", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/pagina/mx/:path*" },
     { "source": "/directorio", "destination": "https://serenecare-backend-production.up.railway.app/api/directorio" },
