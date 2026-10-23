@@ -65,6 +65,7 @@
             <option value="en_revision">Dejar en revisión</option>
           </select>
         </label>
+        <label class="flex items-center gap-2 text-sm font-semibold"><input id="f_solo" type="checkbox" class="w-4 h-4"> Solo para registrados (vídeos, webinars, premium)</label>
         <button class="bg-secondary text-white font-semibold rounded-lg py-2.5 mt-1">Guardar contenido</button>
         <p id="form-msg" class="text-sm"></p>
       </form>
@@ -142,7 +143,7 @@ $('#form').addEventListener('submit', async (e) => {
   const body = {
     autor_id: $('#f_autor').value, titulo: $('#f_titulo').value.trim(), tema: $('#f_tema').value || null,
     tipo: $('#f_tipo').value, tiempo_min: $('#f_min').value || null, media_url: $('#f_media').value.trim() || null,
-    cuerpo_md: $('#f_cuerpo').value, estado: $('#f_estado').value,
+    cuerpo_md: $('#f_cuerpo').value, estado: $('#f_estado').value, solo_registrados: $('#f_solo').checked,
   };
   if (!body.titulo) { msg.textContent = 'Falta el título.'; return; }
   const r = await api('/api/hablalo/admin/contenido', { method: 'POST', body: JSON.stringify(body) });

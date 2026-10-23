@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Entrar | Háblalo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:"#446350",secondary:"#904c28",surface:"#effdf4","surf-c":"#e4f1e8","surf-low":"#e9f7ee",white:"#ffffff",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
+<style>body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}.ms{font-family:'Material Symbols Outlined'}</style>
+</head>
+<body class="bg-surface text-tinta min-h-screen flex flex-col">
+<header class="h-16 px-5 max-w-md mx-auto w-full flex items-center"><a href="/hablalo" class="text-xl font-bold text-primary">Háblalo</a></header>
+<main class="flex-1 flex items-center justify-center px-5 pb-10">
+  <div class="w-full max-w-md">
+    <div class="bg-white rounded-3xl p-7 shadow-[0_8px_30px_rgba(46,58,52,0.06)]">
+      <div class="w-14 h-14 rounded-2xl bg-surf-c text-primary flex items-center justify-center mb-4"><span class="ms text-[28px]">favorite</span></div>
+      <h1 class="text-2xl font-bold tracking-tight mb-1">Crea tu cuenta gratis</h1>
+      <p class="text-sm text-tinta-v mb-5">Para guardar recursos, acceder a vídeos y webinars, y tener tu espacio personal. Leer el contenido siempre es gratis y sin cuenta.</p>
+
+      <div id="ya" class="hidden bg-surf-low rounded-xl p-4 text-center">
+        <p class="text-sm mb-3">Ya has iniciado sesión.</p>
+        <a href="/hablalo/mi-espacio" class="inline-block bg-primary text-white font-semibold rounded-lg px-5 py-2.5">Ir a Mi espacio</a>
+      </div>
+
+      <form id="form" class="flex flex-col gap-3">
+        <label class="text-sm font-semibold">Tu email
+          <input id="email" type="email" required autocomplete="email" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="tu@email.com">
+        </label>
+        <button class="bg-secondary text-white font-semibold rounded-xl py-3 mt-1">Enviarme el enlace de acceso</button>
+        <p class="text-xs text-tinta-v text-center">Te enviamos un enlace mágico. Sin contraseñas.</p>
+      </form>
+      <div id="enviado" class="hidden text-center py-3">
+        <div class="text-4xl">📬</div>
+        <h3 class="text-lg font-semibold mt-1">Revisa tu correo</h3>
+        <p class="text-sm text-tinta-v mt-1">Te enviamos un enlace a <strong id="email-echo"></strong>. Ábrelo para entrar.</p>
+      </div>
+      <p id="err" class="text-sm text-red-700 mt-2"></p>
+    </div>
+    <p class="text-center text-sm text-tinta-v mt-5">¿Eres psicólogo? <a href="/login" class="text-primary font-semibold">Entra por aquí</a></p>
+  </div>
+</main>
+
+<script type="module">
+import { supabase } from '/js/supabase-client.js';
+const $ = s => document.querySelector(s);
+const params = new URLSearchParams(location.search);
+const next = params.get('next') && params.get('next').startsWith('/') ? params.get('next') : '/hablalo/mi-espacio';
+
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) { $('#form').classList.add('hidden'); $('#ya').classList.remove('hidden'); }
+})();
+
+$('#form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('#err').textContent = '';
+  const email = $('#email').value.trim();
+  if (!email) return;
+  const btn = $('#form').querySelector('button'); btn.disabled = true; btn.textContent = 'Enviando…';
+  const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + next, shouldCreateUser: true } });
+  if (error) { $('#err').textContent = error.message || 'No se pudo enviar. Reinténtalo.'; btn.disabled = false; btn.textContent = 'Enviarme el enlace de acceso'; return; }
+  $('#form').classList.add('hidden'); $('#email-echo').textContent = email; $('#enviado').classList.remove('hidden');
+});
+</script>
+</body>
+</html>

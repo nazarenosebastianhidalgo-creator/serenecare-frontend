@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Mi espacio | Háblalo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:"#446350",secondary:"#904c28","sec-c":"#fea67b",surface:"#effdf4","surf-c":"#e4f1e8","surf-low":"#e9f7ee",white:"#ffffff",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
+<style>body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}.ms{font-family:'Material Symbols Outlined'}</style>
+</head>
+<body class="bg-surface text-tinta min-h-screen">
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(46,58,52,0.04)]">
+  <div class="h-16 px-5 max-w-2xl mx-auto flex items-center justify-between">
+    <a href="/hablalo" class="text-xl font-bold text-primary">Háblalo</a>
+    <button id="salir" class="hidden text-sm text-tinta-v font-semibold">Cerrar sesión</button>
+  </div>
+</header>
+<main class="max-w-2xl mx-auto px-5 pt-20 pb-28">
+  <div id="cargando" class="text-center text-tinta-v py-16">Cargando…</div>
+
+  <div id="no-sesion" class="hidden text-center py-12 flex flex-col items-center">
+    <div class="w-16 h-16 rounded-full bg-sec-c/50 text-secondary flex items-center justify-center mb-4"><span class="ms text-[30px]">favorite</span></div>
+    <h1 class="text-2xl font-semibold mb-2">Tu espacio personal</h1>
+    <p class="text-tinta-v max-w-sm mb-6">Crea tu cuenta gratis para guardar recursos, acceder a vídeos y webinars, y tener todo en un solo sitio.</p>
+    <a href="/hablalo/entrar?next=/hablalo/mi-espacio" class="inline-flex items-center justify-center min-h-[48px] px-6 rounded-xl bg-secondary text-white font-semibold">Crear cuenta / Entrar</a>
+  </div>
+
+  <div id="app" class="hidden">
+    <h1 class="text-2xl font-semibold tracking-tight mb-1">Hola 🌿</h1>
+    <p class="text-sm text-tinta-v mb-6" id="saludo-email"></p>
+    <h2 class="text-lg font-semibold mb-3">Guardado</h2>
+    <div id="guardados" class="flex flex-col gap-3"></div>
+  </div>
+</main>
+
+<nav class="fixed bottom-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_-4px_20px_rgba(46,58,52,0.04)]">
+  <div class="h-20 max-w-2xl mx-auto px-2 flex items-center justify-around text-tinta-v">
+    <a class="flex flex-col items-center min-w-[44px]" href="/hablalo"><span class="ms text-[24px]">home</span><span class="text-xs mt-0.5">Inicio</span></a>
+    <a class="flex flex-col items-center min-w-[44px]" href="/hablalo/buscar"><span class="ms text-[24px]">explore</span><span class="text-xs mt-0.5">Explorar</span></a>
+    <a class="flex flex-col items-center min-w-[44px]" href="/herramientas"><span class="ms text-[24px]">spa</span><span class="text-xs mt-0.5">Herramientas</span></a>
+    <a class="flex flex-col items-center min-w-[44px] text-primary font-semibold" href="/hablalo/mi-espacio"><span class="ms text-[24px]">favorite</span><span class="text-xs mt-0.5">Mi espacio</span></a>
+  </div>
+</nav>
+
+<script type="module">
+import { supabase } from '/js/supabase-client.js';
+const $ = s => document.querySelector(s);
+function show(id){ ['cargando','no-sesion','app'].forEach(x => $('#'+x).classList.toggle('hidden', x !== id)); }
+
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) { show('no-sesion'); return; }
+  const token = session.access_token;
+  $('#saludo-email').textContent = session.user?.email || '';
+  $('#salir').classList.remove('hidden');
+  $('#salir').addEventListener('click', async () => { await supabase.auth.signOut(); location.reload(); });
+  show('app');
+  try {
+    const r = await fetch('/api/hablalo/mis-guardados', { headers: { Authorization: 'Bearer ' + token } });
+    const { guardados } = await r.json();
+    const cont = $('#guardados');
+    if (!guardados || !guardados.length) { cont.innerHTML = '<p class="text-sm text-tinta-v bg-white rounded-2xl p-5 border border-linea">Aún no has guardado nada. Explora el contenido y pulsa “Guardar”.</p>'; return; }
+    cont.innerHTML = guardados.map(c => `
+      <a href="/hablalo/articulo/${c.slug}" class="bg-white rounded-2xl p-4 border border-linea block">
+        <span class="text-[11px] font-bold text-primary uppercase">${(c.tema||'')}</span>
+        <p class="font-semibold mt-0.5">${esc(c.titulo)}</p>
+        <p class="text-xs text-tinta-v mt-1">${c.tiempo_min ? c.tiempo_min + ' min de lectura' : 'Lectura'}</p>
+      </a>`).join('');
+  } catch (e) { $('#guardados').innerHTML = '<p class="text-sm text-red-700">No se pudo cargar.</p>'; }
+})();
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+</script>
+</body>
+</html>

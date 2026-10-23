@@ -59,6 +59,7 @@
           <label class="text-sm font-semibold">Cuerpo (usa ## para títulos y - para listas)
             <textarea id="f_cuerpo" rows="9" class="mt-1 w-full border border-linea rounded-lg px-3 py-2"></textarea>
           </label>
+          <label class="flex items-center gap-2 text-sm font-semibold"><input id="f_solo" type="checkbox" class="w-4 h-4"> Solo para registrados (vídeo/webinar)</label>
           <button class="bg-secondary text-white font-semibold rounded-lg py-2.5 mt-1">Enviar a revisión</button>
           <p class="text-xs text-tinta-v">Lo revisamos y, si todo está bien, lo publicamos en tu perfil de Háblalo.</p>
           <p id="form-msg" class="text-sm"></p>
@@ -115,7 +116,7 @@ $('#form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = $('#form-msg'); msg.textContent = 'Enviando…'; msg.className = 'text-sm text-tinta-v';
   const body = { titulo: $('#f_titulo').value.trim(), tema: $('#f_tema').value || null, tipo: $('#f_tipo').value,
-    tiempo_min: $('#f_min').value || null, media_url: $('#f_media').value.trim() || null, cuerpo_md: $('#f_cuerpo').value };
+    tiempo_min: $('#f_min').value || null, media_url: $('#f_media').value.trim() || null, cuerpo_md: $('#f_cuerpo').value, solo_registrados: $('#f_solo').checked };
   if (!body.titulo) { msg.textContent = 'Falta el título.'; return; }
   const r = await api('/api/hablalo/autor-panel/contenido', { method: 'POST', body: JSON.stringify(body) });
   if (r.ok) { msg.textContent = '✅ Enviado a revisión.'; msg.className = 'text-sm text-green-700'; $('#form').reset(); loadLista(); }
