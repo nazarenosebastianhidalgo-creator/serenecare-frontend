@@ -43,6 +43,8 @@
     { "source": "/hablalo/autor/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/autor/:slug" },
     { "source": "/hablalo/articulo/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/articulo/:slug" },
     { "source": "/hablalo/buscar", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/buscar" },
+    { "source": "/hablalo/explorar", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/explorar" },
+    { "source": "/hablalo/tema/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/tema/:slug" },
     { "source": "/hablalo/mi-espacio", "destination": "/screens/hablalo_mi_espacio.html" },
     { "source": "/hablalo", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/home" },
     { "source": "/mx", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/mx-index" },
