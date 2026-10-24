@@ -34,7 +34,7 @@
         <h2 class="font-bold text-lg mb-3">Nuevo contenido</h2>
         <form id="form" class="flex flex-col gap-3">
           <label class="text-sm font-semibold">Título
-            <input id="f_titulo" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" required>
+            <input id="f_titulo" class="mt-1 w-full border border-linea rounded-lg px-3 py-2">
           </label>
           <div class="grid grid-cols-2 gap-3">
             <label class="text-sm font-semibold">Tema
@@ -42,6 +42,7 @@
             </label>
             <label class="text-sm font-semibold">Tipo
               <select id="f_tipo" class="mt-1 w-full border border-linea rounded-lg px-3 py-2 bg-surf-low">
+                <option value="breve">Publicación breve</option>
                 <option value="consejo">Consejo</option><option value="guia">Guía</option>
                 <option value="video">Vídeo</option><option value="herramienta">Herramienta</option>
                 <option value="qa">Preguntas y respuestas</option>
