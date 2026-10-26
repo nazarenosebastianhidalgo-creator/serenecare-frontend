@@ -47,6 +47,7 @@
     { "source": "/hablalo/tema/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/tema/:slug" },
     { "source": "/hablalo/reservar/:slug", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/reservar/:slug" },
     { "source": "/hablalo/mi-espacio", "destination": "/screens/hablalo_mi_espacio.html" },
+    { "source": "/hablalo/ajustes", "destination": "/screens/hablalo_ajustes.html" },
     { "source": "/hablalo", "destination": "https://serenecare-backend-production.up.railway.app/api/hablalo/home" },
     { "source": "/mx", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/mx-index" },
     { "source": "/mx/:path*", "destination": "https://serenecare-backend-production.up.railway.app/api/seo/pagina/mx/:path*" },

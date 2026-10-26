@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex"/>
+<title>Ajustes de cuenta | Háblalo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{brand:{cream:'#effdf4',surface:'#ffffff',primary:'#446350','primary-dark':'#324a3c','primary-light':'#e6f3eb',terracotta:'#904c28',text:'#121e19',muted:'#424843',border:'#c2c8c1',red:'#b91c1c','red-bg':'#fee2e2'}},fontFamily:{sans:['"Plus Jakarta Sans"','system-ui','sans-serif']}}}};</script>
+<style>.material-symbols-outlined{vertical-align:middle;}</style>
+</head>
+<body class="bg-brand-cream text-brand-text font-sans antialiased min-h-screen">
+<header class="sticky top-0 z-40 bg-brand-cream/90 backdrop-blur-md border-b border-brand-border/60">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <a href="/hablalo/mi-espacio" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-muted hover:text-brand-text"><span class="material-symbols-outlined text-[20px]">arrow_back</span>Mi espacio</a>
+    <a href="/hablalo" class="flex flex-col"><span class="text-lg font-bold text-brand-primary leading-none">Háblalo</span></a>
+  </div>
+</header>
+
+<main class="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+  <h1 class="text-2xl font-extrabold tracking-tight">Ajustes de cuenta</h1>
+
+  <div id="loading" class="text-brand-muted">Cargando…</div>
+
+  <div id="content" class="hidden space-y-6">
+    <!-- Cuenta -->
+    <section class="bg-brand-surface border border-brand-border/70 rounded-3xl p-6 shadow-sm">
+      <h2 class="text-lg font-bold mb-3">Tu cuenta</h2>
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 rounded-full bg-brand-primary-light text-brand-primary flex items-center justify-center font-bold" id="avatar">··</div>
+        <div><p class="text-sm text-brand-muted">Correo</p><p class="font-semibold" id="email">—</p></div>
+      </div>
+      <button id="btn-logout" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-brand-border font-semibold hover:bg-brand-cream transition-all"><span class="material-symbols-outlined text-[20px]">logout</span>Cerrar sesión</button>
+    </section>
+
+    <!-- Privacidad / baja -->
+    <section class="bg-brand-surface border border-brand-border/70 rounded-3xl p-6 shadow-sm">
+      <h2 class="text-lg font-bold mb-1">Privacidad y datos</h2>
+      <p class="text-sm text-brand-muted mb-4">Tú mandas sobre tus datos. Puedes borrar tu cuenta y todo lo asociado (guardados, seguimientos y reacciones) cuando quieras. Esta acción es permanente.</p>
+      <button id="btn-borrar" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-brand-red-bg text-brand-red font-semibold hover:bg-red-100 transition-all"><span class="material-symbols-outlined text-[20px]">delete_forever</span>Borrar mi cuenta</button>
+      <p id="borrar-msg" class="text-sm mt-3"></p>
+    </section>
+  </div>
+
+  <!-- Sin sesión -->
+  <div id="guest" class="hidden bg-brand-surface border border-brand-border/70 rounded-3xl p-8 text-center shadow-sm">
+    <span class="material-symbols-outlined text-4xl text-brand-primary">lock</span>
+    <p class="text-brand-muted mt-2 mb-4">Inicia sesión para ver tus ajustes.</p>
+    <a href="/hablalo/entrar" class="inline-block bg-brand-primary text-white font-semibold rounded-xl px-6 py-3">Entrar</a>
+  </div>
+</main>
+
+<script type="module">
+import { supabase } from '/js/supabase-client.js';
+const $ = id => document.getElementById(id);
+
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  $('#loading').classList.add('hidden');
+  if (!session) { $('#guest').classList.remove('hidden'); return; }
+  const email = session.user.email || '';
+  $('#email').textContent = email;
+  $('#avatar').textContent = (email[0] || '·').toUpperCase() + (email[1] || '·').toUpperCase();
+  $('#content').classList.remove('hidden');
+
+  $('#btn-logout').addEventListener('click', async () => {
+    await supabase.auth.signOut(); location.href = '/hablalo';
+  });
+
+  $('#btn-borrar').addEventListener('click', async () => {
+    if (!confirm('¿Seguro que quieres borrar tu cuenta? Se eliminarán tus guardados, seguimientos y reacciones. Esta acción no se puede deshacer.')) return;
+    const msg = $('#borrar-msg'); msg.textContent = 'Borrando…'; msg.className = 'text-sm mt-3 text-brand-muted';
+    const btn = $('#btn-borrar'); btn.disabled = true;
+    try {
+      const r = await fetch('/api/hablalo/borrar-cuenta', { method: 'POST', headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' }, body: '{}' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok) { msg.textContent = d.error || 'No se pudo borrar.'; msg.className = 'text-sm mt-3 text-brand-red'; btn.disabled = false; return; }
+      await supabase.auth.signOut().catch(() => {});
+      alert('Tu cuenta y tus datos se han borrado. Gracias por haber pasado por aquí. 🌿');
+      location.href = '/hablalo';
+    } catch (e) { msg.textContent = 'Error de conexión.'; msg.className = 'text-sm mt-3 text-brand-red'; btn.disabled = false; }
+  });
+})();
+</script>
+</body></html>

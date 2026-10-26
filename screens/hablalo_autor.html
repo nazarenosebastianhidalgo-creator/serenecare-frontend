@@ -53,8 +53,9 @@
         </div>
         <div class="flex items-center gap-3 self-start md:self-center">
           <a id="ver-ficha" href="#" target="_blank" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-brand-border text-brand-text font-semibold text-sm hover:bg-brand-cream hover:border-brand-primary transition-all h-12">
-            <span class="material-symbols-outlined text-xl text-brand-primary">person_outline</span><span>Ver mi perfil público</span>
+            <span class="material-symbols-outlined text-xl text-brand-primary">person_outline</span><span class="hidden sm:inline">Ver mi perfil público</span><span class="sm:hidden">Mi perfil</span>
           </a>
+          <button id="btn-logout" title="Cerrar sesión" class="inline-flex items-center justify-center w-12 h-12 rounded-2xl border border-brand-border text-brand-muted hover:bg-brand-cream hover:border-brand-primary transition-all"><span class="material-symbols-outlined text-xl">logout</span></button>
           <div id="mi-avatar" class="w-12 h-12 rounded-2xl bg-[#f0e8df] border border-[#ded5cb] flex items-center justify-center font-bold text-brand-muted text-base">··</div>
         </div>
       </div>
@@ -429,6 +430,7 @@ async function loadVerif() {
   } catch (e) {}
 }
 
+$('#btn-logout').addEventListener('click', async () => { await supabase.auth.signOut().catch(()=>{}); location.href = '/hablalo'; });
 init();
 </script>
 </body></html>
