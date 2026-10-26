@@ -68,6 +68,40 @@
       </div>
     </section>
 
+    <!-- Verificación profesional (país-gated: México primero) -->
+    <section id="verif" class="hidden bg-white rounded-2xl p-5 border border-linea mb-5">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-surf-c text-primary flex items-center justify-center shrink-0"><span class="ms text-[22px]">verified_user</span></div>
+        <div class="flex-1">
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="font-bold text-lg">Verificación profesional</h2>
+            <span id="verif-badge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-surf-low text-tinta-v"></span>
+          </div>
+          <p class="text-sm text-tinta-v mt-0.5">El sello de "Psicólogo verificado" aparece tras comprobar tus credenciales. Tu documentación solo la ve nuestro equipo (almacenamiento privado).</p>
+          <div id="verif-rechazo" class="hidden mt-2 text-sm bg-red-50 text-red-700 rounded-xl px-3 py-2"></div>
+          <div class="mt-3 grid sm:grid-cols-2 gap-3">
+            <label class="text-sm font-semibold sm:col-span-2">Cédula profesional o nº de colegiación
+              <input id="verif-cedula" class="mt-1 w-full border border-linea rounded-lg px-3 py-2.5" placeholder="Ej. 12345678">
+            </label>
+            <div class="text-sm font-semibold">Identificación (INE / DNI)
+              <label class="mt-1 flex items-center gap-2 border border-linea rounded-lg px-3 py-2.5 cursor-pointer bg-surf-low font-normal"><span class="ms text-[18px] text-primary">upload_file</span><span class="verif-estado text-tinta-v" data-for="ine">Subir archivo</span>
+                <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('ine',this)"></label>
+            </div>
+            <div class="text-sm font-semibold">Título profesional
+              <label class="mt-1 flex items-center gap-2 border border-linea rounded-lg px-3 py-2.5 cursor-pointer bg-surf-low font-normal"><span class="ms text-[18px] text-primary">upload_file</span><span class="verif-estado text-tinta-v" data-for="titulo">Subir archivo</span>
+                <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('titulo',this)"></label>
+            </div>
+            <div class="text-sm font-semibold sm:col-span-2">Cédula profesional (documento)
+              <label class="mt-1 flex items-center gap-2 border border-linea rounded-lg px-3 py-2.5 cursor-pointer bg-surf-low font-normal"><span class="ms text-[18px] text-primary">upload_file</span><span class="verif-estado text-tinta-v" data-for="cedula">Subir archivo</span>
+                <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('cedula',this)"></label>
+            </div>
+          </div>
+          <button id="btn-guardar-verif" onclick="guardarVerificacion()" class="mt-3 bg-secondary text-white font-semibold rounded-xl px-5 py-2.5">Enviar documentación</button>
+          <p id="verif-msg" class="text-sm mt-1"></p>
+        </div>
+      </div>
+    </section>
+
     <div class="grid md:grid-cols-2 gap-6">
       <section class="bg-white rounded-2xl p-5 border border-linea">
         <h2 class="font-bold text-lg mb-3">Nuevo contenido</h2>
@@ -126,12 +160,12 @@
 <script type="module">
 import { supabase } from '/js/supabase-client.js';
 const $ = s => document.querySelector(s);
-let token = null, miSlug = null;
+let token = null, miSlug = null, miUid = null;
 
 async function init() {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) { gate('Inicia sesión con tu cuenta de psicólogo.'); return; }
-  token = session.access_token;
+  token = session.access_token; miUid = session.user.id;
   const r = await api('/api/hablalo/autor-panel/info');
   if (r.status === 403) { gate('Tu cuenta no está asociada a un perfil de psicólogo.'); return; }
   if (!r.ok) { gate('Error al cargar. Reintenta.'); return; }
@@ -144,6 +178,76 @@ async function init() {
   renderSesiones(sesiones || { activas: false, reservaDirecta: false });
   $('#gate').classList.add('hidden'); $('#app').classList.remove('hidden');
   loadLista();
+  loadVerif();
+}
+
+// ── Verificación profesional (reutiliza /api/perfil/verificacion + bucket privado) ──
+const VERIF_BUCKET = 'documentos-verificacion';
+const _verifPaths = { ine: null, titulo: null, cedula: null };
+function verifBadge(estado) {
+  const b = $('#verif-badge'); if (!b) return;
+  const map = {
+    PENDING: ['Sin verificar', 'bg-surf-low', 'text-tinta-v'],
+    VERIFYING: ['Documentación recibida', 'bg-amber-100', 'text-amber-700'],
+    MANUAL_REVIEW: ['En revisión', 'bg-amber-100', 'text-amber-700'],
+    VERIFIED: ['Verificado ✓', 'bg-green-100', 'text-green-700'],
+    CORPORATE_VERIFIED: ['Verificado ✓', 'bg-green-100', 'text-green-700'],
+    REJECTED: ['Revisar documentación', 'bg-red-100', 'text-red-700'],
+  };
+  const [t, bg, c] = map[estado] || map.PENDING;
+  b.textContent = t; b.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full ' + bg + ' ' + c;
+}
+function docEstado(tipo, txt, cls) {
+  const el = document.querySelector('.verif-estado[data-for="' + tipo + '"]');
+  if (el) { el.textContent = txt; el.className = 'verif-estado ' + (cls || 'text-tinta-v'); }
+}
+window.subirDoc = async function (tipo, input) {
+  const file = input.files && input.files[0]; if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { alert('El archivo supera los 10 MB.'); input.value = ''; return; }
+  docEstado(tipo, 'Subiendo…', 'text-primary');
+  try {
+    const ext = (file.name.split('.').pop() || 'dat').toLowerCase().slice(0, 5);
+    const path = miUid + '/' + tipo + '_' + Date.now() + '.' + ext;
+    const { error } = await supabase.storage.from(VERIF_BUCKET).upload(path, file, { upsert: true, contentType: file.type });
+    if (error) throw error;
+    _verifPaths[tipo] = path;
+    docEstado(tipo, '✓ Subido', 'text-green-700');
+  } catch (e) { docEstado(tipo, 'Error al subir', 'text-red-700'); alert('No se pudo subir: ' + (e.message || e)); }
+  input.value = '';
+};
+window.guardarVerificacion = async function () {
+  const btn = $('#btn-guardar-verif'), msg = $('#verif-msg');
+  const cedula = ($('#verif-cedula').value || '').trim();
+  if (!cedula && !_verifPaths.ine && !_verifPaths.titulo && !_verifPaths.cedula) {
+    msg.textContent = 'Añade tu número de cédula y al menos un documento.'; msg.className = 'text-sm mt-1 text-red-700'; return;
+  }
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  try {
+    const r = await api('/api/perfil/verificacion', { method: 'POST', body: JSON.stringify({
+      cedula_profesional: cedula, ine_path: _verifPaths.ine, titulo_path: _verifPaths.titulo, cedula_path: _verifPaths.cedula }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Error');
+    if (d.estado) verifBadge(d.estado);
+    msg.textContent = '✅ Documentación recibida. Te avisaremos cuando esté revisada.'; msg.className = 'text-sm mt-1 text-green-700';
+  } catch (e) { msg.textContent = '❌ ' + e.message; msg.className = 'text-sm mt-1 text-red-700'; }
+  btn.disabled = false; btn.textContent = 'Enviar documentación';
+};
+async function loadVerif() {
+  try {
+    const v = await (await api('/api/perfil/verificacion')).json();
+    if (!v.aplica) return; // de momento solo México
+    $('#verif').classList.remove('hidden');
+    $('#verif-cedula').value = v.cedula_profesional || '';
+    verifBadge(v.estado);
+    if (v.estado === 'REJECTED' && v.motivo_rechazo) {
+      const r = $('#verif-rechazo'); r.textContent = 'Motivo: ' + v.motivo_rechazo; r.classList.remove('hidden');
+    }
+    if (v.docs) {
+      if (v.docs.ine) docEstado('ine', '✓ Subido', 'text-green-700');
+      if (v.docs.titulo) docEstado('titulo', '✓ Subido', 'text-green-700');
+      if (v.docs.cedula) docEstado('cedula', '✓ Subido', 'text-green-700');
+    }
+  } catch (e) {}
 }
 function renderSesiones(s) {
   $('#ses-off').classList.toggle('hidden', !!s.activas);
