@@ -59,6 +59,7 @@
     { "source": "/hablalo-admin", "destination": "/screens/hablalo_admin.html" },
     { "source": "/hablalo-autor", "destination": "/screens/hablalo_autor.html" },
     { "source": "/hablalo/entrar", "destination": "/screens/hablalo_entrar.html" },
+    { "source": "/hablalo/soy-psicologo", "destination": "/screens/hablalo_registro_psicologo.html" },
     { "source": "/seo", "destination": "/seo-panel.html" },
     { "source": "/sala", "destination": "/seo-sala.html" },
     { "source": "/creadores", "destination": "/screens/creadores.html" },

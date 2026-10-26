@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Soy psicólogo | Háblalo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:"#446350","primary-c":"#5c7c67",secondary:"#904c28","sec-c":"#fea67b",surface:"#effdf4","surf-c":"#e4f1e8","surf-low":"#e9f7ee",white:"#ffffff",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
+<style>body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}.ms{font-family:'Material Symbols Outlined'}</style>
+</head>
+<body class="bg-surface text-tinta min-h-screen flex flex-col">
+<header class="h-16 px-5 max-w-5xl mx-auto w-full flex items-center justify-between">
+  <a href="/hablalo" class="text-xl font-bold text-primary">Háblalo</a>
+  <a href="/acceso" class="text-sm font-semibold text-tinta-v hover:text-tinta">Ya tengo cuenta</a>
+</header>
+
+<main class="flex-1 px-5 py-8 md:py-12">
+  <div class="w-full max-w-5xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-start">
+
+    <!-- Pitch (lo que se lleva el psicólogo) -->
+    <section class="order-2 md:order-1">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surf-c text-primary text-xs font-bold mb-4"><span class="ms text-[15px]">workspace_premium</span>Profesionales Fundadores</span>
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3">Tu conocimiento, llegando a gente de verdad</h1>
+      <p class="text-tinta-v md:text-lg mb-7">Comparte lo que sabes con tu nombre, sin montarte una web ni pelearte con el algoritmo. Publicar y participar es gratis.</p>
+      <ul class="flex flex-col gap-4">
+        <li class="flex items-start gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm"><span class="ms text-[22px]">badge</span></div>
+          <div><h3 class="font-bold">Tu perfil profesional, gratis</h3><p class="text-sm text-tinta-v">Bio, especialidades y todas tus publicaciones reunidas en un sitio que puedes compartir con tus pacientes y en tus redes.</p></div>
+        </li>
+        <li class="flex items-start gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm"><span class="ms text-[22px]">insights</span></div>
+          <div><h3 class="font-bold">Distribución y datos</h3><p class="text-sm text-tinta-v">Tu contenido aparece en Inicio, temas y búsquedas. Ves cuánta gente lo lee, lo guarda y marca que le ayuda.</p></div>
+        </li>
+        <li class="flex items-start gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm"><span class="ms text-[22px]">groups</span></div>
+          <div><h3 class="font-bold">Una comunidad profesional</h3><p class="text-sm text-tinta-v">Participa con otros profesionales, propón talleres y colabora. Un motivo para volver, no solo para publicar una vez.</p></div>
+        </li>
+        <li class="flex items-start gap-3.5">
+          <div class="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm"><span class="ms text-[22px]">event_available</span></div>
+          <div><h3 class="font-bold">Sesiones, si quieres</h3><p class="text-sm text-tinta-v">Puedes activar más adelante la opción de ofrecer sesiones. Es opcional y no hace falta para colaborar.</p></div>
+        </li>
+      </ul>
+      <p class="text-xs text-tinta-v mt-7 leading-relaxed">Háblalo está creciendo y no prometemos una audiencia determinada ni pacientes. Queremos construir este espacio junto a los profesionales que participen desde el principio.</p>
+    </section>
+
+    <!-- Formulario de alta -->
+    <section class="order-1 md:order-2">
+      <div id="form-wrap" class="bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(46,58,52,0.06)]">
+        <h2 class="text-2xl font-bold tracking-tight mb-1">Crea tu perfil profesional</h2>
+        <p class="text-sm text-tinta-v mb-5">Unos pocos datos y ya puedes empezar a publicar. El resto lo completas cuando quieras.</p>
+        <form id="form" class="flex flex-col gap-3.5">
+          <label class="text-sm font-semibold">Nombre profesional
+            <input id="nombre" type="text" required autocomplete="name" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="Ej. Ana Losada">
+          </label>
+          <label class="text-sm font-semibold">Email
+            <input id="email" type="email" required autocomplete="email" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="tu@email.com">
+          </label>
+          <label class="text-sm font-semibold">Contraseña
+            <input id="password" type="password" required autocomplete="new-password" minlength="8" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="Mínimo 8 caracteres">
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="text-sm font-semibold">País
+              <select id="pais" class="mt-1 w-full border border-linea rounded-xl px-3 py-3 bg-surf-low">
+                <option value="mx" selected>México</option>
+                <option value="co">Colombia</option>
+                <option value="ar">Argentina</option>
+                <option value="es">España</option>
+                <option value="cl">Chile</option>
+                <option value="pe">Perú</option>
+                <option value="otro">Otro</option>
+              </select>
+            </label>
+            <label class="text-sm font-semibold">Ciudad (opcional)
+              <input id="ciudad" type="text" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="Ej. CDMX">
+            </label>
+          </div>
+          <label class="text-sm font-semibold">Especialidad (opcional)
+            <input id="especialidad" type="text" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="Ej. Ansiedad, terapia de pareja">
+          </label>
+          <button id="submit" class="bg-secondary text-white font-semibold rounded-xl py-3.5 mt-1 flex items-center justify-center gap-2">Crear mi perfil y empezar</button>
+          <p id="err" class="text-sm text-red-700"></p>
+          <p class="text-xs text-tinta-v leading-relaxed">Tu contenido se revisa antes de publicarse. El sello de <strong>Psicólogo verificado</strong> aparece después de comprobar tus credenciales; es un paso aparte del registro.</p>
+        </form>
+      </div>
+
+      <div id="ok" class="hidden bg-white rounded-3xl p-7 md:p-8 shadow text-center">
+        <div class="text-5xl mb-2">🌿</div>
+        <h2 class="text-2xl font-bold mb-1">¡Bienvenido a Háblalo!</h2>
+        <p class="text-sm text-tinta-v mb-5">Tu perfil está creado. Te llevamos a tu panel para publicar tu primer contenido.</p>
+        <a id="go-panel" href="/hablalo-autor" class="inline-block bg-primary text-white font-semibold rounded-xl px-6 py-3">Ir a mi panel</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<script type="module">
+import { supabase } from '/js/supabase-client.js';
+const $ = s => document.querySelector(s);
+
+// Si ya hay sesión, al panel directo.
+(async () => {
+  try { const { data: { session } } = await supabase.auth.getSession(); if (session) location.replace('/hablalo-autor'); } catch {}
+})();
+
+$('#form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('#err').textContent = '';
+  const btn = $('#submit'); btn.disabled = true; btn.textContent = 'Creando tu perfil…';
+  const body = {
+    nombre: $('#nombre').value.trim(),
+    email: $('#email').value.trim().toLowerCase(),
+    password: $('#password').value,
+    pais: $('#pais').value,
+    ciudad: $('#ciudad').value.trim() || null,
+    especialidad: $('#especialidad').value.trim() || null,
+  };
+  if (body.password.length < 8) { $('#err').textContent = 'La contraseña debe tener al menos 8 caracteres.'; btn.disabled = false; btn.textContent = 'Crear mi perfil y empezar'; return; }
+  try {
+    const r = await fetch('/api/hablalo/alta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) { $('#err').textContent = data.error || 'No se pudo completar el registro.'; btn.disabled = false; btn.textContent = 'Crear mi perfil y empezar'; return; }
+    // Auto-login con la contraseña recién creada, para entrar directo al panel.
+    const { error: signErr } = await supabase.auth.signInWithPassword({ email: body.email, password: body.password });
+    $('#form-wrap').classList.add('hidden'); $('#ok').classList.remove('hidden');
+    if (!signErr) { setTimeout(() => location.replace('/hablalo-autor'), 1200); }
+    else { $('#go-panel').setAttribute('href', '/acceso'); }
+  } catch (err) {
+    $('#err').textContent = 'Error de conexión. Reinténtalo.'; btn.disabled = false; btn.textContent = 'Crear mi perfil y empezar';
+  }
+});
+</script>
+</body>
+</html>
