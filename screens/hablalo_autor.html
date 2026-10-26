@@ -27,7 +27,7 @@
 
   <div id="app" class="hidden">
     <div class="bg-white rounded-2xl p-4 border border-linea mb-5">
-      <p class="text-sm">Hola, <strong id="mi-nombre"></strong> <span id="mi-perfil"></span></p>
+      <p class="text-sm">Hola, <strong id="mi-nombre"></strong> <span id="mi-perfil"></span><span id="mi-fundador"></span></p>
     </div>
 
     <!-- Sesiones (opcional): activar = ofrecer sesiones y aparecer en el buscador -->
@@ -151,6 +151,7 @@
 
       <section class="bg-white rounded-2xl p-5 border border-linea">
         <h2 class="font-bold text-lg mb-3">Tus publicaciones</h2>
+        <div id="totales" class="hidden grid grid-cols-4 gap-2 mb-4"></div>
         <div id="lista" class="flex flex-col gap-2 max-h-[70vh] overflow-auto"><p class="text-tinta-v text-sm">Cargando…</p></div>
       </section>
     </div>
@@ -175,6 +176,7 @@ async function init() {
   $('#mi-perfil').innerHTML = psi.slug ? `· <a class="text-primary font-semibold" href="/hablalo/autor/${psi.slug}" target="_blank">ver tu perfil público</a>` : '';
   $('#f_tema').innerHTML = '<option value="">—</option>' + (temas || []).map(t => `<option value="${t.slug}">${t.nombre}</option>`).join('');
   if (psi.slug) $('#ver-ficha').setAttribute('href', '/hablalo/autor/' + psi.slug);
+  if (psi.hablalo_fundador) $('#mi-fundador').innerHTML = '<span class="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surf-c text-primary text-xs font-bold">✨ Profesional Fundador</span>';
   renderSesiones(sesiones || { activas: false, reservaDirecta: false });
   $('#gate').classList.add('hidden'); $('#app').classList.remove('hidden');
   loadLista();
@@ -262,14 +264,19 @@ function api(path, opts = {}) {
   return fetch(path, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
 }
 async function loadLista() {
-  const { contenidos } = await (await api('/api/hablalo/autor-panel/mis-contenidos')).json();
+  const { contenidos, totales } = await (await api('/api/hablalo/autor-panel/mis-contenidos')).json();
+  if (totales) {
+    const tile = (n, l, ic) => `<div class="bg-surf-low rounded-xl p-2.5 text-center"><div class="text-primary text-base font-bold">${n}</div><div class="text-[11px] text-tinta-v flex items-center justify-center gap-0.5"><span class="ms text-[13px]">${ic}</span>${l}</div></div>`;
+    $('#totales').innerHTML = tile(totales.vistas, 'vistas', 'visibility') + tile(totales.me_ayuda, 'me ayuda', 'favorite') + tile(totales.guardados, 'guardados', 'bookmark') + tile(totales.completados, 'hechos', 'task_alt');
+    $('#totales').classList.remove('hidden');
+  }
   if (!contenidos.length) { $('#lista').innerHTML = '<p class="text-tinta-v text-sm">Aún no has publicado nada. ¡Empieza con tu primer consejo!</p>'; return; }
   const color = { publicado: 'text-green-700 bg-green-100', en_revision: 'text-amber-700 bg-amber-100', rechazado: 'text-red-700 bg-red-100' };
   $('#lista').innerHTML = contenidos.map(c => `
     <div class="border border-linea rounded-xl p-3">
       <div class="flex items-start justify-between gap-2">
         <div class="min-w-0"><p class="font-semibold text-sm truncate">${escp(c.titulo)}</p>
-        <p class="text-xs text-tinta-v">${escp(c.tema||'—')} · ${c.vistas||0} vistas</p></div>
+        <p class="text-xs text-tinta-v">${escp(c.tema||'—')} · ${c.vistas||0} 👁 · ${c.me_ayuda||0} ❤ · ${c.guardados||0} 🔖${c.completados ? ' · ' + c.completados + ' ✓' : ''}</p></div>
         <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${color[c.estado]||''}">${c.estado.replace('_',' ')}</span>
       </div>
       ${c.estado==='publicado' ? `<a class="text-primary font-semibold text-xs mt-2 inline-block" href="/hablalo/articulo/${c.slug}" target="_blank">Ver publicado →</a>` : ''}

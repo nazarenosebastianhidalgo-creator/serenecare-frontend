@@ -96,6 +96,13 @@
       </div>
       <div id="denuncias" class="flex flex-col gap-2"><p class="text-tinta-v text-sm">Cargando…</p></div>
     </section>
+
+    <!-- Autores / Profesionales Fundadores -->
+    <section class="md:col-span-2 bg-white rounded-2xl p-5 border border-linea">
+      <h2 class="font-bold text-lg mb-1">Autores · Profesionales Fundadores</h2>
+      <p class="text-sm text-tinta-v mb-3">El distintivo de fundador NO es una acreditación clínica: reconoce a quienes ayudan a construir la comunidad.</p>
+      <div id="autores" class="flex flex-col gap-2 max-h-[50vh] overflow-auto"><p class="text-tinta-v text-sm">Cargando…</p></div>
+    </section>
   </div>
 </div>
 
@@ -115,6 +122,7 @@ async function init() {
   if (!r.ok) { showGate('Error al cargar. Reintenta.'); return; }
   const { psicologos } = await r.json();
   fillSelect('#f_autor', psicologos.map(p => ({ v: p.id, t: p.nombre + (p.verificado ? ' ✓' : '') })));
+  renderAutores(psicologos);
   const tr = await (await api('/api/hablalo/admin/temas')).json();
   fillSelect('#f_tema', (tr.temas || []).map(t => ({ v: t.slug, t: t.nombre })), true);
   $('#gate').classList.add('hidden'); $('#app').classList.remove('hidden');
@@ -207,6 +215,25 @@ $('#f_tipo').addEventListener('change', () => {
   $('#f_media_lbl').textContent = (t === 'video') ? 'Enlace del vídeo (YouTube, Vimeo o .mp4)' : 'Imagen o vídeo (URL, opcional)';
 });
 
+function renderAutores(ps) {
+  const cont = $('#autores');
+  if (!ps || !ps.length) { cont.innerHTML = '<p class="text-tinta-v text-sm">Sin autores todavía.</p>'; return; }
+  cont.innerHTML = ps.map(p => `
+    <div class="flex items-center justify-between gap-2 border border-linea rounded-xl p-2.5">
+      <div class="min-w-0">
+        <p class="font-semibold text-sm truncate">${escp(p.nombre)} ${p.verificado ? '<span class="text-green-700" title="Verificado">✓</span>' : ''}</p>
+        <p class="text-[11px] text-tinta-v">${p.hablalo_fundador ? '✨ Profesional Fundador' : (p.publicado ? 'Ofrece sesiones' : 'Colaborador')}</p>
+      </div>
+      <button data-fund="${p.id}" data-val="${p.hablalo_fundador ? 0 : 1}" class="text-xs font-semibold px-3 py-1 rounded-full shrink-0 ${p.hablalo_fundador ? 'bg-surf-low text-tinta' : 'bg-surf-c text-primary'}">${p.hablalo_fundador ? 'Quitar Fundador' : 'Hacer Fundador'}</button>
+    </div>`).join('');
+}
+$('#autores').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-fund]'); if (!b) return;
+  const fundador = b.dataset.val === '1';
+  await api('/api/hablalo/admin/autor/fundador', { method: 'POST', body: JSON.stringify({ autor_id: b.dataset.fund, fundador }) });
+  const { psicologos } = await (await api('/api/hablalo/admin/psicologos')).json();
+  renderAutores(psicologos);
+});
 $('#btn-reload-den').addEventListener('click', loadDenuncias);
 $('#denuncias').addEventListener('click', async (e) => {
   const des = e.target.closest('[data-den-descartar]'), ret = e.target.closest('[data-den-retirar]'), sus = e.target.closest('[data-susp]');
