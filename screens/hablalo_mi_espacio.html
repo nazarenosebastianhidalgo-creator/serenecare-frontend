@@ -1,77 +1,201 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex">
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex"/>
 <title>Mi espacio | Háblalo</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{primary:"#446350",secondary:"#904c28","sec-c":"#fea67b",surface:"#effdf4","surf-c":"#e4f1e8","surf-low":"#e9f7ee",white:"#ffffff",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
-<style>body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}.ms{font-family:'Material Symbols Outlined'}</style>
+<script>tailwind.config={theme:{extend:{colors:{brand:{cream:'#effdf4',surface:'#ffffff',primary:'#446350','primary-dark':'#324a3c','primary-light':'#e6f3eb',terracotta:'#904c28','terracotta-dark':'#793e20','terracotta-light':'#fbf0eb',text:'#121e19',muted:'#424843',border:'#c2c8c1',sage:'#6f8f7a'}},fontFamily:{sans:['"Plus Jakarta Sans"','system-ui','sans-serif']},borderRadius:{'2xl':'16px','3xl':'24px','4xl':'28px'},boxShadow:{soft:'0 4px 20px -2px rgba(18,30,25,0.05)',card:'0 8px 30px -4px rgba(18,30,25,0.07)',hover:'0 12px 36px -4px rgba(68,99,80,0.12)'}}}};</script>
+<style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;vertical-align:middle;}.material-symbols-outlined.fill{font-variation-settings:'FILL' 1,'wght' 500;}.no-scrollbar::-webkit-scrollbar{display:none;}.no-scrollbar{scrollbar-width:none;}</style>
 </head>
-<body class="bg-surface text-tinta min-h-screen">
-<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(46,58,52,0.04)]">
-  <div class="h-16 px-5 max-w-2xl mx-auto flex items-center justify-between">
-    <a href="/hablalo" class="text-xl font-bold text-primary">Háblalo</a>
-    <button id="salir" class="hidden text-sm text-tinta-v font-semibold">Cerrar sesión</button>
+<body class="bg-brand-cream text-brand-text font-sans antialiased min-h-screen flex flex-col pb-28 md:pb-12">
+
+<header class="sticky top-0 z-40 bg-brand-cream/90 backdrop-blur-md border-b border-brand-border/60">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <a class="flex items-center gap-3" href="/hablalo">
+      <div class="w-10 h-10 rounded-2xl bg-brand-primary flex items-center justify-center text-white shadow-sm"><span class="material-symbols-outlined text-2xl fill">spa</span></div>
+      <div class="flex flex-col"><span class="text-xl font-extrabold tracking-tight leading-none">Háblalo</span><span class="text-[11px] font-medium text-brand-muted mt-1 leading-none">Bienestar emocional</span></div>
+    </a>
+    <nav class="hidden md:flex items-center gap-1 bg-white/70 p-1.5 rounded-full border border-brand-border/70 shadow-sm">
+      <a class="px-4 py-2 rounded-full text-sm font-semibold text-brand-muted hover:text-brand-text hover:bg-brand-primary-light transition-all flex items-center gap-1.5" href="/hablalo"><span class="material-symbols-outlined text-lg">home</span>Inicio</a>
+      <a class="px-4 py-2 rounded-full text-sm font-semibold text-brand-muted hover:text-brand-text hover:bg-brand-primary-light transition-all flex items-center gap-1.5" href="/hablalo/explorar"><span class="material-symbols-outlined text-lg">explore</span>Explorar</a>
+      <a class="px-4 py-2 rounded-full text-sm font-semibold text-brand-muted hover:text-brand-text hover:bg-brand-primary-light transition-all flex items-center gap-1.5" href="/herramientas"><span class="material-symbols-outlined text-lg">psychology</span>Herramientas</a>
+      <a class="px-4 py-2 rounded-full text-sm font-bold text-white bg-brand-primary shadow-sm flex items-center gap-1.5" href="/hablalo/mi-espacio"><span class="material-symbols-outlined text-lg fill">favorite</span>Mi espacio</a>
+    </nav>
+    <div id="mi-avatar" class="w-10 h-10 rounded-full bg-white border border-brand-border flex items-center justify-center font-bold text-brand-muted text-sm">··</div>
   </div>
 </header>
-<main class="max-w-2xl mx-auto px-5 pt-20 pb-28">
-  <div id="cargando" class="text-center text-tinta-v py-16">Cargando…</div>
 
-  <div id="no-sesion" class="hidden text-center py-12 flex flex-col items-center">
-    <div class="w-16 h-16 rounded-full bg-sec-c/50 text-secondary flex items-center justify-center mb-4"><span class="ms text-[30px]">favorite</span></div>
-    <h1 class="text-2xl font-semibold mb-2">Tu espacio personal</h1>
-    <p class="text-tinta-v max-w-sm mb-6">Crea tu cuenta gratis para guardar recursos, acceder a vídeos y webinars, y tener todo en un solo sitio.</p>
-    <a href="/hablalo/entrar?next=/hablalo/mi-espacio" class="inline-flex items-center justify-center min-h-[48px] px-6 rounded-xl bg-secondary text-white font-semibold">Crear cuenta / Entrar</a>
+<main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 pt-6 sm:pt-8 pb-10">
+
+  <!-- Cargando -->
+  <div id="loading" class="text-center py-20 text-brand-muted">Cargando tu espacio…</div>
+
+  <!-- AUTENTICADO -->
+  <div id="authView" class="hidden space-y-8 sm:space-y-10">
+    <section class="bg-gradient-to-br from-white via-white to-[#f0faf3] rounded-3xl sm:rounded-4xl p-6 sm:p-8 border border-brand-border/70 shadow-card relative overflow-hidden">
+      <div class="absolute -right-8 -bottom-8 opacity-10 pointer-events-none text-brand-primary"><span class="material-symbols-outlined text-[190px]">potted_plant</span></div>
+      <div class="relative z-10 max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary-light text-brand-primary text-xs font-semibold mb-3"><span class="material-symbols-outlined text-sm fill">wb_sunny</span>Tu refugio seguro y sin juicios</div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">Hola 🌿</h1>
+        <p class="mt-2 text-base sm:text-lg text-brand-muted leading-relaxed">Qué bueno verte por aquí. Este rincón guarda lo que te dio paz, para cuando lo necesites.</p>
+        <div class="mt-5 pt-4 border-t border-brand-border/40 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-brand-muted">
+          <div class="flex items-center gap-1.5 font-medium"><span class="w-2 h-2 rounded-full bg-brand-primary"></span><span><strong id="n-guardados">0</strong> lecturas guardadas</span></div>
+          <div class="flex items-center gap-1.5 font-medium"><span class="w-2 h-2 rounded-full bg-brand-terracotta"></span><span><strong id="n-psicologos">0</strong> psicólogos que sigues</span></div>
+          <div class="flex items-center gap-1.5 font-medium"><span class="w-2 h-2 rounded-full bg-brand-sage"></span><span><strong id="n-temas">0</strong> temas que te acompañan</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Psicólogos que sigues -->
+    <section id="sec-psicologos" class="hidden">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-brand-primary-light flex items-center justify-center text-brand-primary"><span class="material-symbols-outlined text-lg">supervised_user_circle</span></div>
+          <div><h2 class="text-xl sm:text-2xl font-bold tracking-tight">Psicólogos que sigues</h2><p class="text-xs sm:text-sm text-brand-muted">Profesionales que aportan a tu día a día</p></div>
+        </div>
+        <a class="text-xs sm:text-sm font-bold text-brand-primary hover:underline flex items-center gap-1" href="/hablalo/buscar">Descubrir más<span class="material-symbols-outlined text-base">arrow_forward</span></a>
+      </div>
+      <div id="lista-psicologos" class="flex items-stretch gap-3.5 sm:gap-4 overflow-x-auto no-scrollbar pb-2 pt-1"></div>
+    </section>
+
+    <!-- Temas que sigues -->
+    <section id="sec-temas" class="hidden bg-white rounded-3xl p-5 sm:p-6 border border-brand-border/70 shadow-soft">
+      <div class="flex items-center gap-2 mb-3.5"><span class="material-symbols-outlined text-brand-primary text-xl">label</span><h2 class="text-base sm:text-lg font-bold">Temas que sigues</h2></div>
+      <div id="lista-temas" class="flex flex-wrap gap-2.5"></div>
+    </section>
+
+    <!-- Tus guardados -->
+    <section>
+      <div class="flex items-center gap-2 mb-4 sm:mb-5">
+        <span class="w-8 h-8 rounded-full bg-brand-terracotta-light flex items-center justify-center text-brand-terracotta"><span class="material-symbols-outlined text-lg fill">bookmark</span></span>
+        <div><h2 class="text-xl sm:text-2xl font-bold tracking-tight">Tus guardados</h2><p class="text-xs sm:text-sm text-brand-muted mt-0.5">Lo que decidiste guardar para cuando lo necesites</p></div>
+      </div>
+      <div id="grid-guardados" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
+      <div id="empty-guardados" class="hidden bg-white rounded-3xl p-8 sm:p-12 border border-dashed border-brand-border text-center max-w-xl mx-auto shadow-soft">
+        <div class="w-20 h-20 rounded-full bg-brand-cream text-brand-primary flex items-center justify-center mx-auto mb-4"><span class="material-symbols-outlined text-4xl">bookmark_border</span></div>
+        <h3 class="text-xl font-bold">Tu baúl de lecturas está libre por ahora</h3>
+        <p class="text-sm text-brand-muted mt-2 leading-relaxed max-w-md mx-auto">Cuando encuentres un artículo o ejercicio que resuene contigo, pulsa Guardar. Aparecerá aquí para tenerlo a mano.</p>
+        <a class="inline-flex mt-6 px-6 py-3 rounded-full text-sm font-bold text-white bg-brand-primary hover:bg-brand-primary-dark shadow-sm transition-all items-center justify-center gap-2" href="/hablalo"><span class="material-symbols-outlined text-base">explore</span>Explorar contenido</a>
+      </div>
+    </section>
+
+    <!-- Invitación -->
+    <section class="bg-gradient-to-r from-brand-primary to-brand-primary-dark rounded-3xl sm:rounded-4xl p-6 sm:p-9 text-white shadow-card relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 opacity-15 pointer-events-none"><span class="material-symbols-outlined text-[240px]">psychology</span></div>
+      <div class="relative z-10 max-w-2xl">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 text-white/95 text-xs font-semibold mb-3"><span class="material-symbols-outlined text-sm fill">volunteer_activism</span>Apoyo humano y accesible</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">¿Quieres sentirte mejor? No tienes que resolverlo a solas</h2>
+        <p class="mt-2.5 text-sm sm:text-base text-white/85 leading-relaxed">A veces leer reconforta, pero hablar con alguien que te escuche sin juzgar abre caminos nuevos. En Háblalo colaboran psicólogos verificados en México.</p>
+        <div class="mt-6 flex flex-wrap items-center gap-3">
+          <a class="px-6 py-3.5 rounded-full text-sm font-bold text-brand-text bg-white hover:bg-brand-cream shadow-md transition-all flex items-center gap-2" href="/hablalo/buscar"><span class="material-symbols-outlined text-lg text-brand-terracotta">search</span>Encontrar psicólogo</a>
+        </div>
+        <div class="mt-5 pt-4 border-t border-white/15 flex items-center gap-2 text-xs text-white/70"><span class="material-symbols-outlined text-sm">call</span><span>¿Crisis inmediata? Línea de la Vida (México): <a class="underline font-bold text-white" href="tel:8009112000">800 911 2000</a> (gratis, 24 h).</span></div>
+      </div>
+    </section>
   </div>
 
-  <div id="app" class="hidden">
-    <h1 class="text-2xl font-semibold tracking-tight mb-1">Hola 🌿</h1>
-    <p class="text-sm text-tinta-v mb-6" id="saludo-email"></p>
-    <h2 class="text-lg font-semibold mb-3">Guardado</h2>
-    <div id="guardados" class="flex flex-col gap-3"></div>
+  <!-- SIN SESIÓN -->
+  <div id="guestView" class="hidden">
+    <div class="max-w-2xl mx-auto bg-white rounded-3xl sm:rounded-4xl p-7 sm:p-12 border border-brand-border/70 shadow-card text-center">
+      <div class="w-20 h-20 rounded-3xl bg-brand-terracotta-light text-brand-terracotta flex items-center justify-center mx-auto mb-6 shadow-soft"><span class="material-symbols-outlined text-4xl fill">spa</span></div>
+      <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-brand-primary-light text-brand-primary text-xs font-bold mb-3">Tu refugio emocional personal</span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-tight">Guarda tus lecturas y cuida de ti a tu ritmo</h1>
+      <p class="mt-3 text-sm sm:text-base text-brand-muted max-w-lg mx-auto leading-relaxed">Crea tu cuenta gratuita para guardar artículos, seguir a psicólogos de confianza y retomar tus reflexiones cuando lo necesites. Sin costes ni compromisos.</p>
+      <div class="my-7 py-5 border-y border-brand-border/40 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+        <div class="flex items-start gap-2.5 p-2"><span class="material-symbols-outlined text-brand-primary text-xl mt-0.5">bookmark</span><div><h4 class="text-xs font-bold">Guarda tus favoritos</h4><p class="text-[11px] text-brand-muted">Accede a tus recursos siempre.</p></div></div>
+        <div class="flex items-start gap-2.5 p-2"><span class="material-symbols-outlined text-brand-primary text-xl mt-0.5">favorite</span><div><h4 class="text-xs font-bold">Sigue a psicólogos</h4><p class="text-[11px] text-brand-muted">Profesionales verificados.</p></div></div>
+        <div class="flex items-start gap-2.5 p-2"><span class="material-symbols-outlined text-brand-primary text-xl mt-0.5">lock</span><div><h4 class="text-xs font-bold">100% confidencial</h4><p class="text-[11px] text-brand-muted">Tu espacio seguro y privado.</p></div></div>
+      </div>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5">
+        <a class="w-full sm:w-auto px-8 py-3.5 rounded-full text-base font-bold text-white bg-brand-terracotta hover:bg-brand-terracotta-dark shadow-md transition-all flex items-center justify-center gap-2" href="/hablalo/entrar"><span class="material-symbols-outlined text-lg">person_add</span>Crear cuenta gratis</a>
+        <a class="w-full sm:w-auto px-6 py-3.5 rounded-full text-base font-semibold text-brand-text bg-brand-cream hover:bg-brand-primary-light border border-brand-border transition-all flex items-center justify-center gap-2" href="/hablalo/entrar">Ya tengo cuenta</a>
+      </div>
+    </div>
   </div>
 </main>
 
-<nav class="fixed bottom-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_-4px_20px_rgba(46,58,52,0.04)]">
-  <div class="h-20 max-w-2xl mx-auto px-2 flex items-center justify-around text-tinta-v">
-    <a class="flex flex-col items-center min-w-[44px]" href="/hablalo"><span class="ms text-[24px]">home</span><span class="text-xs mt-0.5">Inicio</span></a>
-    <a class="flex flex-col items-center min-w-[44px]" href="/hablalo/buscar"><span class="ms text-[24px]">explore</span><span class="text-xs mt-0.5">Explorar</span></a>
-    <a class="flex flex-col items-center min-w-[44px]" href="/herramientas"><span class="ms text-[24px]">spa</span><span class="text-xs mt-0.5">Herramientas</span></a>
-    <a class="flex flex-col items-center min-w-[44px] text-primary font-semibold" href="/hablalo/mi-espacio"><span class="ms text-[24px]">favorite</span><span class="text-xs mt-0.5">Mi espacio</span></a>
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-brand-border/70 px-4 py-2 shadow-lg">
+  <div class="max-w-md mx-auto grid grid-cols-4 items-center">
+    <a class="flex flex-col items-center justify-center py-1 text-brand-muted" href="/hablalo"><span class="material-symbols-outlined text-2xl">home</span><span class="text-[11px] font-medium mt-0.5">Inicio</span></a>
+    <a class="flex flex-col items-center justify-center py-1 text-brand-muted" href="/hablalo/explorar"><span class="material-symbols-outlined text-2xl">explore</span><span class="text-[11px] font-medium mt-0.5">Explorar</span></a>
+    <a class="flex flex-col items-center justify-center py-1 text-brand-muted" href="/herramientas"><span class="material-symbols-outlined text-2xl">psychology</span><span class="text-[11px] font-medium mt-0.5">Herramientas</span></a>
+    <a class="flex flex-col items-center justify-center py-1 text-brand-primary relative" href="/hablalo/mi-espacio"><span class="material-symbols-outlined text-2xl fill">favorite</span><span class="text-[11px] font-bold mt-0.5">Mi espacio</span><span class="absolute -top-1 w-6 h-1 rounded-full bg-brand-primary"></span></a>
   </div>
 </nav>
 
 <script type="module">
 import { supabase } from '/js/supabase-client.js';
 const $ = s => document.querySelector(s);
-function show(id){ ['cargando','no-sesion','app'].forEach(x => $('#'+x).classList.toggle('hidden', x !== id)); }
+const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const ini = n => String(n||'').trim().split(/\s+/).map(w=>w[0]||'').slice(0,2).join('').toUpperCase()||'··';
+let token = null;
+const api = (p) => fetch(p, { headers: { Authorization: 'Bearer ' + token } });
 
 (async () => {
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session) { show('no-sesion'); return; }
-  const token = session.access_token;
-  $('#saludo-email').textContent = session.user?.email || '';
-  $('#salir').classList.remove('hidden');
-  $('#salir').addEventListener('click', async () => { await supabase.auth.signOut(); location.reload(); });
-  show('app');
+  $('#loading').classList.add('hidden');
+  if (!session) { $('#guestView').classList.remove('hidden'); return; }
+  token = session.access_token;
+  const email = session.user.email || '';
+  $('#mi-avatar').textContent = (email[0] || '·').toUpperCase() + (email[1] || '·').toUpperCase();
+  $('#authView').classList.remove('hidden');
   try {
-    const r = await fetch('/api/hablalo/mis-guardados', { headers: { Authorization: 'Bearer ' + token } });
-    const { guardados } = await r.json();
-    const cont = $('#guardados');
-    if (!guardados || !guardados.length) { cont.innerHTML = '<p class="text-sm text-tinta-v bg-white rounded-2xl p-5 border border-linea">Aún no has guardado nada. Explora el contenido y pulsa “Guardar”.</p>'; return; }
-    cont.innerHTML = guardados.map(c => `
-      <a href="/hablalo/articulo/${c.slug}" class="bg-white rounded-2xl p-4 border border-linea block">
-        <span class="text-[11px] font-bold text-primary uppercase">${(c.tema||'')}</span>
-        <p class="font-semibold mt-0.5">${esc(c.titulo)}</p>
-        <p class="text-xs text-tinta-v mt-1">${c.tiempo_min ? c.tiempo_min + ' min de lectura' : 'Lectura'}</p>
-      </a>`).join('');
-  } catch (e) { $('#guardados').innerHTML = '<p class="text-sm text-red-700">No se pudo cargar.</p>'; }
+    const { guardados, autores, temas } = await (await api('/api/hablalo/mi-espacio-data')).json();
+    $('#n-guardados').textContent = guardados.length;
+    $('#n-psicologos').textContent = autores.length;
+    $('#n-temas').textContent = temas.length;
+    renderPsicologos(autores); renderTemas(temas); renderGuardados(guardados);
+  } catch (e) { renderGuardados([]); }
 })();
-function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderPsicologos(ps) {
+  if (!ps.length) return;
+  $('#sec-psicologos').classList.remove('hidden');
+  $('#lista-psicologos').innerHTML = ps.map(p => {
+    const foto = p.foto_url ? `<img class="w-16 h-16 rounded-full object-cover ring-2 ring-brand-primary/20" src="${esc(p.foto_url)}" alt="${esc(p.nombre)}"/>`
+      : `<div class="w-16 h-16 rounded-full bg-brand-primary-light text-brand-primary flex items-center justify-center font-bold text-lg ring-2 ring-brand-primary/20">${esc(ini(p.nombre))}</div>`;
+    const chip = p.publicado ? `<span class="inline-flex items-center gap-1 mt-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-brand-primary-light text-brand-primary"><span class="w-1.5 h-1.5 rounded-full bg-brand-primary"></span>Ofrece sesiones</span>` : `<span class="inline-flex mt-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-brand-cream text-brand-muted border border-brand-border">Comparte contenido</span>`;
+    return `<a href="/hablalo/autor/${esc(p.slug)}" class="flex-shrink-0 w-44 sm:w-48 bg-white rounded-2xl p-4 border border-brand-border/70 shadow-soft hover:shadow-hover transition-all flex flex-col items-center text-center">
+      <div class="relative mb-3">${foto}${p.verificado ? `<span class="absolute bottom-0 right-0 bg-brand-primary text-white p-1 rounded-full flex items-center justify-center" title="Verificado"><span class="material-symbols-outlined text-xs fill">verified</span></span>` : ''}</div>
+      <h3 class="font-bold text-sm leading-tight line-clamp-1">${esc(p.nombre)}</h3>
+      <span class="text-[11px] font-medium text-brand-muted mt-1 line-clamp-1">${esc((p.especialidad||'').split(',')[0] || 'Psicólogo/a')}</span>
+      ${chip}</a>`;
+  }).join('') + `<a href="/hablalo/buscar" class="flex-shrink-0 w-40 sm:w-44 bg-brand-primary-light/60 rounded-2xl p-4 border border-dashed border-brand-primary/50 hover:bg-brand-primary-light transition-all flex flex-col items-center justify-center text-center"><div class="w-12 h-12 rounded-full bg-white text-brand-primary flex items-center justify-center shadow-sm mb-2"><span class="material-symbols-outlined text-2xl">person_add</span></div><span class="font-bold text-xs text-brand-primary">Buscar más</span></a>`;
+}
+
+function renderTemas(ts) {
+  if (!ts.length) return;
+  $('#sec-temas').classList.remove('hidden');
+  $('#lista-temas').innerHTML = ts.map(t => `<a href="/hablalo/tema/${esc(t.slug)}" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold bg-brand-primary-light text-brand-primary border border-brand-primary/20 hover:border-brand-primary transition-all"><span class="material-symbols-outlined text-base">label</span>${esc(t.nombre)}</a>`).join('');
+}
+
+function renderGuardados(gs) {
+  const grid = $('#grid-guardados'), empty = $('#empty-guardados');
+  if (!gs.length) { grid.classList.add('hidden'); empty.classList.remove('hidden'); return; }
+  grid.classList.remove('hidden'); empty.classList.add('hidden');
+  grid.innerHTML = gs.map(c => {
+    const tipoChip = (c.tipo === 'ejercicio' || c.tipo === 'herramienta') ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-terracotta text-white shadow-sm">Ejercicio</span>'
+      : (c.tipo === 'video' ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-primary text-white shadow-sm">Vídeo</span>'
+      : (c.tipo === 'evento' ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-terracotta text-white shadow-sm">Evento</span>' : ''));
+    return `<a href="/hablalo/articulo/${esc(c.slug)}" class="bg-white rounded-3xl border border-brand-border/70 overflow-hidden shadow-soft hover:shadow-hover transition-all flex flex-col group">
+      <div class="h-32 relative overflow-hidden bg-gradient-to-br from-brand-primary-light to-[#d6ebd9] p-5 flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-white text-brand-primary shadow-sm">${esc(c.tema || 'Háblalo')}</span>
+          ${tipoChip}
+        </div>
+        <div class="text-brand-primary text-xs font-bold flex items-center gap-1">${c.tiempo_min ? `<span class="material-symbols-outlined text-sm">schedule</span>${c.tiempo_min} min` : ''}</div>
+      </div>
+      <div class="p-5 flex-1 flex flex-col justify-between">
+        <h3 class="font-bold text-base sm:text-lg group-hover:text-brand-primary transition-colors leading-snug line-clamp-3">${esc(c.titulo)}</h3>
+        <div class="mt-4 pt-3.5 border-t border-brand-border/40 flex items-center justify-between">
+          <span class="text-xs font-semibold text-brand-muted">${esc(c.autor_nombre || 'Háblalo')}</span>
+          <span class="w-8 h-8 rounded-full bg-brand-cream group-hover:bg-brand-primary text-brand-primary group-hover:text-white flex items-center justify-center transition-colors"><span class="material-symbols-outlined text-base">arrow_outward</span></span>
+        </div>
+      </div></a>`;
+  }).join('');
+}
 </script>
-</body>
-</html>
+</body></html>

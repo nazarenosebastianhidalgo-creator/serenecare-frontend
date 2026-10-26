@@ -1,167 +1,273 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html><html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>Háblalo · Publica tu contenido</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Háblalo · Tu contenido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{primary:"#446350",secondary:"#904c28",surface:"#effdf4","surf-low":"#e9f7ee","surf-c":"#e4f1e8",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
-<style>body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}</style>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: { brand: {
+      cream: '#effdf4', surface: '#ffffff', primary: '#446350', 'primary-hover': '#375241', 'primary-light': '#e6f0ea',
+      terracotta: '#904c28', 'terracotta-hover': '#7a3e1f', 'terracotta-light': '#faeee8',
+      text: '#121e19', muted: '#424843', border: '#c2c8c1', borderSoft: '#e1e7e0',
+      amber: '#b45309', 'amber-bg': '#fef3c7', red: '#b91c1c', 'red-bg': '#fee2e2', green: '#15803d', 'green-bg': '#dcfce7' } },
+    fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+    boxShadow: { soft: '0 4px 20px -2px rgba(18, 30, 25, 0.05), 0 2px 6px -1px rgba(18, 30, 25, 0.03)', elevated: '0 12px 32px -4px rgba(68, 99, 80, 0.08), 0 4px 12px -2px rgba(18, 30, 25, 0.04)' },
+    borderRadius: { '2xl': '20px', '3xl': '26px' }
+  } } }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; display: inline-block; vertical-align: middle; line-height: 1; }
+  .material-symbols-outlined.fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: #446350; box-shadow: 0 0 0 3px rgba(68, 99, 80, 0.15); }
+</style>
 </head>
-<body class="bg-surface text-tinta min-h-screen">
-<div class="max-w-3xl mx-auto px-4 py-6">
-  <header class="flex items-center justify-between mb-6">
-    <div>
-      <h1 class="text-2xl font-bold text-primary">Háblalo · Tu contenido</h1>
-      <p class="text-sm text-tinta-v">Comparte conocimiento y gana visibilidad. Tu contenido se revisa antes de publicarse.</p>
-    </div>
-    <a href="/hablalo" class="text-sm text-primary font-semibold">Ver Háblalo →</a>
-  </header>
+<body class="bg-brand-cream text-brand-text font-sans antialiased min-h-screen py-6 px-4 sm:px-6 lg:px-10">
 
-  <div id="gate" class="hidden bg-white rounded-2xl p-6 border border-linea text-center">
-    <p id="gate-msg" class="text-tinta-v">Comprobando sesión…</p>
-    <a href="/acceso" class="inline-block mt-3 text-primary font-semibold">Iniciar sesión</a>
+  <!-- Puerta de sesión -->
+  <div id="gate" class="hidden max-w-md mx-auto bg-brand-surface border border-brand-borderSoft rounded-3xl p-8 text-center shadow-soft mt-10">
+    <span class="material-symbols-outlined text-4xl text-brand-primary">lock</span>
+    <p id="gate-msg" class="text-brand-muted mt-2">Comprobando sesión…</p>
+    <a href="/acceso" class="inline-block mt-4 text-brand-primary font-bold">Iniciar sesión</a>
   </div>
 
-  <div id="app" class="hidden">
-    <div class="bg-white rounded-2xl p-4 border border-linea mb-5">
-      <p class="text-sm">Hola, <strong id="mi-nombre"></strong> <span id="mi-perfil"></span><span id="mi-fundador"></span></p>
+  <div id="app" class="hidden max-w-6xl mx-auto space-y-6">
+
+    <!-- CABECERA -->
+    <header class="bg-brand-surface border border-brand-borderSoft rounded-3xl p-6 sm:p-8 shadow-soft">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 rounded-2xl bg-brand-primary-light flex items-center justify-center text-brand-primary shrink-0">
+            <span class="material-symbols-outlined fill text-3xl">spa</span>
+          </div>
+          <div class="space-y-1">
+            <div class="flex flex-wrap items-center gap-2.5">
+              <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-text">Háblalo · Tu contenido</h1>
+              <span id="mi-fundador" class="hidden inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-brand-amber border border-amber-200 text-xs font-bold tracking-wide"><span class="text-xs">✨</span> Profesional Fundador</span>
+            </div>
+            <p class="text-brand-muted text-sm sm:text-base font-normal">Hola, <strong id="mi-nombre"></strong>. Comparte conocimiento y gana visibilidad.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 self-start md:self-center">
+          <a id="ver-ficha" href="#" target="_blank" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border border-brand-border text-brand-text font-semibold text-sm hover:bg-brand-cream hover:border-brand-primary transition-all h-12">
+            <span class="material-symbols-outlined text-xl text-brand-primary">person_outline</span><span>Ver mi perfil público</span>
+          </a>
+          <div id="mi-avatar" class="w-12 h-12 rounded-2xl bg-[#f0e8df] border border-[#ded5cb] flex items-center justify-center font-bold text-brand-muted text-base">··</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 4 TILES DE ESTADÍSTICAS (reales) -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      <div class="bg-brand-surface border border-brand-borderSoft rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-soft">
+        <div class="flex items-center justify-between mb-3"><span class="text-brand-muted font-medium text-xs sm:text-sm">Vistas totales</span>
+          <div class="w-10 h-10 rounded-xl bg-brand-primary-light text-brand-primary flex items-center justify-center"><span class="material-symbols-outlined text-2xl">visibility</span></div></div>
+        <div id="st-vistas" class="text-2xl sm:text-3xl font-extrabold tracking-tight">0</div>
+        <p class="text-xs text-brand-muted mt-1.5">lecturas acumuladas</p>
+      </div>
+      <div class="bg-brand-surface border border-brand-borderSoft rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-soft">
+        <div class="flex items-center justify-between mb-3"><span class="text-brand-muted font-medium text-xs sm:text-sm">Me ayuda</span>
+          <div class="w-10 h-10 rounded-xl bg-brand-terracotta-light text-brand-terracotta flex items-center justify-center"><span class="material-symbols-outlined fill text-2xl">favorite</span></div></div>
+        <div id="st-ayuda" class="text-2xl sm:text-3xl font-extrabold tracking-tight">0</div>
+        <p class="text-xs text-brand-muted mt-1.5">veces marcado</p>
+      </div>
+      <div class="bg-brand-surface border border-brand-borderSoft rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-soft">
+        <div class="flex items-center justify-between mb-3"><span class="text-brand-muted font-medium text-xs sm:text-sm">Guardados</span>
+          <div class="w-10 h-10 rounded-xl bg-[#eef3fb] text-[#2c5282] flex items-center justify-center"><span class="material-symbols-outlined fill text-2xl">bookmark</span></div></div>
+        <div id="st-guardados" class="text-2xl sm:text-3xl font-extrabold tracking-tight">0</div>
+        <p class="text-xs text-brand-muted mt-1.5">veces guardado</p>
+      </div>
+      <div class="bg-brand-surface border border-brand-borderSoft rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-soft">
+        <div class="flex items-center justify-between mb-3"><span class="text-brand-muted font-medium text-xs sm:text-sm">Ejercicios hechos</span>
+          <div class="w-10 h-10 rounded-xl bg-[#f5effb] text-[#553c9a] flex items-center justify-center"><span class="material-symbols-outlined text-2xl">self_improvement</span></div></div>
+        <div id="st-hechos" class="text-2xl sm:text-3xl font-extrabold tracking-tight">0</div>
+        <p class="text-xs text-brand-muted mt-1.5">prácticas completadas</p>
+      </div>
+    </section>
+
+    <!-- SESIONES Y VERIFICACIÓN -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- SESIONES -->
+      <div class="bg-brand-surface border border-brand-borderSoft rounded-3xl p-6 sm:p-7 shadow-soft">
+        <div class="flex items-start gap-2.5 mb-3">
+          <div class="w-9 h-9 rounded-xl bg-brand-terracotta-light text-brand-terracotta flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-xl">event_available</span></div>
+          <h2 class="text-lg font-bold">¿Quieres ofrecer sesiones? <span class="text-xs font-semibold text-brand-muted uppercase tracking-wider">(Opcional)</span></h2>
+        </div>
+        <p class="text-brand-muted text-sm leading-relaxed mb-5">Actívalo y aparecerás en el buscador de psicólogos. Quien descubra tu contenido podrá solicitarte una sesión. Publicar seguirá siendo lo principal.</p>
+
+        <!-- Estado NO activas -->
+        <div id="sessions-form-state" class="space-y-4">
+          <div>
+            <label for="credencial" class="block text-xs font-bold uppercase tracking-wider mb-2">Cédula profesional o nº de colegiación</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted text-xl pointer-events-none">badge</span>
+              <input type="text" id="credencial" placeholder="Obligatorio para ofrecer sesiones" class="w-full pl-11 pr-4 py-3.5 bg-brand-cream/60 border border-brand-border rounded-2xl text-sm">
+            </div>
+          </div>
+          <div class="flex items-center justify-end">
+            <button id="btn-activar" type="button" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-brand-terracotta hover:bg-brand-terracotta-hover text-white font-bold text-sm rounded-2xl transition-all h-12">
+              <span class="material-symbols-outlined text-lg">check_circle</span><span>Activar sesiones</span></button>
+          </div>
+          <p id="activar-msg" class="text-sm"></p>
+        </div>
+
+        <!-- Estado activas -->
+        <div id="sessions-active-state" class="hidden bg-brand-green-bg/60 border border-brand-green/30 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-brand-green text-white flex items-center justify-center shrink-0"><span class="material-symbols-outlined font-bold text-xl">check</span></div>
+            <div><h4 class="text-sm font-bold text-brand-green">Sesiones activas</h4>
+              <p class="text-xs text-brand-muted">Apareces en el buscador y la gente puede solicitarte sesión desde tu perfil.</p></div>
+          </div>
+          <div id="ses-nodirecta" class="text-xs text-brand-muted bg-white/60 rounded-xl px-3 py-2">Próximo paso: configurar tu disponibilidad para que reserven día y hora directamente. De momento las reservas te llegan como solicitud.</div>
+          <div class="flex items-center justify-between text-xs pt-2 border-t border-brand-green/20">
+            <a id="ver-ficha-2" href="#" target="_blank" class="text-brand-primary font-bold hover:underline">Ver cómo te ven →</a>
+            <button id="btn-desactivar" type="button" class="text-brand-muted font-semibold hover:text-brand-red">Desactivar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VERIFICACIÓN -->
+      <div id="verif" class="hidden bg-brand-surface border border-brand-borderSoft rounded-3xl p-6 sm:p-7 shadow-soft">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-brand-primary-light text-brand-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-xl">verified_user</span></div>
+            <h2 class="text-lg font-bold">Verificación profesional</h2>
+          </div>
+          <span id="verif-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100 text-stone-600 border border-stone-300 text-xs font-bold">Sin verificar</span>
+        </div>
+        <p class="text-brand-muted text-sm leading-relaxed mb-4">El sello de "Psicólogo verificado" aparece tras comprobar tus credenciales. Tu documentación solo la ve nuestro equipo.</p>
+        <div id="verif-rechazo" class="hidden mb-3 p-2.5 rounded-xl bg-red-50 text-xs text-brand-red font-medium"></div>
+
+        <div class="mb-4">
+          <label for="verif-cedula" class="block text-xs font-bold uppercase tracking-wider mb-1.5">Cédula profesional</label>
+          <input type="text" id="verif-cedula" placeholder="Número oficial" class="w-full px-4 py-3 bg-brand-cream/60 border border-brand-border rounded-2xl text-sm font-medium">
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5 sm:gap-3 mb-4">
+          <label class="border-2 border-dashed border-brand-border hover:border-brand-primary bg-brand-cream/30 rounded-2xl p-3 text-center cursor-pointer flex flex-col items-center justify-center min-h-[95px]">
+            <span class="material-symbols-outlined text-brand-primary text-2xl mb-1">id_card</span><span class="text-xs font-bold block">1. INE / ID</span>
+            <span class="verif-estado text-[10px] text-brand-muted mt-0.5" data-for="ine">Subir archivo</span>
+            <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('ine',this)"></label>
+          <label class="border-2 border-dashed border-brand-border hover:border-brand-primary bg-brand-cream/30 rounded-2xl p-3 text-center cursor-pointer flex flex-col items-center justify-center min-h-[95px]">
+            <span class="material-symbols-outlined text-brand-primary text-2xl mb-1">school</span><span class="text-xs font-bold block">2. Título</span>
+            <span class="verif-estado text-[10px] text-brand-muted mt-0.5" data-for="titulo">Subir archivo</span>
+            <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('titulo',this)"></label>
+          <label class="border-2 border-dashed border-brand-border hover:border-brand-primary bg-brand-cream/30 rounded-2xl p-3 text-center cursor-pointer flex flex-col items-center justify-center min-h-[95px]">
+            <span class="material-symbols-outlined text-brand-primary text-2xl mb-1">file_present</span><span class="text-xs font-bold block">3. Cédula</span>
+            <span class="verif-estado text-[10px] text-brand-muted mt-0.5" data-for="cedula">Subir archivo</span>
+            <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('cedula',this)"></label>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-1">
+          <div class="flex items-center gap-1.5 text-xs text-brand-muted"><span class="material-symbols-outlined text-base text-brand-primary">lock</span><span>Tu documentación solo la ve el equipo.</span></div>
+          <button id="btn-guardar-verif" type="button" onclick="guardarVerificacion()" class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-sm rounded-2xl transition-all h-11 shrink-0">
+            <span class="material-symbols-outlined text-lg">upload_file</span><span>Enviar documentación</span></button>
+        </div>
+        <p id="verif-msg" class="text-sm mt-2"></p>
+      </div>
+
     </div>
 
-    <!-- Sesiones (opcional): activar = ofrecer sesiones y aparecer en el buscador -->
-    <section id="sesiones" class="bg-white rounded-2xl p-5 border border-linea mb-5">
-      <!-- Estado: NO activas -->
-      <div id="ses-off">
-        <div class="flex items-start gap-3">
-          <div class="w-10 h-10 rounded-xl bg-surf-c text-primary flex items-center justify-center shrink-0"><span class="ms text-[22px]">event_available</span></div>
-          <div class="flex-1">
-            <h2 class="font-bold text-lg">¿Quieres ofrecer sesiones? <span class="text-tinta-v font-medium text-sm">(opcional)</span></h2>
-            <p class="text-sm text-tinta-v mt-0.5">Actívalo y aparecerás en el buscador de psicólogos. Las personas que descubran tu contenido podrán solicitarte una sesión. Publicar contenido seguirá siendo lo principal.</p>
-            <form id="form-activar" class="mt-3 flex flex-col sm:flex-row gap-2 sm:items-end">
-              <label class="text-sm font-semibold flex-1">Cédula profesional o nº de colegiación
-                <input id="credencial" class="mt-1 w-full border border-linea rounded-xl px-3 py-2.5" placeholder="Obligatorio para ofrecer sesiones">
-              </label>
-              <button class="bg-secondary text-white font-semibold rounded-xl px-5 py-2.5 whitespace-nowrap">Activar sesiones</button>
-            </form>
-            <p id="activar-msg" class="text-sm mt-1"></p>
-            <p class="text-xs text-tinta-v mt-1">Comprobamos tu credencial antes de darte el sello de verificado; es un paso aparte.</p>
-          </div>
-        </div>
-      </div>
-      <!-- Estado: activas -->
-      <div id="ses-on" class="hidden">
-        <div class="flex items-start gap-3">
-          <div class="w-10 h-10 rounded-xl bg-green-100 text-green-700 flex items-center justify-center shrink-0"><span class="ms text-[22px]">check_circle</span></div>
-          <div class="flex-1">
-            <h2 class="font-bold text-lg">Sesiones activas</h2>
-            <p class="text-sm text-tinta-v mt-0.5">Apareces en el buscador y la gente puede solicitarte sesión desde tu perfil. Te avisaremos de cada solicitud para coordinar.</p>
-            <div id="ses-directa" class="hidden mt-2 text-sm text-green-700 font-semibold">✓ Reserva directa de día y hora activada.</div>
-            <div id="ses-nodirecta" class="mt-2 text-sm text-tinta-v bg-surf-low rounded-xl px-3 py-2">Próximo paso: configurar tu disponibilidad para que reserven día y hora directamente. Lo habilitaremos muy pronto; de momento las reservas te llegan como solicitud.</div>
-            <div class="mt-3 flex items-center gap-4">
-              <a id="ver-ficha" href="#" target="_blank" class="text-primary font-semibold text-sm">Ver cómo te ven →</a>
-              <button id="btn-desactivar" class="text-tinta-v text-sm font-semibold hover:text-red-700">Desactivar sesiones</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- NUEVO CONTENIDO + TUS PUBLICACIONES -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-    <!-- Verificación profesional (país-gated: México primero) -->
-    <section id="verif" class="hidden bg-white rounded-2xl p-5 border border-linea mb-5">
-      <div class="flex items-start gap-3">
-        <div class="w-10 h-10 rounded-xl bg-surf-c text-primary flex items-center justify-center shrink-0"><span class="ms text-[22px]">verified_user</span></div>
-        <div class="flex-1">
-          <div class="flex items-center justify-between gap-2">
-            <h2 class="font-bold text-lg">Verificación profesional</h2>
-            <span id="verif-badge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-surf-low text-tinta-v"></span>
-          </div>
-          <p class="text-sm text-tinta-v mt-0.5">El sello de "Psicólogo verificado" aparece tras comprobar tus credenciales. Tu documentación solo la ve nuestro equipo (almacenamiento privado).</p>
-          <div id="verif-rechazo" class="hidden mt-2 text-sm bg-red-50 text-red-700 rounded-xl px-3 py-2"></div>
-          <div class="mt-3 grid sm:grid-cols-2 gap-3">
-            <label class="text-sm font-semibold sm:col-span-2">Cédula profesional o nº de colegiación
-              <input id="verif-cedula" class="mt-1 w-full border border-linea rounded-lg px-3 py-2.5" placeholder="Ej. 12345678">
-            </label>
-            <div class="text-sm font-semibold">Identificación (INE / DNI)
-              <label class="mt-1 flex items-center gap-2 border border-linea rounded-lg px-3 py-2.5 cursor-pointer bg-surf-low font-normal"><span class="ms text-[18px] text-primary">upload_file</span><span class="verif-estado text-tinta-v" data-for="ine">Subir archivo</span>
-                <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('ine',this)"></label>
-            </div>
-            <div class="text-sm font-semibold">Título profesional
-              <label class="mt-1 flex items-center gap-2 border border-linea rounded-lg px-3 py-2.5 cursor-pointer bg-surf-low font-normal"><span class="ms text-[18px] text-primary">upload_file</span><span class="verif-estado text-tinta-v" data-for="titulo">Subir archivo</span>
-                <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('titulo',this)"></label>
-            </div>
-            <div class="text-sm font-semibold sm:col-span-2">Cédula profesional (documento)
-              <label class="mt-1 flex items-center gap-2 border border-linea rounded-lg px-3 py-2.5 cursor-pointer bg-surf-low font-normal"><span class="ms text-[18px] text-primary">upload_file</span><span class="verif-estado text-tinta-v" data-for="cedula">Subir archivo</span>
-                <input type="file" class="hidden" accept="image/*,application/pdf" onchange="subirDoc('cedula',this)"></label>
-            </div>
-          </div>
-          <button id="btn-guardar-verif" onclick="guardarVerificacion()" class="mt-3 bg-secondary text-white font-semibold rounded-xl px-5 py-2.5">Enviar documentación</button>
-          <p id="verif-msg" class="text-sm mt-1"></p>
+      <!-- NUEVO CONTENIDO -->
+      <section class="lg:col-span-7 bg-brand-surface border border-brand-borderSoft rounded-3xl p-6 sm:p-8 shadow-soft space-y-6">
+        <div class="border-b border-brand-borderSoft pb-4">
+          <div class="flex items-center gap-2.5 mb-1"><span class="material-symbols-outlined text-2xl text-brand-primary">edit_note</span>
+            <h2 class="text-xl font-extrabold tracking-tight">Nuevo contenido</h2></div>
+          <p class="text-brand-muted text-sm">Escribe con cercanía, despatologiza y valida la experiencia de quien te lee.</p>
         </div>
-      </div>
-    </section>
 
-    <div class="grid md:grid-cols-2 gap-6">
-      <section class="bg-white rounded-2xl p-5 border border-linea">
-        <h2 class="font-bold text-lg mb-3">Nuevo contenido</h2>
-        <form id="form" class="flex flex-col gap-3">
-          <label class="text-sm font-semibold">Título
-            <input id="f_titulo" class="mt-1 w-full border border-linea rounded-lg px-3 py-2">
-          </label>
-          <div class="grid grid-cols-2 gap-3">
-            <label class="text-sm font-semibold">Tema
-              <select id="f_tema" class="mt-1 w-full border border-linea rounded-lg px-3 py-2 bg-surf-low"></select>
-            </label>
-            <label class="text-sm font-semibold">Tipo
-              <select id="f_tipo" class="mt-1 w-full border border-linea rounded-lg px-3 py-2 bg-surf-low">
-                <option value="breve">Publicación breve</option>
-                <option value="consejo">Consejo</option><option value="guia">Guía / artículo</option>
-                <option value="video">Vídeo</option><option value="ejercicio">Ejercicio práctico</option>
-                <option value="evento">Evento / actividad</option>
-                <option value="qa">Preguntas y respuestas</option>
-              </select>
-            </label>
+        <form id="form" class="space-y-5">
+          <div>
+            <label for="titulo-post" class="block text-xs font-bold uppercase tracking-wider mb-2">Título de la publicación</label>
+            <input type="text" id="titulo-post" placeholder="Ej. Qué hacer cuando no puedes dejar de darle vueltas" class="w-full px-4 py-3.5 bg-brand-cream/60 border border-brand-border rounded-2xl text-sm font-semibold">
           </div>
-          <div class="grid grid-cols-2 gap-3">
-            <label class="text-sm font-semibold">Minutos de lectura
-              <input id="f_min" type="number" min="1" class="mt-1 w-full border border-linea rounded-lg px-3 py-2">
-            </label>
-            <label class="text-sm font-semibold"><span id="f_media_lbl">Imagen o vídeo (URL, opcional)</span>
-              <input id="f_media" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" placeholder="Imagen, o enlace de YouTube/Vimeo">
-            </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="tema-post" class="block text-xs font-bold uppercase tracking-wider mb-2">Tema principal</label>
+              <div class="relative"><select id="tema-post" class="w-full px-4 py-3.5 bg-brand-cream/60 border border-brand-border rounded-2xl text-sm font-medium appearance-none pr-10"></select>
+                <span class="material-symbols-outlined absolute right-3.5 top-1/2 -translate-y-1/2 text-brand-muted pointer-events-none text-xl">expand_more</span></div>
+            </div>
+            <div>
+              <label for="tipo-post" class="block text-xs font-bold uppercase tracking-wider mb-2">Tipo de formato</label>
+              <div class="relative"><select id="tipo-post" onchange="handleTipoChange(this.value)" class="w-full px-4 py-3.5 bg-brand-cream/60 border border-brand-border rounded-2xl text-sm font-medium appearance-none pr-10">
+                <option value="breve">Publicación breve</option><option value="consejo">Consejo</option><option value="guia">Guía / artículo</option>
+                <option value="video">Vídeo</option><option value="ejercicio">Ejercicio práctico</option><option value="evento">Evento / actividad</option>
+                <option value="qa">Preguntas y respuestas</option></select>
+                <span class="material-symbols-outlined absolute right-3.5 top-1/2 -translate-y-1/2 text-brand-muted pointer-events-none text-xl">expand_more</span></div>
+            </div>
           </div>
-          <div id="evento-fields" class="hidden grid grid-cols-2 gap-3">
-            <label class="text-sm font-semibold">Fecha y hora del evento
-              <input id="f_evento_fecha" type="datetime-local" class="mt-1 w-full border border-linea rounded-lg px-3 py-2">
-            </label>
-            <label class="text-sm font-semibold">Enlace para apuntarse (opcional)
-              <input id="f_evento_enlace" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" placeholder="https://…">
-            </label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-1">
+              <label for="minutos-post" class="block text-xs font-bold uppercase tracking-wider mb-2">Tiempo est.</label>
+              <div class="relative"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted text-lg pointer-events-none">schedule</span>
+                <input type="number" id="minutos-post" placeholder="Ej. 4" min="1" max="120" class="w-full pl-9 pr-9 py-3.5 bg-brand-cream/60 border border-brand-border rounded-2xl text-sm font-medium">
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-muted pointer-events-none">min</span></div>
+            </div>
+            <div class="sm:col-span-2">
+              <label for="media-url-post" id="media-lbl" class="block text-xs font-bold uppercase tracking-wider mb-2">Imagen o vídeo (URL)</label>
+              <div class="relative"><span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted text-lg pointer-events-none">link</span>
+                <input type="url" id="media-url-post" placeholder="Imagen, o enlace de YouTube/Vimeo" class="w-full pl-10 pr-4 py-3.5 bg-brand-cream/60 border border-brand-border rounded-2xl text-sm font-medium"></div>
+            </div>
           </div>
-          <label class="text-sm font-semibold"><span id="f_cuerpo_lbl">Cuerpo (usa ## para títulos y - para listas)</span>
-            <textarea id="f_cuerpo" rows="9" class="mt-1 w-full border border-linea rounded-lg px-3 py-2"></textarea>
-          </label>
-          <label class="flex items-center gap-2 text-sm font-semibold"><input id="f_solo" type="checkbox" class="w-4 h-4"> Solo para registrados (vídeo/webinar)</label>
-          <button class="bg-secondary text-white font-semibold rounded-lg py-2.5 mt-1">Enviar a revisión</button>
-          <p class="text-xs text-tinta-v">Lo revisamos y, si todo está bien, lo publicamos en tu perfil de Háblalo.</p>
+          <div id="evento-fields" class="hidden bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 space-y-4">
+            <div class="flex items-center gap-2 text-xs font-bold text-brand-amber"><span class="material-symbols-outlined text-lg">event</span><span>Detalles del evento / taller</span></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><label for="fecha-evento" class="block text-xs font-semibold mb-1">Fecha y hora</label>
+                <input type="datetime-local" id="fecha-evento" class="w-full px-3.5 py-2.5 bg-white border border-brand-border rounded-xl text-sm"></div>
+              <div><label for="enlace-evento" class="block text-xs font-semibold mb-1">Enlace para apuntarse (opcional)</label>
+                <input type="url" id="enlace-evento" placeholder="https://…" class="w-full px-3.5 py-2.5 bg-white border border-brand-border rounded-xl text-sm"></div>
+            </div>
+          </div>
+          <div>
+            <label for="cuerpo-post" id="cuerpo-lbl" class="block text-xs font-bold uppercase tracking-wider mb-2">Cuerpo (usa ## para títulos y - para listas)</label>
+            <textarea id="cuerpo-post" rows="7" placeholder="Habla de tú a tú: 'Si hoy sientes que todo va demasiado rápido, detente un instante...'" class="w-full px-4 py-3.5 bg-brand-cream/60 border border-brand-border text-sm leading-relaxed resize-y rounded-2xl"></textarea>
+          </div>
+          <div class="flex items-center gap-3 p-3.5 bg-brand-cream/40 border border-brand-borderSoft rounded-2xl">
+            <input type="checkbox" id="solo-registrados" class="w-5 h-5 rounded-lg accent-brand-primary cursor-pointer">
+            <label for="solo-registrados" class="text-xs sm:text-sm font-semibold cursor-pointer select-none">Solo para personas registradas <span class="text-xs text-brand-muted font-normal">(vídeos, webinars, premium)</span></label>
+          </div>
+          <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span class="text-xs text-brand-muted text-center sm:text-left">Tu contenido se revisa antes de publicarse.</span>
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-base rounded-2xl transition-all min-h-[50px] shrink-0">
+              <span class="material-symbols-outlined text-xl">send</span><span>Publicar</span></button>
+          </div>
           <p id="form-msg" class="text-sm"></p>
         </form>
       </section>
 
-      <section class="bg-white rounded-2xl p-5 border border-linea">
-        <h2 class="font-bold text-lg mb-3">Tus publicaciones</h2>
-        <div id="totales" class="hidden grid grid-cols-4 gap-2 mb-4"></div>
-        <div id="lista" class="flex flex-col gap-2 max-h-[70vh] overflow-auto"><p class="text-tinta-v text-sm">Cargando…</p></div>
+      <!-- TUS PUBLICACIONES -->
+      <section class="lg:col-span-5 bg-brand-surface border border-brand-borderSoft rounded-3xl p-6 sm:p-7 shadow-soft space-y-5">
+        <div class="flex items-center justify-between border-b border-brand-borderSoft pb-4">
+          <div><h2 class="text-xl font-extrabold tracking-tight">Tus publicaciones</h2>
+            <p id="pub-sub" class="text-brand-muted text-xs sm:text-sm mt-0.5">Cargando…</p></div>
+          <span id="pub-count" class="px-2.5 py-1 rounded-full bg-brand-primary-light text-brand-primary text-xs font-bold">0</span>
+        </div>
+        <div id="lista" class="space-y-4"><p class="text-brand-muted text-sm">Cargando…</p></div>
       </section>
+
     </div>
+
+    <footer class="pt-4 pb-8 text-center text-xs text-brand-muted border-t border-brand-borderSoft/70">
+      <p>Háblalo · comunidad de bienestar emocional.</p>
+    </footer>
   </div>
-</div>
 
 <script type="module">
 import { supabase } from '/js/supabase-client.js';
 const $ = s => document.querySelector(s);
-let token = null, miSlug = null, miUid = null;
+let token = null, miUid = null, miSlug = null;
+
+function gate(msg) { $('#app').classList.add('hidden'); $('#gate').classList.remove('hidden'); $('#gate-msg').textContent = msg; }
+function api(path, opts = {}) { return fetch(path, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(opts.headers || {}) } }); }
+function escp(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function iniciales(n){return String(n||'').trim().split(/\s+/).map(w=>w[0]||'').slice(0,2).join('').toUpperCase()||'··';}
 
 async function init() {
   const { data: { session } } = await supabase.auth.getSession();
@@ -172,155 +278,157 @@ async function init() {
   if (!r.ok) { gate('Error al cargar. Reintenta.'); return; }
   const { psi, temas, sesiones } = await r.json();
   miSlug = psi.slug;
-  $('#mi-nombre').textContent = psi.nombre;
-  $('#mi-perfil').innerHTML = psi.slug ? `· <a class="text-primary font-semibold" href="/hablalo/autor/${psi.slug}" target="_blank">ver tu perfil público</a>` : '';
-  $('#f_tema').innerHTML = '<option value="">—</option>' + (temas || []).map(t => `<option value="${t.slug}">${t.nombre}</option>`).join('');
-  if (psi.slug) $('#ver-ficha').setAttribute('href', '/hablalo/autor/' + psi.slug);
-  if (psi.hablalo_fundador) $('#mi-fundador').innerHTML = '<span class="ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surf-c text-primary text-xs font-bold">✨ Profesional Fundador</span>';
-  renderSesiones(sesiones || { activas: false, reservaDirecta: false });
+  $('#mi-nombre').textContent = (psi.nombre || '').split(' ')[0] || '';
+  $('#mi-avatar').textContent = iniciales(psi.nombre);
+  if (psi.slug) { $('#ver-ficha').href = '/hablalo/autor/' + psi.slug; $('#ver-ficha-2').href = '/hablalo/autor/' + psi.slug; }
+  if (psi.hablalo_fundador) $('#mi-fundador').classList.remove('hidden');
+  $('#tema-post').innerHTML = '<option value="">Sin tema</option>' + (temas || []).map(t => `<option value="${t.slug}">${escp(t.nombre)}</option>`).join('');
+  renderSesiones(sesiones || { activas: false });
   $('#gate').classList.add('hidden'); $('#app').classList.remove('hidden');
   loadLista();
   loadVerif();
 }
 
-// ── Verificación profesional (reutiliza /api/perfil/verificacion + bucket privado) ──
+function renderSesiones(s) {
+  $('#sessions-form-state').classList.toggle('hidden', !!s.activas);
+  $('#sessions-active-state').classList.toggle('hidden', !s.activas);
+  if (s.activas) $('#ses-nodirecta').classList.toggle('hidden', !!s.reservaDirecta);
+}
+
+async function loadLista() {
+  const { contenidos, totales } = await (await api('/api/hablalo/autor-panel/mis-contenidos')).json();
+  if (totales) {
+    $('#st-vistas').textContent = totales.vistas; $('#st-ayuda').textContent = totales.me_ayuda;
+    $('#st-guardados').textContent = totales.guardados; $('#st-hechos').textContent = totales.completados;
+    $('#pub-count').textContent = contenidos.length;
+    $('#pub-sub').textContent = `${totales.publicados} publicada${totales.publicados === 1 ? '' : 's'} de ${contenidos.length}`;
+  }
+  if (!contenidos.length) { $('#lista').innerHTML = '<p class="text-brand-muted text-sm">Aún no has publicado nada. ¡Empieza con tu primer consejo!</p>'; return; }
+  const est = {
+    publicado: ['Publicado', 'bg-brand-green-bg text-brand-green border-green-200', 'bg-brand-green'],
+    en_revision: ['En revisión', 'bg-brand-amber-bg text-brand-amber border-amber-200', 'bg-amber-500'],
+    rechazado: ['Rechazado', 'bg-brand-red-bg text-brand-red border-red-200', 'bg-brand-red'],
+  };
+  $('#lista').innerHTML = contenidos.map(c => {
+    const [et, ec, edot] = est[c.estado] || est.en_revision;
+    return `<article class="p-4 sm:p-5 rounded-2xl border border-brand-borderSoft bg-brand-cream/20 space-y-3">
+      <div class="flex items-start justify-between gap-2">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full ${ec} text-xs font-bold border"><span class="w-1.5 h-1.5 rounded-full ${edot}"></span>${et}</span>
+        ${c.tema ? `<span class="text-xs font-semibold text-brand-muted bg-white px-2 py-0.5 rounded-md border border-brand-borderSoft">${escp(c.tema)}</span>` : ''}
+      </div>
+      <h3 class="text-sm sm:text-base font-bold leading-snug">${escp(c.titulo)}</h3>
+      <div class="pt-2 border-t border-brand-borderSoft/60 flex items-center justify-between text-xs text-brand-muted">
+        <div class="flex items-center gap-3 font-medium">
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm text-brand-primary">visibility</span>${c.vistas||0}</span>
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined fill text-sm text-brand-terracotta">favorite</span>${c.me_ayuda||0}</span>
+          <span class="flex items-center gap-1"><span class="material-symbols-outlined fill text-sm text-[#2c5282]">bookmark</span>${c.guardados||0}</span>
+        </div>
+        ${c.estado === 'publicado' ? `<a href="/hablalo/articulo/${escp(c.slug)}" target="_blank" class="font-bold text-brand-primary hover:underline flex items-center gap-0.5">Ver<span class="material-symbols-outlined text-sm">open_in_new</span></a>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+}
+
+// Tipo -> campos y etiquetas
+window.handleTipoChange = function (t) {
+  $('#evento-fields').classList.toggle('hidden', t !== 'evento');
+  $('#media-lbl').textContent = (t === 'video') ? 'Enlace del vídeo (YouTube, Vimeo o .mp4)' : 'Imagen o vídeo (URL)';
+  $('#media-url-post').placeholder = (t === 'video') ? 'https://youtu.be/…' : 'Imagen, o enlace de YouTube/Vimeo';
+  $('#cuerpo-lbl').textContent = (t === 'ejercicio') ? 'Pasos del ejercicio (usa - para cada paso)'
+    : (t === 'evento') ? 'Descripción del evento (qué se trabaja, para quién)' : 'Cuerpo (usa ## para títulos y - para listas)';
+};
+
+// Publicar
+$('#form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('#form-msg'); msg.textContent = 'Enviando…'; msg.className = 'text-sm text-brand-muted';
+  const tipo = $('#tipo-post').value, fechaRaw = $('#fecha-evento').value;
+  const body = {
+    titulo: $('#titulo-post').value.trim(), tema: $('#tema-post').value || null, tipo,
+    tiempo_min: $('#minutos-post').value || null, media_url: $('#media-url-post').value.trim() || null,
+    cuerpo_md: $('#cuerpo-post').value, solo_registrados: $('#solo-registrados').checked,
+    evento_fecha: (tipo === 'evento' && fechaRaw) ? new Date(fechaRaw).toISOString() : null,
+    evento_enlace: (tipo === 'evento') ? ($('#enlace-evento').value.trim() || null) : null,
+  };
+  if (!body.titulo && tipo !== 'breve') { msg.textContent = 'Falta el título.'; msg.className = 'text-sm text-brand-red'; return; }
+  const r = await api('/api/hablalo/autor-panel/contenido', { method: 'POST', body: JSON.stringify(body) });
+  if (r.ok) {
+    const d = await r.json().catch(() => ({}));
+    msg.textContent = d.autopublicado ? '✅ ¡Publicado! Ya está en Háblalo.' : '✅ Enviado a revisión. Lo revisamos y lo publicamos.';
+    msg.className = 'text-sm text-brand-green'; $('#form').reset(); $('#evento-fields').classList.add('hidden'); loadLista();
+  } else { const e2 = await r.json().catch(() => ({})); msg.textContent = '❌ ' + (e2.error || 'Error'); msg.className = 'text-sm text-brand-red'; }
+});
+
+// Activar / desactivar sesiones
+$('#btn-activar').addEventListener('click', async () => {
+  const msg = $('#activar-msg'); msg.textContent = 'Activando…'; msg.className = 'text-sm text-brand-muted';
+  const credencial = $('#credencial').value.trim();
+  if (!credencial) { msg.textContent = 'Pon tu cédula o nº de colegiación.'; msg.className = 'text-sm text-brand-red'; return; }
+  const r = await api('/api/hablalo/autor-panel/activar-sesiones', { method: 'POST', body: JSON.stringify({ credencial }) });
+  if (r.ok) renderSesiones({ activas: true, reservaDirecta: false });
+  else { const e2 = await r.json().catch(() => ({})); msg.textContent = '❌ ' + (e2.error || 'Error'); msg.className = 'text-sm text-brand-red'; }
+});
+$('#btn-desactivar').addEventListener('click', async () => {
+  if (!confirm('¿Desactivar las sesiones? Dejarás de aparecer en el buscador. Tu contenido seguirá publicado.')) return;
+  const r = await api('/api/hablalo/autor-panel/desactivar-sesiones', { method: 'POST', body: JSON.stringify({}) });
+  if (r.ok) renderSesiones({ activas: false });
+});
+
+// Verificación (reutiliza /api/perfil/verificacion + bucket privado)
 const VERIF_BUCKET = 'documentos-verificacion';
 const _verifPaths = { ine: null, titulo: null, cedula: null };
 function verifBadge(estado) {
   const b = $('#verif-badge'); if (!b) return;
   const map = {
-    PENDING: ['Sin verificar', 'bg-surf-low', 'text-tinta-v'],
-    VERIFYING: ['Documentación recibida', 'bg-amber-100', 'text-amber-700'],
-    MANUAL_REVIEW: ['En revisión', 'bg-amber-100', 'text-amber-700'],
-    VERIFIED: ['Verificado ✓', 'bg-green-100', 'text-green-700'],
-    CORPORATE_VERIFIED: ['Verificado ✓', 'bg-green-100', 'text-green-700'],
-    REJECTED: ['Revisar documentación', 'bg-red-100', 'text-red-700'],
+    PENDING: ['Sin verificar', 'bg-stone-100 text-stone-600 border-stone-300'],
+    VERIFYING: ['Documentación recibida', 'bg-amber-50 text-brand-amber border-amber-200'],
+    MANUAL_REVIEW: ['En revisión', 'bg-amber-50 text-brand-amber border-amber-200'],
+    VERIFIED: ['Verificado ✓', 'bg-green-50 text-brand-green border-green-200'],
+    CORPORATE_VERIFIED: ['Verificado ✓', 'bg-green-50 text-brand-green border-green-200'],
+    REJECTED: ['Revisar documentación', 'bg-red-50 text-brand-red border-red-200'],
   };
-  const [t, bg, c] = map[estado] || map.PENDING;
-  b.textContent = t; b.className = 'text-[11px] font-bold px-2.5 py-1 rounded-full ' + bg + ' ' + c;
+  const [t, cls] = map[estado] || map.PENDING;
+  b.textContent = t; b.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold ' + cls;
 }
-function docEstado(tipo, txt, cls) {
-  const el = document.querySelector('.verif-estado[data-for="' + tipo + '"]');
-  if (el) { el.textContent = txt; el.className = 'verif-estado ' + (cls || 'text-tinta-v'); }
-}
+function docEstado(tipo, txt, cls) { const el = document.querySelector('.verif-estado[data-for="' + tipo + '"]'); if (el) { el.textContent = txt; el.className = 'verif-estado text-[10px] mt-0.5 ' + (cls || 'text-brand-muted'); } }
 window.subirDoc = async function (tipo, input) {
   const file = input.files && input.files[0]; if (!file) return;
   if (file.size > 10 * 1024 * 1024) { alert('El archivo supera los 10 MB.'); input.value = ''; return; }
-  docEstado(tipo, 'Subiendo…', 'text-primary');
+  docEstado(tipo, 'Subiendo…', 'text-brand-primary');
   try {
     const ext = (file.name.split('.').pop() || 'dat').toLowerCase().slice(0, 5);
     const path = miUid + '/' + tipo + '_' + Date.now() + '.' + ext;
     const { error } = await supabase.storage.from(VERIF_BUCKET).upload(path, file, { upsert: true, contentType: file.type });
     if (error) throw error;
-    _verifPaths[tipo] = path;
-    docEstado(tipo, '✓ Subido', 'text-green-700');
-  } catch (e) { docEstado(tipo, 'Error al subir', 'text-red-700'); alert('No se pudo subir: ' + (e.message || e)); }
+    _verifPaths[tipo] = path; docEstado(tipo, '✓ Subido', 'text-brand-green');
+  } catch (e) { docEstado(tipo, 'Error al subir', 'text-brand-red'); alert('No se pudo subir: ' + (e.message || e)); }
   input.value = '';
 };
 window.guardarVerificacion = async function () {
   const btn = $('#btn-guardar-verif'), msg = $('#verif-msg');
   const cedula = ($('#verif-cedula').value || '').trim();
-  if (!cedula && !_verifPaths.ine && !_verifPaths.titulo && !_verifPaths.cedula) {
-    msg.textContent = 'Añade tu número de cédula y al menos un documento.'; msg.className = 'text-sm mt-1 text-red-700'; return;
-  }
-  btn.disabled = true; btn.textContent = 'Enviando…';
+  if (!cedula && !_verifPaths.ine && !_verifPaths.titulo && !_verifPaths.cedula) { msg.textContent = 'Añade tu cédula y al menos un documento.'; msg.className = 'text-sm mt-2 text-brand-red'; return; }
+  btn.disabled = true;
   try {
-    const r = await api('/api/perfil/verificacion', { method: 'POST', body: JSON.stringify({
-      cedula_profesional: cedula, ine_path: _verifPaths.ine, titulo_path: _verifPaths.titulo, cedula_path: _verifPaths.cedula }) });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.error || 'Error');
+    const r = await api('/api/perfil/verificacion', { method: 'POST', body: JSON.stringify({ cedula_profesional: cedula, ine_path: _verifPaths.ine, titulo_path: _verifPaths.titulo, cedula_path: _verifPaths.cedula }) });
+    const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Error');
     if (d.estado) verifBadge(d.estado);
-    msg.textContent = '✅ Documentación recibida. Te avisaremos cuando esté revisada.'; msg.className = 'text-sm mt-1 text-green-700';
-  } catch (e) { msg.textContent = '❌ ' + e.message; msg.className = 'text-sm mt-1 text-red-700'; }
-  btn.disabled = false; btn.textContent = 'Enviar documentación';
+    msg.textContent = '✅ Documentación recibida. Te avisaremos cuando esté revisada.'; msg.className = 'text-sm mt-2 text-brand-green';
+  } catch (e) { msg.textContent = '❌ ' + e.message; msg.className = 'text-sm mt-2 text-brand-red'; }
+  btn.disabled = false;
 };
 async function loadVerif() {
   try {
     const v = await (await api('/api/perfil/verificacion')).json();
-    if (!v.aplica) return; // de momento solo México
+    if (!v.aplica) return;
     $('#verif').classList.remove('hidden');
     $('#verif-cedula').value = v.cedula_profesional || '';
     verifBadge(v.estado);
-    if (v.estado === 'REJECTED' && v.motivo_rechazo) {
-      const r = $('#verif-rechazo'); r.textContent = 'Motivo: ' + v.motivo_rechazo; r.classList.remove('hidden');
-    }
-    if (v.docs) {
-      if (v.docs.ine) docEstado('ine', '✓ Subido', 'text-green-700');
-      if (v.docs.titulo) docEstado('titulo', '✓ Subido', 'text-green-700');
-      if (v.docs.cedula) docEstado('cedula', '✓ Subido', 'text-green-700');
-    }
+    if (v.estado === 'REJECTED' && v.motivo_rechazo) { const r = $('#verif-rechazo'); r.textContent = 'Motivo: ' + v.motivo_rechazo; r.classList.remove('hidden'); }
+    if (v.docs) { if (v.docs.ine) docEstado('ine', '✓ Subido', 'text-brand-green'); if (v.docs.titulo) docEstado('titulo', '✓ Subido', 'text-brand-green'); if (v.docs.cedula) docEstado('cedula', '✓ Subido', 'text-brand-green'); }
   } catch (e) {}
 }
-function renderSesiones(s) {
-  $('#ses-off').classList.toggle('hidden', !!s.activas);
-  $('#ses-on').classList.toggle('hidden', !s.activas);
-  if (s.activas) {
-    $('#ses-directa').classList.toggle('hidden', !s.reservaDirecta);
-    $('#ses-nodirecta').classList.toggle('hidden', !!s.reservaDirecta);
-  }
-}
-function gate(msg) { $('#gate').classList.remove('hidden'); $('#gate-msg').textContent = msg; }
-function api(path, opts = {}) {
-  return fetch(path, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
-}
-async function loadLista() {
-  const { contenidos, totales } = await (await api('/api/hablalo/autor-panel/mis-contenidos')).json();
-  if (totales) {
-    const tile = (n, l, ic) => `<div class="bg-surf-low rounded-xl p-2.5 text-center"><div class="text-primary text-base font-bold">${n}</div><div class="text-[11px] text-tinta-v flex items-center justify-center gap-0.5"><span class="ms text-[13px]">${ic}</span>${l}</div></div>`;
-    $('#totales').innerHTML = tile(totales.vistas, 'vistas', 'visibility') + tile(totales.me_ayuda, 'me ayuda', 'favorite') + tile(totales.guardados, 'guardados', 'bookmark') + tile(totales.completados, 'hechos', 'task_alt');
-    $('#totales').classList.remove('hidden');
-  }
-  if (!contenidos.length) { $('#lista').innerHTML = '<p class="text-tinta-v text-sm">Aún no has publicado nada. ¡Empieza con tu primer consejo!</p>'; return; }
-  const color = { publicado: 'text-green-700 bg-green-100', en_revision: 'text-amber-700 bg-amber-100', rechazado: 'text-red-700 bg-red-100' };
-  $('#lista').innerHTML = contenidos.map(c => `
-    <div class="border border-linea rounded-xl p-3">
-      <div class="flex items-start justify-between gap-2">
-        <div class="min-w-0"><p class="font-semibold text-sm truncate">${escp(c.titulo)}</p>
-        <p class="text-xs text-tinta-v">${escp(c.tema||'—')} · ${c.vistas||0} 👁 · ${c.me_ayuda||0} ❤ · ${c.guardados||0} 🔖${c.completados ? ' · ' + c.completados + ' ✓' : ''}</p></div>
-        <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${color[c.estado]||''}">${c.estado.replace('_',' ')}</span>
-      </div>
-      ${c.estado==='publicado' ? `<a class="text-primary font-semibold text-xs mt-2 inline-block" href="/hablalo/articulo/${c.slug}" target="_blank">Ver publicado →</a>` : ''}
-    </div>`).join('');
-}
-$('#form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const msg = $('#form-msg'); msg.textContent = 'Enviando…'; msg.className = 'text-sm text-tinta-v';
-  const fechaRaw = $('#f_evento_fecha').value;
-  const body = { titulo: $('#f_titulo').value.trim(), tema: $('#f_tema').value || null, tipo: $('#f_tipo').value,
-    tiempo_min: $('#f_min').value || null, media_url: $('#f_media').value.trim() || null, cuerpo_md: $('#f_cuerpo').value, solo_registrados: $('#f_solo').checked,
-    evento_fecha: ($('#f_tipo').value === 'evento' && fechaRaw) ? new Date(fechaRaw).toISOString() : null,
-    evento_enlace: ($('#f_tipo').value === 'evento') ? ($('#f_evento_enlace').value.trim() || null) : null };
-  if (!body.titulo) { msg.textContent = 'Falta el título.'; return; }
-  const r = await api('/api/hablalo/autor-panel/contenido', { method: 'POST', body: JSON.stringify(body) });
-  if (r.ok) { const d = await r.json().catch(()=>({})); msg.textContent = d.autopublicado ? '✅ ¡Publicado! Ya está en Háblalo.' : '✅ Enviado a revisión. Lo revisamos y lo publicamos.'; msg.className = 'text-sm text-green-700'; $('#form').reset(); $('#evento-fields').classList.add('hidden'); loadLista(); }
-  else { const e2 = await r.json().catch(()=>({})); msg.textContent = '❌ ' + (e2.error || 'Error'); msg.className = 'text-sm text-red-700'; }
-});
-$('#form-activar').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const msg = $('#activar-msg'); msg.textContent = 'Activando…'; msg.className = 'text-sm mt-1 text-tinta-v';
-  const credencial = $('#credencial').value.trim();
-  if (!credencial) { msg.textContent = 'Pon tu cédula o nº de colegiación.'; msg.className = 'text-sm mt-1 text-red-700'; return; }
-  const r = await api('/api/hablalo/autor-panel/activar-sesiones', { method: 'POST', body: JSON.stringify({ credencial }) });
-  if (r.ok) { renderSesiones({ activas: true, reservaDirecta: false }); }
-  else { const e2 = await r.json().catch(()=>({})); msg.textContent = '❌ ' + (e2.error || 'Error'); msg.className = 'text-sm mt-1 text-red-700'; }
-});
-$('#btn-desactivar').addEventListener('click', async () => {
-  if (!confirm('¿Desactivar las sesiones? Dejarás de aparecer en el buscador de psicólogos. Tu contenido seguirá publicado.')) return;
-  const r = await api('/api/hablalo/autor-panel/desactivar-sesiones', { method: 'POST', body: JSON.stringify({}) });
-  if (r.ok) renderSesiones({ activas: false, reservaDirecta: false });
-});
-$('#f_tipo').addEventListener('change', () => {
-  const t = $('#f_tipo').value;
-  $('#evento-fields').classList.toggle('hidden', t !== 'evento');
-  $('#evento-fields').classList.toggle('grid', t === 'evento');
-  $('#f_media_lbl').textContent = (t === 'video') ? 'Enlace del vídeo (YouTube, Vimeo o .mp4)' : 'Imagen o vídeo (URL, opcional)';
-  $('#f_media').placeholder = (t === 'video') ? 'https://youtu.be/…' : 'Imagen, o enlace de YouTube/Vimeo';
-  $('#f_cuerpo_lbl').textContent = (t === 'ejercicio') ? 'Pasos del ejercicio (usa - para cada paso)'
-    : (t === 'evento') ? 'Descripción del evento (qué se trabaja, para quién)'
-    : 'Cuerpo (usa ## para títulos y - para listas)';
-});
-function escp(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 init();
 </script>
-</body>
-</html>
+</body></html>

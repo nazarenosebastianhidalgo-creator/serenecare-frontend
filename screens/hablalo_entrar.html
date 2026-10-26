@@ -1,99 +1,176 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex">
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex"/>
 <title>Entrar | Háblalo</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>::-webkit-scrollbar{display:none;} .ms{font-family:'Material Symbols Outlined';}</style>
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{primary:"#446350","primary-c":"#5c7c67",secondary:"#904c28","sec-c":"#fea67b",surface:"#effdf4","surf-c":"#e4f1e8","surf-low":"#e9f7ee",white:"#ffffff",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
-<style>body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}.ms{font-family:'Material Symbols Outlined'}</style>
+<script>tailwind.config={theme:{extend:{colors:{"surface-container-lowest":"#ffffff","inverse-surface":"#27332d","secondary-container":"#fea67b","primary":"#446350","primary-container":"#5c7c67","surface-container":"#e4f1e8","on-secondary-container":"#783a17","on-secondary":"#ffffff","background":"#effdf4","surface-container-high":"#deebe3","outline-variant":"#c2c8c1","primary-fixed":"#c8ebd2","surface":"#effdf4","on-surface":"#121e19","secondary-fixed":"#ffdbcb","on-primary":"#ffffff","error-container":"#ffdad6","on-error-container":"#93000a","on-surface-variant":"#424843","surface-container-low":"#e9f7ee","on-primary-container":"#f6fff5","primary-fixed-dim":"#adcfb7","secondary":"#904c28","on-secondary-fixed-variant":"#723513","outline":"#727973","inverse-on-surface":"#e6f4eb"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
 </head>
-<body class="bg-surface text-tinta min-h-screen flex flex-col">
-<header class="h-16 px-5 max-w-5xl mx-auto w-full flex items-center"><a href="/hablalo" class="text-xl font-bold text-primary">Háblalo</a></header>
-<main class="flex-1 flex items-center justify-center px-5 py-10">
-  <div class="w-full max-w-4xl">
-
-    <div id="ya" class="hidden bg-white rounded-3xl p-7 shadow text-center max-w-md mx-auto">
-      <p class="mb-3">Ya has iniciado sesión.</p>
-      <a href="/hablalo/mi-espacio" class="inline-block bg-primary text-white font-semibold rounded-lg px-5 py-2.5">Ir a Mi espacio</a>
-    </div>
-
-    <!-- PUERTA ÚNICA: dos caminos -->
-    <div id="chooser">
-      <div class="text-center mb-8 md:mb-10">
-        <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2">Te damos la bienvenida a Háblalo</h1>
-        <p class="text-tinta-v md:text-lg">¿Cómo quieres entrar?</p>
-      </div>
-      <div class="grid md:grid-cols-2 gap-5">
-        <button id="go-persona" class="text-left bg-white rounded-3xl p-7 md:p-8 shadow-[0_6px_24px_rgba(46,58,52,0.06)] border border-transparent hover:border-primary/30 transition-colors">
-          <div class="w-16 h-16 rounded-2xl bg-surf-c text-primary flex items-center justify-center mb-5"><span class="ms text-[32px]">self_improvement</span></div>
-          <h2 class="text-xl md:text-2xl font-bold mb-2">Quiero sentirme mejor</h2>
-          <p class="text-sm md:text-base text-tinta-v mb-5">Explora recursos y herramientas, guarda tus favoritos, sigue a psicólogos y encuentra ayuda cuando la necesites.</p>
-          <span class="inline-flex items-center gap-1 text-primary font-semibold">Crear mi cuenta gratis <span class="ms text-[18px]">arrow_forward</span></span>
-        </button>
-        <a href="/hablalo/soy-psicologo" class="block text-left bg-white rounded-3xl p-7 md:p-8 shadow-[0_6px_24px_rgba(46,58,52,0.06)] border border-transparent hover:border-secondary/30 transition-colors">
-          <div class="w-16 h-16 rounded-2xl bg-sec-c/40 text-secondary flex items-center justify-center mb-5"><span class="ms text-[32px]">psychology</span></div>
-          <h2 class="text-xl md:text-2xl font-bold mb-2">Soy psicólogo</h2>
-          <p class="text-sm md:text-base text-tinta-v mb-5">Comparte lo que sabes, construye tu perfil profesional y llega a más personas. Publicar es gratis. Ofrecer sesiones, opcional.</p>
-          <span class="inline-flex items-center gap-1 text-secondary font-semibold">Crear mi perfil profesional <span class="ms text-[18px]">arrow_forward</span></span>
-        </a>
-      </div>
-      <p class="text-center text-xs text-tinta-v mt-5">Leer el contenido es siempre gratis y sin cuenta. La cuenta es para guardar, participar y acceder a tus recursos.</p>
-    </div>
-
-    <!-- FLUJO PERSONA (registro exprés por email) -->
-    <div id="persona" class="hidden max-w-md mx-auto">
-      <button id="back" class="inline-flex items-center gap-1 text-tinta-v text-sm font-semibold mb-3"><span class="ms text-[18px]">arrow_back</span> Volver</button>
-      <div class="bg-white rounded-3xl p-7 shadow-[0_8px_30px_rgba(46,58,52,0.06)]">
-        <div class="w-14 h-14 rounded-2xl bg-surf-c text-primary flex items-center justify-center mb-4"><span class="ms text-[28px]">favorite</span></div>
-        <h1 class="text-2xl font-bold tracking-tight mb-1">Crea tu cuenta gratis</h1>
-        <p class="text-sm text-tinta-v mb-5">Para guardar recursos, acceder a vídeos y webinars, y tener tu espacio personal.</p>
-        <form id="form" class="flex flex-col gap-3">
-          <label class="text-sm font-semibold">Tu email
-            <input id="email" type="email" required autocomplete="email" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="tu@email.com">
-          </label>
-          <button class="bg-secondary text-white font-semibold rounded-xl py-3 mt-1">Enviarme el enlace de acceso</button>
-          <p class="text-xs text-tinta-v text-center">Te enviamos un enlace mágico. Sin contraseñas.</p>
-        </form>
-        <div id="enviado" class="hidden text-center py-3">
-          <div class="text-4xl">📬</div>
-          <h3 class="text-lg font-semibold mt-1">Revisa tu correo</h3>
-          <p class="text-sm text-tinta-v mt-1">Te enviamos un enlace a <strong id="email-echo"></strong>. Ábrelo para entrar.</p>
-        </div>
-        <p id="err" class="text-sm text-red-700 mt-2"></p>
-      </div>
-    </div>
-
+<body class="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col">
+<header class="sticky top-0 z-50 bg-surface/85 backdrop-blur-md">
+  <div class="h-16 w-full max-w-[1200px] mx-auto px-5 md:px-8 flex items-center justify-between">
+    <a href="/hablalo" class="flex flex-col"><span class="text-xl font-bold text-primary leading-none tracking-tight">Háblalo</span><span class="text-[11px] text-on-surface-variant leading-none mt-0.5">Bienestar emocional</span></a>
+    <nav class="hidden sm:flex items-center gap-2 text-sm font-semibold text-on-surface-variant">
+      <a href="/hablalo" class="px-3 py-1.5 rounded-lg hover:bg-surface-container">Inicio</a>
+      <a href="/hablalo/explorar" class="px-3 py-1.5 rounded-lg hover:bg-surface-container">Explorar</a>
+      <a href="/herramientas" class="px-3 py-1.5 rounded-lg hover:bg-surface-container">Herramientas</a>
+    </nav>
   </div>
+</header>
+
+<main class="flex-1 w-full max-w-[1200px] mx-auto px-5 md:px-8 py-10">
+
+  <!-- Ya hay sesión -->
+  <div id="ya" class="hidden bg-surface-container-lowest rounded-[28px] p-8 shadow-sm text-center max-w-md mx-auto">
+    <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-primary mx-auto mb-3"><span class="ms text-[34px]">eco</span></div>
+    <p class="mb-4 text-on-surface-variant">Ya has iniciado sesión.</p>
+    <a href="/hablalo/mi-espacio" class="inline-block bg-primary text-on-primary font-semibold rounded-xl px-6 py-3">Ir a Mi espacio</a>
+  </div>
+
+  <div id="chooser">
+    <!-- Hero -->
+    <header class="flex flex-col items-center text-center max-w-xl mx-auto mb-10">
+      <div class="relative mb-3"><div class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center text-primary"><span class="ms text-[40px]">eco</span></div></div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container text-primary mb-2"><span class="ms text-[16px]">spa</span><span class="text-xs font-semibold tracking-wide uppercase">Comunidad de bienestar emocional</span></div>
+      <h1 class="text-4xl md:text-[44px] font-bold tracking-tight">Te damos la bienvenida a Háblalo</h1>
+      <p class="text-on-surface-variant mt-2 text-lg">¿Cómo quieres entrar hoy?</p>
+    </header>
+
+    <!-- Dos tarjetas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mx-auto mb-8">
+      <!-- Persona -->
+      <div class="relative bg-surface-container-lowest rounded-[28px] p-6 md:p-10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary-fixed/20 rounded-bl-full pointer-events-none"></div>
+        <div>
+          <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center text-primary mb-5"><span class="ms text-[34px]">self_improvement</span></div>
+          <div class="inline-block px-2.5 py-0.5 rounded-full bg-primary-fixed-dim/30 text-on-primary-container text-xs font-semibold mb-2">Para ti o alguien que quieres</div>
+          <h3 class="text-2xl font-semibold mb-2">Quiero sentirme mejor</h3>
+          <p class="text-on-surface-variant mb-5 leading-relaxed">Explora recursos y herramientas prácticas, guarda tus favoritos, sigue a psicólogos verificados y encuentra ayuda a tu ritmo.</p>
+          <div class="space-y-3 mb-8">
+            <div class="flex items-start gap-3"><span class="ms text-primary text-[20px] mt-0.5">check_circle</span><span class="text-sm">Guarda lecturas, ejercicios y recursos</span></div>
+            <div class="flex items-start gap-3"><span class="ms text-primary text-[20px] mt-0.5">check_circle</span><span class="text-sm">Acceso gratuito a la comunidad</span></div>
+            <div class="flex items-start gap-3"><span class="ms text-primary text-[20px] mt-0.5">check_circle</span><span class="text-sm">Sigue a psicólogos y reserva si lo necesitas</span></div>
+          </div>
+        </div>
+        <button onclick="switchView('signup')" class="w-full min-h-[52px] rounded-xl bg-primary hover:bg-primary-container text-on-primary font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.99]"><span>Crear mi cuenta gratis</span><span class="ms text-[20px]">arrow_forward</span></button>
+      </div>
+      <!-- Psicólogo -->
+      <div class="relative bg-surface-container-lowest rounded-[28px] p-6 md:p-10 shadow-sm hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-secondary-fixed/40 rounded-bl-full pointer-events-none"></div>
+        <div>
+          <div class="w-16 h-16 rounded-2xl bg-secondary-fixed/50 flex items-center justify-center text-secondary mb-5"><span class="ms text-[34px]">psychology</span></div>
+          <div class="inline-block px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-xs font-semibold mb-2">Profesionales de la psicología</div>
+          <h3 class="text-2xl font-semibold mb-2">Soy psicólogo</h3>
+          <p class="text-on-surface-variant mb-5 leading-relaxed">Comparte lo que sabes, construye tu perfil profesional y llega a más personas. Publicar es gratis; ofrecer sesiones, opcional.</p>
+          <div class="space-y-3 mb-8">
+            <div class="flex items-start gap-3"><span class="ms text-secondary text-[20px] mt-0.5">check_circle</span><span class="text-sm">Comparte reflexiones, guías y psicoeducación</span></div>
+            <div class="flex items-start gap-3"><span class="ms text-secondary text-[20px] mt-0.5">check_circle</span><span class="text-sm">Verificación con cédula profesional (México)</span></div>
+            <div class="flex items-start gap-3"><span class="ms text-secondary text-[20px] mt-0.5">check_circle</span><span class="text-sm">Sin cuotas por mantener tu perfil</span></div>
+          </div>
+        </div>
+        <a href="/hablalo/soy-psicologo" class="w-full min-h-[52px] rounded-xl bg-secondary hover:bg-secondary-container text-on-secondary font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.99]"><span>Crear mi perfil profesional</span><span class="ms text-[20px]">badge</span></a>
+      </div>
+    </div>
+
+    <div class="w-full max-w-2xl mx-auto text-center flex flex-col items-center gap-3">
+      <div class="px-4 py-2 rounded-full bg-surface-container-low text-on-surface-variant flex items-center gap-2"><span>🌿</span><span class="text-sm">Leer el contenido es <strong>siempre gratis y sin cuenta</strong>. La cuenta es para guardar y participar.</span></div>
+      <button onclick="switchView('signup')" class="text-sm text-primary hover:text-primary-container font-semibold inline-flex items-center gap-1.5 underline decoration-primary/40 underline-offset-4"><span>¿Ya tienes cuenta? Entra con tu correo</span><span class="ms text-[16px]">chevron_right</span></button>
+    </div>
+  </div>
+
+  <!-- Signup persona -->
+  <section id="view-signup" class="hidden w-full max-w-md mx-auto">
+    <button onclick="switchView('path')" class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface text-sm font-semibold py-1.5 px-3 rounded-lg hover:bg-surface-container mb-4"><span class="ms text-[18px]">arrow_back</span>Volver</button>
+    <div class="bg-surface-container-lowest rounded-[28px] p-6 md:p-10 shadow-sm">
+      <div class="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center text-primary mb-4"><span class="ms text-[28px]">mark_email_unread</span></div>
+      <h2 class="text-2xl font-semibold mb-1">Crea tu cuenta gratis</h2>
+      <p class="text-on-surface-variant mb-6 leading-relaxed">Solo necesitamos tu correo para enviarte un enlace de acceso seguro. Sin contraseñas.</p>
+      <form id="signup-form" class="space-y-4">
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium flex items-center justify-between" for="user-email"><span>Tu correo electrónico</span><span class="text-xs text-on-surface-variant font-normal">Confidencial</span></label>
+          <div class="relative flex items-center"><span class="ms absolute left-3.5 text-outline text-[20px] pointer-events-none">mail</span>
+            <input class="w-full h-12 pl-11 pr-4 rounded-xl bg-surface-container-low focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all" id="user-email" placeholder="tu@correo.com" required type="email"/></div>
+        </div>
+        <button class="w-full min-h-[50px] rounded-xl bg-primary hover:bg-primary-container text-on-primary font-semibold flex items-center justify-center gap-2 transition-all active:scale-[0.99]" type="submit"><span id="signup-btn-txt">Enviarme el enlace de acceso</span><span class="ms text-[20px]">send</span></button>
+        <p id="signup-err" class="text-sm text-error-container"></p>
+      </form>
+      <div class="mt-6 pt-4 flex items-center gap-2 text-on-surface-variant"><span class="ms text-[16px] text-primary">lock</span><span class="text-xs font-medium">Tus datos son privados. Cero spam.</span></div>
+    </div>
+  </section>
+
+  <!-- Verify -->
+  <section id="view-verify" class="hidden w-full max-w-md mx-auto">
+    <div class="bg-surface-container-lowest rounded-[28px] p-6 md:p-10 shadow-sm flex flex-col items-center text-center">
+      <div class="relative w-20 h-20 rounded-full bg-surface-container flex items-center justify-center text-primary mb-6"><div class="absolute inset-0 rounded-full bg-primary/10 animate-ping"></div><span class="ms text-[40px] text-primary">mark_email_read</span></div>
+      <h2 class="text-2xl font-bold mb-1">Revisa tu correo 💌</h2>
+      <p class="text-on-surface-variant mb-4">Te enviamos un enlace de acceso a:</p>
+      <div class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high font-semibold mb-6 flex items-center justify-center gap-2"><span class="ms text-primary text-[18px]">alternate_email</span><span id="display-user-email">tu@correo.com</span></div>
+      <p class="text-sm text-on-surface-variant mb-6">Ábrelo para entrar automáticamente a tu espacio. Sin contraseñas.</p>
+      <div class="w-full space-y-2.5">
+        <button id="btn-resend" onclick="handleResend()" class="w-full min-h-[48px] rounded-xl bg-surface-container hover:bg-surface-container-high font-semibold flex items-center justify-center gap-2 transition-all"><span class="ms text-[18px]">refresh</span><span>Reenviar enlace</span></button>
+        <button onclick="switchView('signup')" class="w-full min-h-[48px] rounded-xl hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface transition-all">¿No es tu correo? Cambiar dirección</button>
+      </div>
+      <div class="mt-6 pt-4 flex items-center gap-2 text-outline text-sm"><span class="ms text-[16px]">schedule</span><span>El enlace expira en 15 minutos.</span></div>
+    </div>
+  </section>
+
+  <!-- Crisis -->
+  <aside class="w-full max-w-4xl mx-auto mt-10">
+    <div class="bg-surface-container rounded-2xl p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+      <div class="flex items-center gap-4 text-left">
+        <div class="w-12 h-12 rounded-xl bg-surface-container-lowest text-primary flex items-center justify-center shrink-0"><span class="ms text-[26px]">support_agent</span></div>
+        <div><h4 class="font-semibold flex items-center gap-2"><span>¿Estás en un momento de crisis urgente?</span><span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container text-xs font-semibold">24/7 Gratis</span></h4>
+          <p class="text-sm text-on-surface-variant mt-0.5">Llama a la <strong>Línea de la Vida</strong> (México) al <span class="font-semibold text-on-surface">800 911 2000</span>. Atención profesional, confidencial e inmediata.</p></div>
+      </div>
+      <a class="shrink-0 min-h-[44px] px-4 py-2.5 rounded-xl bg-surface-container-lowest hover:bg-surface text-primary font-semibold flex items-center gap-2 shadow-sm transition-all" href="tel:8009112000"><span class="ms text-[18px]">call</span><span>Llamar</span></a>
+    </div>
+  </aside>
 </main>
+
+<footer class="w-full bg-surface-container-low py-10 mt-6"><div class="w-full max-w-[1200px] mx-auto px-5 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-4"><div class="flex flex-col items-center sm:items-start"><span class="text-sm font-semibold">Háblalo · Acompañamiento humano</span><span class="text-sm text-on-surface-variant">Un entorno cálido, protegido y libre de juicios.</span></div></div></footer>
 
 <script type="module">
 import { supabase } from '/js/supabase-client.js';
 const $ = s => document.querySelector(s);
 const params = new URLSearchParams(location.search);
-const next = params.get('next') && params.get('next').startsWith('/') ? params.get('next') : '/hablalo/mi-espacio';
+const next = (params.get('next') && params.get('next').startsWith('/')) ? params.get('next') : '/hablalo/mi-espacio';
+let lastEmail = '';
 
 (async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) { $('#chooser').classList.add('hidden'); $('#ya').classList.remove('hidden'); }
+  try { const { data: { session } } = await supabase.auth.getSession(); if (session) { $('#chooser').classList.add('hidden'); $('#ya').classList.remove('hidden'); } } catch {}
 })();
 
-$('#go-persona').addEventListener('click', () => { $('#chooser').classList.add('hidden'); $('#persona').classList.remove('hidden'); });
-$('#back').addEventListener('click', () => { $('#persona').classList.add('hidden'); $('#chooser').classList.remove('hidden'); });
+window.switchView = function (v) {
+  $('#chooser').classList.toggle('hidden', v !== 'path');
+  $('#view-signup').classList.toggle('hidden', v !== 'signup');
+  $('#view-verify').classList.toggle('hidden', v !== 'verify');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
 
-$('#form').addEventListener('submit', async (e) => {
+async function enviarEnlace(email) {
+  return supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + next, shouldCreateUser: true } });
+}
+
+$('#signup-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  $('#err').textContent = '';
-  const email = $('#email').value.trim();
+  $('#signup-err').textContent = '';
+  const email = $('#user-email').value.trim();
   if (!email) return;
-  const btn = $('#form').querySelector('button'); btn.disabled = true; btn.textContent = 'Enviando…';
-  const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + next, shouldCreateUser: true } });
-  if (error) { $('#err').textContent = error.message || 'No se pudo enviar. Reinténtalo.'; btn.disabled = false; btn.textContent = 'Enviarme el enlace de acceso'; return; }
-  $('#form').classList.add('hidden'); $('#email-echo').textContent = email; $('#enviado').classList.remove('hidden');
+  const btn = $('#signup-form').querySelector('button'); btn.disabled = true; $('#signup-btn-txt').textContent = 'Enviando…';
+  const { error } = await enviarEnlace(email);
+  btn.disabled = false; $('#signup-btn-txt').textContent = 'Enviarme el enlace de acceso';
+  if (error) { $('#signup-err').textContent = error.message || 'No se pudo enviar. Reinténtalo.'; return; }
+  lastEmail = email; $('#display-user-email').textContent = email; window.switchView('verify');
 });
+
+window.handleResend = async function () {
+  const b = $('#btn-resend'); if (!lastEmail) return;
+  b.disabled = true; b.innerHTML = '<span class="ms text-[18px] animate-spin">progress_activity</span><span>Enviando…</span>';
+  await enviarEnlace(lastEmail);
+  setTimeout(() => { b.innerHTML = '<span class="ms text-[18px]">done</span><span>¡Enviado de nuevo!</span>'; setTimeout(() => { b.disabled = false; b.innerHTML = '<span class="ms text-[18px]">refresh</span><span>Reenviar enlace</span>'; }, 3000); }, 800);
+};
 </script>
-</body>
-</html>
+</body></html>

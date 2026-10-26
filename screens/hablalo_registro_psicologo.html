@@ -1,137 +1,155 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex">
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex"/>
 <title>Soy psicólogo | Háblalo</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>::-webkit-scrollbar{display:none;}.material-symbols-outlined{vertical-align:middle;}</style>
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{primary:"#446350","primary-c":"#5c7c67",secondary:"#904c28","sec-c":"#fea67b",surface:"#effdf4","surf-c":"#e4f1e8","surf-low":"#e9f7ee",white:"#ffffff",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
-<style>body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}.ms{font-family:'Material Symbols Outlined'}</style>
+<script>tailwind.config={theme:{extend:{colors:{"on-primary":"#ffffff","surface":"#effdf4","primary-fixed":"#c8ebd2","surface-container-lowest":"#ffffff","on-surface-variant":"#424843","surface-container":"#e4f1e8","on-secondary-container":"#783a17","surface-container-high":"#deebe3","on-surface":"#121e19","surface-container-low":"#e9f7ee","primary-container":"#5c7c67","on-primary-fixed-variant":"#2f4d3b","error":"#ba1a1a","secondary-container":"#fea67b","background":"#effdf4","on-secondary":"#ffffff","outline":"#727973","on-secondary-fixed":"#341000","on-secondary-fixed-variant":"#723513","outline-variant":"#c2c8c1","secondary":"#904c28","primary":"#446350","secondary-fixed":"#ffdbcb"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
 </head>
-<body class="bg-surface text-tinta min-h-screen flex flex-col">
-<header class="h-16 px-5 max-w-5xl mx-auto w-full flex items-center justify-between">
-  <a href="/hablalo" class="text-xl font-bold text-primary">Háblalo</a>
-  <a href="/acceso" class="text-sm font-semibold text-tinta-v hover:text-tinta">Ya tengo cuenta</a>
-</header>
+<body class="bg-background font-sans text-on-surface antialiased">
+<main class="w-full min-h-screen flex flex-col items-center px-5 py-10">
+<div class="flex flex-col w-full max-w-7xl mx-auto px-1 sm:px-6">
 
-<main class="flex-1 px-5 py-8 md:py-12">
-  <div class="w-full max-w-5xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12 items-start">
+  <header class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 sm:mb-12">
+    <a href="/hablalo" class="flex items-center gap-3 self-start sm:self-auto">
+      <div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-2xl">spa</span></div>
+      <div><div class="flex items-center gap-2"><span class="text-xl font-semibold tracking-tight">Háblalo</span><span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-xs font-semibold">Comunidad profesional</span></div>
+        <p class="text-sm text-on-surface-variant">Red de psicólogos y bienestar emocional</p></div>
+    </a>
+    <a href="/acceso" class="text-sm font-semibold text-on-surface-variant hover:text-on-surface">Ya tengo cuenta</a>
+  </header>
 
-    <!-- Pitch (lo que se lleva el psicólogo) -->
-    <section class="order-2 md:order-1">
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surf-c text-primary text-xs font-bold mb-4"><span class="ms text-[15px]">workspace_premium</span>Profesionales Fundadores</span>
-      <h1 class="text-3xl md:text-4xl font-bold tracking-tight leading-tight mb-3">Tu conocimiento, llegando a gente de verdad</h1>
-      <p class="text-tinta-v md:text-lg mb-7">Comparte lo que sabes con tu nombre, sin montarte una web ni pelearte con el algoritmo. Publicar y participar es gratis.</p>
-      <ul class="flex flex-col gap-4">
-        <li class="flex items-start gap-3.5">
-          <div class="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm"><span class="ms text-[22px]">badge</span></div>
-          <div><h3 class="font-bold">Tu perfil profesional, gratis</h3><p class="text-sm text-tinta-v">Bio, especialidades y todas tus publicaciones reunidas en un sitio que puedes compartir con tus pacientes y en tus redes.</p></div>
-        </li>
-        <li class="flex items-start gap-3.5">
-          <div class="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm"><span class="ms text-[22px]">insights</span></div>
-          <div><h3 class="font-bold">Distribución y datos</h3><p class="text-sm text-tinta-v">Tu contenido aparece en Inicio, temas y búsquedas. Ves cuánta gente lo lee, lo guarda y marca que le ayuda.</p></div>
-        </li>
-        <li class="flex items-start gap-3.5">
-          <div class="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm"><span class="ms text-[22px]">groups</span></div>
-          <div><h3 class="font-bold">Una comunidad profesional</h3><p class="text-sm text-tinta-v">Participa con otros profesionales, propón talleres y colabora. Un motivo para volver, no solo para publicar una vez.</p></div>
-        </li>
-        <li class="flex items-start gap-3.5">
-          <div class="w-10 h-10 rounded-xl bg-white text-primary flex items-center justify-center shrink-0 shadow-sm"><span class="ms text-[22px]">event_available</span></div>
-          <div><h3 class="font-bold">Sesiones, si quieres</h3><p class="text-sm text-tinta-v">Puedes activar más adelante la opción de ofrecer sesiones. Es opcional y no hace falta para colaborar.</p></div>
-        </li>
-      </ul>
-      <p class="text-xs text-tinta-v mt-7 leading-relaxed">Háblalo está creciendo y no prometemos una audiencia determinada ni pacientes. Queremos construir este espacio junto a los profesionales que participen desde el principio.</p>
-    </section>
-
-    <!-- Formulario de alta -->
-    <section class="order-1 md:order-2">
-      <div id="form-wrap" class="bg-white rounded-3xl p-6 md:p-8 shadow-[0_8px_30px_rgba(46,58,52,0.06)]">
-        <h2 class="text-2xl font-bold tracking-tight mb-1">Crea tu perfil profesional</h2>
-        <p class="text-sm text-tinta-v mb-5">Unos pocos datos y ya puedes empezar a publicar. El resto lo completas cuando quieras.</p>
-        <form id="form" class="flex flex-col gap-3.5">
-          <label class="text-sm font-semibold">Nombre profesional
-            <input id="nombre" type="text" required autocomplete="name" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="Ej. Ana Losada">
-          </label>
-          <label class="text-sm font-semibold">Email
-            <input id="email" type="email" required autocomplete="email" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="tu@email.com">
-          </label>
-          <label class="text-sm font-semibold">Contraseña
-            <input id="password" type="password" required autocomplete="new-password" minlength="8" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="Mínimo 8 caracteres">
-          </label>
-          <div class="grid grid-cols-2 gap-3">
-            <label class="text-sm font-semibold">País
-              <select id="pais" class="mt-1 w-full border border-linea rounded-xl px-3 py-3 bg-surf-low">
-                <option value="México" selected>México</option>
-                <option value="Colombia">Colombia</option>
-                <option value="Argentina">Argentina</option>
-                <option value="España">España</option>
-                <option value="Chile">Chile</option>
-                <option value="Perú">Perú</option>
-                <option value="Ecuador">Ecuador</option>
-              </select>
-            </label>
-            <label class="text-sm font-semibold">Ciudad (opcional)
-              <input id="ciudad" type="text" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="Ej. CDMX">
-            </label>
+  <!-- VISTA REGISTRO -->
+  <section id="view-register" class="w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <!-- Argumentario -->
+      <div class="order-2 lg:order-1 lg:col-span-7 flex flex-col gap-6">
+        <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-secondary-fixed/50 text-secondary w-fit shadow-sm"><span class="material-symbols-outlined text-base">star</span><span class="text-xs font-semibold tracking-wide">✨ Profesionales Fundadores</span></div>
+        <div class="space-y-3">
+          <h1 class="text-4xl md:text-[40px] font-bold leading-tight tracking-tight">Tu conocimiento, llegando a gente de verdad.</h1>
+          <p class="text-lg text-on-surface-variant leading-relaxed">Comparte lo que sabes con tu nombre, sin montarte una web ni pelearte con el algoritmo. Publicar y participar es gratis.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+          <div class="bg-surface-container-lowest p-5 rounded-2xl shadow-sm flex flex-col gap-3">
+            <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-primary"><span class="material-symbols-outlined text-2xl">badge</span></div>
+            <div><h2 class="text-lg font-semibold mb-1">Tu perfil profesional, gratis</h2><p class="text-sm text-on-surface-variant leading-relaxed">Un espacio limpio y sin publicidad con tus artículos y tu enfoque, para compartir con pacientes y en tus redes.</p></div>
           </div>
-          <label class="text-sm font-semibold">Especialidad (opcional)
-            <input id="especialidad" type="text" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="Ej. Ansiedad, terapia de pareja">
-          </label>
-          <button id="submit" class="bg-secondary text-white font-semibold rounded-xl py-3.5 mt-1 flex items-center justify-center gap-2">Crear mi perfil y empezar</button>
-          <p id="err" class="text-sm text-red-700"></p>
-          <p class="text-xs text-tinta-v leading-relaxed">Tu contenido se revisa antes de publicarse. El sello de <strong>Psicólogo verificado</strong> aparece después de comprobar tus credenciales; es un paso aparte del registro.</p>
-        </form>
+          <div class="bg-surface-container-lowest p-5 rounded-2xl shadow-sm flex flex-col gap-3">
+            <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-primary"><span class="material-symbols-outlined text-2xl">insights</span></div>
+            <div><h2 class="text-lg font-semibold mb-1">Distribución y datos</h2><p class="text-sm text-on-surface-variant leading-relaxed">Apareces en el feed, los temas y las búsquedas. Ves lecturas, guardados y "me ayuda" reales de tu contenido.</p></div>
+          </div>
+          <div class="bg-surface-container-lowest p-5 rounded-2xl shadow-sm flex flex-col gap-3">
+            <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-primary"><span class="material-symbols-outlined text-2xl">diversity_1</span></div>
+            <div><h2 class="text-lg font-semibold mb-1">Una comunidad profesional</h2><p class="text-sm text-on-surface-variant leading-relaxed">Comparte junto a colegas que valoran la ética, el rigor y el trato humano a quien lee.</p></div>
+          </div>
+          <div class="bg-surface-container-lowest p-5 rounded-2xl shadow-sm flex flex-col gap-3">
+            <div class="w-11 h-11 rounded-xl bg-surface-container flex items-center justify-center text-primary"><span class="material-symbols-outlined text-2xl">calendar_today</span></div>
+            <div><h2 class="text-lg font-semibold mb-1">Sesiones, si quieres (opcional)</h2><p class="text-sm text-on-surface-variant leading-relaxed">Puedes activar tu agenda más adelante o quedarte solo como autor. Sin cuotas ni permanencia.</p></div>
+          </div>
+        </div>
+        <div class="bg-surface-container p-5 rounded-2xl flex items-start gap-4">
+          <span class="material-symbols-outlined text-primary text-2xl shrink-0 mt-0.5">nature_people</span>
+          <p class="text-sm text-on-surface-variant leading-relaxed"><strong class="text-on-surface font-semibold">Con sinceridad:</strong> Háblalo no promete audiencias infladas ni pacientes garantizados. Queremos construir este espacio junto a los profesionales que participen desde el principio.</p>
+        </div>
       </div>
 
-      <div id="ok" class="hidden bg-white rounded-3xl p-7 md:p-8 shadow text-center">
-        <div class="text-5xl mb-2">🌿</div>
-        <h2 class="text-2xl font-bold mb-1">¡Bienvenido a Háblalo!</h2>
-        <p class="text-sm text-tinta-v mb-5">Tu perfil está creado. Te llevamos a tu panel para publicar tu primer contenido.</p>
-        <a id="go-panel" href="/hablalo-autor" class="inline-block bg-primary text-white font-semibold rounded-xl px-6 py-3">Ir a mi panel</a>
+      <!-- Formulario -->
+      <div class="order-1 lg:order-2 lg:col-span-5">
+        <div class="bg-surface-container-lowest p-6 sm:p-8 rounded-3xl shadow-md lg:sticky lg:top-6">
+          <div class="mb-6"><h2 class="text-2xl font-semibold">Crea tu perfil profesional</h2><p class="text-sm text-on-surface-variant mt-1">Unos pocos datos y ya puedes empezar a publicar.</p></div>
+          <form class="space-y-4" id="form-registration">
+            <div class="space-y-1.5"><label class="block text-sm font-semibold" for="prof-name">Nombre profesional <span class="text-secondary">*</span></label>
+              <input class="w-full px-4 py-3 bg-surface-container-low rounded-xl focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/30 transition-all" id="prof-name" placeholder="Ej. Ana Losada" required type="text"/></div>
+            <div class="space-y-1.5"><label class="block text-sm font-semibold" for="prof-email">Correo electrónico <span class="text-secondary">*</span></label>
+              <input class="w-full px-4 py-3 bg-surface-container-low rounded-xl focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/30 transition-all" id="prof-email" placeholder="tu@correo.com" required type="email"/></div>
+            <div class="space-y-1.5"><label class="block text-sm font-semibold" for="prof-password">Contraseña <span class="text-secondary">*</span></label>
+              <div class="relative flex items-center">
+                <input class="w-full px-4 py-3 pr-11 bg-surface-container-low rounded-xl focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/30 transition-all" id="prof-password" minlength="8" placeholder="Mínimo 8 caracteres" required type="password"/>
+                <button aria-label="Mostrar contraseña" class="absolute right-3 text-outline hover:text-on-surface p-1" onclick="togglePasswordVisibility()" type="button"><span class="material-symbols-outlined text-xl" id="eye-icon">visibility</span></button>
+              </div>
+              <div class="flex items-center gap-1.5 px-1 text-on-surface-variant"><span class="material-symbols-outlined text-sm text-primary">check_circle</span><span class="text-xs">Mínimo 8 caracteres</span></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div class="space-y-1.5"><label class="block text-sm font-semibold" for="prof-country">País</label>
+                <div class="relative"><select class="w-full appearance-none px-4 py-3 pr-10 bg-surface-container-low rounded-xl focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/30 transition-all cursor-pointer" id="prof-country">
+                  <option selected value="México">México</option><option value="Colombia">Colombia</option><option value="Argentina">Argentina</option><option value="España">España</option><option value="Chile">Chile</option><option value="Perú">Perú</option><option value="Ecuador">Ecuador</option>
+                </select><span class="material-symbols-outlined absolute right-3 top-3.5 pointer-events-none text-outline text-xl">expand_more</span></div>
+              </div>
+              <div class="space-y-1.5"><label class="block text-sm font-semibold" for="prof-city">Ciudad <span class="font-normal text-on-surface-variant text-xs">(opcional)</span></label>
+                <input class="w-full px-4 py-3 bg-surface-container-low rounded-xl focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/30 transition-all" id="prof-city" placeholder="Ej. CDMX" type="text"/></div>
+            </div>
+            <div class="space-y-1.5"><label class="block text-sm font-semibold" for="prof-approach">Especialidad o enfoque <span class="font-normal text-on-surface-variant text-xs">(opcional)</span></label>
+              <input class="w-full px-4 py-3 bg-surface-container-low rounded-xl focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/30 transition-all" id="prof-approach" placeholder="Ej. Ansiedad, duelo, terapia de pareja…" type="text"/></div>
+            <div class="pt-2"><label class="flex items-start gap-3 cursor-pointer group"><div class="pt-0.5"><input class="w-5 h-5 rounded accent-primary cursor-pointer" id="prof-ethics" required type="checkbox"/></div>
+              <span class="text-sm text-on-surface-variant leading-snug">Acepto los principios éticos y el código editorial de Háblalo.</span></label></div>
+            <div class="pt-2"><button class="w-full py-4 px-6 bg-secondary text-on-secondary rounded-xl font-semibold shadow-sm hover:shadow-md active:scale-[0.99] transition-all flex items-center justify-center gap-2 group" type="submit">
+              <span id="reg-btn-txt">Crear mi perfil y empezar</span><span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span></button></div>
+            <p id="reg-err" class="text-sm text-error"></p>
+          </form>
+          <div class="mt-6 pt-5 bg-surface-container-low p-4 rounded-xl flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary text-xl shrink-0 mt-0.5">verified</span>
+            <p class="text-sm text-on-surface-variant leading-relaxed"><strong class="text-on-surface font-semibold">Validación posterior:</strong> tu contenido se revisa antes de publicarse. El sello de <em>Psicólogo verificado</em> se activa tras comprobar tu cédula o colegiación; es un paso aparte desde tu panel.</p>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-  </div>
+  <!-- VISTA ÉXITO -->
+  <section id="view-success" class="hidden w-full max-w-3xl mx-auto">
+    <div class="bg-surface-container-lowest p-8 sm:p-12 rounded-3xl shadow-lg flex flex-col items-center text-center">
+      <div class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center text-primary mb-6"><span class="material-symbols-outlined text-4xl">local_florist</span></div>
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-surface-container text-primary text-xs font-semibold mb-3"><span class="material-symbols-outlined text-base">check_circle</span><span>Perfil registrado con éxito</span></div>
+      <h2 class="text-3xl font-semibold mb-3 tracking-tight">¡Te damos la bienvenida a Háblalo!</h2>
+      <p class="text-lg text-on-surface-variant max-w-xl mx-auto leading-relaxed mb-8">Tu perfil está creado. Desde hoy puedes escribir tus primeras reflexiones, compartir guías y, cuando quieras, verificar tu cédula o activar sesiones.</p>
+      <div class="w-full text-left bg-surface-container p-6 rounded-2xl mb-8 space-y-4">
+        <h3 class="text-lg font-semibold flex items-center gap-2"><span class="material-symbols-outlined text-primary text-xl">checklist</span><span>Primeros pasos</span></h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+          <div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-2"><span class="w-6 h-6 rounded-full bg-primary text-on-primary text-xs font-semibold flex items-center justify-center">1</span><p class="text-sm font-semibold">Escribe tu primer artículo</p><p class="text-xs text-on-surface-variant">Un consejo o reflexión breve.</p></div>
+          <div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-2"><span class="w-6 h-6 rounded-full bg-surface-container text-primary text-xs font-semibold flex items-center justify-center">2</span><p class="text-sm font-semibold">Verifica tu cédula (opcional)</p><p class="text-xs text-on-surface-variant">Para obtener el sello de verificado.</p></div>
+          <div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-2"><span class="w-6 h-6 rounded-full bg-surface-container text-primary text-xs font-semibold flex items-center justify-center">3</span><p class="text-sm font-semibold">Activa sesiones (opcional)</p><p class="text-xs text-on-surface-variant">Si quieres recibir pacientes.</p></div>
+        </div>
+      </div>
+      <a id="go-panel" href="/hablalo-autor" class="w-full sm:w-auto px-8 py-4 bg-primary text-on-primary rounded-xl font-semibold shadow-sm hover:shadow-md transition-all inline-flex items-center justify-center gap-2"><span>Ir a mi panel de autor</span><span class="material-symbols-outlined text-xl">dashboard</span></a>
+    </div>
+  </section>
+
+</div>
 </main>
 
 <script type="module">
 import { supabase } from '/js/supabase-client.js';
-const $ = s => document.querySelector(s);
+const $ = id => document.getElementById(id);
 
-// Si ya hay sesión, al panel directo.
-(async () => {
-  try { const { data: { session } } = await supabase.auth.getSession(); if (session) location.replace('/hablalo-autor'); } catch {}
-})();
+(async () => { try { const { data: { session } } = await supabase.auth.getSession(); if (session) location.replace('/hablalo-autor'); } catch {} })();
 
-$('#form').addEventListener('submit', async (e) => {
+window.togglePasswordVisibility = function () {
+  const p = $('prof-password'), e = $('eye-icon');
+  if (p.type === 'password') { p.type = 'text'; e.textContent = 'visibility_off'; } else { p.type = 'password'; e.textContent = 'visibility'; }
+};
+
+$('form-registration').addEventListener('submit', async (e) => {
   e.preventDefault();
-  $('#err').textContent = '';
-  const btn = $('#submit'); btn.disabled = true; btn.textContent = 'Creando tu perfil…';
+  const err = $('reg-err'); err.textContent = '';
+  const btn = $('form-registration').querySelector('button[type=submit]'); btn.disabled = true; $('reg-btn-txt').textContent = 'Creando tu perfil…';
   const body = {
-    nombre: $('#nombre').value.trim(),
-    email: $('#email').value.trim().toLowerCase(),
-    password: $('#password').value,
-    pais: $('#pais').value,
-    ciudad: $('#ciudad').value.trim() || null,
-    especialidad: $('#especialidad').value.trim() || null,
+    nombre: $('prof-name').value.trim(), email: $('prof-email').value.trim().toLowerCase(), password: $('prof-password').value,
+    pais: $('prof-country').value, ciudad: $('prof-city').value.trim() || null, especialidad: $('prof-approach').value.trim() || null,
   };
-  if (body.password.length < 8) { $('#err').textContent = 'La contraseña debe tener al menos 8 caracteres.'; btn.disabled = false; btn.textContent = 'Crear mi perfil y empezar'; return; }
+  const reset = () => { btn.disabled = false; $('reg-btn-txt').textContent = 'Crear mi perfil y empezar'; };
+  if (body.password.length < 8) { err.textContent = 'La contraseña debe tener al menos 8 caracteres.'; reset(); return; }
   try {
     const r = await fetch('/api/hablalo/alta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    const data = await r.json().catch(() => ({}));
-    if (!r.ok) { $('#err').textContent = data.error || 'No se pudo completar el registro.'; btn.disabled = false; btn.textContent = 'Crear mi perfil y empezar'; return; }
-    // Auto-login con la contraseña recién creada, para entrar directo al panel.
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { err.textContent = d.error || 'No se pudo completar el registro.'; reset(); return; }
     const { error: signErr } = await supabase.auth.signInWithPassword({ email: body.email, password: body.password });
-    $('#form-wrap').classList.add('hidden'); $('#ok').classList.remove('hidden');
-    if (!signErr) { setTimeout(() => location.replace('/hablalo-autor'), 1200); }
-    else { $('#go-panel').setAttribute('href', '/acceso'); }
-  } catch (err) {
-    $('#err').textContent = 'Error de conexión. Reinténtalo.'; btn.disabled = false; btn.textContent = 'Crear mi perfil y empezar';
-  }
+    if (signErr) $('go-panel').setAttribute('href', '/acceso');
+    $('view-register').classList.add('hidden'); $('view-success').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err2) { $('reg-err').textContent = 'Error de conexión. Reinténtalo.'; reset(); }
 });
 </script>
-</body>
-</html>
+</body></html>
