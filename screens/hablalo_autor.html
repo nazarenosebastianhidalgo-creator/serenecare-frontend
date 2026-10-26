@@ -29,6 +29,45 @@
     <div class="bg-white rounded-2xl p-4 border border-linea mb-5">
       <p class="text-sm">Hola, <strong id="mi-nombre"></strong> <span id="mi-perfil"></span></p>
     </div>
+
+    <!-- Sesiones (opcional): activar = ofrecer sesiones y aparecer en el buscador -->
+    <section id="sesiones" class="bg-white rounded-2xl p-5 border border-linea mb-5">
+      <!-- Estado: NO activas -->
+      <div id="ses-off">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-surf-c text-primary flex items-center justify-center shrink-0"><span class="ms text-[22px]">event_available</span></div>
+          <div class="flex-1">
+            <h2 class="font-bold text-lg">¿Quieres ofrecer sesiones? <span class="text-tinta-v font-medium text-sm">(opcional)</span></h2>
+            <p class="text-sm text-tinta-v mt-0.5">Actívalo y aparecerás en el buscador de psicólogos. Las personas que descubran tu contenido podrán solicitarte una sesión. Publicar contenido seguirá siendo lo principal.</p>
+            <form id="form-activar" class="mt-3 flex flex-col sm:flex-row gap-2 sm:items-end">
+              <label class="text-sm font-semibold flex-1">Cédula profesional o nº de colegiación
+                <input id="credencial" class="mt-1 w-full border border-linea rounded-xl px-3 py-2.5" placeholder="Obligatorio para ofrecer sesiones">
+              </label>
+              <button class="bg-secondary text-white font-semibold rounded-xl px-5 py-2.5 whitespace-nowrap">Activar sesiones</button>
+            </form>
+            <p id="activar-msg" class="text-sm mt-1"></p>
+            <p class="text-xs text-tinta-v mt-1">Comprobamos tu credencial antes de darte el sello de verificado; es un paso aparte.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Estado: activas -->
+      <div id="ses-on" class="hidden">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-xl bg-green-100 text-green-700 flex items-center justify-center shrink-0"><span class="ms text-[22px]">check_circle</span></div>
+          <div class="flex-1">
+            <h2 class="font-bold text-lg">Sesiones activas</h2>
+            <p class="text-sm text-tinta-v mt-0.5">Apareces en el buscador y la gente puede solicitarte sesión desde tu perfil. Te avisaremos de cada solicitud para coordinar.</p>
+            <div id="ses-directa" class="hidden mt-2 text-sm text-green-700 font-semibold">✓ Reserva directa de día y hora activada.</div>
+            <div id="ses-nodirecta" class="mt-2 text-sm text-tinta-v bg-surf-low rounded-xl px-3 py-2">Próximo paso: configurar tu disponibilidad para que reserven día y hora directamente. Lo habilitaremos muy pronto; de momento las reservas te llegan como solicitud.</div>
+            <div class="mt-3 flex items-center gap-4">
+              <a id="ver-ficha" href="#" target="_blank" class="text-primary font-semibold text-sm">Ver cómo te ven →</a>
+              <button id="btn-desactivar" class="text-tinta-v text-sm font-semibold hover:text-red-700">Desactivar sesiones</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div class="grid md:grid-cols-2 gap-6">
       <section class="bg-white rounded-2xl p-5 border border-linea">
         <h2 class="font-bold text-lg mb-3">Nuevo contenido</h2>
@@ -87,13 +126,23 @@ async function init() {
   const r = await api('/api/hablalo/autor-panel/info');
   if (r.status === 403) { gate('Tu cuenta no está asociada a un perfil de psicólogo.'); return; }
   if (!r.ok) { gate('Error al cargar. Reintenta.'); return; }
-  const { psi, temas } = await r.json();
+  const { psi, temas, sesiones } = await r.json();
   miSlug = psi.slug;
   $('#mi-nombre').textContent = psi.nombre;
   $('#mi-perfil').innerHTML = psi.slug ? `· <a class="text-primary font-semibold" href="/hablalo/autor/${psi.slug}" target="_blank">ver tu perfil público</a>` : '';
   $('#f_tema').innerHTML = '<option value="">—</option>' + (temas || []).map(t => `<option value="${t.slug}">${t.nombre}</option>`).join('');
+  if (psi.slug) $('#ver-ficha').setAttribute('href', '/hablalo/autor/' + psi.slug);
+  renderSesiones(sesiones || { activas: false, reservaDirecta: false });
   $('#gate').classList.add('hidden'); $('#app').classList.remove('hidden');
   loadLista();
+}
+function renderSesiones(s) {
+  $('#ses-off').classList.toggle('hidden', !!s.activas);
+  $('#ses-on').classList.toggle('hidden', !s.activas);
+  if (s.activas) {
+    $('#ses-directa').classList.toggle('hidden', !s.reservaDirecta);
+    $('#ses-nodirecta').classList.toggle('hidden', !!s.reservaDirecta);
+  }
 }
 function gate(msg) { $('#gate').classList.remove('hidden'); $('#gate-msg').textContent = msg; }
 function api(path, opts = {}) {
@@ -122,6 +171,20 @@ $('#form').addEventListener('submit', async (e) => {
   const r = await api('/api/hablalo/autor-panel/contenido', { method: 'POST', body: JSON.stringify(body) });
   if (r.ok) { msg.textContent = '✅ Enviado a revisión.'; msg.className = 'text-sm text-green-700'; $('#form').reset(); loadLista(); }
   else { const e2 = await r.json().catch(()=>({})); msg.textContent = '❌ ' + (e2.error || 'Error'); msg.className = 'text-sm text-red-700'; }
+});
+$('#form-activar').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('#activar-msg'); msg.textContent = 'Activando…'; msg.className = 'text-sm mt-1 text-tinta-v';
+  const credencial = $('#credencial').value.trim();
+  if (!credencial) { msg.textContent = 'Pon tu cédula o nº de colegiación.'; msg.className = 'text-sm mt-1 text-red-700'; return; }
+  const r = await api('/api/hablalo/autor-panel/activar-sesiones', { method: 'POST', body: JSON.stringify({ credencial }) });
+  if (r.ok) { renderSesiones({ activas: true, reservaDirecta: false }); }
+  else { const e2 = await r.json().catch(()=>({})); msg.textContent = '❌ ' + (e2.error || 'Error'); msg.className = 'text-sm mt-1 text-red-700'; }
+});
+$('#btn-desactivar').addEventListener('click', async () => {
+  if (!confirm('¿Desactivar las sesiones? Dejarás de aparecer en el buscador de psicólogos. Tu contenido seguirá publicado.')) return;
+  const r = await api('/api/hablalo/autor-panel/desactivar-sesiones', { method: 'POST', body: JSON.stringify({}) });
+  if (r.ok) renderSesiones({ activas: false, reservaDirecta: false });
 });
 function escp(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 init();
