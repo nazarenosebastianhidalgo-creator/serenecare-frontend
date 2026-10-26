@@ -82,8 +82,9 @@
             <label class="text-sm font-semibold">Tipo
               <select id="f_tipo" class="mt-1 w-full border border-linea rounded-lg px-3 py-2 bg-surf-low">
                 <option value="breve">Publicación breve</option>
-                <option value="consejo">Consejo</option><option value="guia">Guía</option>
-                <option value="video">Vídeo</option><option value="herramienta">Herramienta</option>
+                <option value="consejo">Consejo</option><option value="guia">Guía / artículo</option>
+                <option value="video">Vídeo</option><option value="ejercicio">Ejercicio práctico</option>
+                <option value="evento">Evento / actividad</option>
                 <option value="qa">Preguntas y respuestas</option>
               </select>
             </label>
@@ -92,11 +93,19 @@
             <label class="text-sm font-semibold">Minutos de lectura
               <input id="f_min" type="number" min="1" class="mt-1 w-full border border-linea rounded-lg px-3 py-2">
             </label>
-            <label class="text-sm font-semibold">Imagen (URL, opcional)
-              <input id="f_media" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" placeholder="https://…">
+            <label class="text-sm font-semibold"><span id="f_media_lbl">Imagen o vídeo (URL, opcional)</span>
+              <input id="f_media" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" placeholder="Imagen, o enlace de YouTube/Vimeo">
             </label>
           </div>
-          <label class="text-sm font-semibold">Cuerpo (usa ## para títulos y - para listas)
+          <div id="evento-fields" class="hidden grid grid-cols-2 gap-3">
+            <label class="text-sm font-semibold">Fecha y hora del evento
+              <input id="f_evento_fecha" type="datetime-local" class="mt-1 w-full border border-linea rounded-lg px-3 py-2">
+            </label>
+            <label class="text-sm font-semibold">Enlace para apuntarse (opcional)
+              <input id="f_evento_enlace" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" placeholder="https://…">
+            </label>
+          </div>
+          <label class="text-sm font-semibold"><span id="f_cuerpo_lbl">Cuerpo (usa ## para títulos y - para listas)</span>
             <textarea id="f_cuerpo" rows="9" class="mt-1 w-full border border-linea rounded-lg px-3 py-2"></textarea>
           </label>
           <label class="flex items-center gap-2 text-sm font-semibold"><input id="f_solo" type="checkbox" class="w-4 h-4"> Solo para registrados (vídeo/webinar)</label>
@@ -165,8 +174,11 @@ async function loadLista() {
 $('#form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = $('#form-msg'); msg.textContent = 'Enviando…'; msg.className = 'text-sm text-tinta-v';
+  const fechaRaw = $('#f_evento_fecha').value;
   const body = { titulo: $('#f_titulo').value.trim(), tema: $('#f_tema').value || null, tipo: $('#f_tipo').value,
-    tiempo_min: $('#f_min').value || null, media_url: $('#f_media').value.trim() || null, cuerpo_md: $('#f_cuerpo').value, solo_registrados: $('#f_solo').checked };
+    tiempo_min: $('#f_min').value || null, media_url: $('#f_media').value.trim() || null, cuerpo_md: $('#f_cuerpo').value, solo_registrados: $('#f_solo').checked,
+    evento_fecha: ($('#f_tipo').value === 'evento' && fechaRaw) ? new Date(fechaRaw).toISOString() : null,
+    evento_enlace: ($('#f_tipo').value === 'evento') ? ($('#f_evento_enlace').value.trim() || null) : null };
   if (!body.titulo) { msg.textContent = 'Falta el título.'; return; }
   const r = await api('/api/hablalo/autor-panel/contenido', { method: 'POST', body: JSON.stringify(body) });
   if (r.ok) { msg.textContent = '✅ Enviado a revisión.'; msg.className = 'text-sm text-green-700'; $('#form').reset(); loadLista(); }
@@ -185,6 +197,16 @@ $('#btn-desactivar').addEventListener('click', async () => {
   if (!confirm('¿Desactivar las sesiones? Dejarás de aparecer en el buscador de psicólogos. Tu contenido seguirá publicado.')) return;
   const r = await api('/api/hablalo/autor-panel/desactivar-sesiones', { method: 'POST', body: JSON.stringify({}) });
   if (r.ok) renderSesiones({ activas: false, reservaDirecta: false });
+});
+$('#f_tipo').addEventListener('change', () => {
+  const t = $('#f_tipo').value;
+  $('#evento-fields').classList.toggle('hidden', t !== 'evento');
+  $('#evento-fields').classList.toggle('grid', t === 'evento');
+  $('#f_media_lbl').textContent = (t === 'video') ? 'Enlace del vídeo (YouTube, Vimeo o .mp4)' : 'Imagen o vídeo (URL, opcional)';
+  $('#f_media').placeholder = (t === 'video') ? 'https://youtu.be/…' : 'Imagen, o enlace de YouTube/Vimeo';
+  $('#f_cuerpo_lbl').textContent = (t === 'ejercicio') ? 'Pasos del ejercicio (usa - para cada paso)'
+    : (t === 'evento') ? 'Descripción del evento (qué se trabaja, para quién)'
+    : 'Cuerpo (usa ## para títulos y - para listas)';
 });
 function escp(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 init();

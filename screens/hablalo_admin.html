@@ -43,8 +43,9 @@
           <label class="text-sm font-semibold">Tipo
             <select id="f_tipo" class="mt-1 w-full border border-linea rounded-lg px-3 py-2 bg-surf-low">
               <option value="breve">Publicación breve</option>
-              <option value="consejo">Consejo</option><option value="guia">Guía</option>
-              <option value="video">Vídeo</option><option value="herramienta">Herramienta</option>
+              <option value="consejo">Consejo</option><option value="guia">Guía / artículo</option>
+              <option value="video">Vídeo</option><option value="ejercicio">Ejercicio práctico</option>
+              <option value="evento">Evento / actividad</option>
               <option value="qa">Preguntas y respuestas</option><option value="serie">Serie</option>
             </select>
           </label>
@@ -53,8 +54,16 @@
           <label class="text-sm font-semibold">Minutos de lectura
             <input id="f_min" type="number" min="1" class="mt-1 w-full border border-linea rounded-lg px-3 py-2">
           </label>
-          <label class="text-sm font-semibold">Imagen (URL, opcional)
-            <input id="f_media" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" placeholder="https://…">
+          <label class="text-sm font-semibold"><span id="f_media_lbl">Imagen o vídeo (URL, opcional)</span>
+            <input id="f_media" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" placeholder="Imagen, o enlace de YouTube/Vimeo">
+          </label>
+        </div>
+        <div id="evento-fields" class="hidden grid grid-cols-2 gap-3">
+          <label class="text-sm font-semibold">Fecha y hora del evento
+            <input id="f_evento_fecha" type="datetime-local" class="mt-1 w-full border border-linea rounded-lg px-3 py-2">
+          </label>
+          <label class="text-sm font-semibold">Enlace para apuntarse (opcional)
+            <input id="f_evento_enlace" class="mt-1 w-full border border-linea rounded-lg px-3 py-2" placeholder="https://…">
           </label>
         </div>
         <label class="text-sm font-semibold">Cuerpo (texto. Usa ## para títulos y - para listas)
@@ -142,15 +151,26 @@ async function moderar(id, estado) {
 $('#form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const msg = $('#form-msg'); msg.textContent = 'Guardando…'; msg.className = 'text-sm text-tinta-v';
+  const fechaRaw = $('#f_evento_fecha').value;
+  const esEvento = $('#f_tipo').value === 'evento';
   const body = {
     autor_id: $('#f_autor').value, titulo: $('#f_titulo').value.trim(), tema: $('#f_tema').value || null,
     tipo: $('#f_tipo').value, tiempo_min: $('#f_min').value || null, media_url: $('#f_media').value.trim() || null,
     cuerpo_md: $('#f_cuerpo').value, estado: $('#f_estado').value, solo_registrados: $('#f_solo').checked, destacado: $('#f_destacado').checked,
+    evento_fecha: (esEvento && fechaRaw) ? new Date(fechaRaw).toISOString() : null,
+    evento_enlace: esEvento ? ($('#f_evento_enlace').value.trim() || null) : null,
   };
   if (!body.titulo) { msg.textContent = 'Falta el título.'; return; }
   const r = await api('/api/hablalo/admin/contenido', { method: 'POST', body: JSON.stringify(body) });
-  if (r.ok) { msg.textContent = '✅ Guardado.'; msg.className = 'text-sm text-green-700'; $('#form').reset(); loadLista(); }
+  if (r.ok) { msg.textContent = '✅ Guardado.'; msg.className = 'text-sm text-green-700'; $('#form').reset(); $('#evento-fields').classList.add('hidden'); loadLista(); }
   else { const e2 = await r.json().catch(()=>({})); msg.textContent = '❌ ' + (e2.error || 'Error'); msg.className = 'text-sm text-red-700'; }
+});
+
+$('#f_tipo').addEventListener('change', () => {
+  const t = $('#f_tipo').value;
+  $('#evento-fields').classList.toggle('hidden', t !== 'evento');
+  $('#evento-fields').classList.toggle('grid', t === 'evento');
+  $('#f_media_lbl').textContent = (t === 'video') ? 'Enlace del vídeo (YouTube, Vimeo o .mp4)' : 'Imagen o vídeo (URL, opcional)';
 });
 
 function escp(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
