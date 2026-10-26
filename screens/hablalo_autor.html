@@ -285,7 +285,7 @@ $('#form').addEventListener('submit', async (e) => {
     evento_enlace: ($('#f_tipo').value === 'evento') ? ($('#f_evento_enlace').value.trim() || null) : null };
   if (!body.titulo) { msg.textContent = 'Falta el título.'; return; }
   const r = await api('/api/hablalo/autor-panel/contenido', { method: 'POST', body: JSON.stringify(body) });
-  if (r.ok) { msg.textContent = '✅ Enviado a revisión.'; msg.className = 'text-sm text-green-700'; $('#form').reset(); loadLista(); }
+  if (r.ok) { const d = await r.json().catch(()=>({})); msg.textContent = d.autopublicado ? '✅ ¡Publicado! Ya está en Háblalo.' : '✅ Enviado a revisión. Lo revisamos y lo publicamos.'; msg.className = 'text-sm text-green-700'; $('#form').reset(); $('#evento-fields').classList.add('hidden'); loadLista(); }
   else { const e2 = await r.json().catch(()=>({})); msg.textContent = '❌ ' + (e2.error || 'Error'); msg.className = 'text-sm text-red-700'; }
 });
 $('#form-activar').addEventListener('submit', async (e) => {
