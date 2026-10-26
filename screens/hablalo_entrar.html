@@ -8,38 +8,65 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config={theme:{extend:{colors:{primary:"#446350",secondary:"#904c28",surface:"#effdf4","surf-c":"#e4f1e8","surf-low":"#e9f7ee",white:"#ffffff",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
+<script>tailwind.config={theme:{extend:{colors:{primary:"#446350","primary-c":"#5c7c67",secondary:"#904c28","sec-c":"#fea67b",surface:"#effdf4","surf-c":"#e4f1e8","surf-low":"#e9f7ee",white:"#ffffff",tinta:"#121e19","tinta-v":"#424843",linea:"#c2c8c1"},fontFamily:{sans:["Plus Jakarta Sans","system-ui","sans-serif"]}}}};</script>
 <style>body{font-family:'Plus Jakarta Sans',system-ui,sans-serif}.ms{font-family:'Material Symbols Outlined'}</style>
 </head>
 <body class="bg-surface text-tinta min-h-screen flex flex-col">
-<header class="h-16 px-5 max-w-md mx-auto w-full flex items-center"><a href="/hablalo" class="text-xl font-bold text-primary">Háblalo</a></header>
+<header class="h-16 px-5 max-w-2xl mx-auto w-full flex items-center"><a href="/hablalo" class="text-xl font-bold text-primary">Háblalo</a></header>
 <main class="flex-1 flex items-center justify-center px-5 pb-10">
-  <div class="w-full max-w-md">
-    <div class="bg-white rounded-3xl p-7 shadow-[0_8px_30px_rgba(46,58,52,0.06)]">
-      <div class="w-14 h-14 rounded-2xl bg-surf-c text-primary flex items-center justify-center mb-4"><span class="ms text-[28px]">favorite</span></div>
-      <h1 class="text-2xl font-bold tracking-tight mb-1">Crea tu cuenta gratis</h1>
-      <p class="text-sm text-tinta-v mb-5">Para guardar recursos, acceder a vídeos y webinars, y tener tu espacio personal. Leer el contenido siempre es gratis y sin cuenta.</p>
+  <div class="w-full max-w-2xl">
 
-      <div id="ya" class="hidden bg-surf-low rounded-xl p-4 text-center">
-        <p class="text-sm mb-3">Ya has iniciado sesión.</p>
-        <a href="/hablalo/mi-espacio" class="inline-block bg-primary text-white font-semibold rounded-lg px-5 py-2.5">Ir a Mi espacio</a>
-      </div>
-
-      <form id="form" class="flex flex-col gap-3">
-        <label class="text-sm font-semibold">Tu email
-          <input id="email" type="email" required autocomplete="email" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="tu@email.com">
-        </label>
-        <button class="bg-secondary text-white font-semibold rounded-xl py-3 mt-1">Enviarme el enlace de acceso</button>
-        <p class="text-xs text-tinta-v text-center">Te enviamos un enlace mágico. Sin contraseñas.</p>
-      </form>
-      <div id="enviado" class="hidden text-center py-3">
-        <div class="text-4xl">📬</div>
-        <h3 class="text-lg font-semibold mt-1">Revisa tu correo</h3>
-        <p class="text-sm text-tinta-v mt-1">Te enviamos un enlace a <strong id="email-echo"></strong>. Ábrelo para entrar.</p>
-      </div>
-      <p id="err" class="text-sm text-red-700 mt-2"></p>
+    <div id="ya" class="hidden bg-white rounded-3xl p-7 shadow text-center max-w-md mx-auto">
+      <p class="mb-3">Ya has iniciado sesión.</p>
+      <a href="/hablalo/mi-espacio" class="inline-block bg-primary text-white font-semibold rounded-lg px-5 py-2.5">Ir a Mi espacio</a>
     </div>
-    <p class="text-center text-sm text-tinta-v mt-5">¿Eres psicólogo? <a href="/login" class="text-primary font-semibold">Entra por aquí</a></p>
+
+    <!-- PUERTA ÚNICA: dos caminos -->
+    <div id="chooser">
+      <div class="text-center mb-7">
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight mb-1">Te damos la bienvenida a Háblalo</h1>
+        <p class="text-tinta-v">¿Cómo quieres entrar?</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <button id="go-persona" class="text-left bg-white rounded-3xl p-6 shadow-[0_6px_24px_rgba(46,58,52,0.06)] border border-transparent hover:border-primary/30 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-surf-c text-primary flex items-center justify-center mb-4"><span class="ms text-[28px]">self_improvement</span></div>
+          <h2 class="text-lg font-bold mb-1">Quiero sentirme mejor</h2>
+          <p class="text-sm text-tinta-v mb-4">Explora recursos y herramientas, guarda tus favoritos, sigue a psicólogos y encuentra ayuda cuando la necesites.</p>
+          <span class="inline-flex items-center gap-1 text-primary font-semibold text-sm">Crear mi cuenta gratis <span class="ms text-[18px]">arrow_forward</span></span>
+        </button>
+        <a href="/login" class="block text-left bg-white rounded-3xl p-6 shadow-[0_6px_24px_rgba(46,58,52,0.06)] border border-transparent hover:border-secondary/30 transition-colors">
+          <div class="w-14 h-14 rounded-2xl bg-sec-c/40 text-secondary flex items-center justify-center mb-4"><span class="ms text-[28px]">psychology</span></div>
+          <h2 class="text-lg font-bold mb-1">Soy psicólogo</h2>
+          <p class="text-sm text-tinta-v mb-4">Comparte tu conocimiento, gana visibilidad en la comunidad y recibe pacientes nuevos. Gestiona tu consulta con SereneCare.</p>
+          <span class="inline-flex items-center gap-1 text-secondary font-semibold text-sm">Entrar como profesional <span class="ms text-[18px]">arrow_forward</span></span>
+        </a>
+      </div>
+      <p class="text-center text-xs text-tinta-v mt-5">Leer el contenido es siempre gratis y sin cuenta. La cuenta es para guardar, participar y acceder a tus recursos.</p>
+    </div>
+
+    <!-- FLUJO PERSONA (registro exprés por email) -->
+    <div id="persona" class="hidden max-w-md mx-auto">
+      <button id="back" class="inline-flex items-center gap-1 text-tinta-v text-sm font-semibold mb-3"><span class="ms text-[18px]">arrow_back</span> Volver</button>
+      <div class="bg-white rounded-3xl p-7 shadow-[0_8px_30px_rgba(46,58,52,0.06)]">
+        <div class="w-14 h-14 rounded-2xl bg-surf-c text-primary flex items-center justify-center mb-4"><span class="ms text-[28px]">favorite</span></div>
+        <h1 class="text-2xl font-bold tracking-tight mb-1">Crea tu cuenta gratis</h1>
+        <p class="text-sm text-tinta-v mb-5">Para guardar recursos, acceder a vídeos y webinars, y tener tu espacio personal.</p>
+        <form id="form" class="flex flex-col gap-3">
+          <label class="text-sm font-semibold">Tu email
+            <input id="email" type="email" required autocomplete="email" class="mt-1 w-full border border-linea rounded-xl px-4 py-3" placeholder="tu@email.com">
+          </label>
+          <button class="bg-secondary text-white font-semibold rounded-xl py-3 mt-1">Enviarme el enlace de acceso</button>
+          <p class="text-xs text-tinta-v text-center">Te enviamos un enlace mágico. Sin contraseñas.</p>
+        </form>
+        <div id="enviado" class="hidden text-center py-3">
+          <div class="text-4xl">📬</div>
+          <h3 class="text-lg font-semibold mt-1">Revisa tu correo</h3>
+          <p class="text-sm text-tinta-v mt-1">Te enviamos un enlace a <strong id="email-echo"></strong>. Ábrelo para entrar.</p>
+        </div>
+        <p id="err" class="text-sm text-red-700 mt-2"></p>
+      </div>
+    </div>
+
   </div>
 </main>
 
@@ -51,8 +78,11 @@ const next = params.get('next') && params.get('next').startsWith('/') ? params.g
 
 (async () => {
   const { data: { session } } = await supabase.auth.getSession();
-  if (session) { $('#form').classList.add('hidden'); $('#ya').classList.remove('hidden'); }
+  if (session) { $('#chooser').classList.add('hidden'); $('#ya').classList.remove('hidden'); }
 })();
+
+$('#go-persona').addEventListener('click', () => { $('#chooser').classList.add('hidden'); $('#persona').classList.remove('hidden'); });
+$('#back').addEventListener('click', () => { $('#persona').classList.add('hidden'); $('#chooser').classList.remove('hidden'); });
 
 $('#form').addEventListener('submit', async (e) => {
   e.preventDefault();
