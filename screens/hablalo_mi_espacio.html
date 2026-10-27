@@ -139,6 +139,16 @@ const api = (p) => fetch(p, { headers: { Authorization: 'Bearer ' + token } });
   $('#loading').classList.add('hidden');
   if (!session) { $('#guestView').classList.remove('hidden'); return; }
   token = session.access_token;
+  // Aplicar la "ruta" del cuestionario si viene de /hablalo/empezar
+  try {
+    const onb = JSON.parse(localStorage.getItem('hablalo_onb') || 'null');
+    if (onb) {
+      const h = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
+      if (onb.area) await fetch('/api/hablalo/seguir', { method: 'POST', headers: h, body: JSON.stringify({ tipo: 'tema', ref: onb.area }) });
+      if (onb.consent) await fetch('/api/hablalo/novedades', { method: 'POST', headers: h, body: JSON.stringify({ consent: true, email: session.user.email || null }) });
+      localStorage.removeItem('hablalo_onb');
+    }
+  } catch (e) {}
   const email = session.user.email || '';
   $('#mi-avatar').textContent = (email[0] || '·').toUpperCase() + (email[1] || '·').toUpperCase();
   $('#authView').classList.remove('hidden');

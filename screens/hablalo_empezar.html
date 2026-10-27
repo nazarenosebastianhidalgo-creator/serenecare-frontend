@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="robots" content="noindex"/>
+<title>Encuentra lo que necesitas | Háblalo</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{brand:{cream:'#effdf4',surface:'#ffffff',primary:'#446350','primary-dark':'#324a3c','primary-light':'#e6f3eb',terracotta:'#904c28','terracotta-dark':'#793e20','terracotta-light':'#fbf0eb',text:'#121e19',muted:'#424843',border:'#c2c8c1'}},fontFamily:{sans:['"Plus Jakarta Sans"','system-ui','sans-serif']}}}};</script>
+<style>.material-symbols-outlined{vertical-align:middle;}.opt:hover{border-color:#446350;}</style>
+</head>
+<body class="bg-brand-cream text-brand-text font-sans antialiased min-h-screen flex flex-col">
+<header class="h-16 px-5 max-w-3xl mx-auto w-full flex items-center justify-between">
+  <a href="/hablalo" class="flex flex-col"><span class="text-xl font-bold text-brand-primary leading-none">Háblalo</span><span class="text-[11px] text-brand-muted leading-none mt-0.5">Bienestar emocional</span></a>
+  <a href="/hablalo" class="text-sm font-semibold text-brand-muted hover:text-brand-text">Explorar sin cuenta</a>
+</header>
+
+<main class="flex-1 w-full max-w-2xl mx-auto px-5 py-6">
+  <!-- Progreso -->
+  <div id="progress-wrap" class="mb-6">
+    <div class="h-1.5 w-full rounded-full bg-brand-primary-light overflow-hidden"><div id="progress" class="h-full bg-brand-primary transition-all" style="width:33%"></div></div>
+    <p id="progress-txt" class="text-xs text-brand-muted mt-2">Paso 1 de 3</p>
+  </div>
+
+  <!-- Paso 1: estado -->
+  <section data-step="1" class="step">
+    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1">¿Cómo te sientes estos días?</h1>
+    <p class="text-brand-muted mb-5">No hay respuesta correcta. Elige lo que más se acerque.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-q="estado">
+      <button class="opt" data-v="agobiado" data-icon="bolt">Agobiado/a, con la cabeza a mil</button>
+      <button class="opt" data-v="triste" data-icon="rainy">Triste o con el ánimo bajo</button>
+      <button class="opt" data-v="bloqueado" data-icon="block">Bloqueado/a, sin saber por dónde tirar</button>
+      <button class="opt" data-v="mejorar" data-icon="eco">Bien, con ganas de cuidarme mejor</button>
+    </div>
+  </section>
+
+  <!-- Paso 2: área -->
+  <section data-step="2" class="step hidden">
+    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1">¿Qué es lo que más te pesa ahora?</h1>
+    <p class="text-brand-muted mb-5">Elige el área por la que quieres empezar.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-q="area">
+      <button class="opt" data-v="ansiedad" data-icon="air">Ansiedad y estrés</button>
+      <button class="opt" data-v="relaciones" data-icon="favorite">Relaciones y rupturas</button>
+      <button class="opt" data-v="autoestima" data-icon="self_improvement">Autoestima</button>
+      <button class="opt" data-v="trabajo" data-icon="work">Trabajo y agotamiento</button>
+      <button class="opt" data-v="duelo" data-icon="spa">Duelo y pérdida</button>
+      <button class="opt" data-v="crecimiento" data-icon="trending_up">Crecimiento personal</button>
+    </div>
+  </section>
+
+  <!-- Paso 3: busca -->
+  <section data-step="3" class="step hidden">
+    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1">¿Qué te vendría mejor ahora?</h1>
+    <p class="text-brand-muted mb-5">Te mostramos lo más útil según lo que buscas.</p>
+    <div class="grid grid-cols-1 gap-3" data-q="busca">
+      <button class="opt" data-v="entender" data-icon="lightbulb">Entender qué me pasa</button>
+      <button class="opt" data-v="herramientas" data-icon="handyman">Herramientas prácticas para hoy</button>
+      <button class="opt" data-v="hablar" data-icon="forum">Hablar con alguien</button>
+    </div>
+  </section>
+
+  <!-- Resultados -->
+  <section id="resultados" class="hidden">
+    <div class="bg-white rounded-3xl p-5 sm:p-6 border border-brand-border/70 shadow-sm mb-5">
+      <div class="flex items-center gap-2 text-brand-primary mb-1"><span class="material-symbols-outlined">auto_awesome</span><h2 class="text-xl font-bold">Lo que te recomendamos</h2></div>
+      <p id="orientativo" class="text-sm text-brand-muted"></p>
+    </div>
+    <div id="recs" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5"></div>
+    <div id="sug-psi" class="hidden bg-brand-terracotta-light rounded-2xl p-4 mb-5 flex items-center justify-between gap-3">
+      <p class="text-sm text-brand-text font-medium">¿Prefieres hablar con un psicólogo?</p>
+      <a href="/hablalo/buscar" class="shrink-0 px-4 py-2.5 rounded-xl bg-brand-terracotta text-white font-semibold text-sm">Encontrar psicólogo</a>
+    </div>
+
+    <!-- Captura -->
+    <div id="captura" class="bg-gradient-to-br from-brand-primary to-brand-primary-dark rounded-3xl p-6 text-white shadow-lg">
+      <h3 class="text-xl font-extrabold mb-1">Guarda tu ruta 🌿</h3>
+      <p class="text-white/85 text-sm mb-4">Crea tu cuenta gratis y te guardamos estas recomendaciones y tu tema. Así, cuando vuelvas, sigues donde lo dejaste.</p>
+      <form id="form-captura" class="space-y-3">
+        <input id="cap-email" type="email" required placeholder="tu@correo.com" class="w-full h-12 px-4 rounded-xl text-brand-text focus:outline-none focus:ring-2 focus:ring-white/50"/>
+        <label class="flex items-start gap-2.5 text-xs text-white/85"><input id="cap-consent" type="checkbox" class="mt-0.5 w-4 h-4 rounded accent-white"><span>Quiero recibir por correo nuevas herramientas y recursos de Háblalo. Puedo darme de baja cuando quiera.</span></label>
+        <button class="w-full h-12 rounded-xl bg-white text-brand-primary font-bold flex items-center justify-center gap-2"><span id="cap-btn-txt">Guardar mi ruta gratis</span><span class="material-symbols-outlined">arrow_forward</span></button>
+        <p id="cap-msg" class="text-sm text-white"></p>
+      </form>
+      <p class="text-[11px] text-white/60 mt-3">Tus respuestas son orientativas y privadas. No las usamos para publicidad.</p>
+    </div>
+    <!-- Ya registrado -->
+    <div id="captura-ok" class="hidden bg-brand-primary-light rounded-3xl p-6 text-center">
+      <span class="material-symbols-outlined text-4xl text-brand-primary">task_alt</span>
+      <h3 class="text-xl font-bold mt-1">¡Ruta guardada!</h3>
+      <p class="text-sm text-brand-muted mt-1 mb-4">Hemos añadido este tema a tu espacio.</p>
+      <a href="/hablalo/mi-espacio" class="inline-block px-6 py-3 rounded-xl bg-brand-primary text-white font-semibold">Ir a mi espacio</a>
+    </div>
+    <!-- Revisa correo -->
+    <div id="captura-mail" class="hidden bg-white rounded-3xl p-6 text-center border border-brand-border/70">
+      <span class="material-symbols-outlined text-4xl text-brand-primary">mark_email_read</span>
+      <h3 class="text-xl font-bold mt-1">Revisa tu correo 💌</h3>
+      <p class="text-sm text-brand-muted mt-1">Te enviamos un enlace a <strong id="mail-echo"></strong>. Ábrelo para guardar tu ruta y entrar.</p>
+    </div>
+  </section>
+</main>
+
+<style>.opt{display:flex;align-items:center;gap:.75rem;text-align:left;padding:1rem 1.1rem;border-radius:1rem;background:#fff;border:1.5px solid #c2c8c1;font-weight:600;font-size:.95rem;transition:all .15s;}
+.opt .material-symbols-outlined{color:#446350;}.opt.sel{border-color:#446350;background:#e6f3eb;}</style>
+
+<script type="module">
+import { supabase } from '/js/supabase-client.js';
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const ans = { estado:null, area:null, busca:null };
+let step = 1, session = null;
+
+(async () => { try { const { data } = await supabase.auth.getSession(); session = data.session; } catch {} })();
+
+// Inyectar iconos en las opciones
+document.querySelectorAll('.opt').forEach(b => {
+  const ic = b.dataset.icon; if (ic) b.insertAdjacentHTML('afterbegin', `<span class="material-symbols-outlined text-[22px]">${ic}</span><span class="flex-1">`);
+});
+document.querySelectorAll('[data-q]').forEach(group => {
+  const q = group.dataset.q;
+  group.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+    group.querySelectorAll('.opt').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel'); ans[q] = b.dataset.v;
+    setTimeout(() => next(), 180);
+  }));
+});
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.toggle('hidden', +s.dataset.step !== n));
+  $('#progress').style.width = (n/3*100) + '%'; $('#progress-txt').textContent = `Paso ${n} de 3`;
+}
+function next() {
+  if (step < 3) { step++; showStep(step); window.scrollTo({top:0,behavior:'smooth'}); }
+  else finish();
+}
+
+function ytThumb(url){ const m=String(url||'').match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{6,})/); return m?`https://i.ytimg.com/vi/${m[1]}/hqdefault.jpg`:null; }
+
+async function finish() {
+  document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
+  $('#progress-wrap').classList.add('hidden');
+  $('#resultados').classList.remove('hidden');
+  const notas = { agobiado:'Cuando la cabeza va a mil, parar un momento ya es un paso. Empieza por aquí, a tu ritmo.',
+    triste:'Estar con el ánimo bajo pesa. Estos recursos pueden acompañarte hoy.',
+    bloqueado:'No saber por dónde tirar también se trabaja. Un primer paso pequeño cuenta.',
+    mejorar:'Qué bien cuidarse sin esperar a estar mal. Aquí tienes por dónde seguir.' };
+  $('#orientativo').textContent = (notas[ans.estado] || 'Aquí tienes una selección para ti.') + ' Esto es orientativo, no un diagnóstico; si lo estás pasando mal, hablar con un profesional ayuda.';
+  // recomendaciones
+  try {
+    const d = await (await fetch(`/api/hablalo/recomendar?area=${encodeURIComponent(ans.area||'')}&busca=${encodeURIComponent(ans.busca||'')}`)).json();
+    if (d.sugerir_psicologo) $('#sug-psi').classList.remove('hidden');
+    if (!d.items || !d.items.length) { $('#recs').innerHTML = '<p class="text-brand-muted text-sm col-span-full">Pronto añadiremos más recursos de este tema. Mientras, explora el muro.</p>'; }
+    else $('#recs').innerHTML = d.items.map(c => {
+      const th = ytThumb(c.media_url);
+      const media = th ? `<div class="relative h-32"><img class="w-full h-full object-cover" src="${th}"><span class="absolute inset-0 flex items-center justify-center"><span class="w-11 h-11 rounded-full bg-white/90 flex items-center justify-center"><span class="material-symbols-outlined text-brand-terracotta">play_arrow</span></span></span></div>`
+        : `<div class="h-32 bg-gradient-to-br from-brand-primary-light to-[#d6ebd9] flex items-center justify-center"><span class="material-symbols-outlined text-brand-primary text-3xl">${c.tipo==='ejercicio'?'checklist':'auto_stories'}</span></div>`;
+      return `<a href="/hablalo/articulo/${esc(c.slug)}" class="bg-white rounded-2xl overflow-hidden border border-brand-border/70 shadow-sm hover:shadow-md transition-all block">
+        ${media}<div class="p-4"><h3 class="font-bold text-sm leading-snug line-clamp-2">${esc(c.titulo)}</h3>
+        <p class="text-[11px] text-brand-muted mt-1.5">${esc(c.autor_nombre)}${c.tiempo_min?' · '+c.tiempo_min+' min':''}</p></div></a>`;
+    }).join('');
+  } catch(e){ $('#recs').innerHTML=''; }
+
+  // captura según sesión
+  if (session) {
+    $('#captura').classList.add('hidden');
+    await aplicarRuta(session.access_token, null);
+    $('#captura-ok').classList.remove('hidden');
+  }
+}
+
+async function aplicarRuta(token, email) {
+  try {
+    if (ans.area) await fetch('/api/hablalo/seguir', { method:'POST', headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'}, body: JSON.stringify({tipo:'tema', ref:ans.area}) });
+    if ($('#cap-consent') && $('#cap-consent').checked) await fetch('/api/hablalo/novedades', { method:'POST', headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'}, body: JSON.stringify({consent:true, email}) });
+  } catch(e){}
+}
+
+$('#form-captura').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = $('#cap-email').value.trim(); if (!email) return;
+  const btn = $('#form-captura').querySelector('button'); btn.disabled = true; $('#cap-btn-txt').textContent = 'Enviando…';
+  // guardamos la elección para aplicarla al volver del enlace mágico
+  try { localStorage.setItem('hablalo_onb', JSON.stringify({ area: ans.area, consent: $('#cap-consent').checked })); } catch {}
+  const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + '/hablalo/mi-espacio?bienvenida=1', shouldCreateUser: true } });
+  if (error) { $('#cap-msg').textContent = error.message || 'No se pudo enviar.'; btn.disabled=false; $('#cap-btn-txt').textContent='Guardar mi ruta gratis'; return; }
+  $('#form-captura').classList.add('hidden'); $('#mail-echo').textContent = email; $('#captura-mail').classList.remove('hidden');
+});
+</script>
+</body></html>
